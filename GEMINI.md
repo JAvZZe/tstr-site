@@ -5,64 +5,44 @@ Global niche directory platform for Tests and Testing Services & Products servin
 
 **Target Industries**: Oil & Gas, Pharmaceutical, Biochemistry, Genetics, Satellite, High-Tech Manufacturing, Defense, and other underserved specialized testing sectors.
 
-**Geographic Scope**: Global directory with hierarchical drill-down (Global → Region → Country → City). Localized sites will be established post-profitability.
+**Geographic Scope**: Global directory with hierarchical drill-down (Global → Region → Country → City).
 
-## Tech Stack
-- **Frontend**: Astro + React (tstr-frontend/)
-- **Backend/Automation**: Python scrapers + Supabase (tstr-automation/)
+## Tech Stack & Deployment
+- **Frontend**: Astro + React (`web/tstr-frontend/`)
+- **Backend/Automation**: Python scrapers (`web/tstr-automation/`)
 - **Database**: Supabase (PostgreSQL)
+- **Hosting**: Netlify (connected to GitHub)
+- **GitHub Repo**: `https://github.com/JAvZZe/tstr-site.git`
 
-## Directory Structure
-```
-TSTR.site/
-├── web/
-│   ├── tstr-frontend/          # Astro website (Global directory)
-│   │   ├── src/
-│   │   │   ├── pages/          # Geographic hierarchy routes
-│   │   ├── public/
-│   │   └── astro.config.mjs
-│   └── tstr-automation/        # Python automation
-│       ├── dual_scraper.py     # PRIMARY: Listings + leads
-│       ├── scraper.py          # SECONDARY: Listings only
-│       ├── auto_updater.py     # Scheduler
-│       └── generate_outreach.py
-```
+## Deployment & Automation Workflow
+1.  **Code Push**: All changes are pushed to the `main` branch on GitHub.
+2.  **Netlify Build**: Netlify automatically detects the push, builds the frontend, and deploys it.
+    - **Base directory**: `web/tstr-frontend`
+    - **Build command**: `npm run build`
+    - **Publish directory**: `web/tstr-frontend/dist`
+3.  **Scraper Execution**: A cloud scheduler runs the Python scrapers automatically every 3 days.
+4.  **Database Update**: Scrapers add new listings to the Supabase `listings` table.
+5.  **Live Site Update**: A Supabase Webhook triggers a new Netlify build whenever the `listings` table is updated, ensuring new data appears on the live site automatically.
 
 ## Key Files
-- **Frontend entry**: tstr-frontend/src/pages/index.astro
-- **PRIMARY scraper**: tstr-automation/dual_scraper.py (listings + leads)
-- **Listings scraper**: tstr-automation/scraper.py (directory only)
-- **Supabase setup**: tstr-automation/SUPABASE_*.sql
-- **Environment**: tstr-frontend/.env (Supabase keys)
-
-## Gemini CLI Usage Strategy
-Use Gemini for token-efficient tasks:
-- Simple code generation (boilerplate, utilities)
-- File editing and refactoring
-- Documentation generation
-- SQL query writing
-- CSV/data processing scripts
-
-Reserve Claude Code for:
-- Complex architecture decisions
-- Multi-file refactoring
-- Debugging intricate issues
-- Integration work
+- **Frontend entry**: `web/tstr-frontend/src/pages/index.astro`
+- **PRIMARY scraper**: `web/tstr-automation/dual_scraper.py`
+- **Deployment Plan**: `DEPLOY_NOW.md`
+- **Supabase Schema**: `web/tstr-automation/SUPABASE_*.sql`
+- **Frontend Environment**: `web/tstr-frontend/.env` (stores public Supabase keys)
 
 ## Development Principles
-1. **MVP-first**: Ship quick, iterate based on feedback
-2. **Systematic testing**: One feature at a time with checkpoints
-3. **Git commits**: Every working checkpoint for easy rollback
-4. **Pareto focus**: 80/20 rule - focus on high-impact features
-5. **Cost optimization**: Use cheapest effective tool (Gemini < Claude Code)
+1. **MVP-first**: Ship quick, iterate based on feedback.
+2. **Systematic testing**: One feature at a time with checkpoints.
+3. **Git commits**: Every working checkpoint for easy rollback.
+4. **Pareto focus**: 80/20 rule - focus on high-impact features.
+5. **Cost optimization**: Use cheapest effective tool.
 
 ## Current Status
-- Frontend: Astro site deployed
-- Backend: Python scrapers operational
-  - **PRIMARY**: dual_scraper.py (listings + lead data)
-  - **SECONDARY**: scraper.py (listings only)
-- Database: Supabase configured
-- Automation: Auto-updater running
+- **Frontend**: Ready for first deployment to Netlify.
+- **Backend**: Python scrapers are operational.
+- **Database**: Supabase schema is defined and ready.
+- **Automation**: Auto-update workflow (Supabase Webhook -> Netlify Build Hook) is designed and ready for implementation post-deployment.
 
 ## Common Tasks
 ```bash
@@ -72,15 +52,11 @@ cd web/tstr-frontend && npm run dev
 # Run PRIMARY scraper (listings + leads)
 cd web/tstr-automation && python dual_scraper.py
 
-# Run listings scraper (directory only)
-cd web/tstr-automation && python scraper.py
-
-# Test Supabase connection
-cd web/tstr-automation && python test_supabase.py
+# Deploy Frontend (after committing to git)
+git push origin main
 ```
 
 ## Important Notes
-- API keys in .env files - never commit
-- Follow existing code style
-- Test incrementally
-- Document breaking changes
+- API keys in `.env` files must never be committed to Git.
+- The `.gitignore` file is configured to prevent this.
+- Follow existing code style and test incrementally.
