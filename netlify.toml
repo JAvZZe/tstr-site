@@ -1,0 +1,15 @@
+# Netlify Build Configuration for TSTR.site
+
+[build]
+  # Base directory: The location of the frontend source code.
+  base = "web/tstr-frontend"
+
+  # Build command: The command to run to build the site.
+  command = "npm run build"
+
+  # Publish directory: The folder containing the built website, relative to the base directory.
+  publish = "web/tstr-frontend/dist"
+
+[build.environment]
+  # Specify the Node.js version.
+  NODE_VERSION = "18"
