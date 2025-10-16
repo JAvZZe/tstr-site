@@ -8,7 +8,7 @@
   command = "npm run build"
 
   # Publish directory: The folder containing the built website, relative to the base directory.
-  publish = "web/tstr-frontend/dist"
+  publish = "dist"
 
 [build.environment]
   # Specify the Node.js version.
