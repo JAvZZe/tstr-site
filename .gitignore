@@ -39,3 +39,6 @@ venv/
 *.key
 *.pem
 secrets/
+
+# Local Netlify folder
+.netlify
