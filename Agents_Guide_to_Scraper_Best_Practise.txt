@@ -1,0 +1,82 @@
+Here is a best practice root guide document designed to steer our AI agents (like Claude Code) toward building robust, polite, and cost-effective scrapers, using Python or other languages like Node.js.
+
+***
+
+## AI Agent Scraper Generation Root Guide (The "Any Other Way" Protocol)
+
+This document provides foundational principles for all scraper generation tasks requested via LLMs (e.g., Claude Code, Windsurf, or Gemini CLI). The primary objective is to acquire high-quality, structured data for a niche directory site while maintaining low operational costs and ensuring ethical web citizenship to avoid blocks and legal issues.
+
+### Part 1: Initial Project Definition and AI Collaboration
+
+We rely heavily on LLM agents to generate or refine code (Python/Node.js) and extract complex structure.
+
+#### 1. Context is King (The Prompt Strategy)
+When kicking off a project, utilize Claude's Projects feature or a detailed prompt to define the environment, ensuring the AI produces standardized, reusable code.
+
+| Instruction for the AI Agent | Source Reference |
+| :--- | :--- |
+| **Define the Output Structure First:** Always prioritize delivering structured data (JSON, CSV) using a stable schema (like Pydantic/BaseModel in Python) for easy ingestion into Supabase. | |
+| **Specify the Tech Stack:** Prioritize Python libraries (Requests, BeautifulSoup, Scrapy, Selenium/Playwright) or Node.js/JavaScript modules based on the complexity. | |
+| **Provide Comprehensive Prompts:** Detail the target URLs, required data fields, loading model (static or dynamic/JS-rendered), navigation, resilience needs (proxies/delays), and output format/location. | |
+| **Debug Collaboratively:** When debugging, feed the error messages and relevant code sections back to the AI. Claude excels at suggesting alternative scraping logic and evasion strategies. | |
+
+#### 2. Cost Management and Efficiency (The Free Tier Focus)
+
+We aim to keep API usage low, minimizing external LLM calls for repetitive tasks.
+
+| Instruction for the AI Agent | Source Reference |
+| :--- | :--- |
+| **Prefer Indirect Extraction:** Where possible, generate reusable Python functions (the "indirect extraction" approach) rather than making continuous LLM API calls for parsing every single page. This significantly reduces financial cost and required LLM calls. | |
+| **If Direct LLM Parsing is Needed:** Use smaller models (e.g., GPT-3.5 or equivalent cost-efficient reasoning models) for straightforward data extractions to optimize token usage and cost. | |
+| **Optimize HTML Input:** For large, complex pages (like e-commerce sites), clean and compress the HTML before feeding it to the LLM to stay within token limits and reduce latency/cost. | |
+
+### Part 2: The Golden Rule: Be a Good Web Citizen
+
+The most important step is to avoid aggressive scraping that might trigger anti-bot defenses, IP blocks, or legal action. Our AI-generated scraper must exhibit human-like behavior.
+
+#### 3. Ethical and Legal Compliance
+The data should be publicly available. We must not be mistaken for a malicious DoS attack.
+
+| Instruction for the AI Agent | Source Reference |
+| :--- | :--- |
+| **Check `robots.txt` First:** Always read and strictly obey the target website's `robots.txt` file. If a path is disallowed, do not proceed. | |
+| **Avoid Terms of Service (T&C) Violations:** Assume that accessing publicly available data is acceptable, but avoid areas requiring login or explicit acceptance of T&Cs unless necessary and documented. | |
+| **Protect PII and Copyright:** Never scrape or store Personally Identifiable Information (PII) of EU citizens (GDPR). Be mindful that data comprising facts (like business locations) is generally okay, but creative content (reviews, opinions) may be copyrighted if republished. | |
+
+#### 4. Anti-Blocking and Stealth Measures
+
+These tactics ensure the scraper mimics a normal user, avoiding detection via behavior analysis or filtering.
+
+| Instruction for the AI Agent | Source Reference |
+| :--- | :--- |
+| **Implement Throttling and Random Delays:** Introduce unpredictable time delays (e.g., `time.sleep()`) between requests. Avoid sending requests at uniform intervals, as this is a clear sign of automation. | |
+| **Rotate User-Agents and Headers:** Use a popular, up-to-date browser User-Agent string (e.g., modern Chrome/Firefox) and rotate through a list of them. Ensure necessary headers like `Accept-Language` and `Referer` are included to look legitimate. | |
+| **Avoid Honeypots:** Do not interact with HTML elements that are invisible to a human user (e.g., styled with `display: none` or `visibility: hidden`). | |
+
+### Part 3: Tooling and Execution Strategies
+
+This section focuses on using the right tools in the right order for efficiency and data quality.
+
+#### 5. Handling Dynamic Content (JavaScript)
+
+If a page loads data dynamically via JavaScript (Ajax), traditional static HTML parsing (like Requests/BeautifulSoup alone) will fail.
+
+| Instruction for the AI Agent | Source Reference |
+| :--- | :--- |
+| **The Primary Fallback - Internal APIs:** First, check if the website uses an undocumented "internal API" (often JSON/XML endpoints exposed during user interaction). Fetching data directly from this source is faster, cleaner, and avoids complex JavaScript rendering. | |
+| **The Full Browser Simulation:** If an internal API is unavailable, the scraper must use a headless browser like **Selenium** or Playwright to execute JavaScript and mimic user behavior (clicks, scrolling, filling forms). | |
+
+#### 6. Extraction Strategy and Parsing Hierarchy
+
+Once the raw content (HTML/JSON) is retrieved, the AI must apply the most appropriate and stable parsing method.
+
+| Instruction for the AI Agent | Source Reference |
+| :--- | :--- |
+| **Start with CSS Selectors:** Use CSS selectors wherever possible, as they are generally simple and robust for selecting HTML nodes. | |
+| **Use XPath as Fallback:** Employ XPath for more complex selection logic when CSS selectors are insufficient. | |
+| **Employ Parsers for Algorithmic Needs:** Use **BeautifulSoup** (or `lxml` for speed) for tasks requiring complex, algorithmic navigation or transforming data. | |
+| **For Lists and Pagination:** Design the scraper to handle pagination logic (e.g., iterating page parameters or following 'next' links) and structure the data schema to handle multiple items efficiently. | |
+
+***
+
+This guide provides the framework for turning the powerful coding capabilities of your LLM tools into reliable, efficient scrapers suitable for launching your niche directory site without compromising on ethics or budget. Remember that maintaining these agents is an ongoing process, as the internet is dynamic and website structures change daily. Good luck with the directory!

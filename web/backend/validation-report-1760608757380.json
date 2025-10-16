@@ -1,0 +1,65 @@
+{
+  "summary": {
+    "total": 10,
+    "valid": 7,
+    "invalid": 3,
+    "redirected": 7,
+    "successRate": "70.00%"
+  },
+  "validUrls": [
+    {
+      "url": "https://www.questdiagnostics.com",
+      "statusCode": 200,
+      "finalUrl": "https://www.questdiagnostics.com/"
+    },
+    {
+      "url": "https://www.eurofins.com",
+      "statusCode": 200,
+      "finalUrl": "https://www.eurofins.com/"
+    },
+    {
+      "url": "https://www.intertek.com",
+      "statusCode": 200,
+      "finalUrl": "https://www.intertek.com/"
+    },
+    {
+      "url": "https://www.bureauveritas.com",
+      "statusCode": 200,
+      "finalUrl": "https://group.bureauveritas.com/"
+    },
+    {
+      "url": "https://www.ul.com",
+      "statusCode": 200,
+      "finalUrl": "https://www.ul.com/"
+    },
+    {
+      "url": "https://www.dekra.com",
+      "statusCode": 200,
+      "finalUrl": "https://www.dekra.com/en/home/"
+    },
+    {
+      "url": "https://www.nsf.org",
+      "statusCode": 200,
+      "finalUrl": "https://www.nsf.org/"
+    }
+  ],
+  "invalidUrls": [
+    {
+      "url": "https://www.labcorp.com",
+      "error": "maxContentLength size of 10240 exceeded",
+      "errorCode": "ERR_BAD_RESPONSE"
+    },
+    {
+      "url": "https://www.sgs.com",
+      "error": "Parse Error: Missing expected CR after header value",
+      "errorCode": "HPE_CR_EXPECTED"
+    },
+    {
+      "url": "https://www.tuvsud.com",
+      "error": "Request failed with status code 403",
+      "errorCode": "ERR_BAD_REQUEST",
+      "statusCode": 403
+    }
+  ],
+  "testedAt": "2025-10-16T09:59:17.372Z"
+}

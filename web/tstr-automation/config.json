@@ -1,0 +1,81 @@
+{
+  "google_api_searches": [
+    {
+      "category": "Oil & Gas Testing",
+      "location": "Houston Texas"
+    },
+    {
+      "category": "Oil & Gas Testing",
+      "location": "Aberdeen UK"
+    },
+    {
+      "category": "Oil & Gas Testing",
+      "location": "Dubai UAE"
+    },
+    {
+      "category": "Pharmaceutical Testing",
+      "location": "New Jersey"
+    },
+    {
+      "category": "Pharmaceutical Testing",
+      "location": "Basel Switzerland"
+    },
+    {
+      "category": "Pharmaceutical Testing",
+      "location": "Mumbai India"
+    },
+    {
+      "category": "Biotech Testing",
+      "location": "San Francisco California"
+    },
+    {
+      "category": "Biotech Testing",
+      "location": "Cambridge UK"
+    },
+    {
+      "category": "Biotech Testing",
+      "location": "Singapore"
+    },
+    {
+      "category": "Environmental Testing",
+      "location": "California"
+    },
+    {
+      "category": "Materials Testing",
+      "location": "Singapore"
+    },
+    {
+      "category": "Genetics Testing",
+      "location": "Boston Massachusetts"
+    },
+    {
+      "category": "Satellite Testing",
+      "location": "California"
+    },
+    {
+      "category": "Semiconductor Testing",
+      "location": "Taiwan"
+    },
+    {
+      "category": "Defense Testing",
+      "location": "Washington DC"
+    }
+  ],
+  "alternative_sources": [
+    {
+      "name": "Energy Pedia",
+      "category": "Oil & Gas Testing",
+      "url": "https://www.energy-pedia.com/directories/testing-laboratories"
+    },
+    {
+      "name": "Pharmaceutical Technology",
+      "category": "Pharmaceutical Testing",
+      "url": "https://www.pharmaceutical-technology.com/contractors/testing/"
+    },
+    {
+      "name": "Biocompare",
+      "category": "Biotech Testing",
+      "url": "https://www.biocompare.com/Laboratory-Services/"
+    }
+  ]
+}

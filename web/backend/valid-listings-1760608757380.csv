@@ -1,0 +1,8 @@
+name,category,website,location,statusCode,finalUrl
+"Quest Diagnostics",Medical Testing,https://www.questdiagnostics.com,"USA",200,https://www.questdiagnostics.com/
+"Eurofins Scientific",Medical Testing,https://www.eurofins.com,"Luxembourg",200,https://www.eurofins.com/
+"Intertek",Materials Testing,https://www.intertek.com,"UK",200,https://www.intertek.com/
+"Bureau Veritas",Materials Testing,https://www.bureauveritas.com,"France",200,https://group.bureauveritas.com/
+"UL Solutions",Software Testing,https://www.ul.com,"USA",200,https://www.ul.com/
+"DEKRA",Automotive Testing,https://www.dekra.com,"Germany",200,https://www.dekra.com/en/home/
+"NSF International",Food Testing,https://www.nsf.org,"USA",200,https://www.nsf.org/

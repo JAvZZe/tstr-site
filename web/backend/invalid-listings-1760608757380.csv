@@ -1,0 +1,4 @@
+name,category,website,location,error,errorCode
+"LabCorp",Medical Testing,https://www.labcorp.com,"USA","maxContentLength size of 10240 exceeded",ERROR
+"SGS",Materials Testing,https://www.sgs.com,"Switzerland","Parse Error: Missing expected CR after header value",ERROR
+"TÜV SÜD",Automotive Testing,https://www.tuvsud.com,"Germany","Request failed with status code 403",ERROR
