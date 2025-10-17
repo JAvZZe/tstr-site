@@ -1,0 +1,336 @@
+---
+import { supabase } from '../lib/supabase'
+
+// Fetch all active listings from database  
+const { data: listings, error } = await supabase
+  .from('listings')
+  .select('*')
+  .eq('status', 'active')
+  .order('created_at', { ascending: false })
+
+// Log error if any
+if (error) {
+  console.error('Supabase error:', error)
+}
+
+// Get unique categories from listings
+const categories = listings ? [...new Set(listings.map(l => l.category))].filter(Boolean) : []
+
+// Get unique locations from listings
+const locations = listings ? [...new Set(listings.map(l => l.address))].filter(Boolean).slice(0, 5) : []
+
+// Count stats
+const totalListings = listings?.length || 0
+const totalCategories = categories.length
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TSTR.site - Global Testing Laboratory Directory</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+    }
+    
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+    
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+    
+    header p {
+      font-size: 1.25rem;
+      opacity: 0.95;
+    }
+    
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+    
+    section {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: #667eea;
+      border-bottom: 3px solid #667eea;
+      padding-bottom: 0.5rem;
+    }
+    
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .category-card {
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .category-card:hover {
+      border-color: #667eea;
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    }
+    
+    .category-card h3 {
+      color: #667eea;
+      margin-bottom: 0.75rem;
+      font-size: 1.25rem;
+    }
+    
+    .category-card p {
+      color: #666;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    
+    .location-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .location-tag {
+      background: #f0f0f0;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: #555;
+      transition: all 0.2s ease;
+    }
+    
+    .location-tag:hover {
+      background: #667eea;
+      color: white;
+      cursor: pointer;
+    }
+    
+    footer {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+    }
+    
+    .cta-button {
+      display: inline-block;
+      background: #667eea;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .cta-button:hover {
+      background: #764ba2;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>TSTR.site</h1>
+    <p>Global Testing Laboratory Directory</p>
+    <p style="font-size: 1rem; margin-top: 0.5rem; opacity: 0.85;">
+      Oil & Gas • Pharmaceutical • Biotech • Environmental • Materials Testing
+    </p>
+  </header>
+
+  <main>
+    <!-- Stats Section -->
+    <section>
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-number">{totalCategories}</div>
+          <div class="stat-label">Testing Categories</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{totalListings}</div>
+          <div class="stat-label">Verified Labs</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">URL Verified</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Verified Listings Section -->
+    <section>
+      <h2>Verified Testing Laboratories</h2>
+      {error && <p style="color: red;">Error loading listings: {error.message}</p>}
+      {listings && listings.length > 0 ? (
+        <div style="display: grid; gap: 1.5rem;">
+          {listings.map((lab) => (
+            <div style="border: 2px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; transition: all 0.3s ease;" 
+                 onmouseover="this.style.borderColor='#667eea'; this.style.boxShadow='0 4px 12px rgba(102,126,234,0.2)'"
+                 onmouseout="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none'">
+              <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                <div>
+                  <h3 style="color: #667eea; font-size: 1.5rem; margin-bottom: 0.5rem;">{lab.business_name}</h3>
+                  {lab.category && <span style="background: #f0f0f0; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.85rem; color: #555;">{lab.category}</span>}
+                </div>
+                {lab.website_verified && (
+                  <span style="background: #4caf50; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600;">
+                    ✓ Verified
+                  </span>
+                )}
+              </div>
+              {lab.description && (
+                <p style="color: #666; margin-bottom: 1rem; line-height: 1.6;">{lab.description}</p>
+              )}
+              <div style="display: grid; gap: 0.5rem; color: #555; font-size: 0.95rem;">
+                {lab.address && (
+                  <div style="display: flex; gap: 0.5rem;">
+                    <span style="color: #667eea; font-weight: 600;">📍</span>
+                    <span>{lab.address}</span>
+                  </div>
+                )}
+                {lab.phone && (
+                  <div style="display: flex; gap: 0.5rem;">
+                    <span style="color: #667eea; font-weight: 600;">📞</span>
+                    <span>{lab.phone}</span>
+                  </div>
+                )}
+                {lab.email && (
+                  <div style="display: flex; gap: 0.5rem;">
+                    <span style="color: #667eea; font-weight: 600;">✉️</span>
+                    <a href={`mailto:${lab.email}`} style="color: #667eea; text-decoration: none;">{lab.email}</a>
+                  </div>
+                )}
+                {lab.website && (
+                  <div style="display: flex; gap: 0.5rem;">
+                    <span style="color: #667eea; font-weight: 600;">🌐</span>
+                    <a href={lab.website} target="_blank" rel="noopener noreferrer" style="color: #667eea; text-decoration: none;">{lab.website}</a>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p style="text-align: center; color: #666; margin-top: 2rem;">
+          No listings available yet. Database is ready to receive data from automated scrapers.
+        </p>
+      )}
+    </section>
+
+    <!-- Categories Section -->
+    <section>
+      <h2>Browse by Category</h2>
+      <div class="category-grid">
+        {categories.map((category) => (
+          <div class="category-card">
+            <h3>{category}</h3>
+            <p>{listings.filter(l => l.category === category).length} verified labs</p>
+          </div>
+        ))}
+      </div>
+      {categories.length === 0 && (
+        <p style="text-align: center; color: #666; margin-top: 2rem;">
+          Categories will appear as listings are added.
+        </p>
+      )}
+    </section>
+
+    <!-- Locations Section -->
+    <section>
+      <h2>Global Coverage</h2>
+      <p style="margin-bottom: 1rem; color: #666;">
+        Testing laboratories verified and ready to serve you worldwide
+      </p>
+      <div class="location-list">
+        {locations.map((location) => (
+          <div class="location-tag">{location}</div>
+        ))}
+      </div>
+      {locations.length === 0 && (
+        <p style="text-align: center; color: #666; margin-top: 1rem;">
+          Location coverage will expand as more laboratories are added.
+        </p>
+      )}
+    </section>
+
+    <!-- CTA Section -->
+    <section style="text-align: center; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+      <h2 style="color: #333;">List Your Laboratory</h2>
+      <p style="margin: 1rem 0; color: #555; font-size: 1.1rem;">
+        Join our directory and connect with clients seeking testing services
+      </p>
+      <a href="#" class="cta-button">Get Started Free</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 TSTR.site - Global Testing Laboratory Directory</p>
+    <p style="margin-top: 0.5rem; opacity: 0.8; font-size: 0.9rem;">
+      Connecting industries with certified testing laboratories worldwide
+    </p>
+  </footer>
+</body>
+</html>
