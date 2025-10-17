@@ -1,0 +1,99 @@
+╔══════════════════════════════════════════════════════════════╗
+║           TSTR.SITE - OPTIMISED SETUP COMPLETE               ║
+║                  Quick Reference Card                        ║
+╚══════════════════════════════════════════════════════════════╝
+
+📋 LOAD THESE 3 FILES (Always)
+═══════════════════════════════════════════════════════════════
+ ✅ START_HERE.md                    ← Read first!
+ ✅ PROJECT_STATUS.md                ← Current state
+ ✅ DEPLOYMENT_READY_SUMMARY.md      ← What's next
+
+
+🚀 QUICK START (Every Session)
+═══════════════════════════════════════════════════════════════
+Say: "Load START_HERE.md, PROJECT_STATUS.md, and 
+      DEPLOYMENT_READY_SUMMARY.md. Tell me current status."
+
+
+💰 TOKEN SAVINGS
+═══════════════════════════════════════════════════════════════
+Before:  120K tokens (45 files)
+After:    50K tokens (3 files)
+Saved:    70K tokens (58% reduction)
+
+
+📊 CURRENT PROJECT STATE (Oct 17, 2025)
+═══════════════════════════════════════════════════════════════
+Backend:   ✅ DEPLOYED (3 Cloud Functions)
+Scrapers:  ✅ AUTOMATED (every 3 days @ 2am)
+Database:  ✅ OPERATIONAL (19 verified listings)
+Frontend:  ⏳ READY TO DEPLOY (Netlify)
+Cost:      $1.04/month
+
+
+🎯 NEXT ACTION
+═══════════════════════════════════════════════════════════════
+Deploy website to Netlify (see DEPLOY_NOW.md)
+Estimated time: 15 minutes
+Estimated cost: $0 (free tier)
+
+
+🔧 CLEANUP (Do Once)
+═══════════════════════════════════════════════════════════════
+cd "C:\Users\alber\OneDrive\Documents\.WORK\TSTR.site"
+.\cleanup-docs.ps1
+
+
+📁 PROJECT STRUCTURE
+═══════════════════════════════════════════════════════════════
+Level 1: START_HERE, STATUS, SUMMARY       ← Load these
+Level 2: AGENT_PROTOCOL, objectives docs   ← If needed
+Level 3: Reference docs                    ← When needed
+Level 4: archive/                          ← Don't load
+
+
+🤖 FOR AGENTS (Simple Rules)
+═══════════════════════════════════════════════════════════════
+1. Read START_HERE first
+2. Check PROJECT_STATUS for state
+3. Make changes
+4. Update PROJECT_STATUS
+5. Log in handoff_core.md
+
+
+💡 FOR YOU (Quick Commands)
+═══════════════════════════════════════════════════════════════
+Check status:
+  "What's the current state?"
+
+See what's next:
+  "What should we work on according to DEPLOYMENT_READY_SUMMARY?"
+
+Check costs:
+  "What are current monthly costs?"
+
+Before decisions:
+  "Any blockers in PROJECT_STATUS?"
+
+
+✅ BENEFITS
+═══════════════════════════════════════════════════════════════
+ ✓ 70K tokens saved per session (58%)
+ ✓ 5 min agent onboarding (vs 30 min)
+ ✓ Clear navigation
+ ✓ Single source of truth
+ ✓ Better multi-agent sync
+
+
+📞 NEED HELP?
+═══════════════════════════════════════════════════════════════
+Technical:     PROJECT_REFERENCE.md
+Deployment:    DEPLOY_NOW.md
+Setup:         CLAUDE_SETUP_OPTIMISED.md
+Visual guide:  DOCUMENT_HIERARCHY_VISUAL.md
+
+
+╔══════════════════════════════════════════════════════════════╗
+║  PIN THIS CARD - Use it to start every session!             ║
+╚══════════════════════════════════════════════════════════════╝

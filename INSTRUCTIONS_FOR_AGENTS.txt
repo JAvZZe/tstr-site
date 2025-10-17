@@ -1,0 +1,33 @@
+TSTR.SITE - INSTRUCTIONS FOR ALL AGENTS
+
+We aim to stay within the free pricing tier of everything and create fast the leanest multi niche directory site so that we can start to generate income, which we can use to upgrade and improve.
+
+TARGET: Global to local directory of testing and test-related services/products for high-margin specialist industries that are underserviced (oil & gas pipeline testing, pharma lab testing, biotech, etc.)
+
+TECH STACK: Custom site (not WordPress) - Astro + React + Google Cloud Functions + Supabase
+
+APPROACH: MVP first → generate income → improve/pivot
+
+CONSTRAINT: FREE TIERS ONLY - Currently $1.04/month ✅
+
+MANDATORY PROTOCOL (Every Session):
+1. Read START_HERE.md first
+2. Check PROJECT_STATUS.md  
+3. Review handoff_core.md (last 100 lines)
+4. Do work (one feature at a time)
+5. Update PROJECT_STATUS.md
+6. Log session in handoff_core.md
+
+USER STYLE (Non-technical, AuDHD):
+- Terse, factual, no fluff
+- Critique bad ideas directly
+- OODA loop + Pareto 80/20
+- Quick validation, fast pivots
+
+CURRENT STATUS:
+✅ Backend deployed & automated
+⏳ Frontend ready for Netlify deploy  
+✅ Database operational (19 listings)
+💰 $1.04/month (within free tier)
+
+CRITICAL: Test before deploying, stay in free tiers, update docs after changes, one feature at a time.

@@ -1,0 +1,98 @@
+✅ AGENT CONTEXT FILES - QUICK SETUP GUIDE
+
+═══════════════════════════════════════════════════════════════
+
+🎯 WHAT TO LOAD IN CLAUDE DESKTOP
+───────────────────────────────────────────────────────────────
+
+INSTRUCTIONS Panel (Copy/paste this):
+┌─────────────────────────────────────────┐
+│ Content from: INSTRUCTIONS_FOR_AGENTS.txt│
+│ (34 lines - protocol + constraints)    │
+└─────────────────────────────────────────┘
+
+FILES Panel (Click + to add these 4):
+┌─────────────────────────────────────────┐
+│ 1. PROJECT_CONTEXT_LOAD_EVERY_SESSION.txt│
+│ 2. START_HERE.md                        │
+│ 3. PROJECT_STATUS.md                    │
+│ 4. DEPLOYMENT_READY_SUMMARY.md          │
+└─────────────────────────────────────────┘
+
+Total tokens: ~54K (28% capacity)
+
+═══════════════════════════════════════════════════════════════
+
+📋 FILE DESCRIPTIONS
+───────────────────────────────────────────────────────────────
+
+INSTRUCTIONS_FOR_AGENTS.txt (34 lines)
+→ Ultra-compact protocol for Instructions panel
+→ Contains: goals, constraints, protocol, user style
+
+PROJECT_CONTEXT_LOAD_EVERY_SESSION.txt (53 lines)
+→ Condensed protocol for Files panel
+→ Contains: 6-step protocol, rules, current state
+
+START_HERE.md (91 lines)
+→ Navigation hub
+→ Links to all core documents
+
+PROJECT_STATUS.md (507 lines)
+→ Single source of truth
+→ Current deployment state, costs, issues
+
+DEPLOYMENT_READY_SUMMARY.md (~150 lines)
+→ What's deployed, what's next
+→ Step-by-step deployment guides
+
+═══════════════════════════════════════════════════════════════
+
+✅ SETUP STEPS (5 minutes total)
+───────────────────────────────────────────────────────────────
+
+Step 1: Add Instructions (1 min)
+1. Open Claude Desktop
+2. Find "Instructions" panel (top area)
+3. Open: INSTRUCTIONS_FOR_AGENTS.txt
+4. Copy all content
+5. Paste into Instructions panel
+
+Step 2: Load Files (2 min)
+1. Find "Files" panel in Claude Desktop
+2. Click [+] button
+3. Navigate to project folder
+4. Add 4 files listed above
+5. Confirm files appear in panel
+
+Step 3: Test Setup (1 min)
+Start new chat and ask:
+"Read loaded files and tell me current project state"
+
+Agent should immediately know:
+✓ Backend deployed & automated
+✓ Frontend ready for Netlify
+✓ Cost: $1.04/month
+✓ Next: Deploy website
+
+═══════════════════════════════════════════════════════════════
+
+📊 RESULTS
+───────────────────────────────────────────────────────────────
+
+Before: 120K tokens (45 files), 30 min onboarding
+After:   54K tokens (4 files), instant onboarding
+Savings: 66K tokens (55%), 30 minutes per session
+
+═══════════════════════════════════════════════════════════════
+
+🎊 BENEFITS
+───────────────────────────────────────────────────────────────
+✓ Every agent auto-loaded with full context
+✓ Perfect continuity between agents
+✓ No manual explanations needed
+✓ Consistent protocol adherence
+✓ Cost awareness built-in
+✓ Style preferences respected
+
+═══════════════════════════════════════════════════════════════

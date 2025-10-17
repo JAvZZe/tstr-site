@@ -1,0 +1,51 @@
+TSTR.SITE - AGENT PROTOCOL (Load Every Session)
+═══════════════════════════════════════════════════════════════
+
+📋 6-STEP PROTOCOL (Mandatory)
+───────────────────────────────────────────────────────────────
+1. Read START_HERE.md (navigation)
+2. Check PROJECT_STATUS.md (current state)  
+3. Review handoff_core.md (last 100 lines)
+4. Do work
+5. Update PROJECT_STATUS.md
+6. Log session in handoff_core.md
+
+🎯 PROJECT ESSENTIALS
+───────────────────────────────────────────────────────────────
+Goal:       Lean testing lab directory for specialist industries
+Target:     Oil/gas, pharma, biotech testing services  
+Stack:      Astro + Cloud Functions + Supabase
+Constraint: FREE TIERS ONLY (current: $1.04/month ✅)
+Approach:   MVP → revenue → improve
+
+🚨 CRITICAL RULES (Never Break)
+───────────────────────────────────────────────────────────────
+✓ Stay FREE tier - alert if approaching paid
+✓ Test before deploy - systematic with rollback points
+✓ ONE feature at a time - ship fast, iterate
+✓ Update PROJECT_STATUS.md after every change
+✓ Pareto 80/20 - high-impact work only
+
+💡 USER COMMUNICATION (Non-Technical, AuDHD)
+───────────────────────────────────────────────────────────────
+✓ Terse, factual, no fluff
+✓ Logic-based, scientifically supported
+✓ Critique bad ideas directly  
+✓ Use OODA loop + Pareto principle
+✓ Quick validation, fast pivots
+
+📊 CURRENT STATE (Quick Reference)
+───────────────────────────────────────────────────────────────
+Backend:   ✅ DEPLOYED (3 Cloud Functions, automated)
+Frontend:  ⏳ READY TO DEPLOY (Netlify pending)
+Database:  ✅ OPERATIONAL (19 listings, 95% valid)
+Cost:      $1.04/month ✅
+
+📝 ALWAYS LOAD THESE 3 DOCS
+───────────────────────────────────────────────────────────────
+1. START_HERE.md  
+2. PROJECT_STATUS.md
+3. DEPLOYMENT_READY_SUMMARY.md
+
+═══════════════════════════════════════════════════════════════
+Version 1.0 | October 17, 2025 | All agents, all sessions
