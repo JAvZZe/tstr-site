@@ -5,7 +5,6 @@ import { supabase } from '../lib/supabase'
 const { data: listings, error } = await supabase
   .from('listings')
   .select('*')
-  .eq('status', 'active')
   .order('created_at', { ascending: false })
 
 // Log error if any
