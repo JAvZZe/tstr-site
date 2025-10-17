@@ -13,6 +13,17 @@ if (error) {
   console.error('Supabase error:', error)
 }
 
+// Fetch all categories from the database
+const { data: allCategories, error: categoriesError } = await supabase
+  .from('categories')
+  .select('*')
+  .order('name', { ascending: true });
+
+// Log error if any
+if (categoriesError) {
+  console.error('Supabase categories error:', categoriesError);
+}
+
 // Get unique categories from listings
 const categories = listings ? [...new Set(listings.map(l => l.category))].filter(Boolean) : []
 
@@ -284,14 +295,14 @@ const totalCategories = categories.length
     <section>
       <h2>Browse by Category</h2>
       <div class="category-grid">
-        {categories.map((category) => (
+        {allCategories && allCategories.map((category) => (
           <div class="category-card">
-            <h3>{category}</h3>
-            <p>{listings.filter(l => l.category === category).length} verified labs</p>
+            <h3>{category.name}</h3>
+            <p>{listings.filter(l => l.category_id === category.id).length} verified labs</p>
           </div>
         ))}
       </div>
-      {categories.length === 0 && (
+      {allCategories && allCategories.length === 0 && (
         <p style="text-align: center; color: #666; margin-top: 2rem;">
           Categories will appear as listings are added.
         </p>
