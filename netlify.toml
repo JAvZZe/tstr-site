@@ -5,7 +5,7 @@
   base = "web/tstr-frontend"
 
   # Build command: The command to run to build the site.
-  command = "npm run build"
+  command = "printenv && npm run build"
 
   # Publish directory: The folder containing the built website, relative to the base directory.
   publish = "dist"
