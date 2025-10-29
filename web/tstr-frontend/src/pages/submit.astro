@@ -1,0 +1,234 @@
+---
+// Submit page for company listings
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>List Your Company - TSTR Hub</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .form-container {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #667eea;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .required {
+      color: #e74c3c;
+    }
+
+    .submit-button {
+      background: #667eea;
+      color: white;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    .submit-button:hover {
+      background: #764ba2;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .back-link:hover {
+      color: #764ba2;
+    }
+
+    footer {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+    }
+
+    .info-text {
+      background: #f0f0f0;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      color: #555;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>List Your Company</h1>
+    <p>Join TSTR Hub and connect with clients seeking testing services</p>
+  </header>
+
+  <main>
+    <a href="/" class="back-link">← Back to Directory</a>
+
+    <div class="form-container">
+      <div class="info-text">
+        Complete the form below to list your testing laboratory or service on TSTR Hub.
+        All fields marked with <span class="required">*</span> are required.
+      </div>
+
+      <form id="submitForm">
+        <div class="form-group">
+          <label for="business_name">Company Name <span class="required">*</span></label>
+          <input type="text" id="business_name" name="business_name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="category">Category <span class="required">*</span></label>
+          <select id="category" name="category" required>
+            <option value="">Select a category</option>
+            <option value="Oil & Gas Testing">Oil & Gas Testing</option>
+            <option value="Pharmaceutical Testing">Pharmaceutical Testing</option>
+            <option value="Biotech Testing">Biotech Testing</option>
+            <option value="Environmental Testing">Environmental Testing</option>
+            <option value="Materials Testing">Materials Testing</option>
+            <option value="Chemical Analysis">Chemical Analysis</option>
+            <option value="Food Safety Testing">Food Safety Testing</option>
+            <option value="Water Quality Testing">Water Quality Testing</option>
+            <option value="Microbiological Testing">Microbiological Testing</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="website">Website <span class="required">*</span></label>
+          <input type="url" id="website" name="website" placeholder="https://example.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Contact Email <span class="required">*</span></label>
+          <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone">
+        </div>
+
+        <div class="form-group">
+          <label for="address">Full Address <span class="required">*</span></label>
+          <input type="text" id="address" name="address" placeholder="City, Country" required>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Company Profile</label>
+          <textarea id="description" name="description" placeholder="Tell us about your company, services, certifications, specializations, and any additional information..."></textarea>
+        </div>
+
+        <button type="submit" class="submit-button">Submit Listing</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 TSTR Hub - Specialist Testing Services, Products and Solutions Directory</p>
+  </footer>
+
+  <script>
+    document.getElementById('submitForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // TODO: Implement actual form submission to Supabase
+      alert('Thank you for your submission! Your listing will be reviewed and added to our directory shortly.');
+
+      // For now, just log the form data
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData);
+      console.log('Form submission:', data);
+
+      // Redirect back to home after 2 seconds
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 2000);
+    });
+  </script>
+</body>
+</html>

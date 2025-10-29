@@ -60,6 +60,26 @@ const totalCategories = categories.length
       color: white;
       padding: 3rem 2rem;
       text-align: center;
+      position: relative;
+    }
+
+    .header-cta {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      background: white;
+      color: #667eea;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .header-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
     
     header h1 {
@@ -205,6 +225,7 @@ const totalCategories = categories.length
 </head>
 <body>
   <header>
+    <a href="/submit" class="header-cta">Get Started Free</a>
     <h1>TSTR Hub</h1>
     <p>Specialist Testing Services, Products and Solutions Directory</p>
     <p style="font-size: 1rem; margin-top: 0.5rem; opacity: 0.85;">
@@ -329,11 +350,11 @@ const totalCategories = categories.length
 
     <!-- CTA Section -->
     <section style="text-align: center; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
-      <h2 style="color: #333;">List Your Laboratory</h2>
+      <h2 style="color: #333;">List Your Company</h2>
       <p style="margin: 1rem 0; color: #555; font-size: 1.1rem;">
         Join our directory and connect with clients seeking testing services
       </p>
-      <a href="#" class="cta-button">Get Started Free</a>
+      <a href="/submit" class="cta-button">Get Started Free</a>
     </section>
   </main>
 
