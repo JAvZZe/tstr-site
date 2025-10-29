@@ -1,22 +1,22 @@
 ---
 import { supabase } from '../../../lib/supabase'
 
-// Extract city from address
-const extractCity = (address) => {
-  if (!address) return null
-  const parts = address.split(',').map(p => p.trim()).filter(p => p.length > 0)
-  if (parts.length < 2) return parts[0]
-  if (parts.length >= 3) {
-    const potentialCity = parts[parts.length - 3]
-    if (!/^\d+$/.test(potentialCity) && !/^[A-Z0-9\s-]{2,10}$/.test(potentialCity)) {
-      return potentialCity
-    }
-  }
-  return parts[parts.length - 2]
-}
-
 // Get all listings to generate static paths
 export async function getStaticPaths() {
+  // Extract city from address
+  const extractCity = (address) => {
+    if (!address) return null
+    const parts = address.split(',').map(p => p.trim()).filter(p => p.length > 0)
+    if (parts.length < 2) return parts[0]
+    if (parts.length >= 3) {
+      const potentialCity = parts[parts.length - 3]
+      if (!/^\d+$/.test(potentialCity) && !/^[A-Z0-9\s-]{2,10}$/.test(potentialCity)) {
+        return potentialCity
+      }
+    }
+    return parts[parts.length - 2]
+  }
+
   const { data: listings } = await supabase
     .from('listings')
     .select('*')
@@ -34,6 +34,20 @@ export async function getStaticPaths() {
 
 const { city } = Astro.params
 const { cityName } = Astro.props
+
+// Extract city from address (reused from getStaticPaths)
+const extractCity = (address) => {
+  if (!address) return null
+  const parts = address.split(',').map(p => p.trim()).filter(p => p.length > 0)
+  if (parts.length < 2) return parts[0]
+  if (parts.length >= 3) {
+    const potentialCity = parts[parts.length - 3]
+    if (!/^\d+$/.test(potentialCity) && !/^[A-Z0-9\s-]{2,10}$/.test(potentialCity)) {
+      return potentialCity
+    }
+  }
+  return parts[parts.length - 2]
+}
 
 // Fetch all listings for this city
 const { data: allListings } = await supabase

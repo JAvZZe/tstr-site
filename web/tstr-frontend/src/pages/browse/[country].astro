@@ -1,21 +1,21 @@
 ---
 import { supabase } from '../../lib/supabase'
 
-// Extract country from address
-const extractCountry = (address) => {
-  if (!address) return null
-  const parts = address.split(',').map(p => p.trim()).filter(p => p.length > 0)
-  if (parts.length === 0) return null
-  let country = parts[parts.length - 1]
-  if (/^\d+$/.test(country) && parts.length > 1) {
-    country = parts[parts.length - 2]
-  }
-  country = country.replace(/\s+\d{4,}$/g, '').trim()
-  return country
-}
-
 // Get all listings to generate static paths
 export async function getStaticPaths() {
+  // Extract country from address
+  const extractCountry = (address) => {
+    if (!address) return null
+    const parts = address.split(',').map(p => p.trim()).filter(p => p.length > 0)
+    if (parts.length === 0) return null
+    let country = parts[parts.length - 1]
+    if (/^\d+$/.test(country) && parts.length > 1) {
+      country = parts[parts.length - 2]
+    }
+    country = country.replace(/\s+\d{4,}$/g, '').trim()
+    return country
+  }
+
   const { data: listings } = await supabase
     .from('listings')
     .select('*')
@@ -33,6 +33,19 @@ export async function getStaticPaths() {
 
 const { country } = Astro.params
 const { countryName } = Astro.props
+
+// Extract country from address (reused from getStaticPaths)
+const extractCountry = (address) => {
+  if (!address) return null
+  const parts = address.split(',').map(p => p.trim()).filter(p => p.length > 0)
+  if (parts.length === 0) return null
+  let country = parts[parts.length - 1]
+  if (/^\d+$/.test(country) && parts.length > 1) {
+    country = parts[parts.length - 2]
+  }
+  country = country.replace(/\s+\d{4,}$/g, '').trim()
+  return country
+}
 
 // Fetch all listings for this country
 const { data: allListings } = await supabase
