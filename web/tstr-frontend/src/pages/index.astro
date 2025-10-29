@@ -27,8 +27,14 @@ if (categoriesError) {
 // Get unique categories from listings
 const categories = listings ? [...new Set(listings.map(l => l.category))].filter(Boolean) : []
 
-// Get unique locations from listings
-const locations = listings ? [...new Set(listings.map(l => l.address))].filter(Boolean).slice(0, 5) : []
+// Get unique locations from listings (extract countries/regions from addresses)
+const extractCountry = (address) => {
+  if (!address) return null
+  // Split by comma and take last part (typically country)
+  const parts = address.split(',').map(p => p.trim())
+  return parts[parts.length - 1]
+}
+const locations = listings ? [...new Set(listings.map(l => extractCountry(l.address)))].filter(Boolean).slice(0, 8) : []
 
 // Count stats
 const totalListings = listings?.length || 0
@@ -245,13 +251,31 @@ const totalCategories = categories.length
         </div>
         <div class="stat-card">
           <div class="stat-number">{totalListings}</div>
-          <div class="stat-label">Verified Labs</div>
+          <div class="stat-label">Verified Listings</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">100%</div>
           <div class="stat-label">URL Verified</div>
         </div>
       </div>
+    </section>
+
+    <!-- International Coverage Section -->
+    <section>
+      <h2>International Coverage</h2>
+      <p style="margin-bottom: 1rem; color: #666;">
+        Testing service providers verified and ready to serve you in select markets internationally
+      </p>
+      <div class="location-list">
+        {locations.map((location) => (
+          <div class="location-tag">{location}</div>
+        ))}
+      </div>
+      {locations.length === 0 && (
+        <p style="text-align: center; color: #666; margin-top: 1rem;">
+          International coverage will expand as more providers are added.
+        </p>
+      )}
     </section>
 
     <!-- Verified Listings Section -->
@@ -328,24 +352,6 @@ const totalCategories = categories.length
       {allCategories && allCategories.length === 0 && (
         <p style="text-align: center; color: #666; margin-top: 2rem;">
           Categories will appear as listings are added.
-        </p>
-      )}
-    </section>
-
-    <!-- Locations Section -->
-    <section>
-      <h2>Global Coverage</h2>
-      <p style="margin-bottom: 1rem; color: #666;">
-        Testing laboratories verified and ready to serve you worldwide
-      </p>
-      <div class="location-list">
-        {locations.map((location) => (
-          <div class="location-tag">{location}</div>
-        ))}
-      </div>
-      {locations.length === 0 && (
-        <p style="text-align: center; color: #666; margin-top: 1rem;">
-          Location coverage will expand as more laboratories are added.
         </p>
       )}
     </section>
