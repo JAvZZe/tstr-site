@@ -27,13 +27,26 @@ if (categoriesError) {
 // Get unique categories from listings
 const categories = listings ? [...new Set(listings.map(l => l.category))].filter(Boolean) : []
 
-// Get unique locations from listings (extract countries/regions from addresses)
+// Get unique countries from listings (extract from address last part)
 const extractCountry = (address) => {
   if (!address) return null
-  // Split by comma and take last part (typically country)
-  const parts = address.split(',').map(p => p.trim())
-  return parts[parts.length - 1]
+  const parts = address.split(',').map(p => p.trim()).filter(p => p.length > 0)
+  if (parts.length === 0) return null
+
+  // Last part is usually country
+  let country = parts[parts.length - 1]
+
+  // If last part is only numbers (postal code), use second-to-last
+  if (/^\d+$/.test(country) && parts.length > 1) {
+    country = parts[parts.length - 2]
+  }
+
+  // Clean up common postal code patterns at the end
+  country = country.replace(/\s+\d{4,}$/g, '').trim()
+
+  return country
 }
+
 const locations = listings ? [...new Set(listings.map(l => extractCountry(l.address)))].filter(Boolean).slice(0, 8) : []
 
 // Count stats
