@@ -213,22 +213,64 @@
   </footer>
 
   <script>
-    document.getElementById('submitForm').addEventListener('submit', function(e) {
-      e.preventDefault();
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-      // TODO: Implement actual form submission to Supabase
-      alert('Thank you for your submission! Your listing will be reviewed and added to our directory shortly.');
+    // Initialize Supabase client (using public credentials)
+    const supabaseUrl = 'https://haimjeaetrsaauitrhfy.supabase.co'
+    const supabaseKey = 'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO'
+    const supabase = createClient(supabaseUrl, supabaseKey)
 
-      // For now, just log the form data
-      const formData = new FormData(e.target);
-      const data = Object.fromEntries(formData);
-      console.log('Form submission:', data);
+    const form = document.getElementById('submitForm')
+    const submitButton = form.querySelector('.submit-button')
 
-      // Redirect back to home after 2 seconds
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 2000);
-    });
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault()
+
+      // Disable button and show loading state
+      submitButton.disabled = true
+      submitButton.textContent = 'Submitting...'
+
+      try {
+        // Get form data
+        const formData = new FormData(e.target)
+        const data = Object.fromEntries(formData)
+
+        // Insert into Supabase
+        const { data: result, error } = await supabase
+          .from('listings')
+          .insert([{
+            business_name: data.business_name,
+            category: data.category,
+            website: data.website,
+            email: data.email,
+            phone: data.phone || null,
+            address: data.address,
+            description: data.description || null,
+            status: 'pending',
+            website_verified: false,
+            created_at: new Date().toISOString()
+          }])
+          .select()
+
+        if (error) throw error
+
+        // Success
+        alert('✓ Thank you! Your listing has been submitted successfully.\n\nOur team will review it within 24-48 hours and it will appear on the directory once approved.')
+
+        // Redirect to home
+        setTimeout(() => {
+          window.location.href = '/'
+        }, 2000)
+
+      } catch (error) {
+        console.error('Submission error:', error)
+        alert('❌ Error submitting your listing. Please try again or contact support.\n\nError: ' + error.message)
+
+        // Re-enable button
+        submitButton.disabled = false
+        submitButton.textContent = 'Submit Listing'
+      }
+    })
   </script>
 </body>
 </html>
