@@ -281,7 +281,7 @@ const totalCategories = categories.length
       </p>
       <div class="location-list">
         {locations.map((location) => (
-          <div class="location-tag">{location}</div>
+          <a href={`/browse/${location.toLowerCase().replace(/\s+/g, '-')}`} class="location-tag" style="text-decoration: none; cursor: pointer;">{location}</a>
         ))}
       </div>
       {locations.length === 0 && (
@@ -291,64 +291,13 @@ const totalCategories = categories.length
       )}
     </section>
 
-    <!-- Verified Listings Section -->
-    <section>
-      <h2>Verified Testing Laboratories</h2>
-      {error && <p style="color: red;">Error loading listings: {error.message}</p>}
-      {listings && listings.length > 0 ? (
-        <div style="display: grid; gap: 1.5rem;">
-          {listings.map((lab) => (
-            <div style="border: 2px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; transition: all 0.3s ease;" 
-                 onmouseover="this.style.borderColor='#667eea'; this.style.boxShadow='0 4px 12px rgba(102,126,234,0.2)'"
-                 onmouseout="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none'">
-              <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
-                <div>
-                  <h3 style="color: #667eea; font-size: 1.5rem; margin-bottom: 0.5rem;">{lab.business_name}</h3>
-                  {lab.category && <span style="background: #f0f0f0; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.85rem; color: #555;">{lab.category}</span>}
-                </div>
-                {lab.website_verified && (
-                  <span style="background: #4caf50; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600;">
-                    ✓ Verified
-                  </span>
-                )}
-              </div>
-              {lab.description && (
-                <p style="color: #666; margin-bottom: 1rem; line-height: 1.6;">{lab.description}</p>
-              )}
-              <div style="display: grid; gap: 0.5rem; color: #555; font-size: 0.95rem;">
-                {lab.address && (
-                  <div style="display: flex; gap: 0.5rem;">
-                    <span style="color: #667eea; font-weight: 600;">📍</span>
-                    <span>{lab.address}</span>
-                  </div>
-                )}
-                {lab.phone && (
-                  <div style="display: flex; gap: 0.5rem;">
-                    <span style="color: #667eea; font-weight: 600;">📞</span>
-                    <span>{lab.phone}</span>
-                  </div>
-                )}
-                {lab.email && (
-                  <div style="display: flex; gap: 0.5rem;">
-                    <span style="color: #667eea; font-weight: 600;">✉️</span>
-                    <a href={`mailto:${lab.email}`} style="color: #667eea; text-decoration: none;">{lab.email}</a>
-                  </div>
-                )}
-                {lab.website && (
-                  <div style="display: flex; gap: 0.5rem;">
-                    <span style="color: #667eea; font-weight: 600;">🌐</span>
-                    <a href={lab.website} target="_blank" rel="noopener noreferrer" style="color: #667eea; text-decoration: none;">{lab.website}</a>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p style="text-align: center; color: #666; margin-top: 2rem;">
-          No listings available yet. Database is ready to receive data from automated scrapers.
-        </p>
-      )}
+    <!-- Browse Listings CTA -->
+    <section style="text-align: center;">
+      <h2>Browse Verified Testing Laboratories</h2>
+      <p style="margin: 1rem 0 2rem; color: #666; font-size: 1.1rem;">
+        Explore {totalListings} verified testing service providers worldwide
+      </p>
+      <a href="/browse" class="cta-button" style="display: inline-block;">View All Listings</a>
     </section>
 
     <!-- Categories Section -->
@@ -356,10 +305,12 @@ const totalCategories = categories.length
       <h2>Browse by Category</h2>
       <div class="category-grid">
         {allCategories && allCategories.map((category) => (
-          <div class="category-card">
-            <h3>{category.name}</h3>
-            <p>{listings.filter(l => l.category_id === category.id).length} verified labs</p>
-          </div>
+          <a href={`/browse?category=${encodeURIComponent(category.name)}`} style="text-decoration: none; color: inherit;">
+            <div class="category-card">
+              <h3>{category.name}</h3>
+              <p>{listings.filter(l => l.category_id === category.id).length} verified listings</p>
+            </div>
+          </a>
         ))}
       </div>
       {allCategories && allCategories.length === 0 && (

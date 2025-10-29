@@ -1,0 +1,298 @@
+---
+import { supabase } from '../../../lib/supabase'
+
+// Extract city from address
+const extractCity = (address) => {
+  if (!address) return null
+  const parts = address.split(',').map(p => p.trim()).filter(p => p.length > 0)
+  if (parts.length < 2) return parts[0]
+  if (parts.length >= 3) {
+    const potentialCity = parts[parts.length - 3]
+    if (!/^\d+$/.test(potentialCity) && !/^[A-Z0-9\s-]{2,10}$/.test(potentialCity)) {
+      return potentialCity
+    }
+  }
+  return parts[parts.length - 2]
+}
+
+// Get all listings to generate static paths
+export async function getStaticPaths() {
+  const { data: listings } = await supabase
+    .from('listings')
+    .select('*')
+    .eq('status', 'active')
+
+  // Get unique cities
+  const cities = [...new Set(listings?.map(l => extractCity(l.address))).values()].filter(Boolean)
+
+  // Generate paths for each city
+  return cities.map(city => ({
+    params: { city: city.toLowerCase().replace(/\s+/g, '-') },
+    props: { cityName: city }
+  }))
+}
+
+const { city } = Astro.params
+const { cityName } = Astro.props
+
+// Fetch all listings for this city
+const { data: allListings } = await supabase
+  .from('listings')
+  .select('*')
+  .eq('status', 'active')
+  .order('created_at', { ascending: false })
+
+// Filter listings for this city
+const listings = allListings?.filter(l => {
+  const listingCity = extractCity(l.address)
+  return listingCity?.toLowerCase().replace(/\s+/g, '-') === city
+}) || []
+
+const totalListings = listings.length
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Testing Laboratories in {cityName} | TSTR Hub</title>
+  <meta name="description" content="Find {totalListings} verified testing service providers in {cityName}. Oil & Gas, Pharmaceutical, Biotech, Environmental, and Materials Testing laboratories.">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
+     crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+
+    .breadcrumb {
+      margin-top: 1rem;
+      opacity: 0.9;
+    }
+
+    .breadcrumb a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .intro {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .intro h2 {
+      color: #667eea;
+      margin-bottom: 1rem;
+    }
+
+    .listings-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .listing-card {
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .listing-card:hover {
+      border-color: #667eea;
+      box-shadow: 0 4px 12px rgba(102,126,234,0.2);
+      transform: translateY(-2px);
+    }
+
+    .listing-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 1rem;
+    }
+
+    .listing-title {
+      color: #667eea;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .category-badge {
+      background: #f0f0f0;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      color: #555;
+      display: inline-block;
+    }
+
+    .verified-badge {
+      background: #4caf50;
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .listing-description {
+      color: #666;
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .listing-details {
+      display: grid;
+      gap: 0.5rem;
+      color: #555;
+      font-size: 0.95rem;
+    }
+
+    .detail-item {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .detail-icon {
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .detail-item a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .detail-item a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+      margin: 0 1rem;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Testing Laboratories in {cityName}</h1>
+    <p class="breadcrumb">
+      <a href="/">Home</a> / <a href="/browse">Browse</a> / {cityName}
+    </p>
+  </header>
+
+  <main>
+    <div class="intro">
+      <h2>{totalListings} Verified Testing Service Providers</h2>
+      <p>Find accredited testing laboratories in {cityName} for Oil & Gas, Pharmaceutical, Biotech, Environmental, and Materials Testing.</p>
+    </div>
+
+    <div class="listings-grid">
+      {listings.map((lab) => (
+        <div class="listing-card">
+          <div class="listing-header">
+            <div>
+              <h3 class="listing-title">{lab.business_name}</h3>
+              {lab.category && <span class="category-badge">{lab.category}</span>}
+            </div>
+            {lab.website_verified && (
+              <span class="verified-badge">✓ Verified</span>
+            )}
+          </div>
+
+          {lab.description && (
+            <p class="listing-description">{lab.description}</p>
+          )}
+
+          <div class="listing-details">
+            {lab.address && (
+              <div class="detail-item">
+                <span class="detail-icon">📍</span>
+                <span>{lab.address}</span>
+              </div>
+            )}
+            {lab.phone && (
+              <div class="detail-item">
+                <span class="detail-icon">📞</span>
+                <span>{lab.phone}</span>
+              </div>
+            )}
+            {lab.email && (
+              <div class="detail-item">
+                <span class="detail-icon">✉️</span>
+                <a href={`mailto:${lab.email}`}>{lab.email}</a>
+              </div>
+            )}
+            {lab.website && (
+              <div class="detail-item">
+                <span class="detail-icon">🌐</span>
+                <a href={lab.website} target="_blank" rel="noopener noreferrer">{lab.website}</a>
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 TSTR Hub - Specialist Testing Services, Products and Solutions Directory</p>
+    <p style="margin-top: 1rem;">
+      <a href="/">Home</a>
+      <a href="/browse">Browse All</a>
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/submit">List Your Company</a>
+    </p>
+  </footer>
+</body>
+</html>
