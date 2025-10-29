@@ -1,0 +1,6 @@
+# Build Trigger File
+# Updated automatically by GitHub Actions to keep Supabase database active
+# Each commit to this file triggers a Cloudflare Pages rebuild
+
+Initial trigger: 2025-10-29
+Purpose: Prevent Supabase free tier from pausing due to inactivity
