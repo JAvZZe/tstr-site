@@ -1,10 +1,30 @@
 ---
 import { supabase } from '../lib/supabase'
 
-// Fetch all active listings from database  
+// Fetch all active listings with location data from database
 const { data: listings, error } = await supabase
   .from('listings')
-  .select('*')
+  .select(`
+    *,
+    location:location_id (
+      id,
+      name,
+      slug,
+      level,
+      parent:parent_id (
+        id,
+        name,
+        slug,
+        level,
+        parent:parent_id (
+          id,
+          name,
+          slug,
+          level
+        )
+      )
+    )
+  `)
   .eq('status', 'active')
   .order('created_at', { ascending: false })
 
@@ -14,7 +34,7 @@ if (error) {
 }
 
 // Fetch all categories from the database
-const { data: allCategories, error: categoriesError } = await supabase
+const { data: allCategories, error: categoriesError} = await supabase
   .from('categories')
   .select('*')
   .order('name', { ascending: true });
@@ -27,27 +47,31 @@ if (categoriesError) {
 // Get unique categories from listings
 const categories = listings ? [...new Set(listings.map(l => l.category))].filter(Boolean) : []
 
-// Get unique countries from listings (extract from address last part)
-const extractCountry = (address) => {
-  if (!address) return null
-  const parts = address.split(',').map(p => p.trim()).filter(p => p.length > 0)
-  if (parts.length === 0) return null
+// Extract countries from location hierarchy
+const getCountryFromLocation = (location) => {
+  if (!location) return null
 
-  // Last part is usually country
-  let country = parts[parts.length - 1]
-
-  // If last part is only numbers (postal code), use second-to-last
-  if (/^\d+$/.test(country) && parts.length > 1) {
-    country = parts[parts.length - 2]
+  // If this is a country, return it
+  if (location.level === 'country') {
+    return { name: location.name, slug: location.slug }
   }
 
-  // Clean up common postal code patterns at the end
-  country = country.replace(/\s+\d{4,}$/g, '').trim()
+  // Navigate up parent chain to find country
+  let current = location
+  while (current && current.level !== 'country') {
+    current = current.parent
+  }
 
-  return country
+  return current ? { name: current.name, slug: current.slug } : null
 }
 
-const locations = listings ? [...new Set(listings.map(l => extractCountry(l.address)))].filter(Boolean).slice(0, 8) : []
+const locations = listings ?
+  [...new Map(
+    listings
+      .map(l => getCountryFromLocation(l.location))
+      .filter(Boolean)
+      .map(c => [c.slug, c])
+  ).values()].slice(0, 8) : []
 
 // Count stats
 const totalListings = listings?.length || 0
@@ -281,7 +305,7 @@ const totalCategories = categories.length
       </p>
       <div class="location-list">
         {locations.map((location) => (
-          <a href={`/browse/${location.toLowerCase().replace(/\s+/g, '-')}`} class="location-tag" style="text-decoration: none; cursor: pointer;">{location}</a>
+          <a href={`/browse/${location.slug}`} class="location-tag" style="text-decoration: none; cursor: pointer;">{location.name}</a>
         ))}
       </div>
       {locations.length === 0 && (
