@@ -3,62 +3,48 @@ import { supabase } from '../../lib/supabase'
 
 // Get all listings to generate static paths
 export async function getStaticPaths() {
-  // Extract country from address
-  const extractCountry = (address) => {
-    if (!address) return null
-    const parts = address.split(',').map(p => p.trim()).filter(p => p.length > 0)
-    if (parts.length === 0) return null
-    let country = parts[parts.length - 1]
-    if (/^\d+$/.test(country) && parts.length > 1) {
-      country = parts[parts.length - 2]
-    }
-    country = country.replace(/\s+\d{4,}$/g, '').trim()
-    return country
-  }
-
-  const { data: listings } = await supabase
-    .from('listings')
-    .select('*')
-    .eq('status', 'active')
-
-  // Get unique countries
-  const countries = [...new Set(listings?.map(l => extractCountry(l.address))).values()].filter(Boolean)
+  const { data: locations } = await supabase
+    .from('locations')
+    .select('id, name, slug, level')
+    .eq('level', 'country')
 
   // Generate paths for each country
-  return countries.map(country => ({
-    params: { country: country.toLowerCase().replace(/\s+/g, '-') },
-    props: { countryName: country }
-  }))
+  return locations?.map(location => ({
+    params: { country: location.slug },
+    props: { countryName: location.name, countryId: location.id }
+  })) || []
 }
 
 const { country } = Astro.params
-const { countryName } = Astro.props
+const { countryName, countryId } = Astro.props
 
-// Extract country from address (reused from getStaticPaths)
-const extractCountry = (address) => {
-  if (!address) return null
-  const parts = address.split(',').map(p => p.trim()).filter(p => p.length > 0)
-  if (parts.length === 0) return null
-  let country = parts[parts.length - 1]
-  if (/^\d+$/.test(country) && parts.length > 1) {
-    country = parts[parts.length - 2]
-  }
-  country = country.replace(/\s+\d{4,}$/g, '').trim()
-  return country
-}
-
-// Fetch all listings for this country
-const { data: allListings } = await supabase
+// Fetch listings for this country
+const { data: listings } = await supabase
   .from('listings')
-  .select('*')
+  .select(`
+    *,
+    location:location_id (
+      id,
+      name,
+      slug,
+      level,
+      parent:parent_id (
+        id,
+        name,
+        slug,
+        level,
+        parent:parent_id (
+          id,
+          name,
+          slug,
+          level
+        )
+      )
+    )
+  `)
   .eq('status', 'active')
+  .or(`location_id.eq.${countryId},location.parent_id.eq.${countryId},location.parent.parent_id.eq.${countryId}`)
   .order('created_at', { ascending: false })
-
-// Filter listings for this country
-const listings = allListings?.filter(l => {
-  const listingCountry = extractCountry(l.address)
-  return listingCountry?.toLowerCase().replace(/\s+/g, '-') === country
-}) || []
 
 const totalListings = listings.length
 ---
