@@ -1,0 +1,434 @@
+---
+import { supabase } from '../../lib/supabase'
+
+// Generate static paths for all listings at build time
+export async function getStaticPaths() {
+  const { data: listings, error } = await supabase
+    .from('listings')
+    .select('slug')
+    .eq('status', 'active')
+
+  if (error || !listings) {
+    return []
+  }
+
+  return listings.map(listing => ({
+    params: { slug: listing.slug }
+  }))
+}
+
+const { slug } = Astro.params
+
+// Fetch listing with location hierarchy and custom fields
+const { data: listing, error } = await supabase
+  .from('listings')
+  .select(`
+    *,
+    category:category_id (
+      id,
+      name,
+      slug
+    ),
+    location:location_id (
+      id,
+      name,
+      slug,
+      level,
+      parent:parent_id (
+        id,
+        name,
+        slug,
+        level,
+        parent:parent_id (
+          id,
+          name,
+          slug,
+          level
+        )
+      )
+    )
+  `)
+  .eq('slug', slug)
+  .eq('status', 'active')
+  .single()
+
+if (error || !listing) {
+  return Astro.redirect('/browse')
+}
+
+// Fetch custom field values
+const { data: customFieldValues, error: cfError } = await supabase
+  .from('listing_custom_fields')
+  .select(`
+    value,
+    custom_field:custom_field_id (
+      field_name,
+      field_type,
+      field_label,
+      options
+    )
+  `)
+  .eq('listing_id', listing.id)
+
+// Build location breadcrumb
+const getLocationHierarchy = (location) => {
+  if (!location) return []
+  const hierarchy = []
+
+  if (location.parent?.parent?.level === 'country') {
+    hierarchy.push({ name: location.parent.parent.name, slug: location.parent.parent.slug, level: 'country' })
+  }
+  if (location.parent?.level === 'state') {
+    hierarchy.push({ name: location.parent.name, slug: location.parent.slug, level: 'state' })
+  }
+  if (location.level === 'city') {
+    hierarchy.push({ name: location.name, slug: location.slug, level: 'city' })
+  }
+
+  return hierarchy
+}
+
+const locationHierarchy = getLocationHierarchy(listing.location)
+const country = locationHierarchy.find(l => l.level === 'country')
+
+// Format custom fields by type
+const formatFieldValue = (value, fieldType) => {
+  if (fieldType === 'boolean') {
+    return value ? 'Yes' : 'No'
+  }
+  if (fieldType === 'multi_select' && Array.isArray(value)) {
+    return value.join(', ')
+  }
+  if (Array.isArray(value)) {
+    return value.join(', ')
+  }
+  return value
+}
+
+const customFields = customFieldValues?.map(cf => ({
+  name: cf.custom_field?.field_label || cf.custom_field?.field_name || 'Unknown',
+  value: formatFieldValue(cf.value, cf.custom_field?.field_type),
+  type: cf.custom_field?.field_type
+})) || []
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{listing.business_name} | TSTR Hub</title>
+  <meta name="description" content={listing.description}>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
+     crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1.5rem 2rem;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+
+    header a {
+      color: white;
+      text-decoration: none;
+      opacity: 0.9;
+      transition: opacity 0.2s;
+    }
+
+    header a:hover {
+      opacity: 1;
+    }
+
+    .breadcrumb {
+      display: flex;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      opacity: 0.9;
+    }
+
+    .breadcrumb span {
+      opacity: 0.7;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .listing-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .listing-header {
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .listing-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .category-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .info-section {
+      margin-bottom: 2rem;
+    }
+
+    .info-section h2 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 1rem;
+      border-left: 4px solid #667eea;
+      padding-left: 0.75rem;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .info-item {
+      padding: 0.75rem;
+      background: #f9f9f9;
+      border-radius: 6px;
+      border-left: 3px solid #667eea;
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: #666;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+      color: #333;
+      font-size: 1rem;
+    }
+
+    .description {
+      line-height: 1.8;
+      color: #555;
+    }
+
+    .custom-fields {
+      background: linear-gradient(135deg, #f8f9ff 0%, #fff5f8 100%);
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .custom-fields h2 {
+      color: #764ba2;
+      border-left-color: #764ba2;
+    }
+
+    .field-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      background: white;
+      border-radius: 6px;
+      border-left: 3px solid #764ba2;
+    }
+
+    .field-name {
+      font-weight: 600;
+      color: #555;
+    }
+
+    .field-value {
+      color: #333;
+      text-align: right;
+    }
+
+    .disclaimer {
+      background: linear-gradient(135deg, #fff9e6 0%, #ffe8cc 100%);
+      border: 1px solid #ffc107;
+      border-left: 4px solid #ffc107;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #856404;
+    }
+
+    .disclaimer strong {
+      color: #664d03;
+    }
+
+    .back-link {
+      display: inline-block;
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: #764ba2;
+    }
+
+    footer {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 4rem;
+    }
+
+    @media (max-width: 768px) {
+      .listing-title {
+        font-size: 1.5rem;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field-item {
+        flex-direction: column;
+      }
+
+      .field-value {
+        text-align: left;
+        margin-top: 0.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><a href="/">TSTR Hub</a></h1>
+    <div class="breadcrumb">
+      <a href="/">Home</a>
+      <span>›</span>
+      <a href="/browse">Browse</a>
+      {country && (
+        <>
+          <span>›</span>
+          <a href={`/browse/${country.slug}`}>{country.name}</a>
+        </>
+      )}
+      <span>›</span>
+      <span>{listing.business_name}</span>
+    </div>
+  </header>
+
+  <div class="container">
+    <a href="/browse" class="back-link">← Back to Browse</a>
+
+    <div class="listing-card">
+      <div class="listing-header">
+        <h1 class="listing-title">{listing.business_name}</h1>
+        {listing.category?.name && (
+          <div class="category-badge">{listing.category.name}</div>
+        )}
+      </div>
+
+      {listing.description && (
+        <div class="info-section">
+          <h2>About</h2>
+          <p class="description">{listing.description}</p>
+        </div>
+      )}
+
+      <div class="info-section">
+        <h2>Contact Information</h2>
+        <div class="info-grid">
+          {listing.address && (
+            <div class="info-item">
+              <div class="info-label">Address</div>
+              <div class="info-value">{listing.address}</div>
+            </div>
+          )}
+          {listing.phone && (
+            <div class="info-item">
+              <div class="info-label">Phone</div>
+              <div class="info-value"><a href={`tel:${listing.phone}`}>{listing.phone}</a></div>
+            </div>
+          )}
+          {listing.email && (
+            <div class="info-item">
+              <div class="info-label">Email</div>
+              <div class="info-value"><a href={`mailto:${listing.email}`}>{listing.email}</a></div>
+            </div>
+          )}
+          {listing.website && (
+            <div class="info-item">
+              <div class="info-label">Website</div>
+              <div class="info-value"><a href={listing.website} target="_blank" rel="noopener noreferrer">{listing.website}</a></div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {customFields.length > 0 && (
+        <div class="custom-fields">
+          <h2>Certifications & Capabilities</h2>
+          {customFields.map(field => (
+            <div class="field-item">
+              <div class="field-name">{field.name}</div>
+              <div class="field-value">{field.value}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {customFields.length > 0 && (
+        <div class="disclaimer">
+          <strong>⚠️ Disclaimer:</strong> Certifications and capabilities listed are extracted from public databases and have not been independently verified by TSTR.site. We recommend verifying all credentials directly with the testing laboratory and relevant accreditation bodies before engaging services.
+        </div>
+      )}
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 TSTR Hub. All rights reserved.</p>
+  </footer>
+</body>
+</html>

@@ -59,6 +59,19 @@ const cities = Array.from(cityMap.entries()).map(([slug, name]) => ({ slug, name
 const categories = [...new Set(listings?.map(l => l.category)).values()].filter(Boolean).sort()
 
 const totalListings = listings?.length || 0
+
+// Helper functions for filtering
+const extractCountry = (address) => {
+  if (!address) return ''
+  const parts = address.split(',').map(p => p.trim())
+  return parts[parts.length - 1] || ''
+}
+
+const extractCity = (address) => {
+  if (!address) return ''
+  const parts = address.split(',').map(p => p.trim())
+  return parts[0] || ''
+}
 ---
 
 <!DOCTYPE html>
@@ -195,6 +208,16 @@ const totalListings = listings?.length || 0
       font-weight: 600;
     }
 
+    .listing-title a {
+      color: #667eea;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .listing-title a:hover {
+      color: #764ba2;
+    }
+
     .category-badge {
       background: #f0f0f0;
       padding: 0.25rem 0.75rem;
@@ -274,6 +297,45 @@ const totalListings = listings?.length || 0
     .hidden {
       display: none !important;
     }
+
+    .certification-disclaimer {
+      background: linear-gradient(135deg, #fff9e6 0%, #ffe8cc 100%);
+      border: 2px solid #ffc107;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .disclaimer-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      margin-top: 0.25rem;
+    }
+
+    .disclaimer-content {
+      flex: 1;
+    }
+
+    .disclaimer-content p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .certification-disclaimer {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .disclaimer-icon {
+        margin-top: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -321,6 +383,13 @@ const totalListings = listings?.length || 0
       Showing {totalListings} listings
     </div>
 
+    <div class="certification-disclaimer">
+      <div class="disclaimer-icon">⚠️</div>
+      <div class="disclaimer-content">
+        <p><strong>Disclaimer:</strong> Certifications and capabilities listed are extracted from public databases and have not been independently verified by TSTR.site. We recommend verifying all credentials directly with the testing laboratory and relevant accreditation bodies before engaging services.</p>
+      </div>
+    </div>
+
     <div class="listings-grid" id="listings-grid">
       {listings && listings.map((lab) => {
         const country = extractCountry(lab.address)
@@ -330,7 +399,9 @@ const totalListings = listings?.length || 0
           <div class="listing-card" data-country={country} data-city={city} data-category={lab.category}>
             <div class="listing-header">
               <div>
-                <h3 class="listing-title">{lab.business_name}</h3>
+                <h3 class="listing-title">
+                  <a href={`/listing/${lab.slug}`}>{lab.business_name}</a>
+                </h3>
                 {lab.category && <span class="category-badge">{lab.category}</span>}
               </div>
               {lab.website_verified && (
