@@ -1,0 +1,2058 @@
+{
+  "031C4AF0-B0DA-4AD7-BCDE-940DEECDE25E": {
+    "index": 1,
+    "cert": "6754.03",
+    "scope": "Fire Resistance Construction",
+    "category": "construction materials",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"6754.03\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"6754.03\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"031C4AF0-B0DA-4AD7-BCDE-940DEECDE25E\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"6754.03\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Fire\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": false
+  },
+  "07745F0D-416C-4BB1-9CAC-3588866196F3": {
+    "index": 2,
+    "cert": "4356.02",
+    "scope": "Cannabis Testing",
+    "category": "chemical analysis",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"4356.02\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"4356.02\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"07745F0D-416C-4BB1-9CAC-3588866196F3\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"4356.02\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Cannabis\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": false
+  },
+  "09A84789-6D1A-4C35-B656-96FDBD68C0C6": {
+    "index": 3,
+    "cert": "1621.01",
+    "scope": "Calibration",
+    "category": "calibration",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"1621.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"1621.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"09A84789-6D1A-4C35-B656-96FDBD68C0C6\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"1621.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Calibration\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "1106BCD8-2659-41F2-996B-E6A4BF0E302B": {
+    "index": 4,
+    "cert": "2310.02",
+    "scope": "Intertek - Mechanical",
+    "category": "mechanical testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"2310.02\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"2310.02\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"1106BCD8-2659-41F2-996B-E6A4BF0E302B\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"2310.02\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Intertek\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": false
+  },
+  "11FE2BD5-8663-412B-A881-43F3F86414B8": {
+    "index": 5,
+    "cert": "2815.02",
+    "scope": "Toys Testing",
+    "category": "original materials testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"2815.02\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"2815.02\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"11FE2BD5-8663-412B-A881-43F3F86414B8\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"2815.02\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Toys\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": false
+  },
+  "12A618F6-8114-4994-A522-26D9F1AA0986": {
+    "index": 6,
+    "cert": "0363.01",
+    "scope": "Adhesives Plastics",
+    "category": "chemical analysis",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"0363.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"0363.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"12A618F6-8114-4994-A522-26D9F1AA0986\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"0363.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Adhesives\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "12B5296B-1C26-4A2B-9834-86DED1337C27": {
+    "index": 7,
+    "cert": "0214.27",
+    "scope": "Environmental",
+    "category": "environmental",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"0214.27\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"0214.27\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"12B5296B-1C26-4A2B-9834-86DED1337C27\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"0214.27\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Environmental\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": false
+  },
+  "130248C5-EBD2-4BA1-8A85-DD99BC51104F": {
+    "index": 8,
+    "cert": "4950.01",
+    "scope": "RF Microwave Calibration",
+    "category": "calibration",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"4950.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"4950.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"130248C5-EBD2-4BA1-8A85-DD99BC51104F\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"4950.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"RF\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": false
+  },
+  "13AE1E37-EF52-47AA-9BB4-048022563882": {
+    "index": 9,
+    "cert": "1719.06",
+    "scope": "Element Materials - Aerospace",
+    "category": "original materials testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"1719.06\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"1719.06\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"13AE1E37-EF52-47AA-9BB4-048022563882\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"1719.06\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Element Materials\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": false
+  },
+  "17806F1C-4EFA-484D-A34C-0C4438CE34EA": {
+    "index": 10,
+    "cert": "1176.02",
+    "scope": "Mechanical",
+    "category": "mechanical testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"1176.02\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"1176.02\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"17806F1C-4EFA-484D-A34C-0C4438CE34EA\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"1176.02\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Mechanical\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": false
+  },
+  "1D5CD78D-2A8B-4EC2-AFA8-B9C80F0AACAF": {
+    "index": 11,
+    "cert": "3873.01",
+    "scope": "Chemical Petroleum Water",
+    "category": "chemical analysis",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"3873.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"3873.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"1D5CD78D-2A8B-4EC2-AFA8-B9C80F0AACAF\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"3873.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Chemical\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "1E6C92C1-E5BA-4FC9-8C30-0287C8B288AD": {
+    "index": 12,
+    "cert": "4267.02",
+    "scope": "Metallurgy",
+    "category": "metallurgy",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"4267.02\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"4267.02\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"1E6C92C1-E5BA-4FC9-8C30-0287C8B288AD\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"4267.02\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Metallurgy\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "24D14D45-A41B-4FEE-82FE-FEE26EC5ECFA": {
+    "index": 13,
+    "cert": "3329.11",
+    "scope": "Chemical",
+    "category": "chemical analysis",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"3329.11\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"3329.11\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"24D14D45-A41B-4FEE-82FE-FEE26EC5ECFA\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"3329.11\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Chemical\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "2512670B-7B0D-4353-8724-5C9A1F7CF6D9": {
+    "index": 14,
+    "cert": "1873.01",
+    "scope": "Chemical",
+    "category": "chemical analysis",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"1873.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"1873.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"2512670B-7B0D-4353-8724-5C9A1F7CF6D9\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"1873.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Chemical\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "2548EA93-6CD5-4CDB-B794-265A47675446": {
+    "index": 15,
+    "cert": "5580.01",
+    "scope": "Building Products Testing",
+    "category": "original materials testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"5580.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"5580.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"2548EA93-6CD5-4CDB-B794-265A47675446\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"5580.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Building\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "26F78324-8532-4144-A161-F097DE0DE5E1": {
+    "index": 16,
+    "cert": "1032.01",
+    "scope": "Dimensional Calibration",
+    "category": "calibration",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"1032.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"1032.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"26F78324-8532-4144-A161-F097DE0DE5E1\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"1032.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Dimensional\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "2A071EB3-2725-487F-B02F-2D03E2C2F339": {
+    "index": 17,
+    "cert": "1252.01",
+    "scope": "Metal Plating",
+    "category": "metallurgy",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"1252.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"1252.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"2A071EB3-2725-487F-B02F-2D03E2C2F339\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"1252.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Metal\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "2A2DB179-49C9-4810-9B40-7B4A469CD55E": {
+    "index": 18,
+    "cert": "",
+    "scope": "Metallurgy",
+    "category": "metallurgy",
+    "queries": [
+      {
+        "query": "site:a2la.org \"2A2DB179-49C9-4810-9B40-7B4A469CD55E\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "A2LA \"Metallurgy\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "2B874E91-662F-456E-8863-A0BF6274D308": {
+    "index": 19,
+    "cert": "5742.01",
+    "scope": "Construction",
+    "category": "construction materials",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"5742.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"5742.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"2B874E91-662F-456E-8863-A0BF6274D308\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"5742.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Construction\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "30DFB9B1-A082-4723-8233-10231C50C964": {
+    "index": 20,
+    "cert": "",
+    "scope": "Calibration",
+    "category": "calibration",
+    "queries": [
+      {
+        "query": "site:a2la.org \"30DFB9B1-A082-4723-8233-10231C50C964\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "A2LA \"Calibration\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "32EFE4AF-B60E-43E2-B800-41AC00FFA223": {
+    "index": 21,
+    "cert": "7148.02",
+    "scope": "Metallurgy",
+    "category": "metallurgy",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"7148.02\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"7148.02\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"32EFE4AF-B60E-43E2-B800-41AC00FFA223\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"7148.02\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Metallurgy\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "34123416-071F-4049-9ACC-B4E7EEB41237": {
+    "index": 22,
+    "cert": "",
+    "scope": "Metallurgy",
+    "category": "metallurgy",
+    "queries": [
+      {
+        "query": "site:a2la.org \"34123416-071F-4049-9ACC-B4E7EEB41237\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "A2LA \"Metallurgy\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "3E89A197-F258-4B8C-B334-8183DCF06F9B": {
+    "index": 23,
+    "cert": "1719.01",
+    "scope": "Element Materials",
+    "category": "original materials testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"1719.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"1719.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"3E89A197-F258-4B8C-B334-8183DCF06F9B\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"1719.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Element\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "42653955-6E26-43AF-BEF1-02DD1FF1CFED": {
+    "index": 24,
+    "cert": "1123.07",
+    "scope": "Vibration Testing",
+    "category": "mechanical testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"1123.07\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"1123.07\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"42653955-6E26-43AF-BEF1-02DD1FF1CFED\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"1123.07\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Vibration\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "48432716-9AD7-4583-AC9F-133DE39A997C": {
+    "index": 25,
+    "cert": "0078.07",
+    "scope": "Automotive Components",
+    "category": "original materials testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"0078.07\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"0078.07\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"48432716-9AD7-4583-AC9F-133DE39A997C\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"0078.07\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Automotive\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "495FC386-B243-4F51-8577-2B5FC915CE5A": {
+    "index": 26,
+    "cert": "",
+    "scope": "Calibration",
+    "category": "calibration",
+    "queries": [
+      {
+        "query": "site:a2la.org \"495FC386-B243-4F51-8577-2B5FC915CE5A\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "A2LA \"Calibration\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "4D122B72-43F0-43B5-BE91-2AE14F64F095": {
+    "index": 27,
+    "cert": "3329.08",
+    "scope": "Environmental",
+    "category": "environmental",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"3329.08\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"3329.08\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"4D122B72-43F0-43B5-BE91-2AE14F64F095\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"3329.08\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Environmental\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "4F2D1698-48D6-4E25-868E-7A98D7894A7B": {
+    "index": 28,
+    "cert": "2927.01",
+    "scope": "Food Microbiological Chemical",
+    "category": "chemical analysis",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"2927.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"2927.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"4F2D1698-48D6-4E25-868E-7A98D7894A7B\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"2927.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Food\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "50A94EAA-85FB-4DA4-A406-6B9C540CBEA3": {
+    "index": 29,
+    "cert": "3562.01",
+    "scope": "Chemical",
+    "category": "chemical analysis",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"3562.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"3562.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"50A94EAA-85FB-4DA4-A406-6B9C540CBEA3\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"3562.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Chemical\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "64717142-E201-4DDD-B974-DFBA39444EEF": {
+    "index": 30,
+    "cert": "2343.01",
+    "scope": "Petroleum",
+    "category": "petroleum",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"2343.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"2343.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"64717142-E201-4DDD-B974-DFBA39444EEF\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"2343.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Petroleum\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "6976500C-3FCC-44A5-AB51-E146E6A7493C": {
+    "index": 31,
+    "cert": "2387.01",
+    "scope": "Petroleum",
+    "category": "petroleum",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"2387.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"2387.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"6976500C-3FCC-44A5-AB51-E146E6A7493C\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"2387.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Petroleum\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "6B1E7DD3-049B-466E-BE4E-B3FE2435C062": {
+    "index": 32,
+    "cert": "0023.03",
+    "scope": "Geotechnical Engineering",
+    "category": "construction materials",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"0023.03\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"0023.03\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"6B1E7DD3-049B-466E-BE4E-B3FE2435C062\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"0023.03\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Geotechnical\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "6E87B53D-E905-4B05-A324-56579DABC4F7": {
+    "index": 33,
+    "cert": "",
+    "scope": "Construction",
+    "category": "construction materials",
+    "queries": [
+      {
+        "query": "site:a2la.org \"6E87B53D-E905-4B05-A324-56579DABC4F7\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "A2LA \"Construction\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "6EC90935-3F47-4795-8AD3-EE8F7C4A1DFA": {
+    "index": 34,
+    "cert": "0078.01",
+    "scope": "Automotive",
+    "category": "original materials testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"0078.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"0078.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"6EC90935-3F47-4795-8AD3-EE8F7C4A1DFA\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"0078.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Automotive\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "73056B58-28C7-49AE-8BEA-750F3A19EA07": {
+    "index": 35,
+    "cert": "4024.01",
+    "scope": "Nondestructive",
+    "category": "nondestructive testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"4024.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"4024.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"73056B58-28C7-49AE-8BEA-750F3A19EA07\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"4024.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Nondestructive\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "746F757A-985A-4116-A52E-AE5E2DE96A54": {
+    "index": 36,
+    "cert": "",
+    "scope": "Petroleum",
+    "category": "petroleum",
+    "queries": [
+      {
+        "query": "site:a2la.org \"746F757A-985A-4116-A52E-AE5E2DE96A54\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "A2LA \"Petroleum\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "77917E06-92F9-44A7-9B08-AE3073409575": {
+    "index": 37,
+    "cert": "2561.03",
+    "scope": "Medical Device Testing",
+    "category": "original materials testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"2561.03\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"2561.03\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"77917E06-92F9-44A7-9B08-AE3073409575\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"2561.03\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Medical\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "77DA5554-27EC-4936-AB61-DE76DE61B9D1": {
+    "index": 38,
+    "cert": "2250.01",
+    "scope": "Multi-discipline Calibration",
+    "category": "calibration",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"2250.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"2250.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"77DA5554-27EC-4936-AB61-DE76DE61B9D1\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"2250.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Multi\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "850F359C-A1CF-4CCC-9539-4B4075B6FB8C": {
+    "index": 39,
+    "cert": "0078.02",
+    "scope": "Construction",
+    "category": "construction materials",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"0078.02\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"0078.02\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"850F359C-A1CF-4CCC-9539-4B4075B6FB8C\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"0078.02\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Construction\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "8A7A6CF4-B1FC-4663-BDB5-9D658B74E32E": {
+    "index": 40,
+    "cert": "2705.01",
+    "scope": "Paragon - Petroleum",
+    "category": "petroleum",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"2705.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"2705.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"8A7A6CF4-B1FC-4663-BDB5-9D658B74E32E\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"2705.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Paragon\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "8DA9ABB8-81D7-4645-A38C-18AEEAE448F9": {
+    "index": 41,
+    "cert": "5107.02",
+    "scope": "Nondestructive",
+    "category": "nondestructive testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"5107.02\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"5107.02\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"8DA9ABB8-81D7-4645-A38C-18AEEAE448F9\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"5107.02\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Nondestructive\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "916692AF-1CC0-40F2-B4C7-C78CF852FED0": {
+    "index": 42,
+    "cert": "2455.01",
+    "scope": "Paints Coatings",
+    "category": "original materials testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"2455.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"2455.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"916692AF-1CC0-40F2-B4C7-C78CF852FED0\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"2455.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Paints\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "920B0A4F-8FC9-4539-90E3-B0D4E4864489": {
+    "index": 43,
+    "cert": "1627.02",
+    "scope": "Bureau Veritas Environmental",
+    "category": "environmental",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"1627.02\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"1627.02\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"920B0A4F-8FC9-4539-90E3-B0D4E4864489\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"1627.02\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Bureau\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "9C663F8F-5CF9-478A-9EDC-2AC7567287C3": {
+    "index": 44,
+    "cert": "4784.01",
+    "scope": "Mechanical Components",
+    "category": "mechanical testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"4784.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"4784.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"9C663F8F-5CF9-478A-9EDC-2AC7567287C3\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"4784.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Mechanical\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "A10F1CF1-37CC-4599-9BAA-735E28EAA330": {
+    "index": 45,
+    "cert": "3210.02",
+    "scope": "Composite Materials",
+    "category": "original materials testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"3210.02\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"3210.02\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"A10F1CF1-37CC-4599-9BAA-735E28EAA330\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"3210.02\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Composite\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "A2DD8B53-2BE6-440D-BB9C-06197262AF88": {
+    "index": 46,
+    "cert": "3331.09",
+    "scope": "Chemical",
+    "category": "chemical analysis",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"3331.09\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"3331.09\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"A2DD8B53-2BE6-440D-BB9C-06197262AF88\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"3331.09\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Chemical\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "AD1ABAF0-8C2A-4931-A619-598D6F4BD810": {
+    "index": 47,
+    "cert": "0603.01",
+    "scope": "Composites Metals",
+    "category": "metallurgy",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"0603.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"0603.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"AD1ABAF0-8C2A-4931-A619-598D6F4BD810\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"0603.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Composites\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "B0A99F44-366F-4A35-A984-7E605DC2A91D": {
+    "index": 48,
+    "cert": "",
+    "scope": "Mechanical",
+    "category": "mechanical testing",
+    "queries": [
+      {
+        "query": "site:a2la.org \"B0A99F44-366F-4A35-A984-7E605DC2A91D\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "A2LA \"Mechanical\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "B1926234-4ACE-4983-AF20-E94192D6F8CC": {
+    "index": 49,
+    "cert": "1197.01",
+    "scope": "Nondestructive",
+    "category": "nondestructive testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"1197.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"1197.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"B1926234-4ACE-4983-AF20-E94192D6F8CC\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"1197.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Nondestructive\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "B1F22CC3-99DE-4FC7-A5DD-227C58EDBC1A": {
+    "index": 50,
+    "cert": "6056.01",
+    "scope": "Electrical Mechanical",
+    "category": "mechanical testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"6056.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"6056.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"B1F22CC3-99DE-4FC7-A5DD-227C58EDBC1A\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"6056.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Electrical\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "B5C36668-5161-4563-8D46-5F84F0B6B924": {
+    "index": 51,
+    "cert": "3144.01",
+    "scope": "Electrical RF Calibration",
+    "category": "calibration",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"3144.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"3144.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"B5C36668-5161-4563-8D46-5F84F0B6B924\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"3144.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Electrical\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "BC1A7982-7919-473B-8D78-4D9CE11F51F6": {
+    "index": 52,
+    "cert": "0098.01",
+    "scope": "Chemical Metal Analysis",
+    "category": "chemical analysis",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"0098.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"0098.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"BC1A7982-7919-473B-8D78-4D9CE11F51F6\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"0098.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Chemical\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "C07D8434-6F2D-4B60-923C-7B14CBAF9BC6": {
+    "index": 53,
+    "cert": "3003.01",
+    "scope": "Mechanical",
+    "category": "mechanical testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"3003.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"3003.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"C07D8434-6F2D-4B60-923C-7B14CBAF9BC6\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"3003.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Mechanical\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "C1F25E83-11B9-4223-933B-28B2365EC4EC": {
+    "index": 54,
+    "cert": "4795.01",
+    "scope": "Petroleum",
+    "category": "petroleum",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"4795.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"4795.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"C1F25E83-11B9-4223-933B-28B2365EC4EC\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"4795.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Petroleum\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "CE8A8F0D-164C-4F87-B31C-4F9814D50DCE": {
+    "index": 55,
+    "cert": "1888.04",
+    "scope": "Nondestructive Testing",
+    "category": "nondestructive testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"1888.04\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"1888.04\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"CE8A8F0D-164C-4F87-B31C-4F9814D50DCE\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"1888.04\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Nondestructive\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "D202CB1E-40E1-4D98-ADCA-C2F16AD791B9": {
+    "index": 56,
+    "cert": "3140.01",
+    "scope": "Composite Materials",
+    "category": "original materials testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"3140.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"3140.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"D202CB1E-40E1-4D98-ADCA-C2F16AD791B9\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"3140.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Composite\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "DB3FFACC-C7E6-455B-B4E0-F87D694F8B50": {
+    "index": 57,
+    "cert": "0161.02",
+    "scope": "Tensile Testing Metallurgical",
+    "category": "metallurgy",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"0161.02\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"0161.02\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"DB3FFACC-C7E6-455B-B4E0-F87D694F8B50\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"0161.02\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Tensile\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "E05C2ADD-9FB9-4E4C-B009-F946AC591FE6": {
+    "index": 58,
+    "cert": "3819.01",
+    "scope": "Pace Analytical Environmental",
+    "category": "environmental",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"3819.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"3819.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"E05C2ADD-9FB9-4E4C-B009-F946AC591FE6\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"3819.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Pace\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "E0877E3D-8FC8-44CD-AA1F-A7586F9F733D": {
+    "index": 59,
+    "cert": "",
+    "scope": "Environmental",
+    "category": "environmental",
+    "queries": [
+      {
+        "query": "site:a2la.org \"E0877E3D-8FC8-44CD-AA1F-A7586F9F733D\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "A2LA \"Environmental\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "E29B82D6-20E9-4B03-8F27-20E07A2545B9": {
+    "index": 60,
+    "cert": "1109.06",
+    "scope": "Environmental",
+    "category": "environmental",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"1109.06\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"1109.06\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"E29B82D6-20E9-4B03-8F27-20E07A2545B9\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"1109.06\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Environmental\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "E44978E7-CD6E-4BF0-8BB9-0A7F8DD74E17": {
+    "index": 61,
+    "cert": "1720.03",
+    "scope": "Element Materials - Electrical",
+    "category": "original materials testing",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"1720.03\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"1720.03\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"E44978E7-CD6E-4BF0-8BB9-0A7F8DD74E17\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"1720.03\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Element Materials\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "E4C21119-F7C2-4291-89B7-B87ED3712040": {
+    "index": 62,
+    "cert": "1885.02",
+    "scope": "Environmental",
+    "category": "environmental",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"1885.02\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"1885.02\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"E4C21119-F7C2-4291-89B7-B87ED3712040\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"1885.02\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Environmental\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "E521CFA6-FAE4-4643-B5CF-0DB86AA45C67": {
+    "index": 63,
+    "cert": "5827.01",
+    "scope": "Electrical Fluid Calibration",
+    "category": "calibration",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"5827.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"5827.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"E521CFA6-FAE4-4643-B5CF-0DB86AA45C67\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"5827.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Electrical\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  },
+  "F2A38E55-30E1-4972-9636-5CBFD7676FF2": {
+    "index": 64,
+    "cert": "2778.01",
+    "scope": "Petroleum",
+    "category": "petroleum",
+    "queries": [
+      {
+        "query": "site:customer.a2la.org \"2778.01\"",
+        "strategy": "a2la_direct_cert",
+        "order": 1
+      },
+      {
+        "query": "site:a2la.org \"2778.01\"",
+        "strategy": "a2la_site_cert",
+        "order": 2
+      },
+      {
+        "query": "site:a2la.org \"F2A38E55-30E1-4972-9636-5CBFD7676FF2\"",
+        "strategy": "a2la_pid",
+        "order": 3
+      },
+      {
+        "query": "\"A2LA\" \"2778.01\" laboratory accreditation",
+        "strategy": "a2la_context",
+        "order": 4
+      },
+      {
+        "query": "A2LA \"Petroleum\" laboratory accreditation",
+        "strategy": "scope_search",
+        "order": 5
+      }
+    ],
+    "needs_extraction": true
+  }
+}

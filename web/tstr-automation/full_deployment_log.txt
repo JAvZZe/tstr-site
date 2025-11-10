@@ -1,0 +1,91 @@
+2025-11-02 20:08:22,444 - httpx - INFO - HTTP Request: GET https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/categories?select=id&slug=eq.environmental-testing "HTTP/2 200 OK"
+2025-11-02 20:08:22,736 - httpx - INFO - HTTP Request: GET https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/custom_fields?select=%2A&category_id=eq.a80a47e9-ca57-4712-9b55-d3139b98a6b7 "HTTP/2 200 OK"
+2025-11-02 20:08:22,738 - base_scraper - INFO - Loaded 7 custom fields for category 'environmental-testing'
+2025-11-02 20:08:22,738 - location_parser - INFO - Loading locations cache...
+2025-11-02 20:08:23,029 - httpx - INFO - HTTP Request: GET https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/locations?select=%2A "HTTP/2 200 OK"
+2025-11-02 20:08:23,032 - location_parser - INFO - Loaded 23 locations into cache
+2025-11-02 20:08:23,032 - base_scraper - INFO - ======================================================================
+2025-11-02 20:08:23,032 - base_scraper - INFO - Starting scraper: TNIEnvironmentalScraper
+2025-11-02 20:08:23,032 - base_scraper - INFO - Category: environmental-testing
+2025-11-02 20:08:23,032 - base_scraper - INFO - Source: TNI LAMS (NELAP)
+2025-11-02 20:08:23,032 - base_scraper - INFO - ======================================================================
+2025-11-02 20:08:23,032 - __main__ - INFO - Searching for labs in Alabama...
+2025-11-02 20:08:27,089 - __main__ - INFO - Found 5 labs in Alabama
+2025-11-02 20:08:30,089 - __main__ - INFO - Searching for labs in Alaska...
+2025-11-02 20:08:34,093 - __main__ - INFO - Found 5 labs in Alaska
+2025-11-02 20:08:37,093 - base_scraper - INFO - Found 10 listings to scrape
+2025-11-02 20:08:37,093 - base_scraper - INFO - Limiting to 300 listings
+2025-11-02 20:08:37,093 - base_scraper - INFO - 
+[1/10] Processing listing...
+2025-11-02 20:08:37,093 - __main__ - INFO - Processing: https://lams.nelac-institute.org/search#TNI01949
+2025-11-02 20:08:37,093 - location_parser - INFO - ✓ Linked address to location_id: 64c89153... (hill afb)
+2025-11-02 20:08:37,403 - httpx - INFO - HTTP Request: GET https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/listings?select=id&website=eq.&category_id=eq.a80a47e9-ca57-4712-9b55-d3139b98a6b7 "HTTP/2 200 OK"
+2025-11-02 20:08:37,403 - base_scraper - INFO - Skipping duplicate listing: (809) US Air Force - Hill AFB Chemical Science Laboratory
+2025-11-02 20:08:37,404 - base_scraper - INFO - 
+[2/10] Processing listing...
+2025-11-02 20:08:37,404 - __main__ - INFO - Processing: https://lams.nelac-institute.org/search#TNI02466
+2025-11-02 20:08:37,404 - location_parser - INFO - ✓ Linked address to location_id: 0895c66d... (portland)
+2025-11-02 20:08:37,693 - httpx - INFO - HTTP Request: GET https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/listings?select=id&website=eq.&category_id=eq.a80a47e9-ca57-4712-9b55-d3139b98a6b7 "HTTP/2 200 OK"
+2025-11-02 20:08:37,693 - base_scraper - INFO - Skipping duplicate listing: 2 River Labs Oregon
+2025-11-02 20:08:37,693 - base_scraper - INFO - 
+[3/10] Processing listing...
+2025-11-02 20:08:37,694 - __main__ - INFO - Processing: https://lams.nelac-institute.org/search#TNI02455
+2025-11-02 20:08:37,694 - location_parser - INFO - ✓ Linked address to location_id: 0895c66d... (portland)
+2025-11-02 20:08:37,981 - httpx - INFO - HTTP Request: GET https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/listings?select=id&website=eq.&category_id=eq.a80a47e9-ca57-4712-9b55-d3139b98a6b7 "HTTP/2 200 OK"
+2025-11-02 20:08:37,982 - base_scraper - INFO - Skipping duplicate listing: 3B Analytical
+2025-11-02 20:08:37,982 - base_scraper - INFO - 
+[4/10] Processing listing...
+2025-11-02 20:08:37,982 - __main__ - INFO - Processing: https://lams.nelac-institute.org/search#TNI00025
+2025-11-02 20:08:37,982 - location_parser - INFO - ✓ Linked address to location_id: 031f04a4... (houston)
+2025-11-02 20:08:38,294 - httpx - INFO - HTTP Request: GET https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/listings?select=id&website=eq.&category_id=eq.a80a47e9-ca57-4712-9b55-d3139b98a6b7 "HTTP/2 200 OK"
+2025-11-02 20:08:38,294 - base_scraper - INFO - Skipping duplicate listing: A & B Environmental Services, Inc.
+2025-11-02 20:08:38,295 - base_scraper - INFO - 
+[5/10] Processing listing...
+2025-11-02 20:08:38,295 - __main__ - INFO - Processing: https://lams.nelac-institute.org/search#TNI02808
+2025-11-02 20:08:38,295 - location_parser - INFO - ✓ Linked address to location_id: b02a198e... (nederland)
+2025-11-02 20:08:38,586 - httpx - INFO - HTTP Request: GET https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/listings?select=id&website=eq.&category_id=eq.a80a47e9-ca57-4712-9b55-d3139b98a6b7 "HTTP/2 200 OK"
+2025-11-02 20:08:38,586 - base_scraper - INFO - Skipping duplicate listing: A & B Environmental Services, Inc. Golden Triangle
+2025-11-02 20:08:38,586 - base_scraper - INFO - 
+[6/10] Processing listing...
+2025-11-02 20:08:38,586 - __main__ - INFO - Processing: https://lams.nelac-institute.org/search#TNI01949
+2025-11-02 20:08:38,587 - location_parser - INFO - ✓ Linked address to location_id: 64c89153... (hill afb)
+2025-11-02 20:08:38,881 - httpx - INFO - HTTP Request: GET https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/listings?select=id&website=eq.&category_id=eq.a80a47e9-ca57-4712-9b55-d3139b98a6b7 "HTTP/2 200 OK"
+2025-11-02 20:08:38,882 - base_scraper - INFO - Skipping duplicate listing: (809) US Air Force - Hill AFB Chemical Science Laboratory
+2025-11-02 20:08:38,882 - base_scraper - INFO - 
+[7/10] Processing listing...
+2025-11-02 20:08:38,882 - __main__ - INFO - Processing: https://lams.nelac-institute.org/search#TNI02466
+2025-11-02 20:08:38,883 - location_parser - INFO - ✓ Linked address to location_id: 0895c66d... (portland)
+2025-11-02 20:08:39,172 - httpx - INFO - HTTP Request: GET https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/listings?select=id&website=eq.&category_id=eq.a80a47e9-ca57-4712-9b55-d3139b98a6b7 "HTTP/2 200 OK"
+2025-11-02 20:08:39,173 - base_scraper - INFO - Skipping duplicate listing: 2 River Labs Oregon
+2025-11-02 20:08:39,173 - base_scraper - INFO - 
+[8/10] Processing listing...
+2025-11-02 20:08:39,173 - __main__ - INFO - Processing: https://lams.nelac-institute.org/search#TNI02455
+2025-11-02 20:08:39,173 - location_parser - INFO - ✓ Linked address to location_id: 0895c66d... (portland)
+2025-11-02 20:08:39,465 - httpx - INFO - HTTP Request: GET https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/listings?select=id&website=eq.&category_id=eq.a80a47e9-ca57-4712-9b55-d3139b98a6b7 "HTTP/2 200 OK"
+2025-11-02 20:08:39,466 - base_scraper - INFO - Skipping duplicate listing: 3B Analytical
+2025-11-02 20:08:39,466 - base_scraper - INFO - 
+[9/10] Processing listing...
+2025-11-02 20:08:39,466 - __main__ - INFO - Processing: https://lams.nelac-institute.org/search#TNI00025
+2025-11-02 20:08:39,467 - location_parser - INFO - ✓ Linked address to location_id: 031f04a4... (houston)
+2025-11-02 20:08:39,756 - httpx - INFO - HTTP Request: GET https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/listings?select=id&website=eq.&category_id=eq.a80a47e9-ca57-4712-9b55-d3139b98a6b7 "HTTP/2 200 OK"
+2025-11-02 20:08:39,757 - base_scraper - INFO - Skipping duplicate listing: A & B Environmental Services, Inc.
+2025-11-02 20:08:39,757 - base_scraper - INFO - 
+[10/10] Processing listing...
+2025-11-02 20:08:39,757 - __main__ - INFO - Processing: https://lams.nelac-institute.org/search#TNI02808
+2025-11-02 20:08:39,758 - location_parser - INFO - ✓ Linked address to location_id: b02a198e... (nederland)
+2025-11-02 20:08:40,046 - httpx - INFO - HTTP Request: GET https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/listings?select=id&website=eq.&category_id=eq.a80a47e9-ca57-4712-9b55-d3139b98a6b7 "HTTP/2 200 OK"
+2025-11-02 20:08:40,047 - base_scraper - INFO - Skipping duplicate listing: A & B Environmental Services, Inc. Golden Triangle
+2025-11-02 20:08:40,047 - base_scraper - INFO - 
+======================================================================
+2025-11-02 20:08:40,047 - base_scraper - INFO - SCRAPING COMPLETE
+2025-11-02 20:08:40,047 - base_scraper - INFO - ======================================================================
+2025-11-02 20:08:40,047 - base_scraper - INFO - Listings scraped: 0
+2025-11-02 20:08:40,047 - base_scraper - INFO - Listings saved: 0
+2025-11-02 20:08:40,047 - base_scraper - INFO - Duplicates skipped: 10
+2025-11-02 20:08:40,047 - base_scraper - INFO - Failed: 0
+2025-11-02 20:08:40,047 - base_scraper - INFO - Custom fields populated: 0
+2025-11-02 20:08:40,047 - base_scraper - INFO - Rate limit delays: 0
+2025-11-02 20:08:40,047 - base_scraper - INFO - URLs blocked by robots.txt: 0
+2025-11-02 20:08:40,047 - base_scraper - INFO - 
+Location parser cache hit rate: 100.0%
+2025-11-02 20:08:40,048 - base_scraper - INFO - New locations created: 0

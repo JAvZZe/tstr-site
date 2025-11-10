@@ -1,0 +1,95 @@
+# A2LA LABORATORY EXTRACTION - SEARCH INSTRUCTIONS
+
+## Task: Extract data for 64 PIDs using web search
+
+Gemini completed: 8 PIDs (use these as baseline)
+Need to complete: 56 PIDs
+Gemini failures to retry: 2 PIDs
+
+## GEMINI'S SUCCESSFUL EXTRACTIONS (8 PIDs):
+These are baseline data we can verify or use directly:
+
+1. 031C4AF0-B0DA-4AD7-BCDE-940DEECDE25E | Cert: 6754.03 | Org: HOME INNOVATION RESEARCH LABS
+2. 07745F0D-416C-4BB1-9CAC-3588866196F3 | Cert: 4356.02 | Org: GREEN ANALYTICS NORTH
+3. 1106BCD8-2659-41F2-996B-E6A4BF0E302B | Cert: 2310.02 | Org: Intertek
+4. 11FE2BD5-8663-412B-A881-43F3F86414B8 | Cert: 2815.02 | Org: TTL Laboratories
+5. 12B5296B-1C26-4A2B-9834-86DED1337C27 | Cert: 0214.27 | Org: [Environmental Lab - Certificate Search Required]
+6. 130248C5-EBD2-4BA1-8A85-DD99BC51104F | Cert: 4950.01 | Org: [RF Microwave Calibration Lab - Certificate Search Required]
+7. 13AE1E37-EF52-47AA-9BB4-048022563882 | Cert: 1719.06 | Org: Element Materials
+8. 17806F1C-4EFA-484D-A34C-0C4438CE34EA | Cert: 1176.02 | Org: [Mechanical Testing Lab - Certificate Search Required]
+
+## GEMINI'S FAILURES TO RETRY (2 PIDs):
+These reported 'Not Found' but may be findable with different searches:
+
+1. PID: 09A84789-6D1A-4C35-B656-96FDBD68C0C6
+   Cert: 1621.01 | Scope: Calibration
+   Search queries:
+   a) site:customer.a2la.org "1621.01"
+   b) site:a2la.org "1621.01"
+   c) "A2LA 1621.01" laboratory
+   d) A2LA accreditation Calibration
+2. PID: 12A618F6-8114-4994-A522-26D9F1AA0986
+   Cert: 0363.01 | Scope: Adhesives Plastics
+   Search queries:
+   a) site:customer.a2la.org "0363.01"
+   b) site:a2la.org "0363.01"
+   c) "A2LA 0363.01" laboratory
+   d) A2LA accreditation Adhesives Plastics
+
+## REMAINING EXTRACTIONS (56 PIDs):
+Need full web search for organization + location
+
+
+### CALIBRATION (6 PIDs)
+1. Cert 1032.01: Dimensional Calibration | Search: site:a2la.org "1032.01"
+2. Cert : Calibration | Search: site:a2la.org ""
+3. Cert : Calibration | Search: site:a2la.org ""
+   ... and 3 more in this category
+
+### CHEMICAL ANALYSIS (7 PIDs)
+1. Cert 3873.01: Chemical Petroleum Water | Search: site:a2la.org "3873.01"
+2. Cert 3329.11: Chemical | Search: site:a2la.org "3329.11"
+3. Cert 1873.01: Chemical | Search: site:a2la.org "1873.01"
+   ... and 4 more in this category
+
+### CONSTRUCTION MATERIALS (4 PIDs)
+1. Cert 5742.01: Construction | Search: site:a2la.org "5742.01"
+2. Cert 0023.03: Geotechnical Engineering | Search: site:a2la.org "0023.03"
+3. Cert : Construction | Search: site:a2la.org ""
+   ... and 1 more in this category
+
+### ENVIRONMENTAL (6 PIDs)
+1. Cert 3329.08: Environmental | Search: site:a2la.org "3329.08"
+2. Cert 1627.02: Bureau Veritas Environmental | Search: site:a2la.org "1627.02"
+3. Cert 3819.01: Pace Analytical Environmental | Search: site:a2la.org "3819.01"
+   ... and 3 more in this category
+
+### MECHANICAL TESTING (5 PIDs)
+1. Cert 1123.07: Vibration Testing | Search: site:a2la.org "1123.07"
+2. Cert 4784.01: Mechanical Components | Search: site:a2la.org "4784.01"
+3. Cert : Mechanical | Search: site:a2la.org ""
+   ... and 2 more in this category
+
+### METALLURGY (7 PIDs)
+1. Cert 4267.02: Metallurgy | Search: site:a2la.org "4267.02"
+2. Cert 1252.01: Metal Plating | Search: site:a2la.org "1252.01"
+3. Cert : Metallurgy | Search: site:a2la.org ""
+   ... and 4 more in this category
+
+### NONDESTRUCTIVE TESTING (4 PIDs)
+1. Cert 4024.01: Nondestructive | Search: site:a2la.org "4024.01"
+2. Cert 5107.02: Nondestructive | Search: site:a2la.org "5107.02"
+3. Cert 1197.01: Nondestructive | Search: site:a2la.org "1197.01"
+   ... and 1 more in this category
+
+### ORIGINAL MATERIALS TESTING (9 PIDs)
+1. Cert 5580.01: Building Products Testing | Search: site:a2la.org "5580.01"
+2. Cert 1719.01: Element Materials | Search: site:a2la.org "1719.01"
+3. Cert 0078.07: Automotive Components | Search: site:a2la.org "0078.07"
+   ... and 6 more in this category
+
+### PETROLEUM (6 PIDs)
+1. Cert 2343.01: Petroleum | Search: site:a2la.org "2343.01"
+2. Cert 2387.01: Petroleum | Search: site:a2la.org "2387.01"
+3. Cert : Petroleum | Search: site:a2la.org ""
+   ... and 3 more in this category

@@ -10,8 +10,9 @@ Global niche directory platform for Tests and Testing Services & Products servin
 ## Tech Stack & Deployment
 - **Frontend**: Astro + React (`web/tstr-frontend/`)
 - **Backend/Automation**: Python scrapers (`web/tstr-automation/`)
+  - **Hosting**: Oracle Cloud Free Tier (accessible via OCI CLI)
 - **Database**: Supabase (PostgreSQL)
-- **Hosting**: Netlify (connected to GitHub)
+- **Hosting**: Cloudflare Pages (connected to GitHub)
 - **GitHub Repo**: `https://github.com/JAvZZe/tstr-site.git`
 
 ## Deployment & Automation Workflow

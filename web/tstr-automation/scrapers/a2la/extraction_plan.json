@@ -1,0 +1,95 @@
+{
+  "title": "A2LA Laboratory Data Extraction Plan",
+  "objective": "Extract organization name, certificate details, location, and testing scope",
+  "pids_count": 10,
+  "search_strategies": [
+    {
+      "strategy": "Direct A2LA search",
+      "format": "site:customer.a2la.org accreditationPID={PID}",
+      "priority": 1,
+      "rationale": "Official A2LA site has most complete data"
+    },
+    {
+      "strategy": "Certificate number search",
+      "format": "site:customer.a2la.org \"{CERT}\"",
+      "priority": 2,
+      "rationale": "Certificate numbers are unique identifiers"
+    },
+    {
+      "strategy": "Lab name with certification",
+      "format": "A2LA {CERT} accreditation",
+      "priority": 3,
+      "rationale": "Lab name + cert number combination"
+    },
+    {
+      "strategy": "Scope-based search",
+      "format": "A2LA \"{SCOPE}\" accreditation",
+      "priority": 4,
+      "rationale": "Scope provides context for lab type"
+    }
+  ],
+  "expected_data_fields": [
+    "pid",
+    "cert",
+    "org",
+    "location",
+    "scope",
+    "extraction_method",
+    "confidence",
+    "notes"
+  ],
+  "pids_to_extract": [
+    "031C4AF0-B0DA-4AD7-BCDE-940DEECDE25E",
+    "07745F0D-416C-4BB1-9CAC-3588866196F3",
+    "09A84789-6D1A-4C35-B656-96FDBD68C0C6",
+    "1106BCD8-2659-41F2-996B-E6A4BF0E302B",
+    "11FE2BD5-8663-412B-A881-43F3F86414B8",
+    "12A618F6-8114-4994-A522-26D9F1AA0986",
+    "12B5296B-1C26-4A2B-9834-86DED1337C27",
+    "130248C5-EBD2-4BA1-8A85-DD99BC51104F",
+    "13AE1E37-EF52-47AA-9BB4-048022563882",
+    "17806F1C-4EFA-484D-A34C-0C4438CE34EA"
+  ],
+  "known_data": {
+    "031C4AF0-B0DA-4AD7-BCDE-940DEECDE25E": {
+      "cert": "6754.03",
+      "scope": "Fire Resistance Construction"
+    },
+    "07745F0D-416C-4BB1-9CAC-3588866196F3": {
+      "cert": "4356.02",
+      "scope": "Cannabis Testing"
+    },
+    "09A84789-6D1A-4C35-B656-96FDBD68C0C6": {
+      "cert": "1621.01",
+      "scope": "Calibration"
+    },
+    "1106BCD8-2659-41F2-996B-E6A4BF0E302B": {
+      "cert": "2310.02",
+      "scope": "Intertek - Mechanical"
+    },
+    "11FE2BD5-8663-412B-A881-43F3F86414B8": {
+      "cert": "2815.02",
+      "scope": "Toys Testing"
+    },
+    "12A618F6-8114-4994-A522-26D9F1AA0986": {
+      "cert": "0363.01",
+      "scope": "Adhesives Plastics"
+    },
+    "12B5296B-1C26-4A2B-9834-86DED1337C27": {
+      "cert": "0214.27",
+      "scope": "Environmental"
+    },
+    "130248C5-EBD2-4BA1-8A85-DD99BC51104F": {
+      "cert": "4950.01",
+      "scope": "RF Microwave Calibration"
+    },
+    "13AE1E37-EF52-47AA-9BB4-048022563882": {
+      "cert": "1719.06",
+      "scope": "Element Materials - Aerospace"
+    },
+    "17806F1C-4EFA-484D-A34C-0C4438CE34EA": {
+      "cert": "1176.02",
+      "scope": "Mechanical"
+    }
+  }
+}
