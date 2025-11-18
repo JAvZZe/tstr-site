@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Rigzone Oil & Gas Testing Scraper
-Extracts testing laboratories and inspection services from Rigzone directory
+Contract Laboratory Oil & Gas Testing Scraper
+Extracts petroleum testing laboratories from Contract Laboratory directory
+Source: https://www.contractlaboratory.com/directory/laboratories/by-industry.cfm?i=45
 """
 
 import re
@@ -18,12 +19,15 @@ from base_scraper import BaseNicheScraper
 logger = logging.getLogger(__name__)
 
 
-class RigzoneOilGasScraper(BaseNicheScraper):
+class ContractLabOilGasScraper(BaseNicheScraper):
     """
-    Scraper for Oil & Gas testing and inspection companies from Rigzone
+    Scraper for petroleum testing laboratories from Contract Laboratory directory
+
+    Source: 170 petroleum testing labs across 15 pages
+    URL pattern: /directory/laboratories/by-industry.cfm?i=45/page/[n]/?_sort=featured_vendor__desc
 
     Custom Fields Extracted:
-    - testing_types: Well Logging, Production Testing, Flow Assurance, etc.
+    - testing_types: Petroleum Testing, Chemical Analysis, NDT Inspection, etc.
     - real_time_analytics: Boolean for real-time monitoring capabilities
     - equipment_brands: Text description of equipment used
     - coverage_type: Onshore, Offshore, or Both
@@ -35,27 +39,22 @@ class RigzoneOilGasScraper(BaseNicheScraper):
     def __init__(self):
         super().__init__(
             category_slug='oil-gas-testing',
-            source_name='Rigzone Directory',
+            source_name='Contract Laboratory Directory',
             rate_limit_seconds=2.0
         )
 
+        self.base_url = 'https://www.contractlaboratory.com'
+        self.directory_url = f'{self.base_url}/directory/laboratories/by-industry.cfm?i=45'
+
         # Keyword mapping for testing types
         self.testing_type_keywords = {
-            'Well Logging': [
-                'well logging', 'wireline', 'formation evaluation',
-                'downhole logging', 'electric logging'
+            'Petroleum Testing': [
+                'petroleum', 'crude oil', 'fuel', 'gasoline', 'diesel',
+                'octane', 'cetane', 'distillation'
             ],
-            'Production Testing': [
-                'production testing', 'well testing', 'flow testing',
-                'well performance', 'productivity testing'
-            ],
-            'Flow Assurance': [
-                'flow assurance', 'multiphase', 'pipeline flow',
-                'flow measurement', 'hydraulic analysis'
-            ],
-            'Pressure Testing': [
-                'pressure test', 'hydrostatic', 'pressure vessel',
-                'pneumatic test', 'leak detection', 'hydro-test'
+            'Chemical Analysis': [
+                'chemical analysis', 'composition', 'chromatography', 'spectroscopy',
+                'elemental analysis', 'gcms', 'lcms'
             ],
             'NDT Inspection': [
                 'ndt', 'non-destructive', 'ultrasonic', 'radiographic',
@@ -64,6 +63,10 @@ class RigzoneOilGasScraper(BaseNicheScraper):
             'Pipeline Inspection': [
                 'pipeline inspection', 'in-line inspection', 'pig inspection',
                 'pipeline integrity', 'corrosion inspection'
+            ],
+            'Pressure Testing': [
+                'pressure test', 'hydrostatic', 'pressure vessel',
+                'pneumatic test', 'leak detection'
             ]
         }
 
@@ -73,37 +76,66 @@ class RigzoneOilGasScraper(BaseNicheScraper):
             'ISO 17025': r'\bISO[\s-]?17025\b',
             'ASME': r'\bASME\b',
             'ISO 9001': r'\bISO[\s-]?9001\b',
-            'NACE': r'\bNACE\b'
+            'ASTM': r'\bASTM\b'
         }
 
         # Equipment brand keywords
         self.equipment_brands = [
-            'schlumberger', 'halliburton', 'weatherford', 'baker hughes',
-            'oceaneering', 'technip', 'subsea 7', 'aker solutions'
+            'agilent', 'perkinelmer', 'thermo fisher', 'shimadzu',
+            'waters', 'bruker', 'varian'
         ]
 
     def get_listing_urls(self) -> List[str]:
         """
-        Return list of company URLs to scrape
+        Scrape pagination from Contract Laboratory directory
 
-        For initial implementation, using known testing/inspection companies
-        Future: Implement search/pagination to discover more
+        Returns list of individual lab profile URLs
+        Total: ~170 labs across 15 pages (12 per page)
         """
-        # Seed list from web search results
-        seed_urls = [
-            'https://www.rigzone.com/directory/company/20421/3iInternationalInspectingInc/',
-            'https://www.rigzone.com/directory/company/3395/AlphaPipelineIntegrityServices/',
-            'https://www.rigzone.com/directory/company/11110/QualityProcessServicesLLC/',
-            'https://www.rigzone.com/directory/company/21603/PROMETRICEngineeringandInspectionServices/',
-            'https://www.rigzone.com/directory/company/3563/CECOPipelineServicesCompanyInc/',
-        ]
+        listing_urls = []
 
-        logger.info(f"Using {len(seed_urls)} seed URLs for testing")
-        return seed_urls
+        # Scrape all 15 pages
+        for page_num in range(1, 16):  # Pages 1-15
+            if page_num == 1:
+                page_url = self.directory_url
+            else:
+                page_url = f'{self.directory_url}/page/{page_num}/?_sort=featured_vendor__desc'
+
+            logger.info(f"Fetching page {page_num}: {page_url}")
+
+            try:
+                response = self.session.get(page_url, timeout=15)
+                response.raise_for_status()
+                soup = BeautifulSoup(response.content, 'html.parser')
+
+                # Find all lab cards with class "hp-vendor--view-block"
+                lab_cards = soup.find_all('div', class_='hp-vendor--view-block')
+
+                for card in lab_cards:
+                    # Find the profile link
+                    link_elem = card.find('a', href=True)
+                    if link_elem:
+                        profile_url = link_elem['href']
+                        # Convert relative URL to absolute
+                        if profile_url.startswith('/'):
+                            profile_url = f'{self.base_url}{profile_url}'
+                        listing_urls.append(profile_url)
+
+                logger.info(f"Found {len(lab_cards)} labs on page {page_num}")
+
+                # Rate limiting
+                self._rate_limit(self.base_url)
+
+            except Exception as e:
+                logger.error(f"Error fetching page {page_num}: {e}")
+                continue
+
+        logger.info(f"Total labs found: {len(listing_urls)}")
+        return listing_urls
 
     def extract_standard_fields(self, soup: BeautifulSoup, url: str) -> Dict:
         """
-        Extract standard listing fields from Rigzone company profile
+        Extract standard listing fields from Contract Laboratory profile page
 
         Args:
             soup: BeautifulSoup parsed HTML
@@ -124,40 +156,88 @@ class RigzoneOilGasScraper(BaseNicheScraper):
             'longitude': None
         }
 
-        # Extract company name from h1 or page header
+        # Extract company name from h1 or title
         name_elem = soup.find('h1')
         if name_elem:
             fields['business_name'] = name_elem.get_text(strip=True)
+        else:
+            # Fallback: try meta title or page title
+            title_elem = soup.find('title')
+            if title_elem:
+                # Clean up title (remove " - Contract Laboratory")
+                title_text = title_elem.get_text(strip=True)
+                fields['business_name'] = title_text.split(' - ')[0].strip()
 
-        # Extract address (usually in a paragraph or contact section)
-        # Pattern: "Address Line, City, State Zip"
-        address_text = soup.get_text()
-        address_match = re.search(r'(\d+[^,]+,\s*[A-Za-z\s]+,\s*[A-Z]{2}\s*\d{5})', address_text)
-        if address_match:
-            fields['address'] = address_match.group(1).strip()
+        # Extract address from structured data or contact section
+        # Contract Laboratory typically has address in schema.org markup or visible text
+        page_text = soup.get_text()
 
-        # Extract phone numbers (look for patterns like 281-334-5865)
-        phone_match = re.search(r'(\d{3}[-.\s]?\d{3}[-.\s]?\d{4})', address_text)
-        if phone_match:
-            fields['phone'] = phone_match.group(1)
+        # Try to find address with common US/international patterns
+        # Pattern 1: "123 Main St, City, State ZIP, Country"
+        address_patterns = [
+            r'(\d+[^,]+,\s*[A-Za-z\s]+,\s*[A-Z]{2}\s*\d{5}(?:-\d{4})?)',  # US: 123 St, City, ST 12345
+            r'([A-Z][^,\n]+,\s*[A-Z][a-z\s]+,\s*[A-Z]{2,3}\s+\d[\w\s-]+)',  # Intl: St, City, Country Code
+        ]
+
+        for pattern in address_patterns:
+            address_match = re.search(pattern, page_text)
+            if address_match:
+                fields['address'] = address_match.group(1).strip()
+                break
+
+        # If no structured address found, look for location text near labels
+        if not fields['address']:
+            # Look for text after "Address:", "Location:", etc.
+            location_section = re.search(r'(?:Address|Location):\s*([^\n]+(?:\n[^\n]+){0,2})', page_text, re.IGNORECASE)
+            if location_section:
+                fields['address'] = location_section.group(1).strip()
+
+        # Extract phone (various formats)
+        phone_patterns = [
+            r'\+?1?[-.\s]?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}',  # US: (123) 456-7890
+            r'\+\d{1,3}[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}',  # Intl: +1-234-567-8900
+        ]
+        for pattern in phone_patterns:
+            phone_match = re.search(pattern, page_text)
+            if phone_match:
+                fields['phone'] = phone_match.group(0).strip()
+                break
+
+        # Extract email
+        email_match = re.search(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', page_text)
+        if email_match:
+            fields['email'] = email_match.group(0)
 
         # Extract website
-        website_link = soup.find('a', href=re.compile(r'^http'))
-        if website_link:
-            href = website_link.get('href', '')
-            # Skip Rigzone's own links
-            if 'rigzone.com' not in href.lower():
+        # Look for links that are NOT contractlaboratory.com
+        for link in soup.find_all('a', href=True):
+            href = link.get('href', '')
+            if href.startswith('http') and 'contractlaboratory.com' not in href.lower():
+                # Likely the lab's own website
                 fields['website'] = href
-
-        # Extract description (paragraph about company services)
-        # Look for paragraphs containing service descriptions
-        paragraphs = soup.find_all('p')
-        for p in paragraphs:
-            text = p.get_text(strip=True)
-            # Description paragraphs are usually longer and contain service keywords
-            if len(text) > 100 and any(kw in text.lower() for kw in ['service', 'testing', 'inspection', 'consulting']):
-                fields['description'] = text
                 break
+
+        # Extract description from "About" or "Services" section
+        # Contract Laboratory profiles usually have a description paragraph
+        description_keywords = ['about', 'services', 'capabilities', 'testing', 'laboratory']
+        for heading in soup.find_all(['h2', 'h3', 'h4', 'strong', 'b']):
+            heading_text = heading.get_text(strip=True).lower()
+            if any(kw in heading_text for kw in description_keywords):
+                # Get following paragraph or div
+                next_elem = heading.find_next(['p', 'div'])
+                if next_elem:
+                    desc_text = next_elem.get_text(strip=True)
+                    if len(desc_text) > 50:
+                        fields['description'] = desc_text[:1000]  # Limit to 1000 chars
+                        break
+
+        # Fallback: first substantial paragraph
+        if not fields['description']:
+            for p in soup.find_all('p'):
+                text = p.get_text(strip=True)
+                if len(text) > 100:
+                    fields['description'] = text[:1000]
+                    break
 
         # Use location_parser to get location_id
         if fields['address']:
@@ -262,16 +342,16 @@ class RigzoneOilGasScraper(BaseNicheScraper):
 
 
 def main():
-    """Test the Rigzone Oil & Gas scraper"""
+    """Run the Contract Laboratory Oil & Gas scraper"""
     import argparse
 
-    parser = argparse.ArgumentParser(description='Rigzone Oil & Gas Testing Scraper')
+    parser = argparse.ArgumentParser(description='Contract Laboratory Oil & Gas Testing Scraper')
     parser.add_argument('--limit', type=int, help='Limit number of listings to scrape')
     parser.add_argument('--dry-run', action='store_true', help='Parse but don\'t save to database')
 
     args = parser.parse_args()
 
-    scraper = RigzoneOilGasScraper()
+    scraper = ContractLabOilGasScraper()
     scraper.run(limit=args.limit, dry_run=args.dry_run)
 
 
