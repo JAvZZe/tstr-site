@@ -1,11 +1,16 @@
 ---
 import { supabase } from '../lib/supabase'
 
-// Fetch all active listings with location data from database
+// Fetch all active listings with location data and category from database
 const { data: listings, error } = await supabase
   .from('listings')
   .select(`
-    *,
+    id,
+    business_name,
+    category_id,
+    slug,
+    status,
+    created_at,
     location:location_id (
       id,
       name,
