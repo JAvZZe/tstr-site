@@ -1,6 +1,29 @@
 /**
- * Central contact configuration for TSTR.site
- * Update email addresses here and they'll reflect across the entire site
+ * ⚠️ CENTRALIZED CONTACT CONFIGURATION - READ THIS! ⚠️
+ *
+ * This is the SINGLE SOURCE OF TRUTH for all contact emails on TSTR.site
+ *
+ * WHY THIS EXISTS:
+ * - Change email once here, updates everywhere on the site
+ * - Prevents scattered hardcoded emails across 20+ files
+ * - Type-safe references (TypeScript autocomplete)
+ * - Easy maintenance as project scales
+ *
+ * HOW TO USE:
+ * 1. In Astro pages: import { CONTACTS, MAILTO_LINKS } from '../lib/contacts'
+ * 2. Use MAILTO_LINKS.professionalPlan for pre-configured links
+ * 3. Use CONTACTS.sales for displaying email addresses
+ * 4. Use getMailtoLink('sales', 'subject') for custom links
+ *
+ * CRITICAL RULES FOR ALL AGENTS:
+ * ✅ DO: Import and use this file for ALL contact email needs
+ * ❌ DON'T: Hardcode email addresses like "mailto:someone@tstr.site"
+ * ✅ DO: Update this file when changing contact emails
+ * ❌ DON'T: Create duplicate contact configs elsewhere
+ *
+ * CURRENT CONFIGURATION:
+ * - All emails route to: tstr.site1@gmail.com
+ * - Updated: 2025-11-19
  */
 
 export const CONTACTS = {

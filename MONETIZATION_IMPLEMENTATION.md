@@ -545,6 +545,40 @@ ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS stripe_customer_id TEXT;
 
 ---
 
+## Centralized Contact Configuration
+
+**IMPORTANT**: All contact emails are managed centrally in:
+```
+web/tstr-frontend/src/lib/contacts.ts
+```
+
+**Available contacts**:
+- `CONTACTS.sales` - tstr.site1@gmail.com
+- `CONTACTS.support` - tstr.site1@gmail.com
+- `CONTACTS.partnerships` - tstr.site1@gmail.com
+- `CONTACTS.enquiries` - tstr.site1@gmail.com
+- `CONTACTS.legal` - tstr.site1@gmail.com
+
+**Pre-configured mailto links**:
+- `MAILTO_LINKS.professionalPlan` - Sales inquiry for Professional tier
+- `MAILTO_LINKS.premiumPlan` - Sales inquiry for Premium tier
+- `MAILTO_LINKS.enterprisePlan` - Sales inquiry for Enterprise tier
+- `MAILTO_LINKS.support` - General support request
+- `MAILTO_LINKS.claimListing` - Claim listing request
+
+**Usage in Astro pages**:
+```astro
+---
+import { CONTACTS, MAILTO_LINKS } from '../lib/contacts'
+---
+<a href={MAILTO_LINKS.professionalPlan}>Contact Sales</a>
+<p>Email us at {CONTACTS.support}</p>
+```
+
+**Why this matters**: Change email once in `contacts.ts`, updates everywhere. Never hardcode emails.
+
+---
+
 ## Next Immediate Actions
 
 **This Week**:
