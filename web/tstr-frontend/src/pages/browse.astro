@@ -1,11 +1,16 @@
 ---
 import { supabase } from '../lib/supabase'
 
-// Fetch all active listings with location hierarchy
+// Fetch all active listings with location hierarchy and category
 const { data: listings, error } = await supabase
   .from('listings')
   .select(`
     *,
+    category:category_id (
+      id,
+      name,
+      slug
+    ),
     location:location_id (
       id,
       name,
@@ -27,6 +32,12 @@ const { data: listings, error } = await supabase
   `)
   .eq('status', 'active')
   .order('created_at', { ascending: false })
+
+// Fetch all categories for filter dropdown
+const { data: allCategories } = await supabase
+  .from('categories')
+  .select('id, name, slug')
+  .order('name', { ascending: true })
 
 // Extract unique countries and cities from location hierarchy
 const getCountryFromLocation = (location) => {
@@ -56,7 +67,6 @@ listings?.forEach(listing => {
 
 const countries = Array.from(countryMap.entries()).map(([slug, name]) => ({ slug, name })).sort((a, b) => a.name.localeCompare(b.name))
 const cities = Array.from(cityMap.entries()).map(([slug, name]) => ({ slug, name })).sort((a, b) => a.name.localeCompare(b.name))
-const categories = [...new Set(listings?.map(l => l.category)).values()].filter(Boolean).sort()
 
 const totalListings = listings?.length || 0
 
@@ -372,8 +382,8 @@ const extractCity = (address) => {
         <label for="category-filter">Filter by Category</label>
         <select id="category-filter">
           <option value="">All Categories</option>
-          {categories.map(category => (
-            <option value={category}>{category}</option>
+          {allCategories && allCategories.map(category => (
+            <option value={category.name}>{category.name}</option>
           ))}
         </select>
       </div>
@@ -394,15 +404,16 @@ const extractCity = (address) => {
       {listings && listings.map((lab) => {
         const country = extractCountry(lab.address)
         const city = extractCity(lab.address)
+        const categoryName = lab.category?.name || ''
 
         return (
-          <div class="listing-card" data-country={country} data-city={city} data-category={lab.category}>
+          <div class="listing-card" data-country={country} data-city={city} data-category={categoryName}>
             <div class="listing-header">
               <div>
                 <h3 class="listing-title">
                   <a href={`/listing/${lab.slug}`}>{lab.business_name}</a>
                 </h3>
-                {lab.category && <span class="category-badge">{lab.category}</span>}
+                {categoryName && <span class="category-badge">{categoryName}</span>}
               </div>
               {lab.website_verified && (
                 <span class="verified-badge">✓ Verified</span>
