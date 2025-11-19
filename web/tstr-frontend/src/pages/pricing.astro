@@ -1,6 +1,7 @@
 ---
 // Pricing page for TSTR.site
 // No Stripe integration yet - manual sales via contact form
+import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../lib/contacts'
 ---
 
 <!DOCTYPE html>
@@ -407,7 +408,7 @@
           <li>Profile view tracking</li>
           <li>Email support</li>
         </ul>
-        <a href="mailto:contact@tstr.site?subject=Professional Plan Inquiry" class="cta-button">Contact Sales</a>
+        <a href={MAILTO_LINKS.professionalPlan} class="cta-button">Contact Sales</a>
       </div>
 
       <!-- Premium Tier -->
@@ -429,7 +430,7 @@
           <li>48-hour early access to RFQs</li>
           <li>Priority email support</li>
         </ul>
-        <a href="mailto:contact@tstr.site?subject=Premium Plan Inquiry" class="cta-button">Contact Sales</a>
+        <a href={MAILTO_LINKS.premiumPlan} class="cta-button">Contact Sales</a>
       </div>
 
       <!-- Enterprise Tier -->
@@ -451,7 +452,7 @@
           <li>White-label profile widget</li>
           <li>Custom contract terms</li>
         </ul>
-        <a href="mailto:contact@tstr.site?subject=Enterprise Plan Inquiry" class="cta-button secondary">Contact Sales</a>
+        <a href={MAILTO_LINKS.enterprisePlan} class="cta-button secondary">Contact Sales</a>
       </div>
     </div>
 
@@ -541,22 +542,22 @@
 
       <div class="faq-item">
         <h3>How do I claim my free listing?</h3>
-        <p>If you're already listed in our directory, you can claim your listing by contacting us at contact@tstr.site with your company name and verification details. If you're not listed yet, submit your lab via our <a href="/submit">submission form</a> - it's completely free!</p>
+        <p>If you're already listed in our directory, you can claim your listing by contacting us at {CONTACTS.support} with your company name and verification details. If you're not listed yet, submit your lab via our <a href="/submit">submission form</a> - it's completely free!</p>
       </div>
 
       <div class="faq-item">
         <h3>Can I upgrade or downgrade my plan?</h3>
-        <p>Yes! You can upgrade to a higher tier at any time. Contact our sales team at contact@tstr.site to discuss plan changes. Downgrades take effect at the end of your current billing cycle.</p>
+        <p>Yes! You can upgrade to a higher tier at any time. Contact our sales team at {CONTACTS.sales} to discuss plan changes. Downgrades take effect at the end of your current billing cycle.</p>
       </div>
 
       <div class="faq-item">
         <h3>What payment methods do you accept?</h3>
-        <p>We accept bank transfers, company checks, and major credit cards. Enterprise clients can arrange custom payment terms including annual billing with discounts.</p>
+        <p>We accept bank transfers, company checks, and major credit cards. Contact {CONTACTS.sales} for payment arrangements. Enterprise clients can arrange custom payment terms including annual billing with discounts.</p>
       </div>
 
       <div class="faq-item">
         <h3>Do you offer annual billing?</h3>
-        <p>Yes! Pay annually and save 2 months (17% discount). Contact sales@tstr.site for annual billing options.</p>
+        <p>Yes! Pay annually and save 2 months (17% discount). Contact {CONTACTS.sales} for annual billing options.</p>
       </div>
 
       <div class="faq-item">
@@ -578,7 +579,7 @@
     <div class="guarantee-section" style="text-align: center; margin-top: 3rem;">
       <h3>Ready to Grow Your Testing Business?</h3>
       <p style="margin-bottom: 1.5rem;">Join testing laboratories already generating qualified leads through TSTR Hub.</p>
-      <a href="mailto:contact@tstr.site?subject=Pricing Plan Inquiry" class="cta-button" style="display: inline-block; width: auto; padding: 1rem 3rem;">Contact Sales Team</a>
+      <a href={getMailtoLink('sales', 'Pricing Plan Inquiry')} class="cta-button" style="display: inline-block; width: auto; padding: 1rem 3rem;">Contact Sales Team</a>
     </div>
   </main>
 

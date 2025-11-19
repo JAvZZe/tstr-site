@@ -167,16 +167,11 @@
           <label for="category">Category <span class="required">*</span></label>
           <select id="category" name="category" required>
             <option value="">Select a category</option>
-            <option value="Oil & Gas Testing">Oil & Gas Testing</option>
-            <option value="Pharmaceutical Testing">Pharmaceutical Testing</option>
             <option value="Biotech Testing">Biotech Testing</option>
             <option value="Environmental Testing">Environmental Testing</option>
             <option value="Materials Testing">Materials Testing</option>
-            <option value="Chemical Analysis">Chemical Analysis</option>
-            <option value="Food Safety Testing">Food Safety Testing</option>
-            <option value="Water Quality Testing">Water Quality Testing</option>
-            <option value="Microbiological Testing">Microbiological Testing</option>
-            <option value="Other">Other</option>
+            <option value="Oil & Gas Testing">Oil & Gas Testing</option>
+            <option value="Pharmaceutical Testing">Pharmaceutical Testing</option>
           </select>
         </div>
 
@@ -222,8 +217,8 @@
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
     // Initialize Supabase client (using public credentials)
-    const supabaseUrl = 'https://haimjeaetrsaauitrhfy.supabase.co'
-    const supabaseKey = 'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO'
+    const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co'
+    const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNjAxNTksImV4cCI6MjA3NTYzNjE1OX0.1SoHZoMAeap4p2Fy4HxzHJ4IRZWZ78VamGd0JWQ0OqM'
     const supabase = createClient(supabaseUrl, supabaseKey)
 
     const form = document.getElementById('submitForm')
@@ -241,19 +236,96 @@
         const formData = new FormData(e.target)
         const data = Object.fromEntries(formData)
 
-        // Insert into Supabase
+        // Step 1: Look up category_id by name
+        console.log('Looking for category:', data.category)
+
+        const { data: categoryData, error: categoryError } = await supabase
+          .from('categories')
+          .select('id, name')
+          .eq('name', data.category)
+          .single()
+
+        console.log('Category query result:', { categoryData, categoryError })
+
+        if (categoryError || !categoryData) {
+          // Debug: show all available categories
+          const { data: allCategories } = await supabase
+            .from('categories')
+            .select('name')
+          console.log('All available categories:', allCategories)
+          throw new Error(`Category not found. Looking for: "${data.category}". Error: ${categoryError?.message || 'No data'}`)
+        }
+
+        // Step 2: Parse address and find/create location
+        // Parse city and country from address (format: "City, Country" or "Address, City, Country")
+        const addressParts = data.address.split(',').map(s => s.trim())
+        const country = addressParts[addressParts.length - 1] || 'Unknown'
+        const city = addressParts.length >= 2 ? addressParts[addressParts.length - 2] : 'Unknown'
+
+        let locationId
+
+        // First, try to find country location
+        const { data: countryLocation } = await supabase
+          .from('locations')
+          .select('id')
+          .eq('name', country)
+          .eq('level', 'country')
+          .single()
+
+        if (countryLocation) {
+          // Found country, now try to find city under this country
+          const { data: cityLocation } = await supabase
+            .from('locations')
+            .select('id')
+            .eq('name', city)
+            .eq('level', 'city')
+            .eq('parent_id', countryLocation.id)
+            .single()
+
+          if (cityLocation) {
+            locationId = cityLocation.id
+          } else {
+            // City not found, use country
+            locationId = countryLocation.id
+          }
+        } else {
+          // Country not found, use fallback
+          const { data: fallbackLocation } = await supabase
+            .from('locations')
+            .select('id')
+            .eq('level', 'country')
+            .limit(1)
+            .single()
+
+          if (!fallbackLocation) {
+            throw new Error('No default location found. Please contact support.')
+          }
+
+          locationId = fallbackLocation.id
+        }
+
+        // Step 3: Generate slug from business name
+        const slug = data.business_name
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '')
+
+        // Step 4: Insert listing with category_id and location_id
         const { data: result, error } = await supabase
           .from('listings')
           .insert([{
             business_name: data.business_name,
-            category: data.category,
+            slug: slug,
+            category_id: categoryData.id,
+            location_id: locationId,
             website: data.website,
             email: data.email,
             phone: data.phone || null,
             address: data.address,
             description: data.description || null,
             status: 'pending',
-            website_verified: false,
+            verified: false,
+            claimed: false,
             created_at: new Date().toISOString()
           }])
           .select()

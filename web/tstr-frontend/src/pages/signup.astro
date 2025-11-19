@@ -1,0 +1,331 @@
+---
+export const prerender = false // Force SSR for auth page
+
+// Check if user is already logged in
+import { supabaseBrowser } from '../lib/supabase-browser'
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - TSTR Hub</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    header h1 a {
+      color: #667eea;
+      text-decoration: none;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .signup-card {
+      background: white;
+      border-radius: 12px;
+      padding: 3rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      max-width: 450px;
+      width: 100%;
+    }
+
+    .signup-card h2 {
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .signup-card p {
+      color: #666;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .btn {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .message {
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .message.error {
+      background: #fee;
+      border: 1px solid #fcc;
+      color: #c33;
+    }
+
+    .message.success {
+      background: #efe;
+      border: 1px solid #cfc;
+      color: #3c3;
+    }
+
+    .message.info {
+      background: #eef;
+      border: 1px solid #ccf;
+      color: #33c;
+    }
+
+    .divider {
+      text-align: center;
+      margin: 2rem 0;
+      color: #999;
+      position: relative;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background: #ddd;
+    }
+
+    .divider::before {
+      left: 0;
+    }
+
+    .divider::after {
+      right: 0;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: #666;
+    }
+
+    .login-link a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      background: rgba(0, 0, 0, 0.2);
+      color: white;
+      text-align: center;
+      padding: 1.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .signup-card {
+        padding: 2rem 1.5rem;
+      }
+
+      .signup-card h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><a href="/">TSTR Hub</a></h1>
+  </header>
+
+  <div class="container">
+    <div class="signup-card">
+      <h2>Create Account</h2>
+      <p>Get access to full listing details and contact information</p>
+
+      <div id="message-container"></div>
+
+      <form id="signup-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required minlength="6" autocomplete="new-password">
+          <small style="color: #666; font-size: 0.85rem;">Minimum 6 characters</small>
+        </div>
+
+        <div class="form-group">
+          <label for="company_name">Company Name (Optional)</label>
+          <input type="text" id="company_name" name="company_name" autocomplete="organization">
+        </div>
+
+        <button type="submit" class="btn" id="submit-btn">Create Account</button>
+      </form>
+
+      <div class="login-link">
+        Already have an account? <a href="/login">Sign in</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 TSTR Hub. All rights reserved.</p>
+  </footer>
+
+  <script>
+    import { supabaseBrowser } from '../lib/supabase-browser'
+
+    const form = document.getElementById('signup-form')
+    const submitBtn = document.getElementById('submit-btn')
+    const messageContainer = document.getElementById('message-container')
+
+    function showMessage(message, type = 'info') {
+      messageContainer.innerHTML = `<div class="message ${type}">${message}</div>`
+    }
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault()
+
+      const email = document.getElementById('email').value
+      const password = document.getElementById('password').value
+      const companyName = document.getElementById('company_name').value
+
+      submitBtn.disabled = true
+      submitBtn.textContent = 'Creating account...'
+
+      try {
+        // Sign up with Supabase Auth
+        const { data, error } = await supabaseBrowser.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              company_name: companyName
+            },
+            emailRedirectTo: `${window.location.origin}/account`
+          }
+        })
+
+        if (error) {
+          showMessage(error.message, 'error')
+          submitBtn.disabled = false
+          submitBtn.textContent = 'Create Account'
+          return
+        }
+
+        // Create user profile with basic tier
+        if (data.user) {
+          const { error: profileError } = await supabaseBrowser
+            .from('user_profiles')
+            .insert({
+              id: data.user.id,
+              subscription_tier: 'basic',
+              subscription_status: 'active',
+              company_name: companyName || null,
+              billing_email: email
+            })
+
+          if (profileError) {
+            console.error('Profile creation error:', profileError)
+            // Don't block signup if profile creation fails
+          }
+        }
+
+        showMessage(
+          'Account created! Please check your email to verify your address.',
+          'success'
+        )
+
+        // Redirect after 3 seconds
+        setTimeout(() => {
+          window.location.href = '/login?registered=true'
+        }, 3000)
+
+      } catch (err) {
+        showMessage('An unexpected error occurred. Please try again.', 'error')
+        submitBtn.disabled = false
+        submitBtn.textContent = 'Create Account'
+        console.error('Signup error:', err)
+      }
+    })
+
+    // Check if user is already logged in
+    supabaseBrowser.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        window.location.href = '/account'
+      }
+    })
+  </script>
+</body>
+</html>

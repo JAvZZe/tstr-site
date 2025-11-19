@@ -1,0 +1,409 @@
+---
+export const prerender = false // Force SSR for auth page
+
+// Import Supabase client
+import { supabaseBrowser } from '../lib/supabase-browser'
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Dashboard - TSTR Hub</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f5f7fa;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      color: #333;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .info-label {
+      color: #666;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .info-value {
+      color: #333;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .tier-badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .tier-badge.free {
+      background: #f0f0f0;
+      color: #666;
+    }
+
+    .tier-badge.basic {
+      background: #e3f2fd;
+      color: #1976d2;
+    }
+
+    .tier-badge.professional {
+      background: #f3e5f5;
+      color: #7b1fa2;
+    }
+
+    .tier-badge.premium {
+      background: #fff3e0;
+      color: #e65100;
+    }
+
+    .tier-badge.enterprise {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .benefits-list {
+      list-style: none;
+    }
+
+    .benefits-list li {
+      padding: 0.75rem 0;
+      color: #555;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .benefits-list li:before {
+      content: '✓';
+      color: #667eea;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      justify-content: space-between;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+    }
+
+    .btn-secondary:hover {
+      background: #f9f9f9;
+      transform: translateY(-2px);
+    }
+
+    .btn-danger {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #ee5a52;
+      transform: translateY(-2px);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+    }
+
+    .error-message {
+      background: #fee;
+      border: 1px solid #fcc;
+      color: #c33;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      header {
+        padding: 1.5rem 1rem;
+      }
+
+      .container {
+        padding: 0 1rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Account Dashboard</h1>
+    <p>Manage your TSTR Hub account</p>
+  </header>
+
+  <div class="container">
+    <div id="content">
+      <div class="loading">Loading your account...</div>
+    </div>
+  </div>
+
+  <script>
+    import { supabaseBrowser } from '../lib/supabase-browser'
+
+    async function loadDashboard() {
+      const contentDiv = document.getElementById('content')
+
+      try {
+        // Get current user
+        const { data: { user }, error: userError } = await supabaseBrowser.auth.getUser()
+
+        if (userError || !user) {
+          // Redirect to login if not authenticated
+          window.location.href = '/login'
+          return
+        }
+
+        // Fetch user profile
+        const { data: profile, error: profileError } = await supabaseBrowser
+          .from('user_profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single()
+
+        if (profileError) {
+          console.error('Profile fetch error:', profileError)
+          contentDiv.innerHTML = `
+            <div class="error-message">
+              Failed to load account profile. Please try again later.
+            </div>
+          `
+          return
+        }
+
+        const tier = profile?.subscription_tier || 'free'
+        const tierDisplay = tier.charAt(0).toUpperCase() + tier.slice(1)
+        const companyName = profile?.company_name || 'Not provided'
+        const createdAt = profile?.created_at
+          ? new Date(profile.created_at).toLocaleDateString()
+          : 'Unknown'
+
+        // Determine benefits based on tier
+        let benefits = []
+        if (tier === 'free') {
+          benefits = [
+            'Browse all listings',
+            'Sign up to unlock contact details',
+            'Basic search filters'
+          ]
+        } else if (tier === 'basic') {
+          benefits = [
+            'View full listings and certifications',
+            'Search and filter by category',
+            'Save favorite listings',
+            'Email notifications for new listings'
+          ]
+        } else if (tier === 'professional') {
+          benefits = [
+            'Access phone and email contacts',
+            'Export data to CSV',
+            'Advanced search filters',
+            'Priority customer support',
+            'Monthly usage reports'
+          ]
+        } else if (tier === 'premium' || tier === 'enterprise') {
+          benefits = [
+            'Priority ranking in search results',
+            'Featured badge on listings',
+            'Dedicated account manager',
+            'Custom data exports',
+            'API access',
+            'Unlimited contacts and exports'
+          ]
+        }
+
+        const benefitsHtml = benefits.map(b => `<li>${b}</li>`).join('')
+
+        contentDiv.innerHTML = `
+          <div class="dashboard-grid">
+            <div class="card">
+              <h3>Account Information</h3>
+              <div class="card-content">
+                <div class="info-row">
+                  <span class="info-label">Email</span>
+                  <span class="info-value">${user.email}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Company Name</span>
+                  <span class="info-value">${companyName}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Member Since</span>
+                  <span class="info-value">${createdAt}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Subscription Plan</h3>
+              <div class="card-content">
+                <div class="info-row">
+                  <span class="info-label">Current Plan</span>
+                  <span class="tier-badge ${tier}">${tierDisplay}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card full-width">
+              <h3>Plan Benefits</h3>
+              <ul class="benefits-list">
+                ${benefitsHtml}
+              </ul>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <a href="/account/subscription" class="btn btn-primary">Upgrade Plan</a>
+            <button id="signout-btn" class="btn btn-danger">Sign Out</button>
+          </div>
+        `
+
+        // Add sign out handler
+        const signoutBtn = document.getElementById('signout-btn')
+        signoutBtn?.addEventListener('click', async () => {
+          await supabaseBrowser.auth.signOut()
+          window.location.href = '/'
+        })
+
+      } catch (error) {
+        console.error('Dashboard error:', error)
+        contentDiv.innerHTML = `
+          <div class="error-message">
+            An unexpected error occurred. Please refresh the page.
+          </div>
+        `
+      }
+    }
+
+    // Load dashboard when page loads
+    loadDashboard()
+  </script>
+</body>
+</html>

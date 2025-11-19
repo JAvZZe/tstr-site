@@ -1,0 +1,185 @@
+================================================================================
+TSTR.SITE - RLS POLICY FIX FOR PUBLIC FORM SUBMISSIONS
+================================================================================
+
+ISSUE
+-----
+Form submissions from /submit page failing with:
+  "new row violates row-level security policy for table 'listings'"
+
+ROOT CAUSE
+----------
+- RLS (Row-Level Security) enabled on listings table
+- No INSERT policy allowing anonymous users
+- Form attempts INSERT with status='pending' but policy blocks it
+
+SOLUTION IMPLEMENTED
+--------------------
+Created RLS policy allowing anonymous users to INSERT listings with constraints:
+  - status = 'pending' (unverified submissions)
+  - verified = false (not yet verified)
+  - claimed = false (not yet claimed by owner)
+
+FILES CREATED/MODIFIED
+----------------------
+
+1. MIGRATION FILE (Primary)
+   Location: web/tstr-automation/supabase/migrations/20251118000001_fix_rls_public_submissions.sql
+   Content: SQL migration with RLS policy definition
+   Purpose: Version-controlled, deployable via Supabase CLI
+
+2. APPLICATION SCRIPT
+   Location: web/tstr-automation/execute_public_submissions_rls.py
+   Purpose: Execute migration via psql directly
+   Usage: python3 execute_public_submissions_rls.py
+
+3. ALTERNATIVE APPLICATION SCRIPT
+   Location: apply_rls_policy.py
+   Purpose: Fallback approach using supabase-py library
+   Usage: python3 apply_rls_policy.py
+
+4. DOCUMENTATION FILES
+   - RLS_PUBLIC_SUBMISSIONS_FIX.md
+     Full technical details, design rationale, troubleshooting
+
+   - APPLY_RLS_POLICY_INSTRUCTIONS.md
+     Step-by-step guide for applying the fix
+     Three methods: CLI, Python script, Dashboard
+
+5. TEST SCRIPT
+   Location: test_submit.js
+   Purpose: Browser console test for form submission
+   Usage: Copy to browser console on /submit page, run testSubmission()
+
+HOW TO APPLY THE FIX
+--------------------
+
+OPTION 1: Supabase CLI (Recommended)
+  $ cd /home/al/AI\ PROJECTS\ SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working
+  $ supabase link
+  $ supabase db push --linked
+
+OPTION 2: Python Script
+  $ cd web/tstr-automation
+  $ python3 execute_public_submissions_rls.py
+  (Enter database password when prompted)
+
+OPTION 3: Manual Dashboard
+  1. Go to https://app.supabase.io/
+  2. Select TSTR.site project
+  3. SQL Editor > New query
+  4. Paste SQL from migration file
+  5. Execute
+
+VERIFICATION
+------------
+
+After applying, verify the policy exists:
+  $ psql [connection_string] -c \
+    "SELECT policyname, roles, cmd FROM pg_policies
+     WHERE tablename = 'listings' AND cmd = 'INSERT';"
+
+Should see:
+  - Allow authenticated submissions to pending listings
+  - Allow public submissions to pending listings
+
+Test form submission:
+  1. Go to http://tstr.site/submit
+  2. Fill in form
+  3. Click "Submit Listing"
+  4. Should see: "✓ Thank you! Your listing has been submitted successfully."
+  5. Listing appears in database with status='pending'
+
+GIT STATUS
+----------
+
+New files to commit:
+  ?? APPLY_RLS_POLICY_INSTRUCTIONS.md
+  ?? RLS_PUBLIC_SUBMISSIONS_FIX.md
+  ?? apply_rls_policy.py
+  ?? test_submit.js
+  ?? web/tstr-automation/execute_public_submissions_rls.py
+  ?? web/tstr-automation/supabase/migrations/20251118000001_fix_rls_public_submissions.sql
+
+Commit these files with:
+  $ git add APPLY_RLS_POLICY_INSTRUCTIONS.md RLS_PUBLIC_SUBMISSIONS_FIX.md \
+           apply_rls_policy.py test_submit.js \
+           web/tstr-automation/execute_public_submissions_rls.py \
+           web/tstr-automation/supabase/migrations/20251118000001_fix_rls_public_submissions.sql
+  $ git commit -m "Fix RLS policy blocking public form submissions"
+
+POLICY DETAILS
+--------------
+
+The RLS policy created:
+
+  CREATE POLICY "Allow public submissions to pending listings"
+    ON public.listings
+    FOR INSERT
+    TO anon
+    WITH CHECK (
+      status = 'pending'
+      AND verified = false
+      AND claimed = false
+    );
+
+Allows: Anonymous users to INSERT
+Blocks: Inserting with any other status or flags
+Result: Public submissions always go to review queue
+
+WHAT'S NOT CHANGED
+------------------
+
+- Form submission code (submit.astro) - already correct
+- Database schema - no changes needed
+- Other RLS policies - untouched
+- Frontend deployment - no changes needed
+
+RISK ASSESSMENT
+---------------
+
+Risk Level: LOW
+- Enables existing functionality
+- Restricts anonymous users to 'pending' status only
+- No schema changes
+- Reverse-compatible (can be disabled if needed)
+
+Impact:
+- Public form submissions will work
+- Anonymous users can submit new listings
+- All submissions marked as pending for review
+- No changes to user-visible behavior
+
+TIMELINE
+--------
+
+- Issue Found: 2025-11-18
+- Solution Designed: 2025-11-18
+- Files Created: 2025-11-18
+- Status: READY TO DEPLOY
+- Testing: Awaiting deployment
+
+NEXT STEPS
+----------
+
+1. Choose application method (Option 1, 2, or 3 above)
+2. Execute the migration
+3. Verify policy created
+4. Test form submission
+5. Commit files to git
+6. Monitor for any issues
+
+SUPPORT
+-------
+
+For detailed information, see:
+- RLS_PUBLIC_SUBMISSIONS_FIX.md (technical details)
+- APPLY_RLS_POLICY_INSTRUCTIONS.md (deployment guide)
+- test_submit.js (testing procedure)
+
+Questions or issues? Check the documentation files for troubleshooting.
+
+================================================================================
+Created: 2025-11-18
+Status: Ready for Deployment
+================================================================================

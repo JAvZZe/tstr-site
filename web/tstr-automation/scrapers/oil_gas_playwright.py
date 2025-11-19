@@ -97,11 +97,8 @@ def scrape_contract_laboratory(dry_run=False, limit=None):
                 html = page.content()
                 soup = BeautifulSoup(html, 'html.parser')
 
-                # Find lab cards - try multiple selectors
-                lab_cards = soup.find_all('div', class_='hp-vendor--view-block')
-                if not lab_cards:
-                    # Try alternative selector
-                    lab_cards = soup.find_all('div', class_=lambda x: x and 'vendor' in x.lower())
+                # Find lab cards - HivePress uses <article> tags
+                lab_cards = soup.find_all('article', class_='hp-vendor--view-block')
 
                 logger.info(f"Found {len(lab_cards)} labs on page {page_num}")
 
@@ -110,30 +107,29 @@ def scrape_contract_laboratory(dry_run=False, limit=None):
                         break
 
                     try:
-                        # Extract basic info from card
-                        name_elem = card.find('h3') or card.find('h2') or card.find('a')
+                        # Extract name from h4.hp-vendor__name > a
+                        name_elem = card.find('h4', class_='hp-vendor__name')
                         if not name_elem:
                             continue
 
-                        business_name = name_elem.get_text(strip=True)
+                        name_link = name_elem.find('a')
+                        if not name_link:
+                            continue
 
-                        # Extract profile link
-                        link = card.find('a', href=True)
-                        profile_url = None
-                        if link:
-                            profile_url = link['href']
-                            if profile_url.startswith('/'):
-                                profile_url = f'{base_url}{profile_url}'
+                        business_name = name_link.get_text(strip=True)
 
-                        # Extract address from card
-                        address_text = card.get_text()
-                        # Simple address extraction (can be improved)
+                        # Extract profile URL
+                        profile_url = name_link.get('href', '')
+                        if profile_url and not profile_url.startswith('http'):
+                            profile_url = f'{base_url}{profile_url}'
+
+                        # Extract location from .hp-vendor__location span
+                        location_elem = card.find('div', class_='hp-vendor__location')
                         address = None
-                        for line in address_text.split('\n'):
-                            line = line.strip()
-                            if ',' in line and len(line) > 10:
-                                address = line
-                                break
+                        if location_elem:
+                            location_span = location_elem.find('span')
+                            if location_span:
+                                address = location_span.get_text(strip=True)
 
                         listing = {
                             'business_name': business_name,

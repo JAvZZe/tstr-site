@@ -1,21 +1,8 @@
 ---
 import { supabase } from '../../lib/supabase'
 
-// Generate static paths for all listings at build time
-export async function getStaticPaths() {
-  const { data: listings, error } = await supabase
-    .from('listings')
-    .select('slug')
-    .eq('status', 'active')
-
-  if (error || !listings) {
-    return []
-  }
-
-  return listings.map(listing => ({
-    params: { slug: listing.slug }
-  }))
-}
+// Force SSR - we need to check user session/tier dynamically
+export const prerender = false
 
 const { slug } = Astro.params
 
@@ -91,6 +78,42 @@ const getLocationHierarchy = (location) => {
 const locationHierarchy = getLocationHierarchy(listing.location)
 const country = locationHierarchy.find(l => l.level === 'country')
 
+// Get user session and subscription tier
+const authHeader = Astro.request.headers.get('cookie')
+let userTier = 'free'
+let isLoggedIn = false
+
+if (authHeader) {
+  try {
+    // Fetch user from the browser's authenticated session
+    const sessionResponse = await fetch('https://haimjeaetrsaauitrhfy.supabase.co/auth/v1/user', {
+      headers: {
+        'Authorization': `Bearer ${authHeader.split('sb-access-token=')[1]?.split(';')[0] || ''}`,
+        'Content-Type': 'application/json'
+      }
+    })
+
+    if (sessionResponse.ok) {
+      const userData = await sessionResponse.json()
+      if (userData.id) {
+        isLoggedIn = true
+
+        // Fetch user profile with subscription tier
+        const { data: profile } = await supabase
+          .from('user_profiles')
+          .select('subscription_tier')
+          .eq('id', userData.id)
+          .single()
+
+        userTier = profile?.subscription_tier || 'basic'
+      }
+    }
+  } catch (e) {
+    // Silently fail - user will be treated as free tier
+    userTier = 'free'
+  }
+}
+
 // Format custom fields by type
 const formatFieldValue = (value, fieldType) => {
   if (fieldType === 'boolean') {
@@ -110,6 +133,23 @@ const customFields = customFieldValues?.map(cf => ({
   value: formatFieldValue(cf.value, cf.custom_field?.field_type),
   type: cf.custom_field?.field_type
 })) || []
+
+// Tier-based visibility rules
+const canViewFullAddress = userTier !== 'free'
+const canViewPhone = userTier === 'professional' || userTier === 'premium' || userTier === 'enterprise'
+const canViewEmail = userTier === 'professional' || userTier === 'premium' || userTier === 'enterprise'
+const canViewWebsite = userTier !== 'free'
+const canViewCertifications = userTier !== 'free'
+
+// Get description preview for free tier (150 chars)
+const descriptionPreview = listing.description
+  ? userTier === 'free'
+    ? listing.description.substring(0, 150) + (listing.description.length > 150 ? '...' : '')
+    : listing.description
+  : null
+
+// Count certifications (visible to free tier as count only)
+const certificationCount = customFields.length
 ---
 
 <!DOCTYPE html>
@@ -321,6 +361,84 @@ const customFields = customFieldValues?.map(cf => ({
       margin-top: 4rem;
     }
 
+    .upgrade-cta {
+      background: linear-gradient(135deg, #f0f4ff 0%, #fff0f5 100%);
+      border: 2px solid #667eea;
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      margin: 1rem 0;
+    }
+
+    .upgrade-cta svg {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .upgrade-cta p {
+      margin: 0.5rem 0;
+      color: #333;
+    }
+
+    .upgrade-cta p strong {
+      color: #667eea;
+      font-size: 1.1rem;
+    }
+
+    .upgrade-cta p:last-child {
+      font-size: 0.95rem;
+      color: #666;
+    }
+
+    .upgrade-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 1rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .upgrade-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .tier-badge {
+      display: inline-block;
+      background: rgba(102, 126, 234, 0.1);
+      color: #667eea;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-left: 0.5rem;
+    }
+
+    .tier-badge.premium {
+      background: rgba(118, 75, 162, 0.1);
+      color: #764ba2;
+    }
+
+    .free-tier-preview {
+      background: linear-gradient(135deg, #fff9e6 0%, #ffe8cc 100%);
+      padding: 0.75rem 1rem;
+      border-left: 3px solid #ffc107;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .free-tier-preview::after {
+      content: ' (Preview - Sign up for full details)';
+      color: #856404;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
     @media (max-width: 768px) {
       .listing-title {
         font-size: 1.5rem;
@@ -337,6 +455,14 @@ const customFields = customFieldValues?.map(cf => ({
       .field-value {
         text-align: left;
         margin-top: 0.25rem;
+      }
+
+      .upgrade-cta {
+        padding: 1rem;
+      }
+
+      .upgrade-btn {
+        width: 100%;
       }
     }
   </style>
@@ -373,49 +499,102 @@ const customFields = customFieldValues?.map(cf => ({
       {listing.description && (
         <div class="info-section">
           <h2>About</h2>
-          <p class="description">{listing.description}</p>
+          {userTier === 'free' && (
+            <div class="free-tier-preview"></div>
+          )}
+          <p class="description">{descriptionPreview}</p>
         </div>
       )}
 
       <div class="info-section">
-        <h2>Contact Information</h2>
+        <h2>Contact Information {userTier !== 'free' && <span class="tier-badge">{userTier}</span>}</h2>
         <div class="info-grid">
           {listing.address && (
-            <div class="info-item">
-              <div class="info-label">Address</div>
-              <div class="info-value">{listing.address}</div>
-            </div>
+            <>
+              {canViewFullAddress ? (
+                <div class="info-item">
+                  <div class="info-label">Address</div>
+                  <div class="info-value">{listing.address}</div>
+                </div>
+              ) : (
+                <div class="info-item">
+                  <div class="info-label">Location</div>
+                  <div class="info-value">
+                    {listing.location?.name}{listing.location?.parent?.name && `, ${listing.location.parent.name}`}
+                  </div>
+                </div>
+              )}
+            </>
           )}
-          {listing.phone && (
+
+          {listing.phone && canViewPhone ? (
             <div class="info-item">
               <div class="info-label">Phone</div>
               <div class="info-value"><a href={`tel:${listing.phone}`}>{listing.phone}</a></div>
             </div>
-          )}
-          {listing.email && (
+          ) : null}
+
+          {listing.email && canViewEmail ? (
             <div class="info-item">
               <div class="info-label">Email</div>
               <div class="info-value"><a href={`mailto:${listing.email}`}>{listing.email}</a></div>
             </div>
-          )}
-          {listing.website && (
+          ) : null}
+
+          {listing.website && canViewWebsite ? (
             <div class="info-item">
               <div class="info-label">Website</div>
               <div class="info-value"><a href={listing.website} target="_blank" rel="noopener noreferrer">{listing.website}</a></div>
             </div>
-          )}
+          ) : null}
         </div>
+
+        {userTier === 'free' && (
+          <div class="upgrade-cta">
+            <svg>🔒</svg>
+            <p><strong>Contact information hidden</strong></p>
+            <p>Sign up free to view full listing details</p>
+            <a href="/signup" class="upgrade-btn">Sign Up Free</a>
+          </div>
+        )}
+
+        {userTier === 'basic' && (
+          <div class="upgrade-cta">
+            <svg>📞</svg>
+            <p><strong>Contact details available for Professional tier</strong></p>
+            <p>Upgrade to Professional ($295/mo) to view phone and email</p>
+            <a href="/account/subscription" class="upgrade-btn">View Plans</a>
+          </div>
+        )}
       </div>
 
       {customFields.length > 0 && (
         <div class="custom-fields">
-          <h2>Certifications & Capabilities</h2>
-          {customFields.map(field => (
-            <div class="field-item">
-              <div class="field-name">{field.name}</div>
-              <div class="field-value">{field.value}</div>
-            </div>
-          ))}
+          <h2>Certifications & Capabilities {canViewCertifications && <span class="tier-badge premium">{userTier}</span>}</h2>
+
+          {canViewCertifications ? (
+            <>
+              {customFields.map(field => (
+                <div class="field-item">
+                  <div class="field-name">{field.name}</div>
+                  <div class="field-value">{field.value}</div>
+                </div>
+              ))}
+            </>
+          ) : (
+            <>
+              <div class="field-item">
+                <div class="field-name">Total Certifications Found</div>
+                <div class="field-value">{certificationCount}</div>
+              </div>
+              <div class="upgrade-cta">
+                <svg>🔐</svg>
+                <p><strong>Certification details hidden</strong></p>
+                <p>Sign up free to view full certification list</p>
+                <a href="/signup" class="upgrade-btn">Sign Up Free</a>
+              </div>
+            </>
+          )}
         </div>
       )}
 

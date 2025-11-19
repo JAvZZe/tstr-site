@@ -38,6 +38,7 @@
 - URL: https://haimjeaetrsaauitrhfy.supabase.co
 - Tables: `listings` (main), `custom_fields` (JSON), `pending_research`
 - Status: ✅ Operational
+- **MCP Server**: ✅ Installed (native tools for queries, migrations, security advisors)
 
 **Deployment Flow**:
 ```
@@ -191,6 +192,38 @@ python3 scrapers/tni_environmental.py
 # Database query
 ~/.local/bin/supabase db remote psql -c "SELECT COUNT(*) FROM listings;"
 ```
+
+### Supabase MCP Tools (Recommended)
+
+**Status**: ✅ Installed and operational (verified 2025-11-18)
+
+The Supabase MCP server provides native tools that are faster and more token-efficient than CLI calls:
+
+**Available Tools**:
+- `mcp__supabase__list_tables` - Get schema, columns, RLS status, row counts
+- `mcp__supabase__execute_sql` - Run SELECT queries (read-only recommended)
+- `mcp__supabase__apply_migration` - Execute DDL operations (CREATE, ALTER, etc.)
+- `mcp__supabase__get_advisors` - Security & performance linting
+- `mcp__supabase__list_extensions` - PostgreSQL extensions
+- `mcp__supabase__list_migrations` - Applied migrations
+- `mcp__supabase__get_logs` - Service logs (api, postgres, auth, etc.)
+- `mcp__supabase__generate_typescript_types` - Generate types for frontend
+- Edge Functions: list, get, deploy
+- Branch management: create, merge, reset, rebase
+
+**Example Usage**:
+```typescript
+// List all tables with schema details
+mcp__supabase__list_tables(schemas: ["public"])
+
+// Check for security issues
+mcp__supabase__get_advisors(type: "security")
+
+// Run query
+mcp__supabase__execute_sql(query: "SELECT COUNT(*) FROM listings WHERE status='active'")
+```
+
+**Connection**: https://mcp.supabase.com/mcp?project_ref=haimjeaetrsaauitrhfy
 
 ### Git Workflow
 ```bash
