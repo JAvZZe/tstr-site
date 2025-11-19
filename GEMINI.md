@@ -1,63 +1,133 @@
-# TSTR.site - Gemini CLI Project Context
+# CLAUDE.md - TSTR.site Project
 
-## Project Overview
-Global niche directory platform for Tests and Testing Services & Products serving specialized, high-margin industries.
+> **CRITICAL**: This project is part of the AI PROJECTS SPACE continuity system.
+> **Global System**: `/home/al/AI PROJECTS SPACE/`
+> **Project Context**: Read `TSTR.md` (this directory) for project-specific details.
 
-**Target Industries**: Oil & Gas, Pharmaceutical, Biochemistry, Genetics, Satellite, High-Tech Manufacturing, Defense, and other underserved specialized testing sectors.
+---
 
-**Geographic Scope**: Global directory with hierarchical drill-down (Global → Region → Country → City).
+## Mandatory Protocol for ALL Agents
 
-## Tech Stack & Deployment
-- **Frontend**: Astro + React (`web/tstr-frontend/`)
-- **Backend/Automation**: Python scrapers (`web/tstr-automation/`)
-  - **Hosting**: Oracle Cloud Free Tier (accessible via OCI CLI)
-- **Database**: Supabase (PostgreSQL)
-- **Hosting**: Cloudflare Pages (connected to GitHub)
-- **GitHub Repo**: `https://github.com/JAvZZe/tstr-site.git`
+### 1. Session Start (ALWAYS)
 
-## Deployment & Automation Workflow
-1.  **Code Push**: All changes are pushed to the `main` branch on GitHub.
-2.  **Netlify Build**: Netlify automatically detects the push, builds the frontend, and deploys it.
-    - **Base directory**: `web/tstr-frontend`
-    - **Build command**: `npm run build`
-    - **Publish directory**: `web/tstr-frontend/dist`
-3.  **Scraper Execution**: A cloud scheduler runs the Python scrapers automatically every 3 days.
-4.  **Database Update**: Scrapers add new listings to the Supabase `listings` table.
-5.  **Live Site Update**: A Supabase Webhook triggers a new Netlify build whenever the `listings` table is updated, ensuring new data appears on the live site automatically.
-
-## Key Files
-- **Frontend entry**: `web/tstr-frontend/src/pages/index.astro`
-- **PRIMARY scraper**: `web/tstr-automation/dual_scraper.py`
-- **Deployment Plan**: `DEPLOY_NOW.md`
-- **Supabase Schema**: `web/tstr-automation/SUPABASE_*.sql`
-- **Frontend Environment**: `web/tstr-frontend/.env` (stores public Supabase keys)
-
-## Development Principles
-1. **MVP-first**: Ship quick, iterate based on feedback.
-2. **Systematic testing**: One feature at a time with checkpoints.
-3. **Git commits**: Every working checkpoint for easy rollback.
-4. **Pareto focus**: 80/20 rule - focus on high-impact features.
-5. **Cost optimization**: Use cheapest effective tool.
-
-## Current Status
-- **Frontend**: Ready for first deployment to Netlify.
-- **Backend**: Python scrapers are operational.
-- **Database**: Supabase schema is defined and ready.
-- **Automation**: Auto-update workflow (Supabase Webhook -> Netlify Build Hook) is designed and ready for implementation post-deployment.
-
-## Common Tasks
 ```bash
-# Frontend development
-cd web/tstr-frontend && npm run dev
-
-# Run PRIMARY scraper (listings + leads)
-cd web/tstr-automation && python dual_scraper.py
-
-# Deploy Frontend (after committing to git)
-git push origin main
+cd "/home/al/AI PROJECTS SPACE" && ./resume.sh
 ```
 
-## Important Notes
-- API keys in `.env` files must never be committed to Git.
-- The `.gitignore` file is configured to prevent this.
-- Follow existing code style and test incrementally.
+This loads:
+- Global learnings relevant to this project
+- Pending tasks (filter by "TSTR.site" project tag)
+- Handoff context from previous agents
+- Token usage tracking
+
+### 2. During Work
+
+**Checkpoint frequently**:
+```bash
+cd "/home/al/AI PROJECTS SPACE" && ./checkpoint.sh "description of work completed"
+```
+
+**Extract learnings** after errors/discoveries:
+```bash
+cd "/home/al/AI PROJECTS SPACE/SYSTEM/state" && python3 << 'PYEOF'
+from db_utils import add_learning
+add_learning(
+    "Your learning here",
+    "gotcha",  # or "pattern", "optimization", "security"
+    confidence=5,
+    tags=["TSTR.site", "relevant-tech", "specific-issue"]
+)
+PYEOF
+```
+
+**Track tasks**:
+```bash
+cd "/home/al/AI PROJECTS SPACE/SYSTEM/state" && python3 << 'PYEOF'
+from db_utils import add_task, update_task
+task_id = add_task("TSTR.site", "Task description", assigned_to="claude")
+# ... do work ...
+update_task(task_id, "completed", result="Result summary")
+PYEOF
+```
+
+### 3. Session End or Handoff
+
+```bash
+cd "/home/al/AI PROJECTS SPACE" && ./handoff.sh <agent> <reason>
+```
+
+---
+
+## Project-Specific Instructions
+
+**Read these files IN ORDER**:
+
+1. **START_HERE.md** - Quick orientation checklist
+2. **TSTR.md** - PRIMARY agent instructions (architecture, commands, priorities)
+3. **.ai-session.md** - Latest session context and active tasks
+4. **PROJECT_STATUS.md** - Deployment status and infrastructure details
+5. **HANDOFF_TO_CLAUDE.md** - Current handoff (if exists)
+
+---
+
+## Quick Reference
+
+**Project Root**: `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working`
+
+**Frontend**: `web/tstr-frontend/` (Astro + React + Tailwind)
+**Scrapers**: `web/tstr-automation/` (Python, deployed on OCI)
+**Database**: Supabase (https://haimjeaetrsaauitrhfy.supabase.co)
+
+**Website**: http://tstr.site (LIVE - 163 listings as of 2025-11-17)
+
+**Git Repo**: https://github.com/JAvZZe/tstr-site.git
+
+---
+
+## Why This Matters
+
+**Token Economics**: Recording learnings prevents repeated mistakes across sessions.
+- Repeated error = ~5000 tokens wasted
+- Learning recorded once = ~200 tokens
+- ROI after 1-2 avoided repetitions
+
+**Continuity**: Without checkpoints/learnings, context is lost between sessions.
+- Failed work = wasted time and money
+- Checkpoints = instant recovery from failures
+
+**Game Theory**: Using the continuity system is the optimal strategy for long-term project success.
+
+---
+
+## Enforcement
+
+**Self-check compliance**:
+```bash
+cd "/home/al/AI PROJECTS SPACE" && ./SYSTEM/enforcement/protocol_check.sh
+```
+
+Should show:
+- ✅ Checkpoints created
+- ✅ Learnings recorded
+- ✅ Tasks tracked
+
+If any fail → fix violations before continuing.
+
+---
+
+## Development Principles
+
+See `TSTR.md` for:
+- User profile (non-tech, AuDHD, OODA + Pareto + First Principles)
+- Architecture (frontend, scrapers, database)
+- Current priorities (P0, P1, P2)
+- Code standards
+- Common patterns
+- Troubleshooting guides
+
+**Remember**: First Principles. OODA Loop. Test before deploy. No theater, working code only.
+
+---
+
+**Last Updated**: 2025-11-17
+**System Version**: AI PROJECTS SPACE v2.0
