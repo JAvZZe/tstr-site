@@ -1,0 +1,597 @@
+---
+// Pricing page for TSTR.site
+// No Stripe integration yet - manual sales via contact form
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing Plans - Get More Leads | TSTR Hub</title>
+  <meta name="description" content="Choose the right plan for your testing laboratory. Free listings with upgrade options for lead generation, priority ranking, and exclusive features. Starting at $295/month.">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .breadcrumb {
+      margin-top: 1.5rem;
+      opacity: 0.9;
+      font-size: 0.9rem;
+    }
+
+    .breadcrumb a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .pricing-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      position: relative;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(102, 126, 234, 0.15);
+    }
+
+    .pricing-card.featured {
+      border: 3px solid #667eea;
+      transform: scale(1.05);
+    }
+
+    .pricing-card.featured::before {
+      content: "MOST POPULAR";
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #667eea;
+      color: white;
+      padding: 0.4rem 1.5rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .pricing-card.premium::before {
+      content: "BEST VALUE";
+      background: #764ba2;
+    }
+
+    .tier-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    .tier-price {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #667eea;
+      margin: 1rem 0;
+    }
+
+    .tier-price sup {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .tier-price sub {
+      font-size: 1rem;
+      color: #666;
+      font-weight: 400;
+    }
+
+    .tier-description {
+      color: #666;
+      margin-bottom: 2rem;
+      min-height: 50px;
+      font-size: 0.95rem;
+    }
+
+    .features-list {
+      list-style: none;
+      margin-bottom: 2rem;
+    }
+
+    .features-list li {
+      padding: 0.75rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 0.95rem;
+    }
+
+    .features-list li::before {
+      content: "✓";
+      color: #10b981;
+      font-weight: 700;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .features-list li.not-included::before {
+      content: "✗";
+      color: #e5e7eb;
+    }
+
+    .features-list li.not-included {
+      color: #999;
+      text-decoration: line-through;
+    }
+
+    .cta-button {
+      display: block;
+      width: 100%;
+      padding: 1rem 2rem;
+      background: #667eea;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background 0.3s, transform 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .cta-button:hover {
+      background: #5568d3;
+      transform: scale(1.02);
+    }
+
+    .cta-button.secondary {
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+    }
+
+    .cta-button.secondary:hover {
+      background: #f5f7ff;
+    }
+
+    .comparison-section {
+      background: white;
+      border-radius: 16px;
+      padding: 3rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      margin-top: 4rem;
+    }
+
+    .comparison-section h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      color: #333;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow-x: auto;
+    }
+
+    .comparison-table thead {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 1.25rem;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .comparison-table th {
+      font-weight: 600;
+    }
+
+    .comparison-table tbody tr:hover {
+      background: #f9fafb;
+    }
+
+    .comparison-table td {
+      font-size: 0.95rem;
+    }
+
+    .comparison-table .check {
+      color: #10b981;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .comparison-table .cross {
+      color: #e5e7eb;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .guarantee-section {
+      background: #f0f4ff;
+      border-left: 4px solid #667eea;
+      padding: 2rem;
+      margin: 3rem 0;
+      border-radius: 8px;
+    }
+
+    .guarantee-section h3 {
+      color: #667eea;
+      margin-bottom: 0.5rem;
+    }
+
+    .faq-section {
+      margin-top: 4rem;
+      background: white;
+      border-radius: 16px;
+      padding: 3rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .faq-section h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      color: #333;
+    }
+
+    .faq-item {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .faq-item:last-child {
+      border-bottom: none;
+    }
+
+    .faq-item h3 {
+      color: #667eea;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+    }
+
+    .faq-item p {
+      color: #666;
+      line-height: 1.8;
+    }
+
+    footer {
+      background: #1f2937;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      margin-top: 4rem;
+    }
+
+    footer a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+      }
+
+      .pricing-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .pricing-card.featured {
+        transform: scale(1);
+      }
+
+      .comparison-section {
+        padding: 2rem 1rem;
+      }
+
+      .comparison-table {
+        font-size: 0.85rem;
+      }
+
+      .comparison-table th,
+      .comparison-table td {
+        padding: 0.75rem 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Find Your Perfect Plan</h1>
+    <p>Choose the tier that matches your business needs. All plans include listing in our directory. Upgrade anytime.</p>
+    <div class="breadcrumb">
+      <a href="/">Home</a> / <span>Pricing</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="pricing-grid">
+      <!-- Free Tier -->
+      <div class="pricing-card">
+        <div class="tier-name">Free</div>
+        <div class="tier-price">
+          <sup>$</sup>0<sub>/month</sub>
+        </div>
+        <div class="tier-description">
+          Get listed in our directory and start building your online presence.
+        </div>
+        <ul class="features-list">
+          <li>Basic listing in directory</li>
+          <li>Company name & description</li>
+          <li>General location (city/state)</li>
+          <li class="not-included">Contact information hidden</li>
+          <li class="not-included">No analytics dashboard</li>
+          <li class="not-included">No lead notifications</li>
+        </ul>
+        <a href="/submit" class="cta-button secondary">Get Listed Free</a>
+      </div>
+
+      <!-- Professional Tier -->
+      <div class="pricing-card featured">
+        <div class="tier-name">Professional</div>
+        <div class="tier-price">
+          <sup>$</sup>295<sub>/month</sub>
+        </div>
+        <div class="tier-description">
+          Perfect for testing labs seeking direct customer inquiries and visibility.
+        </div>
+        <ul class="features-list">
+          <li>Everything in Free, plus:</li>
+          <li><strong>Full contact info displayed</strong></li>
+          <li>Detailed capabilities & certifications</li>
+          <li>Equipment list</li>
+          <li>Up to 3 case studies</li>
+          <li>Basic analytics dashboard</li>
+          <li>Profile view tracking</li>
+          <li>Email support</li>
+        </ul>
+        <a href="mailto:contact@tstr.site?subject=Professional Plan Inquiry" class="cta-button">Contact Sales</a>
+      </div>
+
+      <!-- Premium Tier -->
+      <div class="pricing-card premium">
+        <div class="tier-name">Premium</div>
+        <div class="tier-price">
+          <sup>$</sup>795<sub>/month</sub>
+        </div>
+        <div class="tier-description">
+          Maximize lead flow with priority ranking and real-time notifications.
+        </div>
+        <ul class="features-list">
+          <li>Everything in Professional, plus:</li>
+          <li><strong>Priority ranking in searches</strong></li>
+          <li><strong>Real-time lead notifications</strong></li>
+          <li>Featured case study section</li>
+          <li>Advanced analytics dashboard</li>
+          <li>Monthly performance reports</li>
+          <li>48-hour early access to RFQs</li>
+          <li>Priority email support</li>
+        </ul>
+        <a href="mailto:contact@tstr.site?subject=Premium Plan Inquiry" class="cta-button">Contact Sales</a>
+      </div>
+
+      <!-- Enterprise Tier -->
+      <div class="pricing-card">
+        <div class="tier-name">Enterprise</div>
+        <div class="tier-price">
+          Custom
+        </div>
+        <div class="tier-description">
+          Dominate your market with exclusive features and dedicated support.
+        </div>
+        <ul class="features-list">
+          <li>Everything in Premium, plus:</li>
+          <li><strong>Category exclusivity</strong></li>
+          <li>Full analytics API access</li>
+          <li>Custom CRM integration</li>
+          <li>Co-branded marketing</li>
+          <li>Dedicated account manager</li>
+          <li>White-label profile widget</li>
+          <li>Custom contract terms</li>
+        </ul>
+        <a href="mailto:contact@tstr.site?subject=Enterprise Plan Inquiry" class="cta-button secondary">Contact Sales</a>
+      </div>
+    </div>
+
+    <div class="guarantee-section">
+      <h3>💡 Why Upgrade?</h3>
+      <p><strong>For Free Tier Users:</strong> Your listing is live, but potential customers can't reach you. Upgrade to Professional to show your contact information and start receiving inquiries today.</p>
+      <p style="margin-top: 1rem;"><strong>ROI Guarantee:</strong> Just one new client from TSTR typically covers 10+ months of your subscription cost. Most Professional subscribers report their first inquiry within 30 days.</p>
+    </div>
+
+    <!-- Feature Comparison Table -->
+    <div class="comparison-section">
+      <h2>Feature Comparison</h2>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Free</th>
+            <th>Professional</th>
+            <th>Premium</th>
+            <th>Enterprise</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Directory listing</td>
+            <td class="check">✓</td>
+            <td class="check">✓</td>
+            <td class="check">✓</td>
+            <td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>Contact info displayed</td>
+            <td class="cross">✗</td>
+            <td class="check">✓</td>
+            <td class="check">✓</td>
+            <td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>Case studies</td>
+            <td>0</td>
+            <td>3</td>
+            <td>Unlimited</td>
+            <td>Unlimited</td>
+          </tr>
+          <tr>
+            <td>Profile analytics</td>
+            <td class="cross">✗</td>
+            <td>Basic</td>
+            <td>Advanced</td>
+            <td>API Access</td>
+          </tr>
+          <tr>
+            <td>Search ranking</td>
+            <td>Standard</td>
+            <td>Standard</td>
+            <td><strong>Priority (Top 3)</strong></td>
+            <td><strong>Exclusive</strong></td>
+          </tr>
+          <tr>
+            <td>Lead notifications</td>
+            <td class="cross">✗</td>
+            <td>Daily email</td>
+            <td><strong>Real-time alerts</strong></td>
+            <td><strong>Real-time + CRM</strong></td>
+          </tr>
+          <tr>
+            <td>RFQ access</td>
+            <td class="cross">✗</td>
+            <td>Standard</td>
+            <td><strong>48hr early access</strong></td>
+            <td><strong>Exclusive delivery</strong></td>
+          </tr>
+          <tr>
+            <td>Support</td>
+            <td>Community</td>
+            <td>Email</td>
+            <td>Priority email</td>
+            <td><strong>Dedicated manager</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+
+      <div class="faq-item">
+        <h3>How do I claim my free listing?</h3>
+        <p>If you're already listed in our directory, you can claim your listing by contacting us at contact@tstr.site with your company name and verification details. If you're not listed yet, submit your lab via our <a href="/submit">submission form</a> - it's completely free!</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Can I upgrade or downgrade my plan?</h3>
+        <p>Yes! You can upgrade to a higher tier at any time. Contact our sales team at contact@tstr.site to discuss plan changes. Downgrades take effect at the end of your current billing cycle.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>What payment methods do you accept?</h3>
+        <p>We accept bank transfers, company checks, and major credit cards. Enterprise clients can arrange custom payment terms including annual billing with discounts.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Do you offer annual billing?</h3>
+        <p>Yes! Pay annually and save 2 months (17% discount). Contact sales@tstr.site for annual billing options.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>What is category exclusivity (Enterprise)?</h3>
+        <p>Category exclusivity means your lab is the only one displayed when buyers search for your specific testing type in your region. This premium feature ensures 100% of relevant leads come to you. Contact us to discuss availability for your category.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>How do lead notifications work?</h3>
+        <p>When a buyer submits a Request for Quote (RFQ) matching your capabilities, Premium subscribers receive instant email alerts. Professional subscribers receive daily digest emails. You can then respond directly to the buyer through our platform.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>What is the "Verified & Tested" certification?</h3>
+        <p>This optional add-on ($2,500 initial audit + $1,200/year renewal) includes verification of your equipment calibrations, technician certifications, insurance coverage, and customer references. Verified providers get a special badge and priority filtering in search results.</p>
+      </div>
+    </div>
+
+    <div class="guarantee-section" style="text-align: center; margin-top: 3rem;">
+      <h3>Ready to Grow Your Testing Business?</h3>
+      <p style="margin-bottom: 1.5rem;">Join testing laboratories already generating qualified leads through TSTR Hub.</p>
+      <a href="mailto:contact@tstr.site?subject=Pricing Plan Inquiry" class="cta-button" style="display: inline-block; width: auto; padding: 1rem 3rem;">Contact Sales Team</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>
+      <a href="/">Home</a> |
+      <a href="/browse">Browse Labs</a> |
+      <a href="/submit">Submit Listing</a> |
+      <a href="/privacy">Privacy Policy</a>
+    </p>
+    <p style="margin-top: 1rem; opacity: 0.8;">
+      © 2025 TSTR Hub. All rights reserved.
+    </p>
+  </footer>
+</body>
+</html>
