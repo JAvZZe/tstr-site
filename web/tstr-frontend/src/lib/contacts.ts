@@ -1,29 +1,33 @@
 /**
- * ⚠️ CENTRALIZED CONTACT CONFIGURATION - READ THIS! ⚠️
+ * ⚠️ CENTRALIZED SITE CONFIGURATION - READ THIS! ⚠️
  *
- * This is the SINGLE SOURCE OF TRUTH for all contact emails on TSTR.site
+ * This is the SINGLE SOURCE OF TRUTH for:
+ * - Contact emails
+ * - Disclaimers and legal text
+ * - Site-wide content strings
+ * - Any text that appears in multiple places
  *
  * WHY THIS EXISTS:
- * - Change email once here, updates everywhere on the site
- * - Prevents scattered hardcoded emails across 20+ files
+ * - Change text once here, updates everywhere on the site
+ * - Prevents scattered hardcoded content across 20+ files
  * - Type-safe references (TypeScript autocomplete)
  * - Easy maintenance as project scales
  *
  * HOW TO USE:
- * 1. In Astro pages: import { CONTACTS, MAILTO_LINKS } from '../lib/contacts'
- * 2. Use MAILTO_LINKS.professionalPlan for pre-configured links
- * 3. Use CONTACTS.sales for displaying email addresses
- * 4. Use getMailtoLink('sales', 'subject') for custom links
+ * 1. In Astro pages: import { CONTACTS, MAILTO_LINKS, CONTENT } from '../lib/contacts'
+ * 2. Use CONTENT.disclaimer for standard disclaimer text
+ * 3. Use MAILTO_LINKS.professionalPlan for pre-configured links
+ * 4. Use CONTACTS.sales for displaying email addresses
  *
  * CRITICAL RULES FOR ALL AGENTS:
- * ✅ DO: Import and use this file for ALL contact email needs
- * ❌ DON'T: Hardcode email addresses like "mailto:someone@tstr.site"
- * ✅ DO: Update this file when changing contact emails
- * ❌ DON'T: Create duplicate contact configs elsewhere
+ * ✅ DO: Import and use this file for ALL site-wide content
+ * ❌ DON'T: Hardcode content like disclaimers, emails, or repeated text
+ * ✅ DO: Update this file when changing site-wide content
+ * ❌ DON'T: Create duplicate content configs elsewhere
  *
  * CURRENT CONFIGURATION:
  * - All emails route to: tstr.site1@gmail.com
- * - Updated: 2025-11-19
+ * - Updated: 2025-11-19 - Added CONTENT section for disclaimers
  */
 
 export const CONTACTS = {
@@ -73,4 +77,34 @@ export const MAILTO_LINKS = {
   partnership: getMailtoLink('partnerships', 'Partnership Opportunity'),
   claimListing: getMailtoLink('support', 'Claim My Listing'),
   reportIssue: getMailtoLink('support', 'Report an Issue'),
+  verificationPricing: getMailtoLink('sales', 'Verification Service Pricing Request'),
+} as const
+
+/**
+ * Site-wide content strings
+ * Use these for any text that appears in multiple places or may change over time
+ */
+export const CONTENT = {
+  // Disclaimers and legal text
+  disclaimer: `Disclaimer: Certifications and capabilities listed are extracted from public databases and have not been independently verified by TSTR.site. We recommend verifying all credentials directly with the testing laboratory and relevant accreditation bodies before engaging services. However, we can do this for you if you so prefer - contact us to request verification pricing.`,
+
+  disclaimerShort: `Information extracted from public databases. Verify credentials directly with laboratories before engaging services.`,
+
+  // Site taglines and descriptions
+  tagline: 'Specialist Testing Services, Products and Solutions Directory',
+
+  description: 'Global directory of testing laboratories serving specialized industries: Oil & Gas, Environmental, Materials Testing, Pharmaceuticals, and more.',
+
+  // Common CTAs
+  cta: {
+    listYourLab: 'List Your Lab',
+    getStartedFree: 'Get Started Free',
+    contactSales: 'Contact Sales',
+    learnMore: 'Learn More',
+    upgradePlan: 'Upgrade Plan',
+    requestVerification: 'Request Verification',
+  },
+
+  // Footer text
+  copyright: `© ${new Date().getFullYear()} TSTR Hub. All rights reserved.`,
 } as const
