@@ -191,14 +191,14 @@ Last Scrape:      November 10, 2025 02:31 UTC (on schedule)
 ### **Current Database State**
 
 ```
-Total Listings:        163
+Total Listings:        175
 Valid URLs:           95%+ (active validation)
 By Category:
 - Pharmaceutical:     108 listings
 - Materials Testing:   41 listings
 - Environmental:       14 listings
+- Oil & Gas Testing:   12 listings ✨ NEW
 - Biotech Testing:      0 (planned)
-- Oil & Gas Testing:    0 (planned)
 
 By Geographic Region:
 - United States:      Primary focus
