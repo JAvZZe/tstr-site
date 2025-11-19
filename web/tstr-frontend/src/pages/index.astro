@@ -5,12 +5,12 @@ import { supabase } from '../lib/supabase'
 const { data: listings, error } = await supabase
   .from('listings')
   .select(`
-    id,
-    business_name,
-    category_id,
-    slug,
-    status,
-    created_at,
+    *,
+    category:category_id (
+      id,
+      name,
+      slug
+    ),
     location:location_id (
       id,
       name,
@@ -48,9 +48,6 @@ const { data: allCategories, error: categoriesError} = await supabase
 if (categoriesError) {
   console.error('Supabase categories error:', categoriesError);
 }
-
-// Get unique categories from listings
-const categories = listings ? [...new Set(listings.map(l => l.category))].filter(Boolean) : []
 
 // Extract countries from location hierarchy
 const getCountryFromLocation = (location) => {
