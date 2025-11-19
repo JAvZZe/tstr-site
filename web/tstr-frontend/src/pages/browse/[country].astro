@@ -16,9 +16,40 @@ export async function getStaticPaths() {
 }
 
 const { country } = Astro.params
-const { countryName, countryId } = Astro.props
 
-// Fetch listings for this country
+// Fetch the country data based on URL param (needed for SSR mode in dev)
+const { data: countryData } = await supabase
+  .from('locations')
+  .select('id, name, slug')
+  .eq('slug', country)
+  .eq('level', 'country')
+  .single()
+
+// Use props from getStaticPaths if available (build time), otherwise use fetched data (dev/SSR)
+const countryName = Astro.props.countryName || countryData?.name
+const countryId = Astro.props.countryId || countryData?.id
+
+// First, get all location IDs that belong to this country (including nested cities/states)
+const { data: countryLocations } = await supabase
+  .from('locations')
+  .select('id')
+  .or(`id.eq.${countryId},parent_id.eq.${countryId}`)
+
+// Also get locations that are grandchildren (city -> state -> country)
+const { data: grandchildLocations } = await supabase
+  .from('locations')
+  .select('id, parent_id')
+
+// Filter grandchildren to find those whose parent is in countryLocations
+const parentIds = countryLocations?.map(loc => loc.id) || []
+const grandchildIds = grandchildLocations
+  ?.filter(loc => parentIds.includes(loc.parent_id))
+  .map(loc => loc.id) || []
+
+// Combine all location IDs
+const allLocationIds = [...new Set([...parentIds, ...grandchildIds])]
+
+// Fetch listings for all these locations
 const { data: listings } = await supabase
   .from('listings')
   .select(`
@@ -43,7 +74,7 @@ const { data: listings } = await supabase
     )
   `)
   .eq('status', 'active')
-  .or(`location_id.eq.${countryId},location.parent_id.eq.${countryId},location.parent.parent_id.eq.${countryId}`)
+  .in('location_id', allLocationIds)
   .order('created_at', { ascending: false })
 
 const totalListings = listings?.length || 0
