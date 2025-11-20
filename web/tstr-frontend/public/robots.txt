@@ -1,20 +1,6 @@
-# robots.txt for TSTR.site
-
 User-agent: *
 Allow: /
-
-# Sitemaps
-Sitemap: https://tstr.site/sitemap.xml
-
-# Disallow admin/account pages
 Disallow: /account
 Disallow: /api/
 
-# Allow all standard pages (important for SEO)
-Allow: /standards/
-Allow: /search/
-Allow: /hydrogen-testing
-Allow: /browse/
-
-# Crawl-delay for politeness
-Crawl-delay: 1
+Sitemap: https://tstr.site/sitemap.xml
