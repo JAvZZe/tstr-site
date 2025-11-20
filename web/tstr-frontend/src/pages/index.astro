@@ -268,6 +268,16 @@ const totalCategories = allCategories?.length || 0
     .stat-label {
       font-size: 1rem;
       opacity: 0.9;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .stat-description {
+      font-size: 0.85rem;
+      color: #888;
+      line-height: 1.4;
+      max-width: 220px;
+      margin: 0 auto;
     }
   </style>
 </head>
@@ -283,20 +293,23 @@ const totalCategories = allCategories?.length || 0
   </header>
 
   <main>
-    <!-- Stats Section -->
+    <!-- Value Propositions Section -->
     <section>
       <div class="stats">
         <div class="stat-card">
-          <div class="stat-number">{totalCategories}</div>
-          <div class="stat-label">Testing Categories</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">{totalListings}</div>
-          <div class="stat-label">Verified Listings</div>
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Free Access</div>
+          <div class="stat-description">Browse all listings, no registration required</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">100%</div>
           <div class="stat-label">URL Verified</div>
+          <div class="stat-description">Every laboratory website confirmed active</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">5+</div>
+          <div class="stat-label">Niche Industries</div>
+          <div class="stat-description">Oil & Gas, Pharma, Biotech, Environmental, Materials</div>
         </div>
       </div>
     </section>
