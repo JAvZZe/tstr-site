@@ -311,7 +311,9 @@
           .replace(/^-|-$/g, '')
 
         // Step 4: Insert listing with category_id and location_id
-        const { data: result, error } = await supabase
+        // Note: We don't use .select() because anon users can't SELECT pending listings (RLS policy)
+        // The insert will succeed (201) without returning data
+        const { error } = await supabase
           .from('listings')
           .insert([{
             business_name: data.business_name,
@@ -328,7 +330,6 @@
             claimed: false,
             created_at: new Date().toISOString()
           }])
-          .select()
 
         if (error) throw error
 
