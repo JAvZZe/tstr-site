@@ -1,0 +1,386 @@
+---
+import { supabase } from '../../lib/supabase'
+import Footer from '../../components/Footer.astro'
+
+// Fetch all active standards grouped by issuing body
+const { data: standards, error: standardsError } = await supabase
+  .from('standards')
+  .select('id, code, name, issuing_body, category:category_id(name)')
+  .eq('is_active', true)
+  .order('issuing_body', { ascending: true })
+  .order('code', { ascending: true })
+
+// Group standards by issuing body for better organization
+const standardsByBody = standards?.reduce((acc, std) => {
+  const body = std.issuing_body || 'Other'
+  if (!acc[body]) acc[body] = []
+  acc[body].push(std)
+  return acc
+}, {} as Record<string, typeof standards>)
+
+const totalStandards = standards?.length || 0
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search by Standard | TSTR Hub</title>
+  <meta name="description" content="Find testing laboratories by specific certifications and standards. Search across {totalStandards} standards including ISO, API, USP, ASTM, and more.">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
+     crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+    }
+
+    .breadcrumb {
+      margin-top: 1rem;
+      opacity: 0.9;
+    }
+
+    .breadcrumb a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .search-card {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .search-form {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: #667eea;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .form-group select {
+      padding: 0.75rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+      background: white;
+    }
+
+    .form-group select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .form-group select option {
+      padding: 0.5rem;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 0.9rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102,126,234,0.3);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .results-section {
+      display: none;
+    }
+
+    .results-section.active {
+      display: block;
+    }
+
+    .results-count {
+      background: white;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      font-weight: 600;
+      color: #667eea;
+    }
+
+    .listings-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .listing-card {
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .listing-card:hover {
+      border-color: #667eea;
+      box-shadow: 0 4px 12px rgba(102,126,234,0.2);
+      transform: translateY(-2px);
+    }
+
+    .listing-title {
+      color: #667eea;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .listing-info {
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+
+    .standard-badge {
+      background: #667eea;
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      display: inline-block;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      color: #667eea;
+      font-size: 1.1rem;
+    }
+
+    .error {
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      border-radius: 8px;
+      padding: 1.5rem;
+      color: #856404;
+      text-align: center;
+    }
+
+    .no-results {
+      background: white;
+      border-radius: 12px;
+      padding: 3rem 2rem;
+      text-align: center;
+      color: #666;
+    }
+
+    .no-results h3 {
+      color: #667eea;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      main {
+        padding: 2rem 1rem;
+      }
+
+      .search-card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🔬 Search by Standard</h1>
+    <p>Find testing laboratories by specific certifications and standards</p>
+    <div class="breadcrumb">
+      <a href="/">Home</a> / <a href="/browse">Browse</a> / Search by Standard
+    </div>
+  </header>
+
+  <main>
+    <div class="search-card">
+      <form class="search-form" id="search-form">
+        <div class="form-group">
+          <label for="standard-select">Select Standard or Certification</label>
+          <select id="standard-select" name="standard" required>
+            <option value="">-- Choose a standard --</option>
+            {standardsByBody && Object.entries(standardsByBody).map(([body, stds]) => (
+              <optgroup label={body}>
+                {stds.map(std => (
+                  <option value={std.code}>
+                    {std.code} - {std.name}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
+        </div>
+
+        <button type="submit" class="btn" id="search-btn">
+          Search Laboratories
+        </button>
+      </form>
+    </div>
+
+    <div class="results-section" id="results-section">
+      <div class="results-count" id="results-count"></div>
+      <div class="listings-grid" id="results-grid"></div>
+    </div>
+  </main>
+
+  <Footer />
+
+  <script>
+    const form = document.getElementById('search-form') as HTMLFormElement
+    const searchBtn = document.getElementById('search-btn') as HTMLButtonElement
+    const resultsSection = document.getElementById('results-section') as HTMLDivElement
+    const resultsCount = document.getElementById('results-count') as HTMLDivElement
+    const resultsGrid = document.getElementById('results-grid') as HTMLDivElement
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      
+      const formData = new FormData(form)
+      const standard = formData.get('standard') as string
+
+      if (!standard) return
+
+      // Show loading state
+      searchBtn.disabled = true
+      searchBtn.textContent = 'Searching...'
+      resultsSection.classList.add('active')
+      resultsCount.textContent = 'Searching laboratories...'
+      resultsGrid.innerHTML = '<div class="loading">🔍 Searching...</div>'
+
+      try {
+        // Call the API endpoint
+        const response = await fetch(`/api/search/by-standard?standard=${encodeURIComponent(standard)}`)
+        const data = await response.json()
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Search failed')
+        }
+
+        // Update results count
+        resultsCount.textContent = `Found ${data.count} ${data.count === 1 ? 'laboratory' : 'laboratories'} for ${data.standard}`
+
+        // Display results
+        if (data.count === 0) {
+          resultsGrid.innerHTML = `
+            <div class="no-results">
+              <h3>No Laboratories Found</h3>
+              <p>We don't have any laboratories certified for <strong>${data.standard}</strong> yet.</p>
+              <p style="margin-top: 1rem;">
+                <a href="/submit" style="color: #667eea; text-decoration: none; font-weight: 600;">
+                  Submit a laboratory →
+                </a>
+              </p>
+            </div>
+          `
+        } else {
+          resultsGrid.innerHTML = data.results.map((result: any) => `
+            <div class="listing-card">
+              <div class="listing-title">
+                <a href="/listing/${result.listing_id}">${result.business_name}</a>
+              </div>
+              <div class="listing-info">
+                📍 ${result.address || 'Location not specified'}
+              </div>
+              <div class="listing-info">
+                <span class="standard-badge">${result.standard_code}</span>
+                ${result.verified ? '<span style="color: #4caf50;">✓ Verified</span>' : ''}
+              </div>
+              ${result.specifications && Object.keys(result.specifications).length > 0 ? `
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
+                  <strong style="color: #667eea;">Technical Specifications:</strong><br>
+                  ${Object.entries(result.specifications).map(([key, value]) => 
+                    `<span style="display: inline-block; margin-right: 1rem; color: #666;">
+                      ${key.replace(/_/g, ' ')}: <strong>${value}</strong>
+                    </span>`
+                  ).join('')}
+                </div>
+              ` : ''}
+            </div>
+          `).join('')
+        }
+
+      } catch (error) {
+        console.error('Search error:', error)
+        resultsGrid.innerHTML = `
+          <div class="error">
+            <strong>Search Error</strong><br>
+            ${error instanceof Error ? error.message : 'An unexpected error occurred. Please try again.'}
+          </div>
+        `
+      } finally {
+        searchBtn.disabled = false
+        searchBtn.textContent = 'Search Laboratories'
+      }
+    })
+  </script>
+</body>
+</html>
