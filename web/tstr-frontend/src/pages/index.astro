@@ -104,7 +104,7 @@ const totalCategories = allCategories?.length || 0
     }
     
     header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #667eea 0%, #059669 100%);
       color: white;
       padding: 3rem 2rem;
       text-align: center;
@@ -239,7 +239,7 @@ const totalCategories = allCategories?.length || 0
     }
     
     .cta-button:hover {
-      background: #764ba2;
+      background: #059669;
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     }
@@ -252,7 +252,7 @@ const totalCategories = allCategories?.length || 0
     }
     
     .stat-card {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #667eea 0%, #059669 100%);
       color: white;
       padding: 1.5rem;
       border-radius: 8px;
@@ -338,7 +338,7 @@ const totalCategories = allCategories?.length || 0
     <section>
       <h2>International Coverage</h2>
       <p style="margin-bottom: 1rem; color: #666;">
-        Testing service providers verified and ready to serve you in select markets internationally
+        Testing service providers ready to serve you in select markets internationally
       </p>
       <div class="location-list">
         {locations.map((location) => (
@@ -354,12 +354,12 @@ const totalCategories = allCategories?.length || 0
 
     <!-- Browse Listings CTA -->
     <section style="text-align: center;">
-      <h2>Browse Verified Testing Laboratories</h2>
+      <h2>Browse Testers</h2>
       <p style="margin: 1rem 0 2rem; color: #666; font-size: 1.1rem;">
-        Explore {totalListings} verified testing service providers worldwide
+        Explore {totalListings} testing service providers worldwide
       </p>
       <a href="/browse" class="cta-button" style="display: inline-block; margin-right: 1rem;">View All Listings</a>
-      <a href="/search/standards" class="cta-button" style="display: inline-block; background: #764ba2;">Search by Standard</a>
+      <a href="/search/standards" class="cta-button" style="display: inline-block; background: #059669;">Search by Standard</a>
     </section>
 
     <!-- Categories Section -->
@@ -370,7 +370,7 @@ const totalCategories = allCategories?.length || 0
           <a href={`/browse?category=${encodeURIComponent(category.name)}`} style="text-decoration: none; color: inherit;">
             <div class="category-card">
               <h3>{category.name}</h3>
-              <p>{listings.filter(l => l.category_id === category.id).length} verified listings</p>
+              <p>{listings.filter(l => l.category_id === category.id).length} listings</p>
             </div>
           </a>
         ))}
