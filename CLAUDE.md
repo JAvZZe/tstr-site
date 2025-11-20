@@ -10,15 +10,26 @@
 
 ### 1. Session Start (ALWAYS)
 
+**NEW (2025-11-20)**: Use bootstrap script instead of resume.sh:
+
 ```bash
-cd "/home/al/AI PROJECTS SPACE" && ./resume.sh
+./bootstrap.sh TSTR.site
 ```
 
 This loads:
-- Global learnings relevant to this project
-- Pending tasks (filter by "TSTR.site" project tag)
-- Handoff context from previous agents
-- Token usage tracking
+- **Project-specific learnings** (15 relevant from 90 total)
+- **Pending tasks** (filtered to TSTR.site only)
+- **Recent session context** (what was last done)
+- **Handoff context** from previous agents
+- **Protocol reminders** with absolute paths
+
+**Why bootstrap > resume**:
+- resume.sh: Shows ALL learnings (overwhelming)
+- bootstrap.sh: Shows TSTR.site learnings only (manageable)
+- Filters by project name in tags AND content
+- High confidence only (≥4)
+
+**Symlinks available**: In this folder, just run `./bootstrap.sh TSTR.site`
 
 ### 2. During Work
 
