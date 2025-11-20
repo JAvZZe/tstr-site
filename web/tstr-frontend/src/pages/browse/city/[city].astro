@@ -1,5 +1,6 @@
 ---
 import { supabase } from '../../../lib/supabase'
+import { CONTENT } from '../../../lib/contacts'
 import Footer from '../../../components/Footer.astro'
 
 // Get all listings to generate static paths
@@ -278,7 +279,10 @@ const totalListings = listings.length
     <div class="certification-disclaimer">
       <div class="disclaimer-icon">⚠️</div>
       <div class="disclaimer-content">
-        <p><strong>Disclaimer:</strong> Certifications and capabilities listed are extracted from public databases and have not been independently verified by TSTR.site. We recommend verifying all credentials directly with the testing laboratory and relevant accreditation bodies before engaging services.</p>
+        <p>{CONTENT.disclaimer}</p>
+        <p style="margin-top: 0.75rem;">
+          <strong><a href={CONTENT.disclaimerLink.href}>{CONTENT.disclaimerLink.text}</a></strong>
+        </p>
       </div>
     </div>
 
