@@ -1,0 +1,535 @@
+---
+import { supabase } from '../../lib/supabase'
+import Footer from '../../components/Footer.astro'
+
+// Fetch ISO 19880-3 standard details
+const { data: standard, error: stdError } = await supabase
+  .from('standards')
+  .select('*')
+  .eq('code', 'ISO 19880-3')
+  .single()
+
+// Fetch certified labs for this standard
+const { data: results, error: searchError } = await supabase
+  .rpc('search_by_standard', {
+    p_standard_code: 'ISO 19880-3',
+    p_category_id: null,
+    p_min_specs: {}
+  })
+
+const labCount = results?.length || 0
+
+const title = "ISO 19880-3 Testing Labs | Hydrogen Valve Certification at 700 Bar"
+const description = "Find laboratories certified for ISO 19880-3 hydrogen fueling station valve testing. 700 bar pressure testing, materials compatibility, and H2 safety certification."
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  
+  <meta name="keywords" content="ISO 19880-3, hydrogen valve testing, 700 bar testing, H2 fueling station, valve certification, hydrogen safety">
+  <link rel="canonical" href="https://tstr.site/standards/iso-19880-3">
+  
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
+     crossorigin="anonymous"></script>
+  
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "ISO 19880-3 Testing Laboratories Directory",
+    "description": "Directory of laboratories certified for ISO 19880-3 hydrogen fueling station valve testing including 700 bar pressure testing",
+    "about": {
+      "@type": "Thing",
+      "name": "ISO 19880-3",
+      "description": "Gaseous hydrogen - Fuelling stations - Part 3: Valves"
+    },
+    "provider": {
+      "@type": "Organization",
+      "name": "TSTR Hub"
+    }
+  }
+  </script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
+      color: white;
+      padding: 4rem 2rem;
+    }
+
+    .hero-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .breadcrumb {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      margin-bottom: 1rem;
+    }
+
+    .breadcrumb a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .hero .subtitle {
+      font-size: 1.3rem;
+      opacity: 0.95;
+      margin-bottom: 2rem;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      font-size: 1.1rem;
+    }
+
+    .hero-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .hero-stat strong {
+      font-size: 1.4rem;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .section {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .section h2 {
+      color: #0066cc;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section h3 {
+      color: #004d99;
+      font-size: 1.4rem;
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .info-card {
+      background: linear-gradient(135deg, #f0f7ff 0%, #e6f2ff 100%);
+      padding: 1.5rem;
+      border-radius: 8px;
+      border-left: 4px solid #0066cc;
+    }
+
+    .info-card h4 {
+      color: #0066cc;
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+    }
+
+    .info-card p {
+      color: #555;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .info-card ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 0.5rem;
+    }
+
+    .info-card li {
+      padding: 0.25rem 0;
+      color: #555;
+    }
+
+    .info-card li::before {
+      content: "✓ ";
+      color: #0066cc;
+      font-weight: bold;
+      margin-right: 0.5rem;
+    }
+
+    .lab-card {
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .lab-card:hover {
+      border-color: #0066cc;
+      box-shadow: 0 4px 12px rgba(0,102,204,0.2);
+      transform: translateY(-2px);
+    }
+
+    .lab-name {
+      color: #0066cc;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .lab-address {
+      color: #666;
+      margin-bottom: 1rem;
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .spec-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .spec-label {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 0.25rem;
+    }
+
+    .spec-value {
+      font-weight: 600;
+      color: #0066cc;
+      font-size: 1rem;
+    }
+
+    .cta-section {
+      background: linear-gradient(135deg, #f0f7ff 0%, #e6f2ff 100%);
+      text-align: center;
+      border: 2px solid #0066cc;
+    }
+
+    .btn {
+      display: inline-block;
+      background: #0066cc;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      margin: 0.5rem;
+    }
+
+    .btn:hover {
+      background: #004d99;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,102,204,0.3);
+    }
+
+    .btn.secondary {
+      background: white;
+      color: #0066cc;
+      border: 2px solid #0066cc;
+    }
+
+    .btn.secondary:hover {
+      background: #0066cc;
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .hero .subtitle {
+        font-size: 1.1rem;
+      }
+
+      main {
+        padding: 2rem 1rem;
+      }
+
+      .section {
+        padding: 1.5rem;
+      }
+
+      .info-grid, .specs-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="hero-content">
+      <div class="breadcrumb">
+        <a href="/">Home</a> / <a href="/hydrogen-testing">Hydrogen Testing</a> / ISO 19880-3
+      </div>
+      <h1>ISO 19880-3 Testing Laboratories</h1>
+      <p class="subtitle">
+        Hydrogen Fuelling Stations - Part 3: Valves
+      </p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span>🔬</span>
+          <span><strong>{labCount}</strong> Certified Labs</span>
+        </div>
+        <div class="hero-stat">
+          <span>⚡</span>
+          <span><strong>700 Bar</strong> Pressure Testing</span>
+        </div>
+        <div class="hero-stat">
+          <span>🌡️</span>
+          <span><strong>-40°C to 85°C</strong> Temperature Range</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- Standard Overview -->
+    <section class="section">
+      <h2>📋 What is ISO 19880-3?</h2>
+      <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem;">
+        ISO 19880-3 specifies the requirements for <strong>valves used in hydrogen fueling stations</strong>. 
+        This is the critical safety standard for components that control hydrogen flow at pressures up to 
+        <strong>700 bar (10,000 psi)</strong>.
+      </p>
+
+      <h3>Why This Standard Matters</h3>
+      <p>
+        Hydrogen fueling stations are transitioning from 350 bar (H35) to 700 bar (H70) systems for increased vehicle range. 
+        Standard industrial valves <strong>fail catastrophically</strong> under these conditions due to:
+      </p>
+      <ul style="margin-left: 2rem; margin-top: 1rem;">
+        <li style="margin-bottom: 0.5rem;"><strong>Hydrogen embrittlement</strong> - Metal degradation from H2 exposure</li>
+        <li style="margin-bottom: 0.5rem;"><strong>Extreme pressure cycling</strong> - Repeated 0-700 bar cycles cause fatigue</li>
+        <li style="margin-bottom: 0.5rem;"><strong>Permeation leaks</strong> - Hydrogen molecules escape through materials</li>
+        <li style="margin-bottom: 0.5rem;"><strong>Rapid decompression</strong> - Explosive failure risk</li>
+      </ul>
+
+      <h3>Who Needs ISO 19880-3 Certification?</h3>
+      <div class="info-grid">
+        <div class="info-card">
+          <h4>Valve Manufacturers</h4>
+          <p>Swagelok, Parker Hannifin, and other component suppliers must prove their valves meet H2 safety requirements.</p>
+        </div>
+        <div class="info-card">
+          <h4>Station Operators</h4>
+          <p>Shell, TotalEnergies, BP require certified components before commissioning hydrogen fueling infrastructure.</p>
+        </div>
+        <div class="info-card">
+          <h4>Automotive OEMs</h4>
+          <p>Toyota, Hyundai, BMW need validated fueling systems for fuel cell vehicle programs.</p>
+        </div>
+        <div class="info-card">
+          <h4>Engineering Firms</h4>
+          <p>Design and construction firms must specify certified components for station builds.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testing Requirements -->
+    <section class="section">
+      <h2>🔬 Testing Requirements</h2>
+      
+      <div class="info-grid">
+        <div class="info-card">
+          <h4>Pressure Testing</h4>
+          <ul>
+            <li>350 bar (H35) minimum</li>
+            <li>700 bar (H70) standard</li>
+            <li>1000+ bar (future-proof)</li>
+            <li>Cycling tests (10,000+ cycles)</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <h4>Temperature Range</h4>
+          <ul>
+            <li>-40°C (cold start conditions)</li>
+            <li>+85°C (operational maximum)</li>
+            <li>Thermal cycling tests</li>
+            <li>Cryogenic optional (-253°C)</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <h4>Materials Compatibility</h4>
+          <ul>
+            <li>Hydrogen embrittlement resistance</li>
+            <li>Permeation rate measurement</li>
+            <li>Seal material qualification</li>
+            <li>Metallurgical analysis</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <h4>Safety Validation</h4>
+          <ul>
+            <li>Leak testing (helium/hydrogen)</li>
+            <li>Fire resistance</li>
+            <li>Rapid decompression</li>
+            <li>Failure mode analysis</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Certified Laboratories -->
+    <section class="section">
+      <h2>🏢 ISO 19880-3 Certified Laboratories ({labCount})</h2>
+      <p style="margin-bottom: 2rem;">
+        These laboratories have the specialized equipment and expertise to perform ISO 19880-3 valve testing:
+      </p>
+
+      {results && results.length > 0 ? (
+        results.map(lab => (
+          <div class="lab-card">
+            <div class="lab-name">{lab.business_name}</div>
+            {lab.address && <div class="lab-address">📍 {lab.address}</div>}
+            
+            {lab.specifications && Object.keys(lab.specifications).length > 0 && (
+              <div class="specs-grid">
+                {lab.specifications.max_pressure_bar && (
+                  <div class="spec-item">
+                    <span class="spec-label">Maximum Pressure</span>
+                    <span class="spec-value">{lab.specifications.max_pressure_bar} bar</span>
+                  </div>
+                )}
+                {lab.specifications.temperature_range_c && (
+                  <div class="spec-item">
+                    <span class="spec-label">Temperature Range</span>
+                    <span class="spec-value">
+                      {lab.specifications.temperature_range_c[0]}°C to {lab.specifications.temperature_range_c[1]}°C
+                    </span>
+                  </div>
+                )}
+                {lab.specifications.test_capabilities && (
+                  <div class="spec-item">
+                    <span class="spec-label">Capabilities</span>
+                    <span class="spec-value">
+                      {Array.isArray(lab.specifications.test_capabilities) 
+                        ? lab.specifications.test_capabilities.join(', ')
+                        : lab.specifications.test_capabilities}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+            
+            {lab.website && (
+              <div style="margin-top: 1rem;">
+                <a href={lab.website} target="_blank" rel="noopener" style="color: #0066cc; text-decoration: none; font-weight: 600;">
+                  Visit Website →
+                </a>
+              </div>
+            )}
+          </div>
+        ))
+      ) : (
+        <div class="info-card">
+          <p>No laboratories currently listed for this standard. <a href="/submit" style="color: #0066cc; font-weight: 600;">Submit your laboratory</a> to be included.</p>
+        </div>
+      )}
+    </section>
+
+    <!-- Related Standards -->
+    <section class="section">
+      <h2>🔗 Related Hydrogen Standards</h2>
+      <p style="margin-bottom: 1.5rem;">
+        ISO 19880-3 is part of a family of hydrogen infrastructure standards:
+      </p>
+      
+      <div class="info-grid">
+        <div class="info-card">
+          <h4>ISO 19880-5</h4>
+          <p><strong>Hoses</strong> - Transfer lines and flexible connections for H2 fueling</p>
+          <a href="/standards/iso-19880-5" style="color: #0066cc; text-decoration: none; font-weight: 600;">View Labs →</a>
+        </div>
+        
+        <div class="info-card">
+          <h4>SAE J2601</h4>
+          <p><strong>Fueling Protocols</strong> - Communication and control for safe vehicle fueling</p>
+          <a href="/search/standards?standard=SAE%20J2601" style="color: #0066cc; text-decoration: none; font-weight: 600;">Search Labs →</a>
+        </div>
+        
+        <div class="info-card">
+          <h4>ISO 11114-4</h4>
+          <p><strong>Embrittlement Testing</strong> - Materials qualification under hydrogen exposure</p>
+          <a href="/search/standards?standard=ISO%2011114-4" style="color: #0066cc; text-decoration: none; font-weight: 600;">Search Labs →</a>
+        </div>
+        
+        <div class="info-card">
+          <h4>ISO 14687</h4>
+          <p><strong>Fuel Quality</strong> - Purity specifications for hydrogen fuel</p>
+          <a href="/search/standards?standard=ISO%2014687" style="color: #0066cc; text-decoration: none; font-weight: 600;">Search Labs →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section cta-section">
+      <h2>Find Your ISO 19880-3 Testing Partner</h2>
+      <p style="margin: 1rem 0 2rem; font-size: 1.1rem;">
+        Search for laboratories by specific capabilities or explore all hydrogen testing standards
+      </p>
+      <div>
+        <a href="/search/standards" class="btn">Search All Standards</a>
+        <a href="/hydrogen-testing" class="btn secondary">Explore H2 Testing</a>
+        <a href="/submit" class="btn secondary">List Your Lab</a>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</body>
+</html>

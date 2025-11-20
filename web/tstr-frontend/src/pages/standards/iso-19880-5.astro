@@ -1,0 +1,137 @@
+---
+import { supabase } from '../../lib/supabase'
+import Footer from '../../components/Footer.astro'
+
+const { data: results } = await supabase.rpc('search_by_standard', {
+  p_standard_code: 'ISO 19880-5',
+  p_category_id: null,
+  p_min_specs: {}
+})
+
+const labCount = results?.length || 0
+const title = "ISO 19880-5 Testing Labs | Hydrogen Hose Certification"
+const description = "Find laboratories for ISO 19880-5 hydrogen fueling station hose testing. 700 bar flexible lines, permeation testing, and H2 hose safety certification."
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="keywords" content="ISO 19880-5, hydrogen hose testing, 700 bar hoses, H2 flexible lines, permeation testing">
+  <link rel="canonical" href="https://tstr.site/standards/iso-19880-5">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966" crossorigin="anonymous"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; color: #333; background: #f5f5f5; }
+    .hero { background: linear-gradient(135deg, #0066cc 0%, #004d99 100%); color: white; padding: 4rem 2rem; }
+    .hero-content { max-width: 1200px; margin: 0 auto; }
+    .breadcrumb { font-size: 0.9rem; opacity: 0.9; margin-bottom: 1rem; }
+    .breadcrumb a { color: white; text-decoration: none; }
+    .hero h1 { font-size: 2.8rem; margin-bottom: 1rem; font-weight: 700; }
+    .hero .subtitle { font-size: 1.3rem; opacity: 0.95; margin-bottom: 2rem; }
+    main { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
+    .section { background: white; padding: 2.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .section h2 { color: #0066cc; font-size: 2rem; margin-bottom: 1.5rem; }
+    .section h3 { color: #004d99; font-size: 1.4rem; margin-top: 1.5rem; margin-bottom: 1rem; }
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+    .info-card { background: linear-gradient(135deg, #f0f7ff 0%, #e6f2ff 100%); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #0066cc; }
+    .info-card h4 { color: #0066cc; margin-bottom: 0.75rem; font-size: 1.1rem; }
+    .lab-card { background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; transition: all 0.3s ease; }
+    .lab-card:hover { border-color: #0066cc; box-shadow: 0 4px 12px rgba(0,102,204,0.2); transform: translateY(-2px); }
+    .lab-name { color: #0066cc; font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .btn { display: inline-block; background: #0066cc; color: white; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; margin: 0.5rem; }
+    .btn:hover { background: #004d99; transform: translateY(-2px); }
+    .btn.secondary { background: white; color: #0066cc; border: 2px solid #0066cc; }
+    @media (max-width: 768px) { .hero h1 { font-size: 2rem; } main { padding: 2rem 1rem; } }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="hero-content">
+      <div class="breadcrumb">
+        <a href="/">Home</a> / <a href="/hydrogen-testing">Hydrogen Testing</a> / ISO 19880-5
+      </div>
+      <h1>ISO 19880-5: Hydrogen Hose Testing</h1>
+      <p class="subtitle">Fuelling Stations - Part 5: Hoses & Flexible Lines</p>
+      <p><strong>{labCount}</strong> certified testing laboratories</p>
+    </div>
+  </div>
+
+  <main>
+    <section class="section">
+      <h2>📋 What is ISO 19880-5?</h2>
+      <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem;">
+        ISO 19880-5 specifies requirements for <strong>hoses and flexible connections</strong> used in hydrogen fueling stations. 
+        These are critical high-failure-rate components that must withstand 700 bar pressure while preventing hydrogen permeation.
+      </p>
+
+      <h3>Why Hoses Fail</h3>
+      <div class="info-grid">
+        <div class="info-card">
+          <h4>Hydrogen Permeation</h4>
+          <p>H2 molecules escape through hose materials, creating fire hazards and fuel loss</p>
+        </div>
+        <div class="info-card">
+          <h4>Pressure Cycling Fatigue</h4>
+          <p>Repeated 0-700 bar cycles cause material degradation and eventual rupture</p>
+        </div>
+        <div class="info-card">
+          <h4>Rapid Decompression</h4>
+          <p>Fast pressure release can cause explosive hose failure</p>
+        </div>
+        <div class="info-card">
+          <h4>Temperature Extremes</h4>
+          <p>-40°C to +85°C operation requires flexible materials that resist embrittlement</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>🔬 Testing Requirements</h2>
+      <ul style="margin-left: 2rem; line-height: 2;">
+        <li><strong>Permeation rate measurement</strong> - Quantify hydrogen leakage through materials</li>
+        <li><strong>Pressure cycling</strong> - 10,000+ cycles at 700 bar operational pressure</li>
+        <li><strong>Burst pressure testing</strong> - Safety margin verification (typically 3×operating pressure)</li>
+        <li><strong>Kink resistance</strong> - Maintain flow under bend conditions</li>
+        <li><strong>Fire resistance</strong> - Integrity under external fire exposure</li>
+        <li><strong>Temperature cycling</strong> - Performance across full operational range</li>
+        <li><strong>Abrasion resistance</strong> - Durability for frequent connect/disconnect</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>🏢 ISO 19880-5 Certified Laboratories ({labCount})</h2>
+      {results && results.length > 0 ? (
+        results.map(lab => (
+          <div class="lab-card">
+            <div class="lab-name">{lab.business_name}</div>
+            {lab.address && <div style="color: #666; margin-bottom: 1rem;">📍 {lab.address}</div>}
+            {lab.specifications && lab.specifications.hose_testing && (
+              <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
+                <strong style="color: #0066cc;">Capabilities:</strong>
+                {lab.specifications.permeation_testing && <span style="margin-left: 1rem; color: #666;">✓ Permeation Testing</span>}
+                {lab.specifications.max_pressure_bar && <span style="margin-left: 1rem; color: #666;">✓ Up to {lab.specifications.max_pressure_bar} bar</span>}
+              </div>
+            )}
+          </div>
+        ))
+      ) : (
+        <div class="info-card">
+          <p>No laboratories currently listed. <a href="/submit" style="color: #0066cc; font-weight: 600;">Submit your laboratory</a></p>
+        </div>
+      )}
+    </section>
+
+    <section class="section" style="background: linear-gradient(135deg, #f0f7ff 0%, #e6f2ff 100%); text-align: center;">
+      <h2>Find Your ISO 19880-5 Testing Partner</h2>
+      <a href="/search/standards" class="btn">Search All Standards</a>
+      <a href="/hydrogen-testing" class="btn secondary">Explore H2 Testing</a>
+    </section>
+  </main>
+
+  <Footer />
+</body>
+</html>

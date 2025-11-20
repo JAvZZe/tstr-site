@@ -1,0 +1,172 @@
+---
+import { supabase } from '../../lib/supabase'
+import Footer from '../../components/Footer.astro'
+
+const { data: results } = await supabase.rpc('search_by_standard', {
+  p_standard_code: 'ISO 11114-4',
+  p_category_id: null,
+  p_min_specs: {}
+})
+
+const labCount = results?.length || 0
+const title = "ISO 11114-4 Testing Labs | Hydrogen Embrittlement Testing"
+const description = "Find laboratories for ISO 11114-4 hydrogen embrittlement testing. Materials compatibility, metallurgical analysis, and H2 degradation resistance certification."
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="keywords" content="ISO 11114-4, hydrogen embrittlement, materials testing, H2 compatibility, metallurgical analysis">
+  <link rel="canonical" href="https://tstr.site/standards/iso-11114-4">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966" crossorigin="anonymous"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; color: #333; background: #f5f5f5; }
+    .hero { background: linear-gradient(135deg, #cc0066 0%, #990049 100%); color: white; padding: 4rem 2rem; }
+    .hero-content { max-width: 1200px; margin: 0 auto; }
+    .breadcrumb { font-size: 0.9rem; opacity: 0.9; margin-bottom: 1rem; }
+    .breadcrumb a { color: white; text-decoration: none; }
+    .hero h1 { font-size: 2.8rem; margin-bottom: 1rem; font-weight: 700; }
+    .hero .subtitle { font-size: 1.3rem; opacity: 0.95; margin-bottom: 2rem; }
+    main { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
+    .section { background: white; padding: 2.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .section h2 { color: #cc0066; font-size: 2rem; margin-bottom: 1.5rem; }
+    .section h3 { color: #990049; font-size: 1.4rem; margin-top: 1.5rem; margin-bottom: 1rem; }
+    .warning-box { background: #fff3cd; border-left: 4px solid #ff9900; padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; }
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+    .info-card { background: linear-gradient(135deg, #fff0f7 0%, #ffe6f2 100%); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #cc0066; }
+    .info-card h4 { color: #cc0066; margin-bottom: 0.75rem; font-size: 1.1rem; }
+    .lab-card { background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; transition: all 0.3s ease; }
+    .lab-card:hover { border-color: #cc0066; box-shadow: 0 4px 12px rgba(204,0,102,0.2); transform: translateY(-2px); }
+    .lab-name { color: #cc0066; font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .btn { display: inline-block; background: #cc0066; color: white; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; margin: 0.5rem; }
+    .btn:hover { background: #990049; transform: translateY(-2px); }
+    .btn.secondary { background: white; color: #cc0066; border: 2px solid #cc0066; }
+    @media (max-width: 768px) { .hero h1 { font-size: 2rem; } main { padding: 2rem 1rem; } }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="hero-content">
+      <div class="breadcrumb">
+        <a href="/">Home</a> / <a href="/hydrogen-testing">Hydrogen Testing</a> / ISO 11114-4
+      </div>
+      <h1>ISO 11114-4: Hydrogen Embrittlement Testing</h1>
+      <p class="subtitle">Test Methods for Selecting Materials Resistant to Hydrogen</p>
+      <p><strong>{labCount}</strong> specialized materials testing laboratories</p>
+    </div>
+  </div>
+
+  <main>
+    <section class="section">
+      <h2>⚠️ The Hydrogen Embrittlement Problem</h2>
+      <div class="warning-box">
+        <strong style="color: #cc7700; font-size: 1.2rem;">Critical Safety Issue:</strong>
+        <p style="margin-top: 0.5rem;">Hydrogen embrittlement is the leading cause of catastrophic failure in H2 infrastructure. Standard metals become brittle and crack under hydrogen exposure, even at room temperature.</p>
+      </div>
+
+      <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem;">
+        ISO 11114-4 provides <strong>test methods for selecting metallic materials</strong> that resist hydrogen-induced degradation. 
+        This is the foundational materials science test for any component exposed to hydrogen.
+      </p>
+
+      <h3>Why Materials Fail</h3>
+      <div class="info-grid">
+        <div class="info-card">
+          <h4>Hydrogen Infiltration</h4>
+          <p>H2 atoms dissolve into metal lattice structure, weakening atomic bonds</p>
+        </div>
+        <div class="info-card">
+          <h4>Crack Propagation</h4>
+          <p>Microscopic cracks grow under stress, leading to sudden catastrophic failure</p>
+        </div>
+        <div class="info-card">
+          <h4>Reduced Ductility</h4>
+          <p>Materials become brittle and lose ability to deform without breaking</p>
+        </div>
+        <div class="info-card">
+          <h4>Delayed Failure</h4>
+          <p>Embrittlement develops over time - components pass initial tests but fail later</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>🔬 Testing Methods</h2>
+      <h3>Tensile Testing Under H2 Exposure</h3>
+      <p>Measure reduction in ductility and tensile strength after hydrogen charging</p>
+      
+      <h3>Fracture Mechanics</h3>
+      <p>Determine crack growth rates and fracture toughness in hydrogen environment</p>
+      
+      <h3>Slow Strain Rate Testing (SSRT)</h3>
+      <p>Detect susceptibility to hydrogen-induced cracking under slow loading</p>
+      
+      <h3>Metallurgical Analysis</h3>
+      <ul style="margin-left: 2rem; line-height: 2; margin-top: 0.5rem;">
+        <li>SEM (Scanning Electron Microscopy) for fracture surface analysis</li>
+        <li>XRD (X-Ray Diffraction) for phase identification</li>
+        <li>Microhardness testing for embrittlement depth</li>
+        <li>Hydrogen permeation rate measurement</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>🎯 Who Needs This Testing?</h2>
+      <div class="info-grid">
+        <div class="info-card">
+          <h4>Component Manufacturers</h4>
+          <p>Valve, fitting, and seal suppliers must prove materials won't fail under H2 exposure</p>
+        </div>
+        <div class="info-card">
+          <h4>Materials Suppliers</h4>
+          <p>Steel mills and alloy producers need certification for H2-compatible grades</p>
+        </div>
+        <div class="info-card">
+          <h4>Design Engineers</h4>
+          <p>Material selection for new H2 infrastructure requires embrittlement data</p>
+        </div>
+        <div class="info-card">
+          <h4>Failure Analysis</h4>
+          <p>Root cause investigation of in-service failures often reveals embrittlement</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>🏢 ISO 11114-4 Certified Laboratories ({labCount})</h2>
+      {results && results.length > 0 ? (
+        results.map(lab => (
+          <div class="lab-card">
+            <div class="lab-name">{lab.business_name}</div>
+            {lab.address && <div style="color: #666; margin-bottom: 1rem;">📍 {lab.address}</div>}
+            {lab.specifications && lab.specifications.embrittlement_testing && (
+              <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
+                <strong style="color: #cc0066;">Capabilities:</strong>
+                {lab.specifications.materials_qualification && <span style="margin-left: 1rem; color: #666;">✓ Materials Qualification</span>}
+                {lab.specifications.metallurgical_analysis && <span style="margin-left: 1rem; color: #666;">✓ Metallurgical Analysis</span>}
+              </div>
+            )}
+          </div>
+        ))
+      ) : (
+        <div class="info-card">
+          <p>No laboratories currently listed. <a href="/submit" style="color: #cc0066; font-weight: 600;">Submit your laboratory</a></p>
+        </div>
+      )}
+    </section>
+
+    <section class="section" style="background: linear-gradient(135deg, #fff0f7 0%, #ffe6f2 100%); text-align: center;">
+      <h2>Find Materials Testing Experts</h2>
+      <a href="/search/standards" class="btn">Search All Standards</a>
+      <a href="/hydrogen-testing" class="btn secondary">Explore H2 Testing</a>
+    </section>
+  </main>
+
+  <Footer />
+</body>
+</html>

@@ -1,0 +1,140 @@
+---
+import { supabase } from '../../lib/supabase'
+import Footer from '../../components/Footer.astro'
+
+// Fetch all standards grouped by category/issuing body
+const { data: standards, error } = await supabase
+  .from('standards')
+  .select('*, category:category_id(name)')
+  .eq('is_active', true)
+  .order('issuing_body')
+  .order('code')
+
+// Group by issuing body
+const standardsByBody = standards?.reduce((acc, std) => {
+  const body = std.issuing_body || 'Other'
+  if (!acc[body]) acc[body] = []
+  acc[body].push(std)
+  return acc
+}, {} as Record<string, typeof standards>)
+
+const title = "Testing Standards Directory | ISO, API, ASTM, EPA, SAE"
+const description = "Complete directory of testing standards for hydrogen, oil & gas, pharmaceutical, materials, and environmental testing laboratories."
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="keywords" content="testing standards, ISO standards, API standards, ASTM standards, EPA methods, hydrogen testing, materials testing">
+  <link rel="canonical" href="https://tstr.site/standards">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966" crossorigin="anonymous"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; color: #333; background: #f5f5f5; }
+    .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 4rem 2rem; text-align: center; }
+    .hero h1 { font-size: 2.8rem; margin-bottom: 1rem; font-weight: 700; }
+    .hero p { font-size: 1.2rem; opacity: 0.95; margin-bottom: 2rem; }
+    main { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
+    .section { background: white; padding: 2.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .section h2 { color: #667eea; font-size: 2rem; margin-bottom: 1.5rem; }
+    .standards-group { margin-bottom: 2rem; }
+    .standards-group h3 { color: #764ba2; font-size: 1.5rem; margin-bottom: 1rem; }
+    .standards-list { display: grid; gap: 1rem; }
+    .standard-card { background: #f8f9fa; border-left: 4px solid #667eea; padding: 1.5rem; border-radius: 8px; transition: all 0.3s ease; }
+    .standard-card:hover { transform: translateX(5px); box-shadow: 0 2px 8px rgba(102,126,234,0.2); }
+    .standard-code { font-weight: 700; color: #667eea; font-size: 1.2rem; margin-bottom: 0.5rem; }
+    .standard-name { color: #333; font-size: 1rem; margin-bottom: 0.5rem; }
+    .standard-meta { font-size: 0.85rem; color: #666; }
+    .btn { display: inline-block; background: #667eea; color: white; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; margin: 0.5rem; }
+    .btn:hover { background: #764ba2; transform: translateY(-2px); }
+    @media (max-width: 768px) { .hero h1 { font-size: 2rem; } main { padding: 2rem 1rem; } }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <h1>📋 Testing Standards Directory</h1>
+    <p>Search laboratories by specific certifications and technical standards</p>
+    <a href="/search/standards" class="btn">Search by Standard</a>
+  </div>
+
+  <main>
+    <!-- Hydrogen Standards Highlight -->
+    <section class="section" style="background: linear-gradient(135deg, #e6f2ff 0%, #cce5ff 100%); border-left: 4px solid #0066cc;">
+      <h2 style="color: #0066cc;">⚡ Featured: Hydrogen Infrastructure Standards</h2>
+      <p style="margin-bottom: 1.5rem; font-size: 1.1rem;">
+        Critical standards for hydrogen fueling stations, materials compatibility, and vehicle safety
+      </p>
+      <div class="standards-list">
+        <div class="standard-card" style="border-left-color: #0066cc;">
+          <div class="standard-code">ISO 19880-3</div>
+          <div class="standard-name">Hydrogen Fuelling Stations - Part 3: Valves</div>
+          <div class="standard-meta">700 bar pressure testing | Materials compatibility | Safety certification</div>
+          <a href="/standards/iso-19880-3" style="color: #0066cc; text-decoration: none; font-weight: 600; margin-top: 0.5rem; display: inline-block;">
+            View Certified Labs →
+          </a>
+        </div>
+        <div class="standard-card" style="border-left-color: #0066cc;">
+          <div class="standard-code">ISO 19880-5</div>
+          <div class="standard-name">Hydrogen Fuelling Stations - Part 5: Hoses</div>
+          <div class="standard-meta">Permeation testing | Pressure cycling | Flexible lines</div>
+          <a href="/standards/iso-19880-5" style="color: #0066cc; text-decoration: none; font-weight: 600; margin-top: 0.5rem; display: inline-block;">
+            View Certified Labs →
+          </a>
+        </div>
+        <div class="standard-card" style="border-left-color: #cc0066;">
+          <div class="standard-code">ISO 11114-4</div>
+          <div class="standard-name">Test Methods for Hydrogen Embrittlement</div>
+          <div class="standard-meta">Materials qualification | Metallurgical analysis | Failure prevention</div>
+          <a href="/standards/iso-11114-4" style="color: #cc0066; text-decoration: none; font-weight: 600; margin-top: 0.5rem; display: inline-block;">
+            View Certified Labs →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- All Standards -->
+    <section class="section">
+      <h2>All Testing Standards</h2>
+      <p style="margin-bottom: 2rem; color: #666;">
+        Browse {standards?.length || 0} technical standards across all testing categories
+      </p>
+
+      {standardsByBody && Object.entries(standardsByBody).map(([body, bodyStandards]) => (
+        <div class="standards-group">
+          <h3>{body}</h3>
+          <div class="standards-list">
+            {bodyStandards.map(std => (
+              <div class="standard-card">
+                <div class="standard-code">{std.code}</div>
+                <div class="standard-name">{std.name}</div>
+                {std.category && (
+                  <div class="standard-meta">Category: {std.category.name}</div>
+                )}
+                <a href={`/search/standards?standard=${encodeURIComponent(std.code)}`} style="color: #667eea; text-decoration: none; font-weight: 600; margin-top: 0.5rem; display: inline-block;">
+                  Find Certified Labs →
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </section>
+
+    <!-- CTA -->
+    <section class="section" style="text-align: center; background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);">
+      <h2>Find Your Testing Partner</h2>
+      <p style="margin: 1rem 0 2rem; font-size: 1.1rem;">
+        Search laboratories by exact certification and technical specifications
+      </p>
+      <a href="/search/standards" class="btn">Search by Standard</a>
+      <a href="/hydrogen-testing" class="btn" style="background: #0066cc;">Hydrogen Testing</a>
+    </section>
+  </main>
+
+  <Footer />
+</body>
+</html>
