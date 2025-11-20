@@ -107,4 +107,12 @@ export const CONTENT = {
 
   // Footer text
   copyright: `© ${new Date().getFullYear()} TSTR Hub. All rights reserved.`,
+  
+  footerTagline: 'Connecting industries with certified testers worldwide',
+  
+  footerLinks: [
+    { href: '/privacy', label: 'Privacy Policy' },
+    { href: '/pricing', label: 'Pricing' },
+    { href: '/submit', label: 'List Your Company' },
+  ],
 } as const

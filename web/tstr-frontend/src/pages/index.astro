@@ -1,5 +1,6 @@
 ---
 import { supabase } from '../lib/supabase'
+import Footer from '../components/Footer.astro'
 
 // Fetch all active listings with location data and category from database
 const { data: listings, error } = await supabase
@@ -357,16 +358,6 @@ const totalCategories = allCategories?.length || 0
     </section>
   </main>
 
-  <footer>
-    <p>&copy; 2025 TSTR Hub - Specialist Testing Services, Products and Solutions Directory</p>
-    <p style="margin-top: 0.5rem; opacity: 0.8; font-size: 0.9rem;">
-      Connecting industries with certified testing laboratories worldwide
-    </p>
-    <p style="margin-top: 1rem;">
-      <a href="/privacy" style="color: white; text-decoration: none; margin: 0 1rem;">Privacy Policy</a>
-      <a href="/pricing" style="color: white; text-decoration: none; margin: 0 1rem;">Pricing</a>
-      <a href="/submit" style="color: white; text-decoration: none; margin: 0 1rem;">List Your Company</a>
-    </p>
-  </footer>
+  <Footer />
 </body>
 </html>

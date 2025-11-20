@@ -2,6 +2,9 @@
 // Submit page for company listings
 ---
 
+---
+import Footer from '../components/Footer.astro'
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -205,13 +208,7 @@
     </div>
   </main>
 
-  <footer>
-    <p>&copy; 2025 TSTR Hub - Specialist Testing Services, Products and Solutions Directory</p>
-    <p style="margin-top: 1rem;">
-      <a href="/" style="color: white; text-decoration: none; margin: 0 1rem;">Home</a>
-      <a href="/privacy" style="color: white; text-decoration: none; margin: 0 1rem;">Privacy Policy</a>
-    </p>
-  </footer>
+  <Footer />
 
   <script>
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'

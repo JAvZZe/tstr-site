@@ -3,6 +3,7 @@ export const prerender = false // Force SSR for auth page
 
 // Check if user is already logged in
 import { supabaseBrowser } from '../lib/supabase-browser'
+import Footer from '../components/Footer.astro'
 ---
 
 <!DOCTYPE html>
@@ -233,9 +234,7 @@ import { supabaseBrowser } from '../lib/supabase-browser'
     </div>
   </div>
 
-  <footer>
-    <p>&copy; 2025 TSTR Hub. All rights reserved.</p>
-  </footer>
+  <Footer />
 
   <script>
     import { supabaseBrowser } from '../lib/supabase-browser'

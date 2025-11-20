@@ -2,6 +2,7 @@
 // Pricing page for TSTR.site
 // No Stripe integration yet - manual sales via contact form
 import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../lib/contacts'
+import Footer from '../components/Footer.astro'
 ---
 
 <!DOCTYPE html>
@@ -583,16 +584,6 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../lib/contacts'
     </div>
   </main>
 
-  <footer>
-    <p>
-      <a href="/">Home</a> |
-      <a href="/browse">Browse Labs</a> |
-      <a href="/submit">Submit Listing</a> |
-      <a href="/privacy">Privacy Policy</a>
-    </p>
-    <p style="margin-top: 1rem; opacity: 0.8;">
-      © 2025 TSTR Hub. All rights reserved.
-    </p>
-  </footer>
+  <Footer />
 </body>
 </html>
