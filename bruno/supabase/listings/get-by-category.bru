@@ -1,0 +1,54 @@
+meta {
+  name: Get Listings by Category
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{BASE_URL}}/rest/v1/listings?select=*&category=eq.Pharmaceutical&limit=10
+  body: none
+  auth: bearer
+}
+
+headers {
+  apikey: {{SUPABASE_ANON_KEY}}
+  Authorization: Bearer {{SUPABASE_ANON_KEY}}
+}
+
+auth:bearer {
+  token: {{SUPABASE_ANON_KEY}}
+}
+
+tests {
+  test("Status is 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Returns array", function() {
+    expect(res.body).to.be.an('array');
+  });
+  
+  test("All listings are Pharmaceutical", function() {
+    res.body.forEach(listing => {
+      expect(listing.category).to.equal('Pharmaceutical');
+    });
+  });
+  
+  test("Has Pharmaceutical listings", function() {
+    expect(res.body.length).to.be.greaterThan(0);
+  });
+}
+
+docs {
+  # Get Listings by Category
+  
+  Tests category filtering (Pharmaceutical).
+  
+  **Expected**: 108 Pharmaceutical listings total
+  **Usage**: Verify category data integrity
+  
+  **Note**: Change `category=eq.Pharmaceutical` to test other categories:
+  - Materials Testing
+  - Environmental Testing
+  - Oil & Gas Testing
+}

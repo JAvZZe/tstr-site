@@ -1,0 +1,46 @@
+meta {
+  name: Count All Listings
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{BASE_URL}}/rest/v1/listings?select=count
+  body: none
+  auth: bearer
+}
+
+headers {
+  apikey: {{SUPABASE_ANON_KEY}}
+  Authorization: Bearer {{SUPABASE_ANON_KEY}}
+  Prefer: count=exact
+}
+
+auth:bearer {
+  token: {{SUPABASE_ANON_KEY}}
+}
+
+tests {
+  test("Status is 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Has listings", function() {
+    const count = parseInt(res.headers['content-range'].split('/')[1]);
+    expect(count).to.be.greaterThan(0);
+  });
+  
+  test("At least 163 listings", function() {
+    const count = parseInt(res.headers['content-range'].split('/')[1]);
+    expect(count).to.be.at.least(163);
+  });
+}
+
+docs {
+  # Count All Listings
+  
+  Verifies database has listing data.
+  
+  **Expected**: At least 163 listings (as of 2025-11-20)
+  **Usage**: Data validation, health monitoring
+}

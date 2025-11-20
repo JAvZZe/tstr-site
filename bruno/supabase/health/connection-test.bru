@@ -1,0 +1,39 @@
+meta {
+  name: Supabase Connection Test
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{BASE_URL}}/rest/v1/
+  body: none
+  auth: bearer
+}
+
+headers {
+  apikey: {{SUPABASE_ANON_KEY}}
+  Authorization: Bearer {{SUPABASE_ANON_KEY}}
+}
+
+auth:bearer {
+  token: {{SUPABASE_ANON_KEY}}
+}
+
+tests {
+  test("Status is 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Connection successful", function() {
+    expect(res).to.have.status(200);
+  });
+}
+
+docs {
+  # Supabase Connection Test
+  
+  Tests basic connectivity to Supabase API.
+  
+  **Expected**: 200 OK response
+  **Usage**: Health check, pre-deployment validation
+}
