@@ -1,0 +1,393 @@
+---
+import { supabase } from '../lib/supabase'
+import Footer from '../components/Footer.astro'
+
+// Fetch hydrogen-specific standards
+const { data: h2Standards, error } = await supabase
+  .from('standards')
+  .select('id, code, name, description')
+  .or('code.like.ISO 19880%,code.like.SAE J2%,code.eq.ISO 11114-4,code.eq.UN ECE R134,code.eq.CSA HGV 4.3')
+  .eq('is_active', true)
+  .order('code')
+
+// Get count of hydrogen-capable labs
+const { data: h2Labs, error: labsError } = await supabase
+  .from('listing_capabilities')
+  .select('listing_id, standard:standard_id(code)')
+  .in('standard.code', ['ISO 19880-3', 'SAE J2601', 'ISO 14687', 'ISO 19881'])
+
+const uniqueLabCount = new Set(h2Labs?.map(l => l.listing_id) || []).size
+
+const title = "ISO 19880-3 Testing Labs | Hydrogen Infrastructure Certification"
+const description = "Find laboratories certified for ISO 19880-3 hydrogen valve testing, 700 bar pressure testing, and H2 infrastructure compatibility. Specialized hydrogen testing facilities worldwide."
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  
+  <!-- SEO for hydrogen niche -->
+  <meta name="keywords" content="ISO 19880-3, hydrogen valve testing, 700 bar testing, hydrogen embrittlement, H2 infrastructure, fuel cell testing, hydrogen compatibility">
+  <link rel="canonical" href="https://tstr.site/hydrogen-testing">
+  
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
+     crossorigin="anonymous"></script>
+  
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Hydrogen Testing Laboratory Directory",
+    "description": "Directory of laboratories certified for hydrogen infrastructure testing including ISO 19880-3 valve testing and 700 bar pressure testing",
+    "specialty": [
+      "ISO 19880-3 Valve Testing",
+      "Hydrogen Embrittlement Testing",
+      "700 Bar Pressure Testing",
+      "Cryogenic Hydrogen Testing"
+    ]
+  }
+  </script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
+      color: white;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .hero .tagline {
+      font-size: 1.3rem;
+      opacity: 0.95;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero .stats {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin-top: 1.5rem;
+    }
+
+    .hero .cta-buttons {
+      margin-top: 2rem;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: white;
+      color: #0066cc;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .btn.secondary {
+      background: transparent;
+      border: 2px solid white;
+      color: white;
+    }
+
+    .btn.secondary:hover {
+      background: white;
+      color: #0066cc;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .section {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .section h2 {
+      color: #0066cc;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section h3 {
+      color: #004d99;
+      font-size: 1.4rem;
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .capabilities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .capability-card {
+      background: linear-gradient(135deg, #f0f7ff 0%, #e6f2ff 100%);
+      padding: 1.5rem;
+      border-radius: 8px;
+      border-left: 4px solid #0066cc;
+    }
+
+    .capability-card h4 {
+      color: #0066cc;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .capability-card p {
+      color: #555;
+      font-size: 0.95rem;
+    }
+
+    .standards-list {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .standard-item {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border-left: 4px solid #0066cc;
+      transition: all 0.3s ease;
+    }
+
+    .standard-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 2px 8px rgba(0,102,204,0.2);
+    }
+
+    .standard-code {
+      font-weight: 700;
+      color: #0066cc;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .standard-name {
+      color: #333;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .standard-desc {
+      color: #666;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .why-section {
+      background: linear-gradient(135deg, #fff5e6 0%, #ffe6cc 100%);
+      border-left: 4px solid #ff9900;
+    }
+
+    .why-section h3 {
+      color: #cc7700;
+    }
+
+    ul {
+      margin-left: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    li {
+      margin-bottom: 0.75rem;
+      line-height: 1.6;
+    }
+
+    strong {
+      color: #0066cc;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .hero .tagline {
+        font-size: 1.1rem;
+      }
+
+      main {
+        padding: 2rem 1rem;
+      }
+
+      .section {
+        padding: 1.5rem;
+      }
+
+      .capabilities-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <h1>🔬 Hydrogen Testing Laboratory Directory</h1>
+    <p class="tagline">ISO 19880-3 | 700 Bar Pressure | Hydrogen Embrittlement | Cryogenic Testing</p>
+    <p class="stats">
+      {uniqueLabCount} specialized hydrogen testing facilities | {h2Standards?.length || 10} critical H2 standards
+    </p>
+    <div class="cta-buttons">
+      <a href="/search/standards?filter=hydrogen" class="btn">Find H2-Certified Labs</a>
+      <a href="/submit" class="btn secondary">List Your Lab</a>
+    </div>
+  </div>
+
+  <main>
+    <!-- Why This Matters -->
+    <section class="section why-section">
+      <h2>⚡ Why Hydrogen Testing is Critical</h2>
+      <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+        The hydrogen infrastructure industry is transitioning rapidly. Standard materials fail under hydrogen conditions due to <strong>embrittlement</strong>, <strong>permeation</strong>, and <strong>extreme pressures (700+ bar)</strong>.
+      </p>
+      
+      <h3>The Discovery Problem</h3>
+      <p>Engineers cannot find qualified labs because:</p>
+      <ul>
+        <li>Standard testing labs lack <strong>high-pressure equipment</strong> (700 bar / 10,000 psi)</li>
+        <li>Cryogenic hydrogen (-253°C) requires <strong>specialized facilities</strong></li>
+        <li>Discovery is broken—engineers search by <strong>ISO/SAE standard numbers</strong>, not company names</li>
+        <li>Certification delays cost months and millions in lost sales</li>
+      </ul>
+
+      <h3>The Equipment Moat</h3>
+      <p>H2 testing requires capital-intensive infrastructure:</p>
+      <ul>
+        <li><strong>Blast bunkers</strong> for catastrophic failure testing</li>
+        <li><strong>Cryogenic chambers</strong> for liquid hydrogen (-253°C)</li>
+        <li><strong>High-pressure autoclaves</strong> (up to 1000+ bar)</li>
+        <li><strong>Embrittlement test rigs</strong> for materials qualification</li>
+      </ul>
+    </section>
+
+    <!-- Key Testing Capabilities -->
+    <section class="section">
+      <h2>🔧 Critical Hydrogen Testing Capabilities</h2>
+      <p>Search our directory by these specialized capabilities:</p>
+      
+      <div class="capabilities-grid">
+        <div class="capability-card">
+          <h4>⚡ Pressure Ratings</h4>
+          <p><strong>350 bar (H35)</strong> - Light vehicles<br>
+          <strong>700 bar (H70)</strong> - Most fuel cell vehicles<br>
+          <strong>1000+ bar</strong> - Industrial / heavy duty</p>
+        </div>
+
+        <div class="capability-card">
+          <h4>❄️ State Testing</h4>
+          <p><strong>Gaseous (GH2)</strong> - Standard fueling<br>
+          <strong>Liquid (LH2)</strong> - Cryogenic -253°C<br>
+          <strong>Supercritical</strong> - High pressure liquid</p>
+        </div>
+
+        <div class="capability-card">
+          <h4>🔬 Failure Modes</h4>
+          <p><strong>Embrittlement</strong> - Material degradation<br>
+          <strong>Permeation</strong> - Hydrogen leakage<br>
+          <strong>Rapid decompression</strong> - Explosive failure</p>
+        </div>
+
+        <div class="capability-card">
+          <h4>🔩 Component Types</h4>
+          <p><strong>Valves & Fittings</strong> - ISO 19880-3<br>
+          <strong>Hoses & Seals</strong> - ISO 19880-5<br>
+          <strong>Type IV Tanks</strong> - UN ECE R134</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Standards Directory -->
+    <section class="section">
+      <h2>📋 Critical Hydrogen Standards</h2>
+      <p>Our directory is indexed by these essential hydrogen testing standards:</p>
+      
+      <div class="standards-list">
+        {h2Standards && h2Standards.map(std => (
+          <div class="standard-item">
+            <div class="standard-code">{std.code}</div>
+            <div class="standard-name">{std.name}</div>
+            {std.description && <div class="standard-desc">{std.description}</div>}
+            <div style="margin-top: 0.75rem;">
+              <a href={`/search/standards?standard=${encodeURIComponent(std.code)}`} style="color: #0066cc; text-decoration: none; font-weight: 600;">
+                Find Certified Labs →
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Target Industries -->
+    <section class="section">
+      <h2>🎯 Who Needs H2 Testing?</h2>
+      
+      <h3>Valve & Fitting Manufacturers</h3>
+      <p>Swagelok, Parker Hannifin, etc. need component certification for hydrogen compatibility.</p>
+      
+      <h3>Automotive OEMs</h3>
+      <p>Toyota, Hyundai, BMW require R&D testing for fuel cell vehicle development.</p>
+      
+      <h3>Energy Majors</h3>
+      <p>Shell, TotalEnergies, BP validate hydrogen fueling infrastructure.</p>
+      
+      <h3>Component Suppliers</h3>
+      <p>O-ring, seal, and gasket manufacturers proving materials resist embrittlement.</p>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" style="text-align: center; background: linear-gradient(135deg, #f0f7ff 0%, #e6f2ff 100%);">
+      <h2>Find Your H2-Certified Laboratory</h2>
+      <p style="margin: 1rem 0 2rem; font-size: 1.1rem;">
+        Search by exact standard (ISO 19880-3, SAE J2601) and technical specifications
+      </p>
+      <a href="/search/standards" class="btn" style="margin-right: 1rem;">Search Laboratories</a>
+      <a href="/submit" class="btn secondary">List Your Lab</a>
+    </section>
+  </main>
+
+  <Footer />
+</body>
+</html>
