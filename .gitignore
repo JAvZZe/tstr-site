@@ -50,3 +50,9 @@ docs/credentials/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Global continuity system symlinks (point to parent AI PROJECTS SPACE)
+checkpoint.sh
+resume.sh
+handoff.sh
+bootstrap.sh

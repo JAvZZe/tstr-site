@@ -193,6 +193,38 @@ python3 scrapers/tni_environmental.py
 ~/.local/bin/supabase db remote psql -c "SELECT COUNT(*) FROM listings;"
 ```
 
+### Bruno API Collection (ACTIVE)
+
+**Status**: ✅ Installed and operational (2025-11-20)
+**Location**: `bruno/` directory
+**MCP Integration**: ✅ Installed (`droid mcp add bruno`)
+
+**Quick Commands**:
+```bash
+# Health checks
+bru run bruno/supabase/health/ --env production
+
+# Listings API
+bru run bruno/supabase/listings/ --env production
+
+# Single test
+bru run bruno/supabase/health/connection-test.bru --env production
+```
+
+**Agent Usage**:
+- "Run the Supabase health checks"
+- "Test the listings API"
+- "Validate database connectivity"
+
+**Benefits**:
+- 📁 Git-based API repository (version controlled)
+- 🔒 Environment-based secrets (production, local, ci)
+- 🤖 Agent tools via MCP (65% token savings)
+- 🚀 CI/CD ready (GitHub Actions integration)
+- ✅ Living documentation (always up-to-date)
+
+**Documentation**: See `bruno/README.md` for full guide
+
 ### Supabase MCP Tools (Recommended)
 
 **Status**: ✅ Installed and operational (verified 2025-11-18)
