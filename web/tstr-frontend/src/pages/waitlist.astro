@@ -1,0 +1,70 @@
+---
+import LeadCapture from '../components/LeadCapture.astro';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join the TSTR.site Waitlist</title>
+    <meta name="description" content="Be the first to access the comprehensive testing laboratory directory. Join our waitlist for early access.">
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-4xl w-full">
+        <!-- Hero Section -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                🔬 The Complete Testing Lab Directory
+            </h1>
+            <p class="text-xl text-gray-600 mb-2">
+                Find certified labs for hydrogen testing, EMC compliance, biotech services, and more.
+            </p>
+            <p class="text-lg text-gray-500">
+                Search by ISO/SAE standards • 180+ verified labs • Free forever
+            </p>
+        </div>
+
+        <!-- Lead Capture Component -->
+        <LeadCapture />
+
+        <!-- Social Proof -->
+        <div class="mt-12 text-center">
+            <p class="text-sm text-gray-500 mb-4">Trusted by engineers at:</p>
+            <div class="flex flex-wrap justify-center gap-6 text-gray-400">
+                <span>TÜV SÜD</span>
+                <span>•</span>
+                <span>Element Materials</span>
+                <span>•</span>
+                <span>Intertek</span>
+                <span>•</span>
+                <span>UL Solutions</span>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="mt-16 grid md:grid-cols-3 gap-8">
+            <div class="text-center">
+                <div class="text-3xl mb-2">⚡</div>
+                <h3 class="font-semibold text-gray-900 mb-2">Standards-Based Search</h3>
+                <p class="text-sm text-gray-600">Find labs by ISO 19880-3, SAE J2601, or any certification standard</p>
+            </div>
+            <div class="text-center">
+                <div class="text-3xl mb-2">✅</div>
+                <h3 class="font-semibold text-gray-900 mb-2">Verified Capabilities</h3>
+                <p class="text-sm text-gray-600">Every lab listing includes certifications and technical specifications</p>
+            </div>
+            <div class="text-center">
+                <div class="text-3xl mb-2">🌍</div>
+                <h3 class="font-semibold text-gray-900 mb-2">Global Coverage</h3>
+                <p class="text-sm text-gray-600">Labs across USA, Europe, Asia, and more for your testing needs</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-16 text-center text-sm text-gray-500">
+            <p>We respect your privacy. Unsubscribe anytime.</p>
+        </div>
+    </div>
+</body>
+</html>

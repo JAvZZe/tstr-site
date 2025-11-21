@@ -1,0 +1,65 @@
+---
+// This is the Astro component (client-side form)
+---
+<div class="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg space-y-4">
+  <h2 class="text-xl font-bold text-gray-900">Get the Full Verified List</h2>
+  <p class="text-gray-500">
+    Be the first to know when the full TSTR directory launches.
+  </p>
+  <form id="lead-form" class="space-y-4">
+    <input
+      type="email"
+      name="email"
+      placeholder="Enter your email"
+      required
+      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+    />
+    <button
+      type="submit"
+      class="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 transition duration-150"
+    >
+      Join Waitlist (100% Free)
+    </button>
+    <p id="message" class="text-center text-sm"></p>
+  </form>
+</div>
+
+<script>
+  // Simple client-side JS to handle form submission via Fetch API
+  const form = document.getElementById('lead-form');
+  const messageElement = document.getElementById('message');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const email = formData.get('email');
+
+    messageElement.textContent = 'Submitting...';
+    messageElement.className = 'text-center text-sm text-gray-500';
+
+    try {
+      const response = await fetch('/api/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        messageElement.textContent = '✅ Success! We will notify you.';
+        messageElement.className = 'text-center text-sm text-green-600';
+        form.reset();
+      } else {
+        messageElement.textContent = `❌ Error: ${result.error || 'Check console.'}`;
+        messageElement.className = 'text-center text-sm text-red-600';
+      }
+    } catch (error) {
+      messageElement.textContent = '❌ Network error.';
+      messageElement.className = 'text-center text-sm text-red-600';
+      console.error('Fetch error:', error);
+    }
+  });
+</script>
