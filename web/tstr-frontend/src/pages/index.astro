@@ -289,7 +289,7 @@ const totalCategories = allCategories?.length || 0
     <h1>TSTR Hub</h1>
     <p>Specialist Testing Services, Products and Solutions Directory</p>
     <p style="font-size: 1rem; margin-top: 0.5rem; opacity: 0.85;">
-      Oil & Gas • Pharmaceutical • Biotech • Environmental • Materials Testing
+      Oil & Gas • Biopharma & Life Sciences • Environmental • Materials Testing
     </p>
   </header>
 
@@ -310,7 +310,7 @@ const totalCategories = allCategories?.length || 0
         <div class="stat-card">
           <div class="stat-number">5+</div>
           <div class="stat-label">Niche Industries</div>
-          <div class="stat-description">Oil & Gas, Pharma, Biotech, Environmental, Materials</div>
+          <div class="stat-description">Oil & Gas, Biopharma & Life Sciences, Environmental, Materials</div>
         </div>
       </div>
     </section>
@@ -366,14 +366,35 @@ const totalCategories = allCategories?.length || 0
     <section>
       <h2>Browse by Category</h2>
       <div class="category-grid">
-        {allCategories && allCategories.map((category) => (
-          <a href={`/browse?category=${encodeURIComponent(category.name)}`} style="text-decoration: none; color: inherit;">
-            <div class="category-card">
-              <h3>{category.name}</h3>
-              <p>{listings.filter(l => l.category_id === category.id).length} listings</p>
-            </div>
-          </a>
-        ))}
+        {/* Combined Biopharma & Life Sciences category */}
+        {allCategories && (() => {
+          const biotechCat = allCategories.find(c => c.name === 'Biotech Testing');
+          const pharmaCat = allCategories.find(c => c.name === 'Pharmaceutical Testing');
+          const biotechCount = biotechCat ? listings.filter(l => l.category_id === biotechCat.id).length : 0;
+          const pharmaCount = pharmaCat ? listings.filter(l => l.category_id === pharmaCat.id).length : 0;
+          const combinedCount = biotechCount + pharmaCount;
+          
+          return (
+            <a href="/browse?category=Pharmaceutical%20Testing" style="text-decoration: none; color: inherit;">
+              <div class="category-card">
+                <h3>Biopharma & Life Sciences Testing</h3>
+                <p>{combinedCount} listings</p>
+              </div>
+            </a>
+          );
+        })()}
+        
+        {/* Other categories (excluding Biotech and Pharmaceutical) */}
+        {allCategories && allCategories
+          .filter(cat => cat.name !== 'Biotech Testing' && cat.name !== 'Pharmaceutical Testing')
+          .map((category) => (
+            <a href={`/browse?category=${encodeURIComponent(category.name)}`} style="text-decoration: none; color: inherit;">
+              <div class="category-card">
+                <h3>{category.name}</h3>
+                <p>{listings.filter(l => l.category_id === category.id).length} listings</p>
+              </div>
+            </a>
+          ))}
       </div>
       {allCategories && allCategories.length === 0 && (
         <p style="text-align: center; color: #666; margin-top: 2rem;">
