@@ -460,6 +460,50 @@ const extractCity = (address) => {
       })}
     </div>
 
+    <!-- Low Density Fallback - Shown when < 5 results via JS -->
+    <div class="low-density-fallback hidden" id="low-density-fallback" style="
+      background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
+      border: 2px solid #93c5fd;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(102,126,234,0.15);
+    ">
+      <div style="max-width: 600px; margin: 0 auto;">
+        <h3 style="font-size: 1.75rem; font-weight: 700; color: #1e3a8a; margin-bottom: 1rem;">
+          Can't find the specific test you need?
+        </h3>
+        <p style="color: #1e40af; font-size: 1.1rem; margin-bottom: 1.5rem; line-height: 1.6;">
+          Our engineering team manually sources ISO 17025 accredited laboratories for specialized requirements.
+          We'll find the perfect testing partner for your needs—at no cost to you.
+        </p>
+        <a
+          href="/contact?subject=Concierge+Request"
+          id="concierge-link"
+          style="
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(102,126,234,0.3);
+          "
+          onmouseover="this.style.background='#764ba2'; this.style.transform='scale(1.05)'"
+          onmouseout="this.style.background='#667eea'; this.style.transform='scale(1)'"
+        >
+          Request Free Concierge Search →
+        </a>
+        <p style="color: #667eea; font-size: 0.9rem; margin-top: 1rem; font-weight: 600;">
+          ⚡ Average response time: 24 hours
+        </p>
+      </div>
+    </div>
+
     <div class="no-results hidden" id="no-results">
       <h2>No listings found</h2>
       <p>Try adjusting your filters to see more results.</p>
@@ -476,6 +520,8 @@ const extractCity = (address) => {
     const listingsGrid = document.getElementById('listings-grid')
     const resultsCount = document.getElementById('results-count')
     const noResults = document.getElementById('no-results')
+    const lowDensityFallback = document.getElementById('low-density-fallback')
+    const conciergeLink = document.getElementById('concierge-link')
     const listings = document.querySelectorAll('.listing-card')
 
     function filterListings() {
@@ -509,9 +555,25 @@ const extractCity = (address) => {
       if (visibleCount === 0) {
         listingsGrid.classList.add('hidden')
         noResults.classList.remove('hidden')
+        lowDensityFallback.classList.add('hidden')
       } else {
         listingsGrid.classList.remove('hidden')
         noResults.classList.add('hidden')
+
+        // Show low-density fallback for < 5 results
+        if (visibleCount < 5) {
+          lowDensityFallback.classList.remove('hidden')
+
+          // Update concierge link with filter context
+          const params = new URLSearchParams()
+          params.set('subject', 'Concierge Request')
+          if (categoryFilter.value) params.set('category', categoryFilter.value)
+          if (countryFilter.value) params.set('country', countryFilter.value)
+          if (cityFilter.value) params.set('city', cityFilter.value)
+          conciergeLink.href = `/contact?${params.toString()}`
+        } else {
+          lowDensityFallback.classList.add('hidden')
+        }
       }
     }
 
