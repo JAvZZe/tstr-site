@@ -35,11 +35,21 @@ const { data: listings, error } = await supabase
   .eq('status', 'active')
   .order('created_at', { ascending: false })
 
-// Fetch all categories for filter dropdown
-const { data: allCategories } = await supabase
+// Fetch categories with active listings only for filter dropdown
+const { data: categoriesData } = await supabase
   .from('categories')
-  .select('id, name, slug')
+  .select(`
+    id,
+    name,
+    slug,
+    listings:listings!category_id(count)
+  `)
   .order('name', { ascending: true })
+
+// Filter to only categories with active listings
+const allCategories = (categoriesData || [])
+  .filter(cat => cat.listings && cat.listings[0]?.count > 0)
+  .map(cat => ({ id: cat.id, name: cat.name, slug: cat.slug }))
 
 // Extract unique countries and cities from location hierarchy
 const getCountryFromLocation = (location) => {
