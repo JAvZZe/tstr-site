@@ -2,6 +2,7 @@
 // src/pages/[category]/[region]/index.astro
 import { supabase } from '../../../lib/supabase';
 import Footer from '../../../components/Footer.astro';
+import { getRedirectUrl } from '../../../lib/redirect';
 
 // Enable static prerendering at build time
 export const prerender = true;
@@ -170,7 +171,7 @@ const listingCount = pageListings?.length || 0;
 
                 {listing.website && (
                   <a
-                    href={listing.website}
+                    href={getRedirectUrl(listing.website, listing.id)}
                     target="_blank"
                     rel="nofollow noopener noreferrer"
                     class="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-blue-700 transition whitespace-nowrap"

@@ -2,6 +2,7 @@
 import { supabase } from '../lib/supabase'
 import { CONTENT } from '../lib/contacts'
 import Footer from '../components/Footer.astro'
+import { getRedirectUrl } from '../lib/redirect'
 
 // Fetch all active listings with location hierarchy and category
 const { data: listings, error } = await supabase
@@ -461,7 +462,7 @@ const extractCity = (address) => {
               {lab.website && (
                 <div class="detail-item">
                   <span class="detail-icon">🌐</span>
-                  <a href={lab.website} target="_blank" rel="noopener noreferrer">{lab.website}</a>
+                  <a href={getRedirectUrl(lab.website, lab.id)} target="_blank" rel="noopener noreferrer">{lab.website}</a>
                 </div>
               )}
             </div>

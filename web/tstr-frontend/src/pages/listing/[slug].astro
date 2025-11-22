@@ -1,5 +1,6 @@
 ---
 import { supabase } from '../../lib/supabase'
+import { getRedirectUrl } from '../../lib/redirect'
 
 // Force SSR - we need to check user session/tier dynamically
 export const prerender = false
@@ -544,7 +545,7 @@ const certificationCount = customFields.length
           {listing.website && canViewWebsite ? (
             <div class="info-item">
               <div class="info-label">Website</div>
-              <div class="info-value"><a href={listing.website} target="_blank" rel="noopener noreferrer">{listing.website}</a></div>
+              <div class="info-value"><a href={getRedirectUrl(listing.website, listing.id)} target="_blank" rel="noopener noreferrer">{listing.website}</a></div>
             </div>
           ) : null}
         </div>

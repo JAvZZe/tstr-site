@@ -1,6 +1,7 @@
 ---
 import { supabase } from '../../lib/supabase'
 import Footer from '../../components/Footer.astro'
+import { getRedirectUrl } from '../../lib/redirect'
 
 // Fetch ISO 19880-3 standard details
 const { data: standard, error: stdError } = await supabase
@@ -468,7 +469,7 @@ const description = "Find laboratories certified for ISO 19880-3 hydrogen fuelin
             
             {lab.website && (
               <div style="margin-top: 1rem;">
-                <a href={lab.website} target="_blank" rel="noopener" style="color: #0066cc; text-decoration: none; font-weight: 600;">
+                <a href={getRedirectUrl(lab.website, lab.id)} target="_blank" rel="noopener" style="color: #0066cc; text-decoration: none; font-weight: 600;">
                   Visit Website →
                 </a>
               </div>
