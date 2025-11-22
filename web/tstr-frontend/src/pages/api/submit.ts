@@ -1,15 +1,30 @@
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
 
-// Load Supabase credentials from your .env file
-// Ensure SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are set for secure server-side writes
-const supabase = createClient(
-  import.meta.env.PUBLIC_SUPABASE_URL || process.env.PUBLIC_SUPABASE_URL || '',
-  import.meta.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-);
-
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
+    // Access environment variables from Cloudflare runtime
+    const env = (locals as any).runtime?.env;
+    
+    const supabaseUrl = env?.PUBLIC_SUPABASE_URL || import.meta.env.PUBLIC_SUPABASE_URL;
+    const supabaseKey = env?.SUPABASE_SERVICE_ROLE_KEY || import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !supabaseKey) {
+      console.error('Missing Supabase credentials', {
+        hasUrl: !!supabaseUrl,
+        hasKey: !!supabaseKey,
+        envKeys: env ? Object.keys(env) : 'no env object',
+      });
+      return new Response(JSON.stringify({ 
+        error: 'Server configuration error. Please contact support.',
+      }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
     const data = await request.json();
     const email = data.email;
 
@@ -43,7 +58,10 @@ export const POST: APIRoute = async ({ request }) => {
         });
       }
       console.error('Supabase error:', error);
-      return new Response(JSON.stringify({ error: 'Database error occurred.' }), {
+      return new Response(JSON.stringify({ 
+        error: 'Database error occurred.',
+        details: error.message 
+      }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -56,7 +74,10 @@ export const POST: APIRoute = async ({ request }) => {
 
   } catch (e) {
     console.error('Request error:', e);
-    return new Response(JSON.stringify({ error: 'Invalid request format.' }), {
+    return new Response(JSON.stringify({ 
+      error: 'Invalid request format.',
+      details: e instanceof Error ? e.message : String(e)
+    }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' },
     });
