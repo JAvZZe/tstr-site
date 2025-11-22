@@ -1,0 +1,207 @@
+---
+import '../styles/global.css';
+
+const providerName = Astro.url.searchParams.get('provider') || '';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claim Your Laboratory Profile | TSTR.site</title>
+    <meta name="description" content="Claim and verify ownership of your laboratory listing on TSTR.site to manage your profile and receive leads.">
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen flex items-center justify-center p-4 md:p-8">
+    <div class="max-w-2xl w-full">
+        
+        <!-- Header Section -->
+        <div class="text-center mb-8">
+            <a href="/" class="inline-block mb-4 text-blue-600 hover:text-blue-700 font-semibold text-sm">
+                ← Back to TSTR.site
+            </a>
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+                Claim Your Profile
+            </h1>
+            {providerName && (
+                <p class="text-lg text-gray-600 mb-2">
+                    Take ownership of <strong class="text-gray-900">{providerName}</strong>
+                </p>
+            )}
+            <p class="text-base text-gray-500">
+                Manage your listing and receive direct leads from customers
+            </p>
+        </div>
+
+        <!-- Claim Form -->
+        <div class="bg-white rounded-2xl shadow-2xl p-6 md:p-10 border border-gray-100">
+            <form id="claim-form" class="space-y-6">
+                
+                <!-- Company Name -->
+                <div>
+                    <label for="provider_name" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Company Name *
+                    </label>
+                    <input 
+                        type="text" 
+                        name="provider_name" 
+                        id="provider_name" 
+                        value={providerName}
+                        required 
+                        class="w-full px-4 py-3 text-base border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition duration-200 outline-none bg-gray-50"
+                    />
+                </div>
+
+                <!-- Contact Name -->
+                <div>
+                    <label for="contact_name" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Your Full Name *
+                    </label>
+                    <input 
+                        type="text" 
+                        name="contact_name" 
+                        id="contact_name" 
+                        placeholder="John Smith"
+                        required 
+                        class="w-full px-4 py-3 text-base border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition duration-200 outline-none"
+                    />
+                </div>
+
+                <!-- Business Email -->
+                <div>
+                    <label for="business_email" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Business Email *
+                    </label>
+                    <input 
+                        type="email" 
+                        name="business_email" 
+                        id="business_email" 
+                        placeholder="name@company.com"
+                        required 
+                        class="w-full px-4 py-3 text-base border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition duration-200 outline-none"
+                    />
+                    <p class="mt-2 text-xs text-gray-500">
+                        <svg class="w-4 h-4 inline-block mr-1 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                        </svg>
+                        We require a domain matching the website to verify ownership instantly
+                    </p>
+                </div>
+
+                <!-- Phone (Optional) -->
+                <div>
+                    <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Direct Phone <span class="text-gray-400 font-normal">(Optional)</span>
+                    </label>
+                    <input 
+                        type="tel" 
+                        name="phone" 
+                        id="phone" 
+                        placeholder="+1 (555) 123-4567"
+                        class="w-full px-4 py-3 text-base border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition duration-200 outline-none"
+                    />
+                </div>
+
+                <!-- Submit Button -->
+                <button
+                    type="submit"
+                    id="submit-btn"
+                    class="w-full px-6 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-200 transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                >
+                    <span id="btn-text">Verify & Claim Profile</span>
+                    <span id="btn-loading" class="hidden">
+                        <svg class="animate-spin h-5 w-5 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Verifying...
+                    </span>
+                </button>
+
+                <div id="status-msg" class="text-center text-sm font-medium min-h-[24px]"></div>
+            </form>
+
+            <!-- Benefits Section -->
+            <div class="mt-8 pt-8 border-t border-gray-100">
+                <h3 class="text-sm font-semibold text-gray-900 mb-4">What happens next?</h3>
+                <ul class="space-y-3 text-sm text-gray-600">
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 mr-3 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span><strong>Email Verification:</strong> We'll send a verification link to confirm your email address</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 mr-3 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span><strong>Instant Access:</strong> If your email domain matches the listing, you'll get immediate access</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 mr-3 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span><strong>Manage Your Listing:</strong> Update information, add services, and respond to leads</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Security Note -->
+        <div class="mt-6 text-center">
+            <p class="text-xs text-gray-500">
+                🔒 Your information is secure and will only be used for verification purposes
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('claim-form') as HTMLFormElement;
+        const msg = document.getElementById('status-msg') as HTMLElement;
+        const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+        const btnText = document.getElementById('btn-text') as HTMLElement;
+        const btnLoading = document.getElementById('btn-loading') as HTMLElement;
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Show loading state
+            btnText.classList.add('hidden');
+            btnLoading.classList.remove('hidden');
+            submitBtn.disabled = true;
+            msg.textContent = '';
+            msg.className = 'text-center text-sm font-medium min-h-[24px]';
+
+            const formData = new FormData(form);
+            const payload = Object.fromEntries(formData);
+
+            try {
+                const res = await fetch('/api/claim_submission', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    msg.textContent = '✅ Claim submitted successfully! Check your email for verification.';
+                    msg.className = 'text-center text-sm font-medium text-green-600 bg-green-50 p-4 rounded-lg border border-green-200';
+                    form.reset();
+                } else {
+                    msg.textContent = `❌ ${data.error || 'Error submitting claim. Please try again.'}`;
+                    msg.className = 'text-center text-sm font-medium text-red-600 bg-red-50 p-4 rounded-lg border border-red-200';
+                }
+            } catch (error) {
+                msg.textContent = '❌ Network error. Please check your connection and try again.';
+                msg.className = 'text-center text-sm font-medium text-red-600 bg-red-50 p-4 rounded-lg border border-red-200';
+            } finally {
+                // Reset button state
+                btnText.classList.remove('hidden');
+                btnLoading.classList.add('hidden');
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

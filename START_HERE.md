@@ -31,9 +31,14 @@
 
 1. ✅ **This file** (you're here - quick orientation)
 2. 📋 **`TSTR.md`** - PRIMARY agent instructions (architecture, commands, priorities, troubleshooting)
-3. 📝 **`.ai-session.md`** - Latest session context, learnings, active tasks
-4. 🔄 **`HANDOFF_TO_CLAUDE.md`** - Current handoff from previous agent (if exists)
-5. 📊 **`PROJECT_STATUS.md`** - Deployment status, infrastructure details, costs
+3. 🎯 **`ORGANIZATION_UPDATE_2025-11-22.md`** - Niche directory structure and strategic focus
+4. 📝 **`.ai-session.md`** - Latest session context, learnings, active tasks
+5. 🔄 **`HANDOFF_TO_CLAUDE.md`** - Current handoff from previous agent (if exists)
+6. 📊 **`PROJECT_STATUS.md`** - Deployment status, infrastructure details, costs
+
+**Niche-Specific Docs**:
+- 🔋 **`/Hydrogen Infrastructure Testing/`** - Hydrogen testing standards and implementations
+- 🧬 **`/Biotech Directory/`** - Biotech/Pharma/Life Sciences resources and workflows
 
 ---
 

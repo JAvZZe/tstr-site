@@ -79,6 +79,34 @@ const locations = listings ?
 // Count stats
 const totalListings = listings?.length || 0
 const totalCategories = allCategories?.length || 0
+
+// Prepare categories for display
+const displayCategories = [];
+
+if (allCategories && allCategories.length > 0) {
+  // Combined Biopharma & Life Sciences category
+  const biotechCat = allCategories.find(c => c.name === 'Biotech Testing');
+  const pharmaCat = allCategories.find(c => c.name === 'Pharmaceutical Testing');
+  const biotechCount = biotechCat && listings ? listings.filter(l => l.category_id === biotechCat.id).length : 0;
+  const pharmaCount = pharmaCat && listings ? listings.filter(l => l.category_id === pharmaCat.id).length : 0;
+
+  displayCategories.push({
+    name: 'Biopharma & Life Sciences Testing',
+    href: '/browse?category=Pharmaceutical%20Testing',
+    count: biotechCount + pharmaCount
+  });
+
+  // Add other categories
+  allCategories
+    .filter(cat => cat.name !== 'Biotech Testing' && cat.name !== 'Pharmaceutical Testing')
+    .forEach(cat => {
+      displayCategories.push({
+        name: cat.name,
+        href: `/browse?category=${encodeURIComponent(cat.name)}`,
+        count: listings ? listings.filter(l => l.category_id === cat.id).length : 0
+      });
+    });
+}
 ---
 
 <!DOCTYPE html>
@@ -366,37 +394,16 @@ const totalCategories = allCategories?.length || 0
     <section>
       <h2>Browse by Category</h2>
       <div class="category-grid">
-        {/* Combined Biopharma & Life Sciences category */}
-        {allCategories && (() => {
-          const biotechCat = allCategories.find(c => c.name === 'Biotech Testing');
-          const pharmaCat = allCategories.find(c => c.name === 'Pharmaceutical Testing');
-          const biotechCount = biotechCat ? listings.filter(l => l.category_id === biotechCat.id).length : 0;
-          const pharmaCount = pharmaCat ? listings.filter(l => l.category_id === pharmaCat.id).length : 0;
-          const combinedCount = biotechCount + pharmaCount;
-          
-          return (
-            <a href="/browse?category=Pharmaceutical%20Testing" style="text-decoration: none; color: inherit;">
-              <div class="category-card">
-                <h3>Biopharma & Life Sciences Testing</h3>
-                <p>{combinedCount} listings</p>
-              </div>
-            </a>
-          );
-        })()}
-        
-        {/* Other categories (excluding Biotech and Pharmaceutical) */}
-        {allCategories && allCategories
-          .filter(cat => cat.name !== 'Biotech Testing' && cat.name !== 'Pharmaceutical Testing')
-          .map((category) => (
-            <a href={`/browse?category=${encodeURIComponent(category.name)}`} style="text-decoration: none; color: inherit;">
-              <div class="category-card">
-                <h3>{category.name}</h3>
-                <p>{listings.filter(l => l.category_id === category.id).length} listings</p>
-              </div>
-            </a>
-          ))}
+        {displayCategories.map((category) => (
+          <a href={category.href} style="text-decoration: none; color: inherit;">
+            <div class="category-card">
+              <h3>{category.name}</h3>
+              <p>{category.count} listings</p>
+            </div>
+          </a>
+        ))}
       </div>
-      {allCategories && allCategories.length === 0 && (
+      {displayCategories.length === 0 && (
         <p style="text-align: center; color: #666; margin-top: 2rem;">
           Categories will appear as listings are added.
         </p>

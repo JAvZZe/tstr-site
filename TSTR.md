@@ -12,7 +12,12 @@
 
 **Business Model**: B2B directory + lead generation for testing laboratories seeking clients in specialized sectors.
 
-**Status**: Production - 127 listings deployed, scrapers active on OCI, frontend needs rebuild
+**Status**: Production - 163 listings deployed, scrapers active on OCI, frontend LIVE at https://tstr.site
+
+**Strategic Focus (Q4 2025 - Q1 2026)**: Hydrogen Infrastructure Testing + Biotech/Pharma/Life Sciences
+- See `ORGANIZATION_UPDATE_2025-11-22.md` for niche directory structure
+- Hydrogen docs: `/Hydrogen Infrastructure Testing/`
+- Biotech docs: `/Biotech Directory/`
 
 ---
 
