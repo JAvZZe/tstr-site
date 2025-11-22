@@ -1,4 +1,4 @@
-# CLAUDE.md - TSTR.site Project
+# GEMINI.md - TSTR.site Project
 
 > **CRITICAL**: This project is part of the AI PROJECTS SPACE continuity system.
 > **Global System**: `/home/al/AI PROJECTS SPACE/`
@@ -10,15 +10,26 @@
 
 ### 1. Session Start (ALWAYS)
 
+**NEW (2025-11-20)**: Use bootstrap script instead of resume.sh:
+
 ```bash
-cd "/home/al/AI PROJECTS SPACE" && ./resume.sh
+./bootstrap.sh TSTR.site
 ```
 
 This loads:
-- Global learnings relevant to this project
-- Pending tasks (filter by "TSTR.site" project tag)
-- Handoff context from previous agents
-- Token usage tracking
+- **Project-specific learnings** (15 relevant from 90 total)
+- **Pending tasks** (filtered to TSTR.site only)
+- **Recent session context** (what was last done)
+- **Handoff context** from previous agents
+- **Protocol reminders** with absolute paths
+
+**Why bootstrap > resume**:
+- resume.sh: Shows ALL learnings (overwhelming)
+- bootstrap.sh: Shows TSTR.site learnings only (manageable)
+- Filters by project name in tags AND content
+- High confidence only (≥4)
+
+**Symlinks available**: In this folder, just run `./bootstrap.sh TSTR.site`
 
 ### 2. During Work
 
@@ -44,7 +55,7 @@ PYEOF
 ```bash
 cd "/home/al/AI PROJECTS SPACE/SYSTEM/state" && python3 << 'PYEOF'
 from db_utils import add_task, update_task
-task_id = add_task("TSTR.site", "Task description", assigned_to="claude")
+task_id = add_task("TSTR.site", "Task description", assigned_to="gemini")
 # ... do work ...
 update_task(task_id, "completed", result="Result summary")
 PYEOF
@@ -55,6 +66,21 @@ PYEOF
 ```bash
 cd "/home/al/AI PROJECTS SPACE" && ./handoff.sh <agent> <reason>
 ```
+
+---
+
+## Gemini / Antigravity Specifics
+
+### Strengths & Capabilities
+- **Agentic Workflow**: I excel at breaking down complex tasks using `task_boundary`, `task.md`, and `implementation_plan.md`. I maintain state across long horizons.
+- **Browser Subagent**: I have a dedicated `browser_subagent` for verifying UI changes, running end-to-end tests, and interacting with web content visually.
+- **Deep Context**: I can process and reason over large amounts of project context, making connections between disparate parts of the codebase.
+- **Google Integration**: I have deep knowledge of Google Cloud, Firebase, and related technologies (though note: this project uses Oracle Cloud & Supabase).
+
+### Workflow Preferences
+1. **Plan First**: Always start with a clear `task_boundary` and `implementation_plan.md` for any non-trivial task.
+2. **Verify Visually**: Use `browser_subagent` to confirm frontend changes actually work as intended.
+3. **Artifacts**: Use artifacts to document plans, walkthroughs, and task lists.
 
 ---
 
@@ -129,5 +155,52 @@ See `TSTR.md` for:
 
 ---
 
-**Last Updated**: 2025-11-17
+## Recent Implementation Notes (2025-11-22)
+
+### Category/Region Dynamic Routes ✅ LIVE
+**Routes created:**
+- `/[category]` - Category overview showing all regions (e.g., `/hydrogen-infrastructure-testing`)
+- `/[category]/[region]` - Filtered listings by category + region (e.g., `/hydrogen-infrastructure-testing/global`)
+
+**Files:**
+- `src/pages/[category]/index.astro` - Category overview page
+- `src/pages/[category]/[region]/index.astro` - Category+region listings page
+- Both use `export const prerender = true` for static generation
+
+**Deployment:** Live on https://tstr.site with Cloudflare Pages edge caching
+
+### Sitemap Optimization ✅ LIVE
+**Change:** Sitemap now filters out categories with 0 active listings
+
+**Implementation:** `src/pages/sitemap.xml.ts` joins categories with listing counts:
+```typescript
+const { data: categoryData } = await supabase
+  .from('categories')
+  .select(`
+    slug,
+    listings:listings!category_id(count)
+  `);
+
+const categories = (categoryData || [])
+  .filter(cat => cat.listings && cat.listings[0]?.count > 0)
+  .map(cat => ({ slug: cat.slug }));
+```
+
+**Result:** Biotech Testing (0 listings) excluded, Pharmaceutical Testing (108 listings) included. Sitemap: 61 URLs (was 63).
+
+### Supabase API Key Migration ✅ COMPLETE
+**Old format (deprecated):** JWT tokens (`eyJhbGci...`)
+**New format (current):**
+- Publishable key: `sb_publishable_*`
+- Secret key: `sb_secret_*`
+
+**Environment variables updated:**
+- `.env` and `.dev.vars` (local)
+- Cloudflare Pages dashboard (production)
+
+**Critical:** Legacy JWT keys were disabled 2025-10-17. All new deployments use new key format.
+
+---
+
+**Last Updated**: 2025-11-22
 **System Version**: AI PROJECTS SPACE v2.0

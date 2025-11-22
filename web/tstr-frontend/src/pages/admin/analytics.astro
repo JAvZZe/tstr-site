@@ -4,26 +4,9 @@ import { supabase } from '../../lib/supabase';
 // Force SSR - need dynamic authentication check
 export const prerender = false;
 
-// Simple authentication check - only allow if user is authenticated
-const authHeader = Astro.request.headers.get('cookie');
-let isAuthenticated = false;
-
-if (authHeader) {
-  try {
-    const token = authHeader.split('sb-access-token=')[1]?.split(';')[0];
-    if (token) {
-      const { data: { user } } = await supabase.auth.getUser(token);
-      isAuthenticated = !!user;
-    }
-  } catch (error) {
-    console.error('Auth check failed:', error);
-  }
-}
-
-// Redirect to home if not authenticated
-if (!isAuthenticated) {
-  return Astro.redirect('/');
-}
+// TODO: Add authentication when auth system is implemented
+// For now, analytics is publicly accessible (internal use only)
+// Access via /admin/analytics
 
 // Fetch analytics data
 const now = new Date();

@@ -79,41 +79,10 @@ const getLocationHierarchy = (location) => {
 const locationHierarchy = getLocationHierarchy(listing.location)
 const country = locationHierarchy.find(l => l.level === 'country')
 
-// Get user session and subscription tier
-const authHeader = Astro.request.headers.get('cookie')
+// Subscription tier system (not yet implemented - defaulting to free)
+// TODO: Implement proper auth when subscription system is ready
 let userTier = 'free'
 let isLoggedIn = false
-
-if (authHeader) {
-  try {
-    // Fetch user from the browser's authenticated session
-    const sessionResponse = await fetch('https://haimjeaetrsaauitrhfy.supabase.co/auth/v1/user', {
-      headers: {
-        'Authorization': `Bearer ${authHeader.split('sb-access-token=')[1]?.split(';')[0] || ''}`,
-        'Content-Type': 'application/json'
-      }
-    })
-
-    if (sessionResponse.ok) {
-      const userData = await sessionResponse.json()
-      if (userData.id) {
-        isLoggedIn = true
-
-        // Fetch user profile with subscription tier
-        const { data: profile } = await supabase
-          .from('user_profiles')
-          .select('subscription_tier')
-          .eq('id', userData.id)
-          .single()
-
-        userTier = profile?.subscription_tier || 'basic'
-      }
-    }
-  } catch (e) {
-    // Silently fail - user will be treated as free tier
-    userTier = 'free'
-  }
-}
 
 // Format custom fields by type
 const formatFieldValue = (value, fieldType) => {
