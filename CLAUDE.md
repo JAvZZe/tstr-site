@@ -140,5 +140,52 @@ See `TSTR.md` for:
 
 ---
 
-**Last Updated**: 2025-11-17
+## Recent Implementation Notes (2025-11-22)
+
+### Category/Region Dynamic Routes ✅ LIVE
+**Routes created:**
+- `/[category]` - Category overview showing all regions (e.g., `/hydrogen-infrastructure-testing`)
+- `/[category]/[region]` - Filtered listings by category + region (e.g., `/hydrogen-infrastructure-testing/global`)
+
+**Files:**
+- `src/pages/[category]/index.astro` - Category overview page
+- `src/pages/[category]/[region]/index.astro` - Category+region listings page
+- Both use `export const prerender = true` for static generation
+
+**Deployment:** Live on https://tstr.site with Cloudflare Pages edge caching
+
+### Sitemap Optimization ✅ LIVE
+**Change:** Sitemap now filters out categories with 0 active listings
+
+**Implementation:** `src/pages/sitemap.xml.ts` joins categories with listing counts:
+```typescript
+const { data: categoryData } = await supabase
+  .from('categories')
+  .select(`
+    slug,
+    listings:listings!category_id(count)
+  `);
+
+const categories = (categoryData || [])
+  .filter(cat => cat.listings && cat.listings[0]?.count > 0)
+  .map(cat => ({ slug: cat.slug }));
+```
+
+**Result:** Biotech Testing (0 listings) excluded, Pharmaceutical Testing (108 listings) included. Sitemap: 61 URLs (was 63).
+
+### Supabase API Key Migration ✅ COMPLETE
+**Old format (deprecated):** JWT tokens (`eyJhbGci...`)
+**New format (current):**
+- Publishable key: `sb_publishable_*`
+- Secret key: `sb_secret_*`
+
+**Environment variables updated:**
+- `.env` and `.dev.vars` (local)
+- Cloudflare Pages dashboard (production)
+
+**Critical:** Legacy JWT keys were disabled 2025-10-17. All new deployments use new key format.
+
+---
+
+**Last Updated**: 2025-11-22
 **System Version**: AI PROJECTS SPACE v2.0
