@@ -1,6 +1,8 @@
 import type { APIRoute } from 'astro';
 import { supabase } from '../lib/supabase';
 
+export const prerender = true;
+
 export const GET: APIRoute = async () => {
   const baseUrl = 'https://tstr.site';
   const currentDate = new Date().toISOString().split('T')[0];
@@ -41,18 +43,51 @@ export const GET: APIRoute = async () => {
     .from('categories')
     .select('slug');
 
+  // Category overview pages (/category)
   const categoryPages = (categories || []).map(cat => ({
+    url: `/${cat.slug}`,
+    priority: '0.9',
+    changefreq: 'weekly'
+  }));
+
+  // Legacy category query param pages
+  const categoryBrowsePages = (categories || []).map(cat => ({
     url: `/browse?category=${encodeURIComponent(cat.slug)}`,
-    priority: '0.8',
+    priority: '0.7',
     changefreq: 'daily'
+  }));
+
+  // Fetch all active listings to build category+region pages
+  const { data: listings } = await supabase
+    .from('listings')
+    .select(`
+      region,
+      category:category_id (slug)
+    `)
+    .eq('status', 'active');
+
+  // Build unique category/region combinations
+  const categoryRegionPairs = new Set<string>();
+  listings?.forEach(listing => {
+    if (listing.category?.slug && listing.region) {
+      categoryRegionPairs.add(`${listing.category.slug}/${listing.region.toLowerCase()}`);
+    }
+  });
+
+  const categoryRegionPages = Array.from(categoryRegionPairs).map(pair => ({
+    url: `/${pair}`,
+    priority: '0.8',
+    changefreq: 'weekly'
   }));
 
   // Combine all pages
   const allPages = [
     ...staticPages,
     ...standardPages,
+    ...categoryPages,
+    ...categoryRegionPages,
     ...standardSearchPages.slice(0, 50), // Limit to top 50
-    ...categoryPages
+    ...categoryBrowsePages
   ];
 
   // Generate XML

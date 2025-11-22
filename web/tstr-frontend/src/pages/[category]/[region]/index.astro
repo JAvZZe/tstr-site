@@ -1,0 +1,213 @@
+---
+// src/pages/[category]/[region]/index.astro
+import { supabase } from '../../../lib/supabase';
+import Footer from '../../../components/Footer.astro';
+
+// Enable static prerendering at build time
+export const prerender = true;
+
+// 1. getStaticPaths: Generate pages for each category/region combination
+export async function getStaticPaths() {
+  // Fetch all listings with category and region
+  const { data: listings, error } = await supabase
+    .from('listings')
+    .select(`
+      region,
+      category:category_id (slug)
+    `)
+    .eq('status', 'active');
+
+  if (error || !listings) {
+    console.error('Error fetching listings for static paths:', error);
+    return [];
+  }
+
+  // Create unique category/region combinations
+  const uniquePaths = new Set<string>();
+  listings.forEach(listing => {
+    if (listing.category?.slug && listing.region) {
+      uniquePaths.add(JSON.stringify({
+        category: listing.category.slug,
+        region: listing.region.toLowerCase()
+      }));
+    }
+  });
+
+  // Return path objects
+  return Array.from(uniquePaths).map(pathStr => {
+    const { category, region } = JSON.parse(pathStr);
+    return {
+      params: { category, region }
+    };
+  });
+}
+
+// 2. Page rendering: Fetch data for this specific page
+const { category, region } = Astro.params;
+
+// Fetch category metadata
+const { data: categoryData } = await supabase
+  .from('categories')
+  .select('id, name, slug, description')
+  .eq('slug', category)
+  .single();
+
+// Fetch listings for this category/region
+const { data: pageListings, error: listingsError } = await supabase
+  .from('listings')
+  .select(`
+    *,
+    category:category_id (
+      id,
+      name,
+      slug
+    ),
+    location:location_id (
+      id,
+      name,
+      slug
+    )
+  `)
+  .eq('status', 'active')
+  .eq('region', region)
+  .eq('category_id', categoryData?.id || '00000000-0000-0000-0000-000000000000')
+  .order('priority_rank', { ascending: false })
+  .order('created_at', { ascending: false });
+
+// SEO-friendly titles
+const titleCat = categoryData?.name || category.charAt(0).toUpperCase() + category.slice(1);
+const titleReg = region.toUpperCase();
+const listingCount = pageListings?.length || 0;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{titleCat} Testing Labs in {titleReg} | TSTR.site</title>
+    <meta
+      name="description"
+      content={`Find ${listingCount} verified ${titleCat.toLowerCase()} testing services, ISO 17025 labs, and certification bodies in ${titleReg}. Compare prices and get quotes on TSTR.site.`}
+    />
+    <meta property="og:title" content={`${titleCat} Testing Labs in ${titleReg}`} />
+    <meta property="og:description" content={`Directory of ${listingCount} verified ${titleCat.toLowerCase()} testing laboratories in ${titleReg}`} />
+  </head>
+
+  <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm p-4">
+      <div class="max-w-6xl mx-auto">
+        <a href="/" class="font-bold text-xl hover:text-blue-600 transition">
+          TSTR<span class="text-blue-600">.site</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto p-6">
+
+      <!-- Breadcrumbs -->
+      <div class="text-sm text-gray-500 mb-4">
+        <a href="/" class="hover:underline hover:text-blue-600">Home</a>
+        <span class="mx-2">›</span>
+        <a href={`/${category}`} class="hover:underline hover:text-blue-600">{titleCat}</a>
+        <span class="mx-2">›</span>
+        <span class="text-gray-900 font-medium">{titleReg}</span>
+      </div>
+
+      <!-- Page Header -->
+      <h1 class="text-3xl md:text-4xl font-bold mb-2">
+        {titleCat} Testing Services in {titleReg}
+      </h1>
+
+      {categoryData?.description && (
+        <p class="text-gray-600 mb-4">{categoryData.description}</p>
+      )}
+
+      <p class="text-gray-600 mb-8 text-lg">
+        {listingCount === 0 ? 'No' : listingCount} verified {listingCount === 1 ? 'laboratory' : 'laboratories'} and certification {listingCount === 1 ? 'body' : 'bodies'}.
+      </p>
+
+      <!-- Error Handling -->
+      {listingsError && (
+        <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
+          <p class="text-red-800 text-sm">
+            ⚠️ Error loading listings. Please try again later.
+          </p>
+        </div>
+      )}
+
+      <!-- Listings Grid -->
+      {pageListings && pageListings.length > 0 ? (
+        <div class="grid gap-6">
+          {pageListings.map((listing) => (
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition">
+
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="text-xl font-bold text-blue-900">
+                    {listing.business_name}
+                  </h3>
+
+                  <div class="text-sm text-gray-500 mt-1 flex flex-wrap gap-3">
+                    <span>📍 {listing.location?.name || listing.region?.toUpperCase()}</span>
+                    {listing.featured && (
+                      <span class="text-yellow-600 font-semibold">⭐ Featured</span>
+                    )}
+                    {listing.verified && (
+                      <span class="text-green-600 font-semibold">✓ Verified</span>
+                    )}
+                  </div>
+
+                  {listing.description && (
+                    <p class="text-gray-700 mt-3 text-sm line-clamp-2">
+                      {listing.description}
+                    </p>
+                  )}
+                </div>
+
+                {listing.website && (
+                  <a
+                    href={listing.website}
+                    target="_blank"
+                    rel="nofollow noopener noreferrer"
+                    class="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-blue-700 transition whitespace-nowrap"
+                  >
+                    Visit Website
+                  </a>
+                )}
+              </div>
+
+              <!-- Claim Prompt for Unclaimed Listings -->
+              {!listing.claimed && (
+                <div class="mt-4 bg-yellow-50 border-l-4 border-yellow-400 p-3 text-xs text-yellow-800">
+                  ⚠️ Is this your lab?
+                  <a href="/claim" class="underline font-bold hover:text-yellow-900">
+                    Claim this profile
+                  </a>
+                  to manage your listing.
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <!-- Empty State -->
+        <div class="text-center py-16 bg-white rounded-lg border-2 border-dashed border-gray-300">
+          <p class="text-gray-500 text-lg mb-2">
+            No {titleCat.toLowerCase()} testing providers listed in {titleReg} yet.
+          </p>
+          <a href="/contact" class="text-blue-600 font-bold hover:underline">
+            Be the first to list here →
+          </a>
+        </div>
+      )}
+
+    </main>
+
+    <!-- Footer -->
+    <Footer />
+  </body>
+</html>
