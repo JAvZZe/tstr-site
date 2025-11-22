@@ -38,20 +38,28 @@ export const GET: APIRoute = async () => {
     changefreq: 'weekly'
   }));
 
-  // Fetch all categories
-  const { data: categories } = await supabase
+  // Fetch categories with active listing counts (exclude empty categories)
+  const { data: categoryData } = await supabase
     .from('categories')
-    .select('slug');
+    .select(`
+      slug,
+      listings:listings!category_id(count)
+    `);
+
+  // Filter out categories with 0 listings
+  const categories = (categoryData || [])
+    .filter(cat => cat.listings && cat.listings[0]?.count > 0)
+    .map(cat => ({ slug: cat.slug }));
 
   // Category overview pages (/category)
-  const categoryPages = (categories || []).map(cat => ({
+  const categoryPages = categories.map(cat => ({
     url: `/${cat.slug}`,
     priority: '0.9',
     changefreq: 'weekly'
   }));
 
   // Legacy category query param pages
-  const categoryBrowsePages = (categories || []).map(cat => ({
+  const categoryBrowsePages = categories.map(cat => ({
     url: `/browse?category=${encodeURIComponent(cat.slug)}`,
     priority: '0.7',
     changefreq: 'daily'
