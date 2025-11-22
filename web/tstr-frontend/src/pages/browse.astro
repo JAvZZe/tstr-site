@@ -489,7 +489,7 @@ const extractCity = (address) => {
           We'll find the perfect testing partner for your needs—at no cost to you.
         </p>
         <a
-          href="/contact?subject=Concierge+Request"
+          href="mailto:tstr.site1@gmail.com?subject=Request Free Concierge Search"
           id="concierge-link"
           style="
             display: inline-block;
@@ -574,13 +574,16 @@ const extractCity = (address) => {
         if (visibleCount < 5) {
           lowDensityFallback.classList.remove('hidden')
 
-          // Update concierge link with filter context
-          const params = new URLSearchParams()
-          params.set('subject', 'Concierge Request')
-          if (categoryFilter.value) params.set('category', categoryFilter.value)
-          if (countryFilter.value) params.set('country', countryFilter.value)
-          if (cityFilter.value) params.set('city', cityFilter.value)
-          conciergeLink.href = `/contact?${params.toString()}`
+          // Update mailto link with filter context in subject
+          let subject = 'Request Free Concierge Search'
+          const contextParts = []
+          if (categoryFilter.value) contextParts.push(categoryFilter.value)
+          if (countryFilter.value) contextParts.push(countryFilter.value)
+          if (cityFilter.value) contextParts.push(cityFilter.value)
+          if (contextParts.length > 0) {
+            subject += ' - ' + contextParts.join(', ')
+          }
+          conciergeLink.href = `mailto:tstr.site1@gmail.com?subject=${encodeURIComponent(subject)}`
         } else {
           lowDensityFallback.classList.add('hidden')
         }
