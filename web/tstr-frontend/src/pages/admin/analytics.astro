@@ -1,0 +1,494 @@
+---
+import { supabase } from '../../lib/supabase';
+
+// Force SSR - need dynamic authentication check
+export const prerender = false;
+
+// Simple authentication check - only allow if user is authenticated
+const authHeader = Astro.request.headers.get('cookie');
+let isAuthenticated = false;
+
+if (authHeader) {
+  try {
+    const token = authHeader.split('sb-access-token=')[1]?.split(';')[0];
+    if (token) {
+      const { data: { user } } = await supabase.auth.getUser(token);
+      isAuthenticated = !!user;
+    }
+  } catch (error) {
+    console.error('Auth check failed:', error);
+  }
+}
+
+// Redirect to home if not authenticated
+if (!isAuthenticated) {
+  return Astro.redirect('/');
+}
+
+// Fetch analytics data
+const now = new Date();
+const last30Days = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+const last7Days = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+// Overview metrics
+const { count: totalClicks } = await supabase
+  .from('clicks')
+  .select('*', { count: 'exact', head: true });
+
+const { count: clicks30d } = await supabase
+  .from('clicks')
+  .select('*', { count: 'exact', head: true })
+  .gte('created_at', last30Days.toISOString());
+
+const { count: clicks7d } = await supabase
+  .from('clicks')
+  .select('*', { count: 'exact', head: true })
+  .gte('created_at', last7Days.toISOString());
+
+// Top clicked listings
+const { data: topListings } = await supabase.rpc('get_top_clicked_listings', { limit_count: 10 });
+
+// If RPC doesn't exist, fall back to manual query
+let topListingsData = topListings;
+if (!topListings) {
+  const { data: clicksWithListings } = await supabase
+    .from('clicks')
+    .select(`
+      listing_id,
+      listings (
+        id,
+        business_name,
+        website,
+        category:category_id(name)
+      )
+    `)
+    .not('listing_id', 'is', null)
+    .order('created_at', { ascending: false });
+
+  // Aggregate manually
+  const listingCounts = new Map();
+  clicksWithListings?.forEach(click => {
+    const id = click.listing_id;
+    if (!listingCounts.has(id)) {
+      listingCounts.set(id, {
+        listing: click.listings,
+        count: 0,
+        last_click: null
+      });
+    }
+    const entry = listingCounts.get(id);
+    entry.count++;
+  });
+
+  topListingsData = Array.from(listingCounts.values())
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 10);
+}
+
+// Recent clicks
+const { data: recentClicks } = await supabase
+  .from('clicks')
+  .select(`
+    id,
+    url,
+    user_agent,
+    created_at,
+    listings (
+      business_name,
+      category:category_id(name)
+    )
+  `)
+  .order('created_at', { ascending: false })
+  .limit(20);
+
+// Daily clicks for last 30 days
+const { data: dailyClicks } = await supabase
+  .from('clicks')
+  .select('created_at')
+  .gte('created_at', last30Days.toISOString())
+  .order('created_at', { ascending: true });
+
+// Aggregate by day
+const clicksByDay = new Map();
+dailyClicks?.forEach(click => {
+  const date = new Date(click.created_at).toISOString().split('T')[0];
+  clicksByDay.set(date, (clicksByDay.get(date) || 0) + 1);
+});
+
+const chartData = Array.from(clicksByDay.entries())
+  .map(([date, count]) => ({ date, count }));
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics Dashboard | TSTR.site Admin</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    header {
+      background: white;
+      padding: 1.5rem 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      color: #1a1a1a;
+    }
+
+    .breadcrumb {
+      font-size: 0.875rem;
+      color: #666;
+      margin-top: 0.5rem;
+    }
+
+    .breadcrumb a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .metric-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .metric-label {
+      font-size: 0.875rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #0066cc;
+    }
+
+    .metric-change {
+      font-size: 0.875rem;
+      color: #666;
+      margin-top: 0.25rem;
+    }
+
+    .section {
+      background: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #1a1a1a;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      padding: 0.75rem;
+      background: #f8f8f8;
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #666;
+    }
+
+    td {
+      padding: 0.75rem;
+      border-top: 1px solid #eee;
+    }
+
+    tr:hover {
+      background: #f8f8f8;
+    }
+
+    .listing-name {
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+
+    .category-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      background: #e3f2fd;
+      color: #0066cc;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .url {
+      color: #666;
+      font-size: 0.875rem;
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .timestamp {
+      color: #999;
+      font-size: 0.875rem;
+    }
+
+    .count-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: #0066cc;
+      color: white;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    .chart {
+      margin-top: 1rem;
+      height: 200px;
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      padding: 1rem 0;
+    }
+
+    .chart-bar {
+      flex: 1;
+      background: linear-gradient(to top, #0066cc, #4d94ff);
+      border-radius: 4px 4px 0 0;
+      transition: opacity 0.2s;
+      position: relative;
+    }
+
+    .chart-bar:hover {
+      opacity: 0.8;
+    }
+
+    .chart-bar::after {
+      content: attr(data-count);
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #0066cc;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #999;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: #0066cc;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: #0052a3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📊 Analytics Dashboard</h1>
+    <div class="breadcrumb">
+      <a href="/">Home</a> › Analytics
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Metrics Overview -->
+    <div class="metrics">
+      <div class="metric-card">
+        <div class="metric-label">Total Clicks</div>
+        <div class="metric-value">{totalClicks || 0}</div>
+        <div class="metric-change">All time</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Last 30 Days</div>
+        <div class="metric-value">{clicks30d || 0}</div>
+        <div class="metric-change">
+          {clicks30d && totalClicks ? Math.round((clicks30d / totalClicks) * 100) : 0}% of total
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Last 7 Days</div>
+        <div class="metric-value">{clicks7d || 0}</div>
+        <div class="metric-change">
+          {clicks7d && clicks30d ? Math.round((clicks7d / clicks30d) * 100) : 0}% of last 30d
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Avg Per Day</div>
+        <div class="metric-value">
+          {clicks30d ? Math.round(clicks30d / 30) : 0}
+        </div>
+        <div class="metric-change">Last 30 days</div>
+      </div>
+    </div>
+
+    <!-- Click Trends Chart -->
+    {chartData.length > 0 && (
+      <div class="section">
+        <h2 class="section-title">Click Trends (Last 30 Days)</h2>
+        <div class="chart">
+          {chartData.map(({ date, count }) => {
+            const maxCount = Math.max(...chartData.map(d => d.count));
+            const height = (count / maxCount) * 100;
+            return (
+              <div
+                class="chart-bar"
+                style={`height: ${height}%`}
+                data-count={count}
+                title={`${date}: ${count} clicks`}
+              />
+            );
+          })}
+        </div>
+      </div>
+    )}
+
+    <!-- Top Clicked Listings -->
+    <div class="section">
+      <h2 class="section-title">🏆 Top Performing Listings</h2>
+      {topListingsData && topListingsData.length > 0 ? (
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Listing</th>
+              <th>Category</th>
+              <th>Website</th>
+              <th>Clicks</th>
+            </tr>
+          </thead>
+          <tbody>
+            {topListingsData.map((item, index) => (
+              <tr>
+                <td><strong>#{index + 1}</strong></td>
+                <td class="listing-name">{item.listing?.business_name || item.business_name || 'Unknown'}</td>
+                <td>
+                  <span class="category-badge">
+                    {item.listing?.category?.name || item.category_name || 'N/A'}
+                  </span>
+                </td>
+                <td>
+                  <div class="url">{item.listing?.website || item.website || 'N/A'}</div>
+                </td>
+                <td>
+                  <span class="count-badge">{item.count || item.clicks}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <div class="empty-state">
+          No click data yet. Clicks will appear here once visitors start clicking on listing websites.
+        </div>
+      )}
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="section">
+      <h2 class="section-title">🕐 Recent Click Activity</h2>
+      {recentClicks && recentClicks.length > 0 ? (
+        <table>
+          <thead>
+            <tr>
+              <th>Listing</th>
+              <th>Category</th>
+              <th>URL</th>
+              <th>User Agent</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {recentClicks.map(click => (
+              <tr>
+                <td class="listing-name">
+                  {click.listings?.business_name || 'Unknown'}
+                </td>
+                <td>
+                  <span class="category-badge">
+                    {click.listings?.category?.name || 'N/A'}
+                  </span>
+                </td>
+                <td>
+                  <div class="url">{click.url}</div>
+                </td>
+                <td>
+                  <div class="url">{click.user_agent || 'Unknown'}</div>
+                </td>
+                <td class="timestamp">
+                  {new Date(click.created_at).toLocaleString()}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <div class="empty-state">
+          No recent clicks to display.
+        </div>
+      )}
+    </div>
+
+    <!-- Export Button -->
+    <div style="text-align: center; margin-top: 2rem;">
+      <a href="/admin/analytics/export" class="btn">📥 Export Click Data (CSV)</a>
+    </div>
+  </div>
+</body>
+</html>
