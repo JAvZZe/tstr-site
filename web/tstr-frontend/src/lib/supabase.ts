@@ -8,7 +8,7 @@ const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsa
 // For CSR (Client Side Rendering), would use anon key instead
 const supabaseKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY ||
                     import.meta.env.PUBLIC_SUPABASE_SERVICE_ROLE_KEY ||
-                    'sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2';  // Service role key for SSG
+                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyOTQ0ODQzNywiZXhwIjoyMDQ1MDI0NDM3fQ.sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2';  // Service role key for SSG
 
 console.log('Supabase URL:', supabaseUrl);
 console.log('Supabase key:', supabaseKey ? 'present' : 'missing');
