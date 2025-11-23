@@ -79,6 +79,13 @@ const { data: pageListings, error: listingsError } = await supabase
 const titleCat = categoryData?.name || category.charAt(0).toUpperCase() + category.slice(1);
 const titleReg = region.toUpperCase();
 const listingCount = pageListings?.length || 0;
+
+// Helper: Convert "Testers" to "Testing" for SEO hybrid hook
+const getTestingServiceName = (categoryName: string) => {
+  return categoryName.replace('Testers', 'Testing');
+};
+
+const testingServiceName = getTestingServiceName(titleCat);
 ---
 
 <!DOCTYPE html>
@@ -86,13 +93,13 @@ const listingCount = pageListings?.length || 0;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{titleCat} Labs in {titleReg} | TSTR.site</title>
+    <title>{titleCat} & {testingServiceName} in {titleReg} | TSTR.site</title>
     <meta
       name="description"
-      content={`Find ${listingCount} verified ${titleCat.toLowerCase()} services, ISO 17025 labs, and certification bodies in ${titleReg}. Compare prices and get quotes on TSTR.site.`}
+      content={`Directory of ${listingCount} verified ${titleCat.toLowerCase()} and ${testingServiceName.toLowerCase()} in ${titleReg}. Compare ISO 17025 labs and certification bodies. Get quotes from certified providers.`}
     />
-    <meta property="og:title" content={`${titleCat} Labs in ${titleReg}`} />
-    <meta property="og:description" content={`Directory of ${listingCount} verified ${titleCat.toLowerCase()} laboratories in ${titleReg}`} />
+    <meta property="og:title" content={`${titleCat} & ${testingServiceName} in ${titleReg}`} />
+    <meta property="og:description" content={`Find and compare ${listingCount} verified ${titleCat.toLowerCase()} in ${titleReg}. ${categoryData?.description || testingServiceName + ' from ISO 17025 laboratories.'}`} />
   </head>
 
   <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
@@ -123,9 +130,18 @@ const listingCount = pageListings?.length || 0;
         {titleCat} in {titleReg}
       </h1>
 
-      {categoryData?.description && (
-        <p class="text-gray-600 mb-4">{categoryData.description}</p>
-      )}
+      <!-- H2: SEO Payload (Hybrid Hook Strategy) -->
+      <h2 class="text-xl md:text-2xl font-semibold text-gray-700 mb-4">
+        High-Value {testingServiceName} in {titleReg}
+      </h2>
+
+      <!-- SEO-enhanced intro -->
+      <p class="text-gray-600 text-base mb-4">
+        Find verified <strong>{titleCat.toLowerCase()}</strong> and compare
+        <strong>{testingServiceName.toLowerCase()}</strong> from ISO 17025
+        accredited laboratories in {titleReg}.
+        {categoryData?.description && ` Expert providers for ${categoryData.description.toLowerCase()}.`}
+      </p>
 
       <p class="text-gray-600 mb-8 text-lg">
         {listingCount === 0 ? 'No' : listingCount} verified {listingCount === 1 ? 'laboratory' : 'laboratories'} and certification {listingCount === 1 ? 'body' : 'bodies'}.

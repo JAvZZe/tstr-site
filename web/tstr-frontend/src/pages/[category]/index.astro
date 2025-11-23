@@ -72,6 +72,13 @@ const sortedRegions = Array.from(listingsByRegion.entries())
   .sort((a, b) => b[1].length - a[1].length);
 
 const totalListings = listings?.length || 0;
+
+// Helper: Convert "Testers" to "Testing" for SEO hybrid hook
+const getTestingServiceName = (categoryName: string) => {
+  return categoryName.replace('Testers', 'Testing');
+};
+
+const testingServiceName = getTestingServiceName(categoryData.name);
 ---
 
 <!DOCTYPE html>
@@ -79,13 +86,13 @@ const totalListings = listings?.length || 0;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{categoryData.name} - Labs & Certification Bodies | TSTR.site</title>
+    <title>{categoryData.name} & {testingServiceName} | TSTR.site</title>
     <meta
       name="description"
-      content={`Find ${totalListings} verified ${categoryData.name.toLowerCase()} laboratories, ISO 17025 accredited labs, and certification bodies worldwide. Compare services and get quotes.`}
+      content={`Directory of ${totalListings} verified ${categoryData.name.toLowerCase()} and ${testingServiceName.toLowerCase()}. Compare ISO 17025 accredited labs and certification bodies worldwide. Get quotes from certified providers.`}
     />
-    <meta property="og:title" content={`${categoryData.name} Directory`} />
-    <meta property="og:description" content={categoryData.description || `Directory of ${totalListings} ${categoryData.name.toLowerCase()} providers`} />
+    <meta property="og:title" content={`${categoryData.name} & ${testingServiceName}`} />
+    <meta property="og:description" content={`Find and compare verified ${categoryData.name.toLowerCase()}. ${categoryData.description || `${testingServiceName} from ISO 17025 certified laboratories.`}`} />
   </head>
 
   <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
@@ -120,9 +127,18 @@ const totalListings = listings?.length || 0;
           </h1>
         </div>
 
-        {categoryData.description && (
-          <p class="text-gray-600 text-lg mb-4">{categoryData.description}</p>
-        )}
+        <!-- H2: SEO Payload (Hybrid Hook Strategy) -->
+        <h2 class="text-xl md:text-2xl font-semibold text-gray-700 mb-4">
+          Compare Premium {testingServiceName} & ISO 17025 Certified Labs
+        </h2>
+
+        <!-- SEO-enhanced intro text combining both keywords -->
+        <p class="text-gray-600 text-base mb-4">
+          Find verified <strong>{categoryData.name.toLowerCase()}</strong> and
+          compare <strong>{testingServiceName.toLowerCase()}</strong> from
+          ISO 17025 accredited laboratories worldwide.
+          {categoryData.description && `Expert providers for ${categoryData.description.toLowerCase()}.`}
+        </p>
 
         <p class="text-gray-700">
           <span class="font-bold text-2xl text-blue-600">{totalListings}</span>
@@ -194,10 +210,10 @@ const totalListings = listings?.length || 0;
       {totalListings > 0 && (
         <div class="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
           <h2 class="text-xl font-bold text-blue-900 mb-2">
-            List Your {categoryData.name} Lab
+            List Your {testingServiceName}
           </h2>
           <p class="text-gray-700 mb-4">
-            Reach thousands of customers searching for {categoryData.name.toLowerCase()}. Free basic listings available.
+            Reach thousands of customers searching for {categoryData.name.toLowerCase()} and {testingServiceName.toLowerCase()}. Free basic listings available.
           </p>
           <a
             href="/contact"
