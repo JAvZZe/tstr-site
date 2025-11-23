@@ -1,9 +1,28 @@
 ---
 import { supabase } from '../../lib/supabase'
 import { getRedirectUrl } from '../../lib/redirect'
+import Footer from '../../components/Footer.astro'
 
-// Force SSR - we need to check user session/tier dynamically
-export const prerender = false
+// Enable static prerendering for SEO
+export const prerender = true
+
+// Generate static paths for all active listings
+export async function getStaticPaths() {
+  const { data: listings, error } = await supabase
+    .from('listings')
+    .select('slug')
+    .eq('status', 'active')
+    .order('created_at', { ascending: false });
+
+  if (error || !listings) {
+    console.error('Error fetching listings for static paths:', error);
+    return [];
+  }
+
+  return listings.map(listing => ({
+    params: { slug: listing.slug }
+  }));
+}
 
 const { slug } = Astro.params
 
@@ -58,6 +77,19 @@ const { data: customFieldValues, error: cfError } = await supabase
   `)
   .eq('listing_id', listing.id)
 
+// Fetch listing capabilities (standards/certifications)
+const { data: capabilities, error: capError } = await supabase
+  .from('listing_capabilities')
+  .select(`
+    standard:standard_id (
+      code,
+      name,
+      description
+    )
+  `)
+  .eq('listing_id', listing.id)
+  .order('created_at', { ascending: true })
+
 // Build location breadcrumb
 const getLocationHierarchy = (location) => {
   if (!location) return []
@@ -79,9 +111,10 @@ const getLocationHierarchy = (location) => {
 const locationHierarchy = getLocationHierarchy(listing.location)
 const country = locationHierarchy.find(l => l.level === 'country')
 
-// Subscription tier system (not yet implemented - defaulting to free)
-// TODO: Implement proper auth when subscription system is ready
-let userTier = 'free'
+// Subscription tier system (not yet implemented)
+// For SEO: Show public data in static build (website, description, certifications)
+// Hide sensitive data (phone, email) - can be gated client-side later
+let userTier = 'basic' // Set to 'basic' for SEO: shows website & certifications
 let isLoggedIn = false
 
 // Format custom fields by type
@@ -104,22 +137,28 @@ const customFields = customFieldValues?.map(cf => ({
   type: cf.custom_field?.field_type
 })) || []
 
-// Tier-based visibility rules
-const canViewFullAddress = userTier !== 'free'
-const canViewPhone = userTier === 'professional' || userTier === 'premium' || userTier === 'enterprise'
-const canViewEmail = userTier === 'professional' || userTier === 'premium' || userTier === 'enterprise'
-const canViewWebsite = userTier !== 'free'
-const canViewCertifications = userTier !== 'free'
+// Add standards as "certifications" for display
+const standards = capabilities?.map(cap => ({
+  name: cap.standard?.code || 'Unknown Standard',
+  value: cap.standard?.name || 'Certification',
+  type: 'standard'
+})) || []
 
-// Get description preview for free tier (150 chars)
-const descriptionPreview = listing.description
-  ? userTier === 'free'
-    ? listing.description.substring(0, 150) + (listing.description.length > 150 ? '...' : '')
-    : listing.description
-  : null
+// Combine custom fields and standards
+const allCertifications = [...customFields, ...standards]
 
-// Count certifications (visible to free tier as count only)
-const certificationCount = customFields.length
+// Tier-based visibility rules (SEO-optimized for static build)
+const canViewFullAddress = true // Show location for SEO
+const canViewPhone = false // Hide for privacy (can be gated client-side)
+const canViewEmail = false // Hide for privacy (can be gated client-side)
+const canViewWebsite = true // Always show (public anyway + SEO value)
+const canViewCertifications = true // Always show (critical for SEO keywords)
+
+// Show full description for SEO (critical for keyword ranking)
+const descriptionPreview = listing.description || null
+
+// Count all certifications (custom fields + standards)
+const certificationCount = allCertifications.length
 ---
 
 <!DOCTYPE html>
@@ -469,9 +508,6 @@ const certificationCount = customFields.length
       {listing.description && (
         <div class="info-section">
           <h2>About</h2>
-          {userTier === 'free' && (
-            <div class="free-tier-preview"></div>
-          )}
           <p class="description">{descriptionPreview}</p>
         </div>
       )}
@@ -518,57 +554,21 @@ const certificationCount = customFields.length
             </div>
           ) : null}
         </div>
-
-        {userTier === 'free' && (
-          <div class="upgrade-cta">
-            <svg>🔒</svg>
-            <p><strong>Contact information hidden</strong></p>
-            <p>Sign up free to view full listing details</p>
-            <a href="/signup" class="upgrade-btn">Sign Up Free</a>
-          </div>
-        )}
-
-        {userTier === 'basic' && (
-          <div class="upgrade-cta">
-            <svg>📞</svg>
-            <p><strong>Contact details available for Professional tier</strong></p>
-            <p>Upgrade to Professional ($295/mo) to view phone and email</p>
-            <a href="/account/subscription" class="upgrade-btn">View Plans</a>
-          </div>
-        )}
       </div>
 
-      {customFields.length > 0 && (
+      {allCertifications.length > 0 && (
         <div class="custom-fields">
-          <h2>Certifications & Capabilities {canViewCertifications && <span class="tier-badge premium">{userTier}</span>}</h2>
-
-          {canViewCertifications ? (
-            <>
-              {customFields.map(field => (
-                <div class="field-item">
-                  <div class="field-name">{field.name}</div>
-                  <div class="field-value">{field.value}</div>
-                </div>
-              ))}
-            </>
-          ) : (
-            <>
-              <div class="field-item">
-                <div class="field-name">Total Certifications Found</div>
-                <div class="field-value">{certificationCount}</div>
-              </div>
-              <div class="upgrade-cta">
-                <svg>🔐</svg>
-                <p><strong>Certification details hidden</strong></p>
-                <p>Sign up free to view full certification list</p>
-                <a href="/signup" class="upgrade-btn">Sign Up Free</a>
-              </div>
-            </>
-          )}
+          <h2>Certifications & Capabilities</h2>
+          {allCertifications.map(field => (
+            <div class="field-item">
+              <div class="field-name">{field.name}</div>
+              <div class="field-value">{field.value}</div>
+            </div>
+          ))}
         </div>
       )}
 
-      {customFields.length > 0 && (
+      {allCertifications.length > 0 && (
         <div class="disclaimer">
           <strong>⚠️ Disclaimer:</strong> Certifications and capabilities listed are extracted from public databases and have not been independently verified by TSTR.site. We recommend verifying all credentials directly with the testing laboratory and relevant accreditation bodies before engaging services.
         </div>
