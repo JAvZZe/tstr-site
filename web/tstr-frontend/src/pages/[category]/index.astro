@@ -79,13 +79,13 @@ const totalListings = listings?.length || 0;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{categoryData.name} Testing Labs & Certification Bodies | TSTR.site</title>
+    <title>{categoryData.name} - Labs & Certification Bodies | TSTR.site</title>
     <meta
       name="description"
-      content={`Find ${totalListings} verified ${categoryData.name.toLowerCase()} testing laboratories, ISO 17025 accredited labs, and certification bodies worldwide. Compare services and get quotes.`}
+      content={`Find ${totalListings} verified ${categoryData.name.toLowerCase()} laboratories, ISO 17025 accredited labs, and certification bodies worldwide. Compare services and get quotes.`}
     />
-    <meta property="og:title" content={`${categoryData.name} Testing Services Directory`} />
-    <meta property="og:description" content={categoryData.description || `Directory of ${totalListings} ${categoryData.name.toLowerCase()} testing providers`} />
+    <meta property="og:title" content={`${categoryData.name} Directory`} />
+    <meta property="og:description" content={categoryData.description || `Directory of ${totalListings} ${categoryData.name.toLowerCase()} providers`} />
   </head>
 
   <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
@@ -116,7 +116,7 @@ const totalListings = listings?.length || 0;
             <span class="text-4xl">{categoryData.icon}</span>
           )}
           <h1 class="text-3xl md:text-5xl font-bold">
-            {categoryData.name} Testing Services
+            {categoryData.name}
           </h1>
         </div>
 
@@ -182,7 +182,7 @@ const totalListings = listings?.length || 0;
         <!-- Empty State -->
         <div class="text-center py-16 bg-white rounded-lg border-2 border-dashed border-gray-300">
           <p class="text-gray-500 text-lg mb-2">
-            No {categoryData.name.toLowerCase()} testing providers listed yet.
+            No {categoryData.name.toLowerCase()} listed yet.
           </p>
           <a href="/contact" class="text-blue-600 font-bold hover:underline">
             Be the first to list here →
@@ -194,10 +194,10 @@ const totalListings = listings?.length || 0;
       {totalListings > 0 && (
         <div class="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
           <h2 class="text-xl font-bold text-blue-900 mb-2">
-            List Your {categoryData.name} Testing Lab
+            List Your {categoryData.name} Lab
           </h2>
           <p class="text-gray-700 mb-4">
-            Reach thousands of customers searching for {categoryData.name.toLowerCase()} testing services. Free basic listings available.
+            Reach thousands of customers searching for {categoryData.name.toLowerCase()}. Free basic listings available.
           </p>
           <a
             href="/contact"

@@ -85,20 +85,20 @@ const displayCategories = [];
 
 if (allCategories && allCategories.length > 0) {
   // Combined Biopharma & Life Sciences category
-  const biotechCat = allCategories.find(c => c.name === 'Biotech Testing');
-  const pharmaCat = allCategories.find(c => c.name === 'Pharmaceutical Testing');
+  const biotechCat = allCategories.find(c => c.name === 'Biotech Testers');
+  const pharmaCat = allCategories.find(c => c.name === 'Biopharma & Life Sciences Testers');
   const biotechCount = biotechCat && listings ? listings.filter(l => l.category_id === biotechCat.id).length : 0;
   const pharmaCount = pharmaCat && listings ? listings.filter(l => l.category_id === pharmaCat.id).length : 0;
 
   displayCategories.push({
-    name: 'Biopharma & Life Sciences Testing',
-    href: '/browse?category=Pharmaceutical%20Testing',
+    name: 'Biopharma & Life Sciences Testers',
+    href: '/browse?category=Biopharma%20%26%20Life%20Sciences%20Testers',
     count: biotechCount + pharmaCount
   });
 
   // Add other categories
   allCategories
-    .filter(cat => cat.name !== 'Biotech Testing' && cat.name !== 'Pharmaceutical Testing')
+    .filter(cat => cat.name !== 'Biotech Testers' && cat.name !== 'Biopharma & Life Sciences Testers')
     .forEach(cat => {
       displayCategories.push({
         name: cat.name,
