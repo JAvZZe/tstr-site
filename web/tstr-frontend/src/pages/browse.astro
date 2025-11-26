@@ -4,7 +4,7 @@ import { CONTENT } from '../lib/contacts'
 import Footer from '../components/Footer.astro'
 import { getRedirectUrl } from '../lib/redirect'
 
-// Fetch all active listings with location hierarchy and category
+// Fetch all active listings with location hierarchy, category, and capabilities
 const { data: listings, error } = await supabase
   .from('listings')
   .select(`
@@ -31,6 +31,15 @@ const { data: listings, error } = await supabase
           level
         )
       )
+    ),
+    listing_capabilities(
+      standard:standard_id(
+        id,
+        code,
+        name,
+        issuing_body,
+        standard_type
+      )
     )
   `)
   .eq('status', 'active')
@@ -51,6 +60,51 @@ const { data: categoriesData } = await supabase
 const allCategories = (categoriesData || [])
   .filter(cat => cat.listings && cat.listings[0]?.count > 0)
   .map(cat => ({ id: cat.id, name: cat.name, slug: cat.slug }))
+
+// Fetch all active standards for filter dropdown
+const { data: standardsData } = await supabase
+  .from('standards')
+  .select(`
+    id,
+    code,
+    name,
+    issuing_body,
+    standard_type,
+    category_id
+  `)
+  .eq('is_active', true)
+  .order('issuing_body', { ascending: true })
+  .order('code', { ascending: true })
+
+// Extract unique standards from listings capabilities
+const standardsMap = new Map()
+listings?.forEach(listing => {
+  if (listing.listing_capabilities) {
+    listing.listing_capabilities.forEach(capability => {
+      if (capability.standard) {
+        const standard = capability.standard
+        const key = `${standard.code} - ${standard.name}`
+        if (!standardsMap.has(key)) {
+          standardsMap.set(key, {
+            id: standard.id,
+            code: standard.code,
+            name: standard.name,
+            issuing_body: standard.issuing_body,
+            standard_type: standard.standard_type,
+            displayName: `${standard.code} - ${standard.name}`
+          })
+        }
+      }
+    })
+  }
+})
+
+const allStandards = Array.from(standardsMap.values()).sort((a, b) => {
+  // Sort by issuing body first, then by code
+  const bodyCompare = (a.issuing_body || '').localeCompare(b.issuing_body || '')
+  if (bodyCompare !== 0) return bodyCompare
+  return a.code.localeCompare(b.code)
+})
 
 // Extract unique countries and cities from location hierarchy
 const getCountryFromLocation = (location) => {
@@ -409,6 +463,16 @@ const extractCity = (address) => {
           ))}
         </select>
       </div>
+
+      <div class="filter-group">
+        <label for="standard-filter">Filter by Standard or Certification</label>
+        <select id="standard-filter">
+          <option value="">All Standards</option>
+          {allStandards.map(standard => (
+            <option value={standard.displayName}>{standard.displayName}</option>
+          ))}
+        </select>
+      </div>
     </div>
 
     <div class="results-count" id="results-count">
@@ -430,9 +494,13 @@ const extractCity = (address) => {
         const country = extractCountry(lab.address)
         const city = extractCity(lab.address)
         const categoryName = lab.category?.name || ''
+        
+        // Extract standards from capabilities
+        const standards = lab.listing_capabilities?.map(cap => cap.standard).filter(Boolean) || []
+        const standardsDisplay = standards.map(s => `${s.code} - ${s.name}`).join(', ')
 
         return (
-          <div class="listing-card" data-country={country} data-city={city} data-category={categoryName}>
+          <div class="listing-card" data-country={country} data-city={city} data-category={categoryName} data-standards={standardsDisplay}>
             <div class="listing-header">
               <div>
                 <h3 class="listing-title">
@@ -447,6 +515,18 @@ const extractCity = (address) => {
 
             {lab.description && (
               <p class="listing-description">{lab.description}</p>
+            )}
+
+            {standards.length > 0 && (
+              <div class="listing-standards" style="margin-bottom: 1rem;">
+                <div class="detail-item">
+                  <span class="detail-icon">🔬</span>
+                  <span style="font-size: 0.9rem; color: #555;">
+                    {standards.slice(0, 3).map(s => `${s.code}`).join(', ')}
+                    {standards.length > 3 && ` +${standards.length - 3} more`}
+                  </span>
+                </div>
+              </div>
             )}
 
             <div class="listing-details">
@@ -537,6 +617,7 @@ const extractCity = (address) => {
     const countryFilter = document.getElementById('country-filter')
     const cityFilter = document.getElementById('city-filter')
     const categoryFilter = document.getElementById('category-filter')
+    const standardFilter = document.getElementById('standard-filter')
     const listingsGrid = document.getElementById('listings-grid')
     const resultsCount = document.getElementById('results-count')
     const noResults = document.getElementById('no-results')
@@ -548,6 +629,7 @@ const extractCity = (address) => {
       const selectedCountry = countryFilter.value.toLowerCase()
       const selectedCity = cityFilter.value.toLowerCase()
       const selectedCategory = categoryFilter.value.toLowerCase()
+      const selectedStandard = standardFilter.value.toLowerCase()
 
       let visibleCount = 0
 
@@ -555,12 +637,14 @@ const extractCity = (address) => {
         const country = (listing.dataset.country || '').toLowerCase()
         const city = (listing.dataset.city || '').toLowerCase()
         const category = (listing.dataset.category || '').toLowerCase()
+        const standards = (listing.dataset.standards || '').toLowerCase()
 
         const matchesCountry = !selectedCountry || country === selectedCountry
         const matchesCity = !selectedCity || city === selectedCity
         const matchesCategory = !selectedCategory || category === selectedCategory
+        const matchesStandard = !selectedStandard || standards.includes(selectedStandard)
 
-        if (matchesCountry && matchesCity && matchesCategory) {
+        if (matchesCountry && matchesCity && matchesCategory && matchesStandard) {
           listing.classList.remove('hidden')
           visibleCount++
         } else {
@@ -590,6 +674,7 @@ const extractCity = (address) => {
           if (categoryFilter.value) contextParts.push(categoryFilter.value)
           if (countryFilter.value) contextParts.push(countryFilter.value)
           if (cityFilter.value) contextParts.push(cityFilter.value)
+          if (standardFilter.value) contextParts.push(standardFilter.value)
           if (contextParts.length > 0) {
             subject += ' - ' + contextParts.join(', ')
           }
@@ -604,6 +689,7 @@ const extractCity = (address) => {
     countryFilter.addEventListener('change', filterListings)
     cityFilter.addEventListener('change', filterListings)
     categoryFilter.addEventListener('change', filterListings)
+    standardFilter.addEventListener('change', filterListings)
 
     // Check URL parameters for pre-filtering
     const urlParams = new URLSearchParams(window.location.search)
@@ -617,6 +703,10 @@ const extractCity = (address) => {
     }
     if (urlParams.has('category')) {
       categoryFilter.value = urlParams.get('category')
+      filterListings()
+    }
+    if (urlParams.has('standard')) {
+      standardFilter.value = urlParams.get('standard')
       filterListings()
     }
   </script>
