@@ -83,6 +83,15 @@ const cities = Array.from(cityMap.entries()).map(([slug, name]) => ({ slug, name
 
 const totalListings = listings?.length || 0
 
+// Get category from URL parameter for dynamic heading
+const urlParams = new URLSearchParams(Astro.url.search)
+const categoryParam = urlParams.get('category')
+const getCategoryDisplayName = (categorySlug) => {
+  if (!categorySlug) return null
+  return categorySlug.replace(/%20/g, ' ')
+}
+const categoryDisplayName = getCategoryDisplayName(categoryParam)
+
 // Helper functions for filtering
 const extractCountry = (address) => {
   if (!address) return ''
@@ -102,7 +111,7 @@ const extractCity = (address) => {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Browse Testing Laboratories | TSTR Hub</title>
+  <title>{categoryDisplayName ? `${categoryDisplayName} | TSTR Hub` : 'Browse Testing Laboratories | TSTR Hub'}</title>
   <meta name="description" content="Browse {totalListings} verified testing service providers by country, city, and specialty. Oil & Gas, Pharmaceutical, Environmental testing labs worldwide.">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
      crossorigin="anonymous"></script>
@@ -363,9 +372,9 @@ const extractCity = (address) => {
 </head>
 <body>
   <header>
-    <h1>Browse Testing Laboratories</h1>
+    <h1>{categoryDisplayName ? `Browse ${categoryDisplayName}` : 'Browse Testing Laboratories'}</h1>
     <p class="breadcrumb">
-      <a href="/">Home</a> / Browse All Listings | <a href="/search/standards">🔬 Search by Standard</a>
+      <a href="/">Home</a> / {categoryDisplayName ? `${categoryDisplayName} | ` : ''}Browse All Listings | <a href="/search/standards">🔬 Search by Standard</a>
     </p>
   </header>
 
