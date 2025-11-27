@@ -1,5 +1,19 @@
 # AGENTS.md - Development Guidelines for TSTR.site
 
+## 🚀 INITIALIZATION (MANDATORY)
+
+**When starting any session in this project:**
+```bash
+./bootstrap.sh TSTR-site    # Load project context, learnings, and pending tasks
+```
+
+This loads:
+- Project-specific learnings from database
+- Pending tasks for TSTR-site
+- Recent session context
+- Pending handoffs
+- Recent checkpoints
+
 ## Commands
 
 ### Frontend (Astro + React)

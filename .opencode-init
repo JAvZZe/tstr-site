@@ -1,0 +1,6 @@
+#!/bin/bash
+# Auto-initialization hook for OpenCode when entering TSTR-site project
+# This file is automatically sourced when OpenCode starts in this directory
+
+echo "🚀 TSTR-site Project Detected - Loading Context..."
+./bootstrap.sh TSTR-site
