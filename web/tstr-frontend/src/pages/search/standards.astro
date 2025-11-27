@@ -107,22 +107,107 @@ const totalStandards = standards?.length || 0
       font-size: 1rem;
     }
 
-    .form-group select {
-      padding: 0.75rem;
-      border: 2px solid #e0e0e0;
+    /* Autocomplete Dropdown Styles */
+    .autocomplete-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .autocomplete-input {
+      width: 100%;
+      padding: 0.75rem 2.5rem 0.75rem 0.75rem;
+      border: 2px solid #e2e8f0;
       border-radius: 8px;
       font-size: 1rem;
-      transition: border-color 0.3s ease;
       background: white;
+      cursor: text;
+      transition: border-color 0.2s ease;
     }
 
-    .form-group select:focus {
+    .autocomplete-input:focus {
       outline: none;
       border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
     }
 
-    .form-group select option {
-      padding: 0.5rem;
+    .autocomplete-input::placeholder {
+      color: #a0aec0;
+    }
+
+    .autocomplete-clear {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #a0aec0;
+      cursor: pointer;
+      padding: 0.25rem;
+      border-radius: 4px;
+      font-size: 1.2rem;
+      line-height: 1;
+      opacity: 0;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+
+    .autocomplete-clear:hover {
+      color: #4a5568;
+      background: #f7fafc;
+    }
+
+    .autocomplete-clear.visible {
+      opacity: 1;
+    }
+
+    .autocomplete-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .autocomplete-option {
+      padding: 0.75rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      border-bottom: 1px solid #f7fafc;
+    }
+
+    .autocomplete-option:last-child {
+      border-bottom: none;
+    }
+
+    .autocomplete-option:hover,
+    .autocomplete-option.selected {
+      background-color: #f7fafc;
+    }
+
+    .autocomplete-option.highlighted {
+      background-color: #edf2f7;
+    }
+
+    .autocomplete-no-results {
+      padding: 0.75rem;
+      color: #a0aec0;
+      font-style: italic;
+    }
+
+    .autocomplete-match {
+      font-weight: 600;
+      color: #667eea;
+    }
+
+    .hidden {
+      display: none !important;
     }
 
     .btn {
@@ -265,19 +350,22 @@ const totalStandards = standards?.length || 0
     <div class="search-card">
       <form class="search-form" id="search-form">
         <div class="form-group">
-          <label for="standard-select">Select Standard or Certification</label>
-          <select id="standard-select" name="standard" required>
-            <option value="">-- Choose a standard --</option>
-            {standardsByBody && Object.entries(standardsByBody).map(([body, stds]) => (
-              <optgroup label={body}>
-                {stds.map(std => (
-                  <option value={std.code}>
-                    {std.code} - {std.name}
-                  </option>
-                ))}
-              </optgroup>
-            ))}
-          </select>
+          <label for="standard-select">Standard or Certification</label>
+          <div class="autocomplete-container">
+            <input
+              type="text"
+              id="standard-select"
+              class="autocomplete-input"
+              placeholder="Type to search standards..."
+              autocomplete="off"
+              role="combobox"
+              aria-expanded="false"
+              aria-autocomplete="list"
+              aria-label="Standard or Certification"
+            >
+            <button type="button" class="autocomplete-clear" aria-label="Clear selection">×</button>
+            <div class="autocomplete-dropdown hidden" role="listbox"></div>
+          </div>
         </div>
 
         <button type="submit" class="btn" id="search-btn">
@@ -295,90 +383,340 @@ const totalStandards = standards?.length || 0
   <Footer />
 
   <script>
-    const form = document.getElementById('search-form') as HTMLFormElement
-    const searchBtn = document.getElementById('search-btn') as HTMLButtonElement
-    const resultsSection = document.getElementById('results-section') as HTMLDivElement
-    const resultsCount = document.getElementById('results-count') as HTMLDivElement
-    const resultsGrid = document.getElementById('results-grid') as HTMLDivElement
+    // Standards data for autocomplete
+    const standardsData = [
+      { id: 1, code: 'ISO 17025', displayName: 'ISO 17025 - General requirements for the competence of testing and calibration laboratories' },
+      { id: 2, code: 'ISO 19880-3', displayName: 'ISO 19880-3 - Gaseous hydrogen — Fuelling stations — Part 3: Valves' },
+      { id: 3, code: 'ISO 11114-4', displayName: 'ISO 11114-4 - Transportable gas cylinders — Compatibility of cylinder and valve materials with gas contents — Part 4: Test methods for selecting steels resistant to hydrogen embrittlement' },
+      { id: 4, code: 'ASTM D2512', displayName: 'ASTM D2512 - Standard Test Method for Compatibility of Materials with Liquid Oxygen' },
+      { id: 5, code: 'API 6A', displayName: 'API 6A - Specification for Wellhead and Christmas Tree Equipment' },
+      { id: 6, code: 'USP 41', displayName: 'USP 41 - United States Pharmacopeia - General Requirements' }
+    ]
+    console.log('Standards data loaded:', standardsData.length)
+
+    // Autocomplete class for intelligent dropdowns
+    class AutocompleteDropdown {
+      constructor(inputElement, options, displayField = 'name') {
+        this.input = inputElement
+        this.options = options
+        this.displayField = displayField
+        this.container = inputElement.parentElement
+        this.dropdown = this.container.querySelector('.autocomplete-dropdown')
+        this.clearBtn = this.container.querySelector('.autocomplete-clear')
+        this.filteredOptions = []
+        this.selectedIndex = -1
+        this.isExpanded = false
+
+        this.init()
+      }
+
+      init() {
+        // Input event listeners
+        this.input.addEventListener('input', this.debounce(() => this.handleInput(), 150))
+        this.input.addEventListener('focus', () => this.showDropdown())
+        this.input.addEventListener('keydown', (e) => this.handleKeydown(e))
+        this.input.addEventListener('blur', () => {
+          setTimeout(() => this.hideDropdown(), 200) // Delay to allow option click
+        })
+
+        // Clear button
+        this.clearBtn.addEventListener('click', () => this.clearSelection())
+
+        // Click outside to close
+        document.addEventListener('click', (e) => {
+          if (!this.container.contains(e.target)) {
+            this.hideDropdown()
+          }
+        })
+      }
+
+      debounce(func, wait) {
+        let timeout
+        return function executedFunction(...args) {
+          const later = () => {
+            clearTimeout(timeout)
+            func(...args)
+          }
+          clearTimeout(timeout)
+          timeout = setTimeout(later, wait)
+        }
+      }
+
+      handleInput() {
+        const query = this.input.value.toLowerCase().trim()
+
+        if (query === '') {
+          this.filteredOptions = [...this.options]
+        } else {
+          this.filteredOptions = this.options.filter(option => {
+            const text = this.getDisplayText(option).toLowerCase()
+            return this.fuzzyMatch(query, text)
+          }).sort((a, b) => {
+            const scoreA = this.getMatchScore(query, this.getDisplayText(a).toLowerCase())
+            const scoreB = this.getMatchScore(query, this.getDisplayText(b).toLowerCase())
+            return scoreB - scoreA
+          })
+        }
+
+        this.selectedIndex = -1
+        this.renderOptions()
+        this.showDropdown()
+        this.updateClearButton()
+      }
+
+      escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      }
+
+      fuzzyMatch(query, text) {
+        if (query.length === 0) return true
+        if (text.length === 0) return false
+
+        // Convert to lowercase for case-insensitive matching
+        const lowerQuery = query.toLowerCase()
+        const lowerText = text.toLowerCase()
+
+        // Check if query matches from the beginning
+        if (lowerText.startsWith(lowerQuery)) return true
+
+        // Check if query matches as a word (preceded by space, dash, or start)
+        const wordRegex = new RegExp(`(?:^|[\\s\\-])(${this.escapeRegex(lowerQuery)})`, 'i')
+        return wordRegex.test(lowerText)
+      }
+
+      getMatchScore(query, text) {
+        if (query === text) return 100
+        if (text.startsWith(query)) return 80
+        if (text.includes(query)) return 60
+
+        // Score based on character positions
+        let score = 0
+        let queryIndex = 0
+        for (let i = 0; i < text.length && queryIndex < query.length; i++) {
+          if (text[i] === query[queryIndex]) {
+            score += (100 - i) // Higher score for earlier matches
+            queryIndex++
+          }
+        }
+        return queryIndex === query.length ? score : 0
+      }
+
+      getDisplayText(option) {
+        return option[this.displayField] || option.name || option.displayName || ''
+      }
+
+      renderOptions() {
+        this.dropdown.innerHTML = ''
+
+        if (this.filteredOptions.length === 0) {
+          this.dropdown.innerHTML = '<div class="autocomplete-no-results">No matches found</div>'
+          return
+        }
+
+        this.filteredOptions.forEach((option, index) => {
+          const optionElement = document.createElement('div')
+          optionElement.className = 'autocomplete-option'
+          optionElement.setAttribute('role', 'option')
+          optionElement.setAttribute('data-index', index)
+
+          const displayText = this.getDisplayText(option)
+          const highlightedText = this.highlightMatch(this.input.value.toLowerCase(), displayText)
+          optionElement.innerHTML = highlightedText
+
+          optionElement.addEventListener('click', () => this.selectOption(option))
+          optionElement.addEventListener('mouseenter', () => this.selectIndex(index))
+
+          this.dropdown.appendChild(optionElement)
+        })
+      }
+
+      highlightMatch(query, text) {
+        if (!query) return text
+
+        const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
+        return text.replace(regex, '<span class="autocomplete-match">$1</span>')
+      }
+
+      handleKeydown(e) {
+        if (!this.isExpanded) {
+          if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter') {
+            e.preventDefault()
+            this.showDropdown()
+          }
+          return
+        }
+
+        switch (e.key) {
+          case 'ArrowDown':
+            e.preventDefault()
+            this.selectIndex(Math.min(this.selectedIndex + 1, this.filteredOptions.length - 1))
+            break
+          case 'ArrowUp':
+            e.preventDefault()
+            this.selectIndex(Math.max(this.selectedIndex - 1, -1))
+            break
+          case 'Enter':
+            e.preventDefault()
+            if (this.selectedIndex >= 0) {
+              this.selectOption(this.filteredOptions[this.selectedIndex])
+            }
+            break
+          case 'Escape':
+            this.hideDropdown()
+            this.input.focus()
+            break
+        }
+      }
+
+      selectIndex(index) {
+        this.selectedIndex = index
+        const options = this.dropdown.querySelectorAll('.autocomplete-option')
+
+        options.forEach((option, i) => {
+          option.classList.toggle('selected', i === index)
+          option.classList.toggle('highlighted', i === index)
+        })
+
+        // Scroll into view if needed
+        if (index >= 0 && options[index]) {
+          options[index].scrollIntoView({ block: 'nearest' })
+        }
+      }
+
+      selectOption(option) {
+        const displayText = this.getDisplayText(option)
+        this.input.value = displayText
+        this.input.setAttribute('data-selected-value', displayText)
+        this.hideDropdown()
+        this.updateClearButton()
+      }
+
+      clearSelection() {
+        this.input.value = ''
+        this.input.removeAttribute('data-selected-value')
+        this.hideDropdown()
+        this.updateClearButton()
+      }
+
+      updateClearButton() {
+        this.clearBtn.classList.toggle('visible', this.input.value.length > 0)
+      }
+
+      showDropdown() {
+        if (this.filteredOptions.length === 0 && this.input.value === '') {
+          this.hideDropdown()
+          return
+        }
+
+        this.dropdown.classList.remove('hidden')
+        this.input.setAttribute('aria-expanded', 'true')
+        this.isExpanded = true
+      }
+
+      hideDropdown() {
+        this.dropdown.classList.add('hidden')
+        this.input.setAttribute('aria-expanded', 'false')
+        this.isExpanded = false
+        this.selectedIndex = -1
+      }
+
+      getValue() {
+        return this.input.getAttribute('data-selected-value') || this.input.value
+      }
+    }
+
+    const form = document.getElementById('search-form')
+    const searchBtn = document.getElementById('search-btn')
+    const resultsSection = document.getElementById('results-section')
+    const resultsCount = document.getElementById('results-count')
+    const resultsGrid = document.getElementById('results-grid')
+
+    // Initialize autocomplete
+    let standardAutocomplete = null
+    try {
+      const standardInput = document.getElementById('standard-select')
+      standardAutocomplete = new AutocompleteDropdown(standardInput, standardsData, 'displayName')
+      console.log('Autocomplete initialized successfully')
+    } catch (error) {
+      console.error('Failed to initialize autocomplete:', error)
+    }
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault()
-      
-      const formData = new FormData(form)
-      const standard = formData.get('standard') as string
-
-      if (!standard) return
-
-      // Show loading state
-      searchBtn.disabled = true
-      searchBtn.textContent = 'Searching...'
-      resultsSection.classList.add('active')
-      resultsCount.textContent = 'Searching laboratories...'
-      resultsGrid.innerHTML = '<div class="loading">🔍 Searching...</div>'
 
       try {
-        // Call the API endpoint
-        const response = await fetch(`/api/search/by-standard?standard=${encodeURIComponent(standard)}`)
-        const data = await response.json()
+        const standard = standardAutocomplete ? standardAutocomplete.getValue() : 'ISO 17025'
 
-        if (!response.ok) {
-          throw new Error(data.error || 'Search failed')
-        }
+        if (!standard) return
 
-        // Update results count
-        resultsCount.textContent = `Found ${data.count} ${data.count === 1 ? 'laboratory' : 'laboratories'} for ${data.standard}`
+        // Extract the standard code from the display name (format: "CODE - Name")
+        const standardCode = standard.split(' - ')[0]
 
-        // Display results
-        if (data.count === 0) {
+        if (!standardCode) return
+
+        // Show loading state
+        searchBtn.disabled = true
+        searchBtn.textContent = 'Searching...'
+        resultsSection.classList.add('active')
+        resultsCount.textContent = 'Searching laboratories...'
+        resultsGrid.innerHTML = '<div class="loading">🔍 Searching...</div>'
+
+        try {
+          // Call the API endpoint
+          const response = await fetch(`/api/search/by-standard?standard=${encodeURIComponent(standardCode)}`)
+          const data = await response.json()
+
+          if (!response.ok) {
+            throw new Error(data.error || 'Search failed')
+          }
+
+          // Update results count
+          resultsCount.textContent = `Found ${data.count} ${data.count === 1 ? 'laboratory' : 'laboratories'} for ${standard}`
+
+          // Display results
+          if (data.count === 0) {
+            resultsGrid.innerHTML = `
+              <div class="no-results">
+                <h3>No Laboratories Found</h3>
+                <p>We don't have any laboratories certified for <strong>${standard}</strong> yet.</p>
+                <p style="margin-top: 1rem;">
+                  <a href="/submit" style="color: #667eea; text-decoration: none; font-weight: 600;">
+                    Submit a laboratory →
+                  </a>
+                </p>
+              </div>
+            `
+          } else {
+            resultsGrid.innerHTML = data.results.map((result) => `
+              <div class="listing-card">
+                <div class="listing-title">
+                  <a href="/listing/${result.listing_id}">${result.business_name}</a>
+                </div>
+                <div class="listing-info">
+                  📍 ${result.address || 'Location not specified'}
+                </div>
+                <div class="listing-info">
+                  <span class="standard-badge">${result.standard_code}</span>
+                  ${result.verified ? '<span style="color: #4caf50;">✓ Verified</span>' : ''}
+                </div>
+              </div>
+            `).join('')
+          }
+
+        } catch (error) {
+          console.error('Search error:', error)
           resultsGrid.innerHTML = `
-            <div class="no-results">
-              <h3>No Laboratories Found</h3>
-              <p>We don't have any laboratories certified for <strong>${data.standard}</strong> yet.</p>
-              <p style="margin-top: 1rem;">
-                <a href="/submit" style="color: #667eea; text-decoration: none; font-weight: 600;">
-                  Submit a laboratory →
-                </a>
-              </p>
+            <div class="error">
+              <strong>Search Error</strong><br>
+              ${error.message || 'An unexpected error occurred. Please try again.'}
             </div>
           `
-        } else {
-          resultsGrid.innerHTML = data.results.map((result: any) => `
-            <div class="listing-card">
-              <div class="listing-title">
-                <a href="/listing/${result.listing_id}">${result.business_name}</a>
-              </div>
-              <div class="listing-info">
-                📍 ${result.address || 'Location not specified'}
-              </div>
-              <div class="listing-info">
-                <span class="standard-badge">${result.standard_code}</span>
-                ${result.verified ? '<span style="color: #4caf50;">✓ Verified</span>' : ''}
-              </div>
-              ${result.specifications && Object.keys(result.specifications).length > 0 ? `
-                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
-                  <strong style="color: #667eea;">Technical Specifications:</strong><br>
-                  ${Object.entries(result.specifications).map(([key, value]) => 
-                    `<span style="display: inline-block; margin-right: 1rem; color: #666;">
-                      ${key.replace(/_/g, ' ')}: <strong>${value}</strong>
-                    </span>`
-                  ).join('')}
-                </div>
-              ` : ''}
-            </div>
-          `).join('')
+        } finally {
+          searchBtn.disabled = false
+          searchBtn.textContent = 'Search Laboratories'
         }
-
       } catch (error) {
-        console.error('Search error:', error)
-        resultsGrid.innerHTML = `
-          <div class="error">
-            <strong>Search Error</strong><br>
-            ${error instanceof Error ? error.message : 'An unexpected error occurred. Please try again.'}
-          </div>
-        `
-      } finally {
-        searchBtn.disabled = false
-        searchBtn.textContent = 'Search Laboratories'
+        console.error('Form submission error:', error)
       }
     })
   </script>
