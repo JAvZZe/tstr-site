@@ -18,6 +18,88 @@ const standardsByBody = standards?.reduce((acc, std) => {
   return acc
 }, {} as Record<string, typeof standards>)
 
+// Fetch all active listings with location data for city/country extraction
+const { data: listings } = await supabase
+  .from('listings')
+  .select(`
+    location:location_id (
+      id,
+      name,
+      level,
+      parent:parent_id (
+        id,
+        name,
+        level,
+        parent:parent_id (
+          id,
+          name,
+          level
+        )
+      )
+    ),
+    address
+  `)
+  .eq('status', 'active')
+
+// Extract unique countries and cities from location hierarchy and address
+const getCountryFromLocation = (location) => {
+  if (!location) return null
+  if (location.level === 'country') return { name: location.name, slug: location.name.toLowerCase().replace(/\s+/g, '-') }
+  if (location.parent?.level === 'country') return { name: location.parent.name, slug: location.parent.name.toLowerCase().replace(/\s+/g, '-') }
+  if (location.parent?.parent?.level === 'country') return { name: location.parent.parent.name, slug: location.parent.parent.name.toLowerCase().replace(/\s+/g, '-') }
+  return null
+}
+
+const getCityFromLocation = (location) => {
+  if (!location) return null
+  if (location.level === 'city') return { name: location.name, slug: location.name.toLowerCase().replace(/\s+/g, '-') }
+  return null
+}
+
+const extractCountry = (address) => {
+  if (!address) return ''
+  const parts = address.split(',').map(p => p.trim())
+  return parts[parts.length - 1] || ''
+}
+
+const extractCity = (address) => {
+  if (!address) return ''
+  const parts = address.split(',').map(p => p.trim())
+  return parts[0] || ''
+}
+
+const countryMap = new Map()
+const cityMap = new Map()
+
+listings?.forEach(listing => {
+  // From location hierarchy
+  const country = getCountryFromLocation(listing.location)
+  if (country) countryMap.set(country.slug, country.name)
+
+  const city = getCityFromLocation(listing.location)
+  if (city) cityMap.set(city.slug, city.name)
+
+  // From address field as fallback
+  const addressCountry = extractCountry(listing.address)
+  if (addressCountry && !countryMap.has(addressCountry.toLowerCase().replace(/\s+/g, '-'))) {
+    countryMap.set(addressCountry.toLowerCase().replace(/\s+/g, '-'), addressCountry)
+  }
+
+  const addressCity = extractCity(listing.address)
+  if (addressCity && !cityMap.has(addressCity.toLowerCase().replace(/\s+/g, '-'))) {
+    cityMap.set(addressCity.toLowerCase().replace(/\s+/g, '-'), addressCity)
+  }
+})
+
+// Create combined location options for fuzzy search
+const locationOptions = []
+countryMap.forEach((name, slug) => {
+  locationOptions.push({ name, type: 'country', displayName: `${name} (Country)` })
+})
+cityMap.forEach((name, slug) => {
+  locationOptions.push({ name, type: 'city', displayName: `${name} (City)` })
+})
+
 const totalStandards = standards?.length || 0
 ---
 
@@ -368,6 +450,25 @@ const totalStandards = standards?.length || 0
           </div>
         </div>
 
+        <div class="form-group">
+          <label for="location-select">Location</label>
+          <div class="autocomplete-container">
+            <input
+              type="text"
+              id="location-select"
+              class="autocomplete-input"
+              placeholder="Type to search cities or countries..."
+              autocomplete="off"
+              role="combobox"
+              aria-expanded="false"
+              aria-autocomplete="list"
+              aria-label="Location"
+            >
+            <button type="button" class="autocomplete-clear" aria-label="Clear selection">×</button>
+            <div class="autocomplete-dropdown hidden" role="listbox"></div>
+          </div>
+        </div>
+
         <button type="submit" class="btn" id="search-btn">
           Search Laboratories
         </button>
@@ -382,17 +483,18 @@ const totalStandards = standards?.length || 0
 
   <Footer />
 
-  <script>
+  <script define:vars={{ standards, locationOptions }}>
     // Standards data for autocomplete
-    const standardsData = [
-      { id: 1, code: 'ISO 17025', displayName: 'ISO 17025 - General requirements for the competence of testing and calibration laboratories' },
-      { id: 2, code: 'ISO 19880-3', displayName: 'ISO 19880-3 - Gaseous hydrogen — Fuelling stations — Part 3: Valves' },
-      { id: 3, code: 'ISO 11114-4', displayName: 'ISO 11114-4 - Transportable gas cylinders — Compatibility of cylinder and valve materials with gas contents — Part 4: Test methods for selecting steels resistant to hydrogen embrittlement' },
-      { id: 4, code: 'ASTM D2512', displayName: 'ASTM D2512 - Standard Test Method for Compatibility of Materials with Liquid Oxygen' },
-      { id: 5, code: 'API 6A', displayName: 'API 6A - Specification for Wellhead and Christmas Tree Equipment' },
-      { id: 6, code: 'USP 41', displayName: 'USP 41 - United States Pharmacopeia - General Requirements' }
-    ]
+    const standardsData = standards?.map(std => ({
+      id: std.id,
+      code: std.code,
+      displayName: `${std.code} - ${std.name}`
+    })) || []
     console.log('Standards data loaded:', standardsData.length)
+
+    // Location data for autocomplete
+    const locationData = locationOptions || []
+    console.log('Location data loaded:', locationData.length)
 
     // Autocomplete class for intelligent dropdowns
     class AutocompleteDropdown {
@@ -633,9 +735,14 @@ const totalStandards = standards?.length || 0
 
     // Initialize autocomplete
     let standardAutocomplete = null
+    let locationAutocomplete = null
     try {
       const standardInput = document.getElementById('standard-select')
       standardAutocomplete = new AutocompleteDropdown(standardInput, standardsData, 'displayName')
+
+      const locationInput = document.getElementById('location-select')
+      locationAutocomplete = new AutocompleteDropdown(locationInput, locationData, 'displayName')
+
       console.log('Autocomplete initialized successfully')
     } catch (error) {
       console.error('Failed to initialize autocomplete:', error)
@@ -646,6 +753,7 @@ const totalStandards = standards?.length || 0
 
       try {
         const standard = standardAutocomplete ? standardAutocomplete.getValue() : 'ISO 17025'
+        const location = locationAutocomplete ? locationAutocomplete.getValue() : ''
 
         if (!standard) return
 
@@ -662,8 +770,16 @@ const totalStandards = standards?.length || 0
         resultsGrid.innerHTML = '<div class="loading">🔍 Searching...</div>'
 
         try {
+          // Build API URL with parameters
+          let apiUrl = `/api/search/by-standard?standard=${encodeURIComponent(standardCode)}`
+          if (location) {
+            // Extract location name without type suffix (remove " (Country)" or " (City)")
+            const locationName = location.replace(/\s*\([^)]*\)$/, '')
+            apiUrl += `&location=${encodeURIComponent(locationName)}`
+          }
+
           // Call the API endpoint
-          const response = await fetch(`/api/search/by-standard?standard=${encodeURIComponent(standardCode)}`)
+          const response = await fetch(apiUrl)
           const data = await response.json()
 
           if (!response.ok) {
@@ -671,14 +787,15 @@ const totalStandards = standards?.length || 0
           }
 
           // Update results count
-          resultsCount.textContent = `Found ${data.count} ${data.count === 1 ? 'laboratory' : 'laboratories'} for ${standard}`
+          const locationText = location ? ` in ${location}` : ''
+          resultsCount.textContent = `Found ${data.count} ${data.count === 1 ? 'laboratory' : 'laboratories'} for ${standard}${locationText}`
 
           // Display results
           if (data.count === 0) {
             resultsGrid.innerHTML = `
               <div class="no-results">
                 <h3>No Laboratories Found</h3>
-                <p>We don't have any laboratories certified for <strong>${standard}</strong> yet.</p>
+                <p>We don't have any laboratories certified for <strong>${standard}</strong>${location ? ` in <strong>${location}</strong>` : ''} yet.</p>
                 <p style="margin-top: 1rem;">
                   <a href="/submit" style="color: #667eea; text-decoration: none; font-weight: 600;">
                     Submit a laboratory →

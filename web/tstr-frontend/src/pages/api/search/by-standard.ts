@@ -6,6 +6,7 @@ export const GET: APIRoute = async ({ request }) => {
   const standard = url.searchParams.get('standard');
   const category = url.searchParams.get('category');
   const specsParam = url.searchParams.get('specs');
+  const location = url.searchParams.get('location');
 
   // Validate required parameter
   if (!standard) {
@@ -41,15 +42,66 @@ export const GET: APIRoute = async ({ request }) => {
       }
     }
 
-    // Call the search_by_standard RPC function
-    const { data, error } = await supabase.rpc('search_by_standard', {
-      p_standard_code: standard,
-      p_category_id: category || null,
-      p_min_specs: specs
-    });
+    // Build the query to search by standard and optionally by location
+    let query = supabase
+      .from('listings')
+      .select(`
+        id,
+        business_name,
+        website,
+        address,
+        verified,
+        location:location_id (
+          id,
+          name,
+          level,
+          parent:parent_id (
+            id,
+            name,
+            level,
+            parent:parent_id (
+              id,
+              name,
+              level
+            )
+          )
+        ),
+        listing_capabilities!inner(
+          standard:standard_id!inner(
+            id,
+            code,
+            name
+          ),
+          specifications,
+          verified
+        )
+      `)
+      .eq('status', 'active')
+      .eq('listing_capabilities.standard.code', standard)
+
+    // Add category filter if provided
+    if (category) {
+      query = query.eq('category_id', category)
+    }
+
+    // Add location filter if provided
+    if (location) {
+      // Search in both location hierarchy and address field
+      query = query.or(`location.name.ilike.%${location}%,location.parent.name.ilike.%${location}%,location.parent.parent.name.ilike.%${location}%,address.ilike.%${location}%`)
+    }
+
+    // Add specifications filter if provided
+    if (Object.keys(specs).length > 0) {
+      query = query.contains('listing_capabilities.specifications', specs)
+    }
+
+    const { data, error } = await query
+      .order('listing_capabilities.verified', { ascending: false })
+      .order('is_featured', { ascending: false })
+      .order('created_at', { ascending: false })
 
     if (error) {
-      console.error('Supabase RPC error:', error);
+      console.error('Supabase query error:', error);
       return new Response(
         JSON.stringify({
           error: 'Database query failed',
@@ -62,14 +114,27 @@ export const GET: APIRoute = async ({ request }) => {
       );
     }
 
+    // Transform the results to match the expected format
+    const transformedResults = data?.map(item => ({
+      listing_id: item.id,
+      business_name: item.business_name,
+      website: item.website,
+      address: item.address,
+      verified: item.verified,
+      standard_code: item.listing_capabilities[0]?.standard?.code || standard,
+      standard_name: item.listing_capabilities[0]?.standard?.name || '',
+      specifications: item.listing_capabilities[0]?.specifications || {}
+    })) || []
+
     // Return results
     return new Response(
       JSON.stringify({
         standard,
         category: category || 'all',
+        location: location || null,
         specs,
-        count: data?.length || 0,
-        results: data || []
+        count: transformedResults.length,
+        results: transformedResults
       }),
       {
         status: 200,
