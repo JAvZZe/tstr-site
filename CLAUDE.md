@@ -88,6 +88,9 @@ cd "/home/al/AI PROJECTS SPACE" && ./handoff.sh <agent> <reason>
 **Frontend**: `web/tstr-frontend/` (Astro + React + Tailwind)
 **Scrapers**: `web/tstr-automation/` (Python, deployed on OCI)
 **Database**: Supabase (https://haimjeaetrsaauitrhfy.supabase.co)
+**API Keys**: 
+- Publishable: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
+- Secret: sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2
 
 **Website**: http://tstr.site (LIVE - 163 listings as of 2025-11-17)
 

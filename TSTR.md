@@ -99,8 +99,13 @@ web/tstr-automation/
 - **Instance IP**: 84.8.139.90
 - **OS**: Oracle Linux 9, Python 3.9.21
 - **Path**: `~/tstr-scraper/` on OCI instance
-- **SSH Key**: `/media/al/AvZ White 1TB WD MyPassport/PROJECTS/Oracle Cloud Machines/avz Oracle Linux 9 pvt ssh-key-2025-10-25.key`
+- **SSH Key**: `/media/al/1TB_AI_ARCH/AI_PROJECTS_ARCHIVE/Oracle Cloud Machines/avz Oracle Linux 9 pvt ssh-key-2025-10-25.key`
 - **Access**: `ssh -i "<key_path>" opc@84.8.139.90`
+
+### External Archive
+- **Project Archive**: `/media/al/1TB_AI_ARCH/AI_PROJECTS_ARCHIVE/TSTR-site Archive/`
+- **Purpose**: Long-term storage of completed work, reports, and handoffs
+- **Access**: Mount external drive before accessing archived files
 
 ---
 
@@ -170,7 +175,7 @@ web/tstr-automation/
 ### OCI Scraper Management
 ```bash
 # SSH to OCI instance
-ssh -i "/media/al/AvZ White 1TB WD MyPassport/PROJECTS/Oracle Cloud Machines/avz Oracle Linux 9 pvt ssh-key-2025-10-25.key" opc@84.8.139.90
+ssh -i "/media/al/1TB_AI_ARCH/AI_PROJECTS_ARCHIVE/Oracle Cloud Machines/avz Oracle Linux 9 pvt ssh-key-2025-10-25.key" opc@84.8.139.90
 
 # Check cron schedule
 ssh opc@84.8.139.90 "crontab -l"

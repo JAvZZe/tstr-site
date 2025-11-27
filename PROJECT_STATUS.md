@@ -271,7 +271,7 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 ### **Oracle Cloud Infrastructure**
 - **Instance IP**: 84.8.139.90
 - **SSH Access**: `ssh -i /tmp/oci-key.pem opc@84.8.139.90`
-- **SSH Key**: `/media/al/AvZ White 1TB WD MyPassport/PROJECTS/Oracle Cloud Machines/avz Oracle Linux 9 pvt ssh-key-2025-10-25.key`
+- **SSH Key**: `/media/al/1TB_AI_ARCH/AI_PROJECTS_ARCHIVE/Oracle Cloud Machines/avz Oracle Linux 9 pvt ssh-key-2025-10-25.key`
 - **Scraper Path**: `/home/opc/tstr-scraper/`
 - **Logs**: `/home/opc/tstr-scraper/scraper.log`
 
@@ -290,6 +290,11 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 - **Automation**: `web/tstr-automation/`
 - **Frontend**: `web/tstr-frontend/`
 - **Scrapers**: `web/tstr-automation/scrapers/`
+
+### **External Archive**
+- **Archive Path**: `/media/al/1TB_AI_ARCH/AI_PROJECTS_ARCHIVE/TSTR-site Archive/`
+- **Purpose**: Long-term storage of completed work, reports, and historical data
+- **Access**: Mount external drive before accessing archived files
 
 ---
 

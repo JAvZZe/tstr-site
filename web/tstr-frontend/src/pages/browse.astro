@@ -384,6 +384,105 @@ const extractCity = (address) => {
       display: none !important;
     }
 
+    /* Autocomplete Dropdown Styles */
+    .autocomplete-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .autocomplete-input {
+      width: 100%;
+      padding: 0.75rem 2.5rem 0.75rem 0.75rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: white;
+      cursor: text;
+      transition: border-color 0.2s ease;
+    }
+
+    .autocomplete-input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+    }
+
+    .autocomplete-input::placeholder {
+      color: #a0aec0;
+    }
+
+    .autocomplete-clear {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #a0aec0;
+      cursor: pointer;
+      padding: 0.25rem;
+      border-radius: 4px;
+      font-size: 1.2rem;
+      line-height: 1;
+      opacity: 0;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+
+    .autocomplete-clear:hover {
+      color: #4a5568;
+      background: #f7fafc;
+    }
+
+    .autocomplete-clear.visible {
+      opacity: 1;
+    }
+
+    .autocomplete-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .autocomplete-option {
+      padding: 0.75rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      border-bottom: 1px solid #f7fafc;
+    }
+
+    .autocomplete-option:last-child {
+      border-bottom: none;
+    }
+
+    .autocomplete-option:hover,
+    .autocomplete-option.selected {
+      background-color: #f7fafc;
+    }
+
+    .autocomplete-option.highlighted {
+      background-color: #edf2f7;
+    }
+
+    .autocomplete-no-results {
+      padding: 0.75rem;
+      color: #a0aec0;
+      font-style: italic;
+    }
+
+    .autocomplete-match {
+      font-weight: 600;
+      color: #667eea;
+    }
+
     .certification-disclaimer {
       background: linear-gradient(135deg, #fff9e6 0%, #ffe8cc 100%);
       border: 2px solid #ffc107;
@@ -436,42 +535,78 @@ const extractCity = (address) => {
     <div class="filters">
       <div class="filter-group">
         <label for="country-filter">Filter by Country</label>
-        <select id="country-filter">
-          <option value="">All Countries</option>
-          {countries.map(country => (
-            <option value={country.name}>{country.name}</option>
-          ))}
-        </select>
+        <div class="autocomplete-container">
+          <input 
+            type="text" 
+            id="country-filter" 
+            class="autocomplete-input" 
+            placeholder="Type to search countries..."
+            autocomplete="off"
+            role="combobox"
+            aria-expanded="false"
+            aria-autocomplete="list"
+            aria-label="Filter by Country"
+          >
+          <button type="button" class="autocomplete-clear" aria-label="Clear selection">×</button>
+          <div class="autocomplete-dropdown hidden" role="listbox"></div>
+        </div>
       </div>
 
       <div class="filter-group">
         <label for="city-filter">Filter by City</label>
-        <select id="city-filter">
-          <option value="">All Cities</option>
-          {cities.map(city => (
-            <option value={city.name}>{city.name}</option>
-          ))}
-        </select>
+        <div class="autocomplete-container">
+          <input 
+            type="text" 
+            id="city-filter" 
+            class="autocomplete-input" 
+            placeholder="Type to search cities..."
+            autocomplete="off"
+            role="combobox"
+            aria-expanded="false"
+            aria-autocomplete="list"
+            aria-label="Filter by City"
+          >
+          <button type="button" class="autocomplete-clear" aria-label="Clear selection">×</button>
+          <div class="autocomplete-dropdown hidden" role="listbox"></div>
+        </div>
       </div>
 
       <div class="filter-group">
         <label for="category-filter">Filter by Category</label>
-        <select id="category-filter">
-          <option value="">All Categories</option>
-          {allCategories && allCategories.map(category => (
-            <option value={category.name}>{category.name}</option>
-          ))}
-        </select>
+        <div class="autocomplete-container">
+          <input 
+            type="text" 
+            id="category-filter" 
+            class="autocomplete-input" 
+            placeholder="Type to search categories..."
+            autocomplete="off"
+            role="combobox"
+            aria-expanded="false"
+            aria-autocomplete="list"
+            aria-label="Filter by Category"
+          >
+          <button type="button" class="autocomplete-clear" aria-label="Clear selection">×</button>
+          <div class="autocomplete-dropdown hidden" role="listbox"></div>
+        </div>
       </div>
 
       <div class="filter-group">
         <label for="standard-filter">Filter by Standard or Certification</label>
-        <select id="standard-filter">
-          <option value="">All Standards</option>
-          {allStandards.map(standard => (
-            <option value={standard.displayName}>{standard.displayName}</option>
-          ))}
-        </select>
+        <div class="autocomplete-container">
+          <input 
+            type="text" 
+            id="standard-filter" 
+            class="autocomplete-input" 
+            placeholder="Type to search standards..."
+            autocomplete="off"
+            role="combobox"
+            aria-expanded="false"
+            aria-autocomplete="list"
+            aria-label="Filter by Standard or Certification"
+          >
+          <button type="button" class="autocomplete-clear" aria-label="Clear selection">×</button>
+          <div class="autocomplete-dropdown hidden" role="listbox"></div>
+        </div>
       </div>
     </div>
 
@@ -612,7 +747,13 @@ const extractCity = (address) => {
 
   <Footer />
 
-  <script>
+  <script define:vars={{ countries, cities, allCategories, allStandards }}>
+    // Data for autocomplete dropdowns
+    const countriesData = JSON.parse(JSON.stringify(countries))
+    const citiesData = JSON.parse(JSON.stringify(cities))
+    const categoriesData = JSON.parse(JSON.stringify(allCategories || []))
+    const standardsData = JSON.parse(JSON.stringify(allStandards))
+
     // Filter functionality
     const countryFilter = document.getElementById('country-filter')
     const cityFilter = document.getElementById('city-filter')
@@ -625,11 +766,248 @@ const extractCity = (address) => {
     const conciergeLink = document.getElementById('concierge-link')
     const listings = document.querySelectorAll('.listing-card')
 
+    // Autocomplete class for intelligent dropdowns
+    class AutocompleteDropdown {
+      constructor(inputElement, options, displayField = 'name') {
+        this.input = inputElement
+        this.options = options
+        this.displayField = displayField
+        this.container = inputElement.parentElement
+        this.dropdown = this.container.querySelector('.autocomplete-dropdown')
+        this.clearBtn = this.container.querySelector('.autocomplete-clear')
+        this.filteredOptions = []
+        this.selectedIndex = -1
+        this.isExpanded = false
+        
+        this.init()
+      }
+
+      init() {
+        // Input event listeners
+        this.input.addEventListener('input', this.debounce(() => this.handleInput(), 150))
+        this.input.addEventListener('focus', () => this.showDropdown())
+        this.input.addEventListener('keydown', (e) => this.handleKeydown(e))
+        this.input.addEventListener('blur', () => {
+          setTimeout(() => this.hideDropdown(), 200) // Delay to allow option click
+        })
+
+        // Clear button
+        this.clearBtn.addEventListener('click', () => this.clearSelection())
+
+        // Click outside to close
+        document.addEventListener('click', (e) => {
+          if (!this.container.contains(e.target)) {
+            this.hideDropdown()
+          }
+        })
+      }
+
+      debounce(func, wait) {
+        let timeout
+        return function executedFunction(...args) {
+          const later = () => {
+            clearTimeout(timeout)
+            func(...args)
+          }
+          clearTimeout(timeout)
+          timeout = setTimeout(later, wait)
+        }
+      }
+
+      handleInput() {
+        const query = this.input.value.toLowerCase().trim()
+        
+        if (query === '') {
+          this.filteredOptions = [...this.options]
+        } else {
+          this.filteredOptions = this.options.filter(option => {
+            const text = this.getDisplayText(option).toLowerCase()
+            return this.fuzzyMatch(query, text)
+          }).sort((a, b) => {
+            const scoreA = this.getMatchScore(query, this.getDisplayText(a).toLowerCase())
+            const scoreB = this.getMatchScore(query, this.getDisplayText(b).toLowerCase())
+            return scoreB - scoreA
+          })
+        }
+
+        this.selectedIndex = -1
+        this.renderOptions()
+        this.showDropdown()
+        this.updateClearButton()
+        filterListings() // Trigger filtering
+      }
+
+      fuzzyMatch(query, text) {
+        if (query.length === 0) return true
+        if (text.length === 0) return false
+
+        let queryIndex = 0
+        let textIndex = 0
+
+        while (queryIndex < query.length && textIndex < text.length) {
+          if (query[queryIndex] === text[textIndex]) {
+            queryIndex++
+          }
+          textIndex++
+        }
+
+        return queryIndex === query.length
+      }
+
+      getMatchScore(query, text) {
+        if (query === text) return 100
+        if (text.startsWith(query)) return 80
+        if (text.includes(query)) return 60
+        
+        // Score based on character positions
+        let score = 0
+        let queryIndex = 0
+        for (let i = 0; i < text.length && queryIndex < query.length; i++) {
+          if (text[i] === query[queryIndex]) {
+            score += (100 - i) // Higher score for earlier matches
+            queryIndex++
+          }
+        }
+        return queryIndex === query.length ? score : 0
+      }
+
+      getDisplayText(option) {
+        return option[this.displayField] || option.name || option.displayName || ''
+      }
+
+      renderOptions() {
+        this.dropdown.innerHTML = ''
+
+        if (this.filteredOptions.length === 0) {
+          this.dropdown.innerHTML = '<div class="autocomplete-no-results">No matches found</div>'
+          return
+        }
+
+        this.filteredOptions.forEach((option, index) => {
+          const optionElement = document.createElement('div')
+          optionElement.className = 'autocomplete-option'
+          optionElement.setAttribute('role', 'option')
+          optionElement.setAttribute('data-index', index)
+          
+          const displayText = this.getDisplayText(option)
+          const highlightedText = this.highlightMatch(this.input.value.toLowerCase(), displayText)
+          optionElement.innerHTML = highlightedText
+
+          optionElement.addEventListener('click', () => this.selectOption(option))
+          optionElement.addEventListener('mouseenter', () => this.selectIndex(index))
+          
+          this.dropdown.appendChild(optionElement)
+        })
+      }
+
+      highlightMatch(query, text) {
+        if (!query) return text
+        
+        const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
+        return text.replace(regex, '<span class="autocomplete-match">$1</span>')
+      }
+
+      handleKeydown(e) {
+        if (!this.isExpanded) {
+          if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter') {
+            e.preventDefault()
+            this.showDropdown()
+          }
+          return
+        }
+
+        switch (e.key) {
+          case 'ArrowDown':
+            e.preventDefault()
+            this.selectIndex(Math.min(this.selectedIndex + 1, this.filteredOptions.length - 1))
+            break
+          case 'ArrowUp':
+            e.preventDefault()
+            this.selectIndex(Math.max(this.selectedIndex - 1, -1))
+            break
+          case 'Enter':
+            e.preventDefault()
+            if (this.selectedIndex >= 0) {
+              this.selectOption(this.filteredOptions[this.selectedIndex])
+            }
+            break
+          case 'Escape':
+            this.hideDropdown()
+            this.input.focus()
+            break
+        }
+      }
+
+      selectIndex(index) {
+        this.selectedIndex = index
+        const options = this.dropdown.querySelectorAll('.autocomplete-option')
+        
+        options.forEach((option, i) => {
+          option.classList.toggle('selected', i === index)
+          option.classList.toggle('highlighted', i === index)
+        })
+
+        // Scroll into view if needed
+        if (index >= 0 && options[index]) {
+          options[index].scrollIntoView({ block: 'nearest' })
+        }
+      }
+
+      selectOption(option) {
+        const displayText = this.getDisplayText(option)
+        this.input.value = displayText
+        this.input.setAttribute('data-selected-value', displayText)
+        this.hideDropdown()
+        this.updateClearButton()
+        filterListings() // Trigger filtering
+      }
+
+      clearSelection() {
+        this.input.value = ''
+        this.input.removeAttribute('data-selected-value')
+        this.hideDropdown()
+        this.updateClearButton()
+        filterListings() // Trigger filtering
+      }
+
+      updateClearButton() {
+        this.clearBtn.classList.toggle('visible', this.input.value.length > 0)
+      }
+
+      showDropdown() {
+        if (this.filteredOptions.length === 0 && this.input.value === '') {
+          this.hideDropdown()
+          return
+        }
+        
+        this.dropdown.classList.remove('hidden')
+        this.input.setAttribute('aria-expanded', 'true')
+        this.isExpanded = true
+      }
+
+      hideDropdown() {
+        this.dropdown.classList.add('hidden')
+        this.input.setAttribute('aria-expanded', 'false')
+        this.isExpanded = false
+        this.selectedIndex = -1
+      }
+
+      getValue() {
+        return this.input.getAttribute('data-selected-value') || this.input.value
+      }
+    }
+
+    // Initialize autocomplete dropdowns
+    const countryAutocomplete = new AutocompleteDropdown(countryFilter, countriesData, 'name')
+    const cityAutocomplete = new AutocompleteDropdown(cityFilter, citiesData, 'name')
+    const categoryAutocomplete = new AutocompleteDropdown(categoryFilter, categoriesData, 'name')
+    const standardAutocomplete = new AutocompleteDropdown(standardFilter, standardsData, 'displayName')
+
     function filterListings() {
-      const selectedCountry = countryFilter.value.toLowerCase()
-      const selectedCity = cityFilter.value.toLowerCase()
-      const selectedCategory = categoryFilter.value.toLowerCase()
-      const selectedStandard = standardFilter.value.toLowerCase()
+      const selectedCountry = countryAutocomplete.getValue().toLowerCase()
+      const selectedCity = cityAutocomplete.getValue().toLowerCase()
+      const selectedCategory = categoryAutocomplete.getValue().toLowerCase()
+      const selectedStandard = standardAutocomplete.getValue().toLowerCase()
 
       let visibleCount = 0
 
@@ -671,10 +1049,10 @@ const extractCity = (address) => {
           // Update mailto link with filter context in subject
           let subject = 'Request Free Concierge Search'
           const contextParts = []
-          if (categoryFilter.value) contextParts.push(categoryFilter.value)
-          if (countryFilter.value) contextParts.push(countryFilter.value)
-          if (cityFilter.value) contextParts.push(cityFilter.value)
-          if (standardFilter.value) contextParts.push(standardFilter.value)
+          if (categoryAutocomplete.getValue()) contextParts.push(categoryAutocomplete.getValue())
+          if (countryAutocomplete.getValue()) contextParts.push(countryAutocomplete.getValue())
+          if (cityAutocomplete.getValue()) contextParts.push(cityAutocomplete.getValue())
+          if (standardAutocomplete.getValue()) contextParts.push(standardAutocomplete.getValue())
           if (contextParts.length > 0) {
             subject += ' - ' + contextParts.join(', ')
           }
@@ -685,28 +1063,32 @@ const extractCity = (address) => {
       }
     }
 
-    // Add event listeners
-    countryFilter.addEventListener('change', filterListings)
-    cityFilter.addEventListener('change', filterListings)
-    categoryFilter.addEventListener('change', filterListings)
-    standardFilter.addEventListener('change', filterListings)
-
     // Check URL parameters for pre-filtering
     const urlParams = new URLSearchParams(window.location.search)
+    
+    function setAutocompleteValue(autocomplete, value) {
+      if (value) {
+        autocomplete.input.value = value
+        autocomplete.input.setAttribute('data-selected-value', value)
+        autocomplete.updateClearButton()
+      }
+    }
+
     if (urlParams.has('country')) {
-      countryFilter.value = urlParams.get('country')
-      filterListings()
+      setAutocompleteValue(countryAutocomplete, urlParams.get('country'))
     }
     if (urlParams.has('city')) {
-      cityFilter.value = urlParams.get('city')
-      filterListings()
+      setAutocompleteValue(cityAutocomplete, urlParams.get('city'))
     }
     if (urlParams.has('category')) {
-      categoryFilter.value = urlParams.get('category')
-      filterListings()
+      setAutocompleteValue(categoryAutocomplete, urlParams.get('category'))
     }
     if (urlParams.has('standard')) {
-      standardFilter.value = urlParams.get('standard')
+      setAutocompleteValue(standardAutocomplete, urlParams.get('standard'))
+    }
+
+    // Initial filter if URL params exist
+    if (urlParams.toString()) {
       filterListings()
     }
   </script>
