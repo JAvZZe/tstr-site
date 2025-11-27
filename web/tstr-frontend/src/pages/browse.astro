@@ -106,34 +106,75 @@ const allStandards = Array.from(standardsMap.values()).sort((a, b) => {
   return a.code.localeCompare(b.code)
 })
 
-// Extract unique countries and cities from location hierarchy
+// Extract unique countries and cities from location hierarchy and address
 const getCountryFromLocation = (location) => {
   if (!location) return null
-  if (location.level === 'country') return { name: location.name, slug: location.slug }
-  if (location.parent?.level === 'country') return { name: location.parent.name, slug: location.parent.slug }
-  if (location.parent?.parent?.level === 'country') return { name: location.parent.parent.name, slug: location.parent.parent.slug }
+  if (location.level === 'country') return { name: location.name, slug: location.name.toLowerCase().replace(/\s+/g, '-') }
+  if (location.parent?.level === 'country') return { name: location.parent.name, slug: location.parent.name.toLowerCase().replace(/\s+/g, '-') }
+  if (location.parent?.parent?.level === 'country') return { name: location.parent.parent.name, slug: location.parent.parent.name.toLowerCase().replace(/\s+/g, '-') }
   return null
 }
 
 const getCityFromLocation = (location) => {
   if (!location) return null
-  if (location.level === 'city') return { name: location.name, slug: location.slug }
+  if (location.level === 'city') return { name: location.name, slug: location.name.toLowerCase().replace(/\s+/g, '-') }
   return null
 }
+
+const extractCountry = (address) => {
+  if (!address) return ''
+  const parts = address.split(',').map(p => p.trim())
+  return parts[parts.length - 1] || ''
+}
+
+const extractCity = (address) => {
+  if (!address) return ''
+  const parts = address.split(',').map(p => p.trim())
+  return parts[0] || ''
+}
+
+// Known countries list for validation
+const knownCountries = new Set([
+  'United States', 'Canada', 'United Kingdom', 'Germany', 'Netherlands',
+  'Singapore', 'Thailand', 'Kuwait', 'UAE', 'UK', 'USA'
+])
 
 const countryMap = new Map()
 const cityMap = new Map()
 
 listings?.forEach(listing => {
+  // From location hierarchy
   const country = getCountryFromLocation(listing.location)
   if (country) countryMap.set(country.slug, country.name)
 
   const city = getCityFromLocation(listing.location)
   if (city) cityMap.set(city.slug, city.name)
+
+  // From address field as fallback - only if it looks like a real country/city
+  const addressCountry = extractCountry(listing.address)
+  if (addressCountry && knownCountries.has(addressCountry) && !countryMap.has(addressCountry.toLowerCase().replace(/\s+/g, '-'))) {
+    countryMap.set(addressCountry.toLowerCase().replace(/\s+/g, '-'), addressCountry)
+  }
+
+  const addressCity = extractCity(listing.address)
+  // Only add if it doesn't look like a street address (no numbers, reasonable length)
+  if (addressCity &&
+      !/\d/.test(addressCity) &&
+      addressCity.length > 2 &&
+      addressCity.length < 30 &&
+      !cityMap.has(addressCity.toLowerCase().replace(/\s+/g, '-'))) {
+    cityMap.set(addressCity.toLowerCase().replace(/\s+/g, '-'), addressCity)
+  }
 })
 
-const countries = Array.from(countryMap.entries()).map(([slug, name]) => ({ slug, name })).sort((a, b) => a.name.localeCompare(b.name))
-const cities = Array.from(cityMap.entries()).map(([slug, name]) => ({ slug, name })).sort((a, b) => a.name.localeCompare(b.name))
+// Create combined location options for fuzzy search
+const locationOptions = []
+countryMap.forEach((name, slug) => {
+  locationOptions.push({ name, type: 'country', displayName: `${name} (Country)` })
+})
+cityMap.forEach((name, slug) => {
+  locationOptions.push({ name, type: 'city', displayName: `${name} (City)` })
+})
 
 const totalListings = listings?.length || 0
 
@@ -146,18 +187,7 @@ const getCategoryDisplayName = (categorySlug) => {
 }
 const categoryDisplayName = getCategoryDisplayName(categoryParam)
 
-// Helper functions for filtering
-const extractCountry = (address) => {
-  if (!address) return ''
-  const parts = address.split(',').map(p => p.trim())
-  return parts[parts.length - 1] || ''
-}
-
-const extractCity = (address) => {
-  if (!address) return ''
-  const parts = address.split(',').map(p => p.trim())
-  return parts[0] || ''
-}
+// Helper functions for filtering are defined in the frontmatter
 ---
 
 <!DOCTYPE html>
@@ -534,37 +564,18 @@ const extractCity = (address) => {
   <main>
     <div class="filters">
       <div class="filter-group">
-        <label for="country-filter">Country</label>
+        <label for="location-filter">Location</label>
         <div class="autocomplete-container">
-          <input 
-            type="text" 
-            id="country-filter" 
-            class="autocomplete-input" 
-            placeholder="Type to search countries..."
+          <input
+            type="text"
+            id="location-filter"
+            class="autocomplete-input"
+            placeholder="Type to search cities or countries..."
             autocomplete="off"
             role="combobox"
             aria-expanded="false"
             aria-autocomplete="list"
-            aria-label="Country"
-          >
-          <button type="button" class="autocomplete-clear" aria-label="Clear selection">×</button>
-          <div class="autocomplete-dropdown hidden" role="listbox"></div>
-        </div>
-      </div>
-
-      <div class="filter-group">
-        <label for="city-filter">City</label>
-        <div class="autocomplete-container">
-          <input 
-            type="text" 
-            id="city-filter" 
-            class="autocomplete-input" 
-            placeholder="Type to search cities..."
-            autocomplete="off"
-            role="combobox"
-            aria-expanded="false"
-            aria-autocomplete="list"
-            aria-label="City"
+            aria-label="Location"
           >
           <button type="button" class="autocomplete-clear" aria-label="Clear selection">×</button>
           <div class="autocomplete-dropdown hidden" role="listbox"></div>
@@ -747,16 +758,14 @@ const extractCity = (address) => {
 
   <Footer />
 
-  <script define:vars={{ countries, cities, allCategories, allStandards }}>
+  <script define:vars={{ locationOptions, allCategories, allStandards }}>
     // Data for autocomplete dropdowns
-    const countriesData = JSON.parse(JSON.stringify(countries))
-    const citiesData = JSON.parse(JSON.stringify(cities))
+    const locationData = JSON.parse(JSON.stringify(locationOptions || []))
     const categoriesData = JSON.parse(JSON.stringify(allCategories || []))
     const standardsData = JSON.parse(JSON.stringify(allStandards))
 
     // Filter functionality
-    const countryFilter = document.getElementById('country-filter')
-    const cityFilter = document.getElementById('city-filter')
+    const locationFilter = document.getElementById('location-filter')
     const categoryFilter = document.getElementById('category-filter')
     const standardFilter = document.getElementById('standard-filter')
     const listingsGrid = document.getElementById('listings-grid')
@@ -1004,14 +1013,12 @@ const extractCity = (address) => {
     }
 
     // Initialize autocomplete dropdowns
-    const countryAutocomplete = new AutocompleteDropdown(countryFilter, countriesData, 'name')
-    const cityAutocomplete = new AutocompleteDropdown(cityFilter, citiesData, 'name')
+    const locationAutocomplete = new AutocompleteDropdown(locationFilter, locationData, 'displayName')
     const categoryAutocomplete = new AutocompleteDropdown(categoryFilter, categoriesData, 'name')
     const standardAutocomplete = new AutocompleteDropdown(standardFilter, standardsData, 'displayName')
 
     function filterListings() {
-      const selectedCountry = countryAutocomplete.getValue().toLowerCase()
-      const selectedCity = cityAutocomplete.getValue().toLowerCase()
+      const selectedLocation = locationAutocomplete.getValue().toLowerCase()
       const selectedCategory = categoryAutocomplete.getValue().toLowerCase()
       const selectedStandard = standardAutocomplete.getValue().toLowerCase()
 
@@ -1023,12 +1030,15 @@ const extractCity = (address) => {
         const category = (listing.dataset.category || '').toLowerCase()
         const standards = (listing.dataset.standards || '').toLowerCase()
 
-        const matchesCountry = !selectedCountry || country === selectedCountry
-        const matchesCity = !selectedCity || city === selectedCity
+        // Location matching: check both country and city fields
+        const matchesLocation = !selectedLocation ||
+          country === selectedLocation ||
+          city === selectedLocation
+
         const matchesCategory = !selectedCategory || category === selectedCategory
         const matchesStandard = !selectedStandard || standards.includes(selectedStandard)
 
-        if (matchesCountry && matchesCity && matchesCategory && matchesStandard) {
+        if (matchesLocation && matchesCategory && matchesStandard) {
           listing.classList.remove('hidden')
           visibleCount++
         } else {
@@ -1056,8 +1066,11 @@ const extractCity = (address) => {
           let subject = 'Request Free Concierge Search'
           const contextParts = []
           if (categoryAutocomplete.getValue()) contextParts.push(categoryAutocomplete.getValue())
-          if (countryAutocomplete.getValue()) contextParts.push(countryAutocomplete.getValue())
-          if (cityAutocomplete.getValue()) contextParts.push(cityAutocomplete.getValue())
+          if (locationAutocomplete.getValue()) {
+            // Extract location name without type suffix
+            const locationName = locationAutocomplete.getValue().replace(/\s*\([^)]*\)$/, '')
+            contextParts.push(locationName)
+          }
           if (standardAutocomplete.getValue()) contextParts.push(standardAutocomplete.getValue())
           if (contextParts.length > 0) {
             subject += ' - ' + contextParts.join(', ')
@@ -1071,7 +1084,7 @@ const extractCity = (address) => {
 
     // Check URL parameters for pre-filtering
     const urlParams = new URLSearchParams(window.location.search)
-    
+
     function setAutocompleteValue(autocomplete, value) {
       if (value) {
         autocomplete.input.value = value
@@ -1080,11 +1093,17 @@ const extractCity = (address) => {
       }
     }
 
+    // Handle legacy URL parameters for backward compatibility
     if (urlParams.has('country')) {
-      setAutocompleteValue(countryAutocomplete, urlParams.get('country'))
+      const countryValue = urlParams.get('country')
+      setAutocompleteValue(locationAutocomplete, `${countryValue} (Country)`)
     }
     if (urlParams.has('city')) {
-      setAutocompleteValue(cityAutocomplete, urlParams.get('city'))
+      const cityValue = urlParams.get('city')
+      setAutocompleteValue(locationAutocomplete, `${cityValue} (City)`)
+    }
+    if (urlParams.has('location')) {
+      setAutocompleteValue(locationAutocomplete, urlParams.get('location'))
     }
     if (urlParams.has('category')) {
       setAutocompleteValue(categoryAutocomplete, urlParams.get('category'))
