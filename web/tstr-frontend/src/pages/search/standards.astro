@@ -41,55 +41,87 @@ const { data: listings } = await supabase
   `)
   .eq('status', 'active')
 
-// Extract unique countries and cities from location hierarchy and address
-const getCountryFromLocation = (location) => {
-  if (!location) return null
-  if (location.level === 'country') return { name: location.name, slug: location.name.toLowerCase().replace(/\s+/g, '-') }
-  if (location.parent?.level === 'country') return { name: location.parent.name, slug: location.parent.name.toLowerCase().replace(/\s+/g, '-') }
-  if (location.parent?.parent?.level === 'country') return { name: location.parent.parent.name, slug: location.parent.parent.name.toLowerCase().replace(/\s+/g, '-') }
-  return null
-}
+  // Extract unique countries and cities from location hierarchy and address
+  const getCountryFromLocation = (location) => {
+    if (!location) return null
+    if (location.level === 'country') return { name: location.name, slug: location.name.toLowerCase().replace(/\s+/g, '-') }
+    if (location.parent?.level === 'country') return { name: location.parent.name, slug: location.parent.name.toLowerCase().replace(/\s+/g, '-') }
+    if (location.parent?.parent?.level === 'country') return { name: location.parent.parent.name, slug: location.parent.parent.name.toLowerCase().replace(/\s+/g, '-') }
+    return null
+  }
 
-const getCityFromLocation = (location) => {
-  if (!location) return null
-  if (location.level === 'city') return { name: location.name, slug: location.name.toLowerCase().replace(/\s+/g, '-') }
-  return null
-}
+  const getCityFromLocation = (location) => {
+    if (!location) return null
+    if (location.level === 'city') return { name: location.name, slug: location.name.toLowerCase().replace(/\s+/g, '-') }
+    return null
+  }
 
-const extractCountry = (address) => {
-  if (!address) return ''
-  const parts = address.split(',').map(p => p.trim())
-  return parts[parts.length - 1] || ''
-}
+  // Improved address parsing to avoid extracting street addresses as cities/countries
+  const extractLocationFromAddress = (address) => {
+    if (!address) return { city: null, country: null }
 
-const extractCity = (address) => {
-  if (!address) return ''
-  const parts = address.split(',').map(p => p.trim())
-  return parts[0] || ''
-}
+    // Clean the address
+    let cleanAddress = address.trim()
+
+    // Handle Singapore addresses: "Street, Singapore POSTAL_CODE"
+    if (cleanAddress.includes('Singapore')) {
+      const singaporeMatch = cleanAddress.match(/,\s*Singapore\s*\d{6}/i)
+      if (singaporeMatch) {
+        return {
+          city: 'Singapore',
+          country: 'Singapore'
+        }
+      }
+    }
+
+    // Standard format: "City, State, Country" or "City, Country"
+    const parts = cleanAddress.split(',').map(p => p.trim()).filter(p => p.length > 0)
+
+    if (parts.length >= 2) {
+      const lastPart = parts[parts.length - 1]
+      const secondLastPart = parts[parts.length - 2]
+
+      // Check if last part looks like a country
+      const countryNames = ['USA', 'United States', 'Canada', 'Germany', 'Netherlands', 'Singapore', 'Thailand', 'United Kingdom', 'UK', 'United Arab Emirates', 'UAE', 'Kuwait']
+      const isCountry = countryNames.some(country => lastPart.toLowerCase().includes(country.toLowerCase()))
+
+      // Only extract if it looks like a proper city/country format
+      // Avoid street addresses by checking if the "city" part looks like an address
+      const looksLikeStreetAddress = /^\d+\s+[A-Za-z]|\b(street|avenue|road|drive|lane|way|place|court)\b/i.test(secondLastPart)
+
+      if (isCountry && !looksLikeStreetAddress && secondLastPart.length > 2 && secondLastPart.length < 50) {
+        return {
+          city: secondLastPart,
+          country: lastPart
+        }
+      }
+    }
+
+    // If we can't parse it reliably, don't extract from address
+    return { city: null, country: null }
+  }
 
 const countryMap = new Map()
 const cityMap = new Map()
 
-listings?.forEach(listing => {
-  // From location hierarchy
-  const country = getCountryFromLocation(listing.location)
-  if (country) countryMap.set(country.slug, country.name)
+  listings?.forEach(listing => {
+    // From location hierarchy (primary source)
+    const country = getCountryFromLocation(listing.location)
+    if (country) countryMap.set(country.slug, country.name)
 
-  const city = getCityFromLocation(listing.location)
-  if (city) cityMap.set(city.slug, city.name)
+    const city = getCityFromLocation(listing.location)
+    if (city) cityMap.set(city.slug, city.name)
 
-  // From address field as fallback
-  const addressCountry = extractCountry(listing.address)
-  if (addressCountry && !countryMap.has(addressCountry.toLowerCase().replace(/\s+/g, '-'))) {
-    countryMap.set(addressCountry.toLowerCase().replace(/\s+/g, '-'), addressCountry)
-  }
+    // From address field as fallback (improved parsing)
+    const addressLocation = extractLocationFromAddress(listing.address)
+    if (addressLocation.country && !countryMap.has(addressLocation.country.toLowerCase().replace(/\s+/g, '-'))) {
+      countryMap.set(addressLocation.country.toLowerCase().replace(/\s+/g, '-'), addressLocation.country)
+    }
 
-  const addressCity = extractCity(listing.address)
-  if (addressCity && !cityMap.has(addressCity.toLowerCase().replace(/\s+/g, '-'))) {
-    cityMap.set(addressCity.toLowerCase().replace(/\s+/g, '-'), addressCity)
-  }
-})
+    if (addressLocation.city && !cityMap.has(addressLocation.city.toLowerCase().replace(/\s+/g, '-'))) {
+      cityMap.set(addressLocation.city.toLowerCase().replace(/\s+/g, '-'), addressLocation.city)
+    }
+  })
 
 // Create combined location options for fuzzy search
 const locationOptions = []
