@@ -837,38 +837,44 @@ const extractCity = (address) => {
         filterListings() // Trigger filtering
       }
 
+      escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      }
+
       fuzzyMatch(query, text) {
         if (query.length === 0) return true
         if (text.length === 0) return false
 
-        let queryIndex = 0
-        let textIndex = 0
+        // Convert to lowercase for case-insensitive matching
+        const lowerQuery = query.toLowerCase()
+        const lowerText = text.toLowerCase()
 
-        while (queryIndex < query.length && textIndex < text.length) {
-          if (query[queryIndex] === text[textIndex]) {
-            queryIndex++
-          }
-          textIndex++
-        }
+        // Check if query matches from the beginning
+        if (lowerText.startsWith(lowerQuery)) return true
 
-        return queryIndex === query.length
+        // Check if query matches as a word (preceded by space, dash, or start)
+        const wordRegex = new RegExp(`(?:^|[\\s\\-])(${this.escapeRegex(lowerQuery)})`, 'i')
+        return wordRegex.test(lowerText)
       }
 
       getMatchScore(query, text) {
-        if (query === text) return 100
-        if (text.startsWith(query)) return 80
-        if (text.includes(query)) return 60
-        
-        // Score based on character positions
-        let score = 0
-        let queryIndex = 0
-        for (let i = 0; i < text.length && queryIndex < query.length; i++) {
-          if (text[i] === query[queryIndex]) {
-            score += (100 - i) // Higher score for earlier matches
-            queryIndex++
-          }
-        }
-        return queryIndex === query.length ? score : 0
+        const lowerQuery = query.toLowerCase()
+        const lowerText = text.toLowerCase()
+
+        // Exact match gets highest score
+        if (lowerQuery === lowerText) return 100
+
+        // Starts with query gets high score
+        if (lowerText.startsWith(lowerQuery)) return 80
+
+        // Word match gets medium score
+        const wordRegex = new RegExp(`(?:^|[\\s\\-])(${this.escapeRegex(lowerQuery)})`, 'i')
+        if (wordRegex.test(lowerText)) return 60
+
+        // Contains query gets lower score
+        if (lowerText.includes(lowerQuery)) return 40
+
+        return 0
       }
 
       getDisplayText(option) {
