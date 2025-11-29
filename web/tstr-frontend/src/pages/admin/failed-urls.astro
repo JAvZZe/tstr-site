@@ -12,6 +12,8 @@ const { data: failedUrls, error: failedUrlsError } = await supabase
 
 // Check which URLs are now corrected (exist in listings table)
 const correctedUrls = []
+const urlValidationResults = {}
+
 if (failedUrls && failedUrls.length > 0) {
   const websites = failedUrls.map(item => item.website).filter(Boolean)
   if (websites.length > 0) {
@@ -24,6 +26,30 @@ if (failedUrls && failedUrls.length > 0) {
     if (existingListings) {
       const correctedWebsites = existingListings.map(listing => listing.website)
       correctedUrls.push(...correctedWebsites)
+
+      // Validate each corrected URL
+      for (const website of correctedWebsites) {
+        try {
+          const response = await fetch(website, {
+            method: 'HEAD',
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (compatible; TSTR-Site-Validator/1.0)'
+            },
+            signal: AbortSignal.timeout(5000) // 5 second timeout
+          })
+
+          if (response.ok) {
+            urlValidationResults[website] = { status: 'valid', code: response.status }
+          } else {
+            urlValidationResults[website] = { status: 'invalid', code: response.status }
+          }
+        } catch (error) {
+          urlValidationResults[website] = {
+            status: 'error',
+            error: error.message.includes('timeout') ? 'timeout' : 'network_error'
+          }
+        }
+      }
     }
   }
 }
@@ -61,13 +87,26 @@ const title = 'Failed URL Validations'
             URLs that failed validation. Green rows indicate URLs that have been corrected and now exist in the active listings.
           </p>
           {failedUrls && (
-            <div class="flex space-x-4 mt-2 text-sm">
+            <div class="flex flex-wrap gap-4 mt-2 text-sm">
               <span class="text-green-600 font-medium">
                 Corrected: {correctedUrls.length}
               </span>
               <span class="text-red-600 font-medium">
                 Still Failed: {(failedUrls.length || 0) - correctedUrls.length}
               </span>
+              {correctedUrls.length > 0 && (
+                <>
+                  <span class="text-green-600 font-medium">
+                    Valid URLs: {Object.values(urlValidationResults).filter(r => r.status === 'valid').length}
+                  </span>
+                  <span class="text-yellow-600 font-medium">
+                    Invalid URLs: {Object.values(urlValidationResults).filter(r => r.status === 'invalid').length}
+                  </span>
+                  <span class="text-red-600 font-medium">
+                    Error URLs: {Object.values(urlValidationResults).filter(r => r.status === 'error').length}
+                  </span>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -90,6 +129,9 @@ const title = 'Failed URL Validations'
                 <tr>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    URL Validation
                   </th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Business
@@ -122,6 +164,31 @@ const title = 'Failed URL Validations'
                           <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">
                             Failed
                           </span>
+                        )}
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        {isCorrected ? (
+                          urlValidationResults[item.website] ? (
+                            urlValidationResults[item.website].status === 'valid' ? (
+                              <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                                ✓ Valid ({urlValidationResults[item.website].code})
+                              </span>
+                            ) : urlValidationResults[item.website].status === 'invalid' ? (
+                              <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
+                                ⚠️ Invalid ({urlValidationResults[item.website].code})
+                              </span>
+                            ) : (
+                              <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">
+                                ✗ Error ({urlValidationResults[item.website].error})
+                              </span>
+                            )
+                          ) : (
+                            <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-medium">
+                              Checking...
+                            </span>
+                          )
+                        ) : (
+                          <span class="text-gray-400 text-xs">-</span>
                         )}
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap">
@@ -193,8 +260,9 @@ const title = 'Failed URL Validations'
           <p><strong>1. Investigate:</strong> Use "Test URL" to verify if the site is accessible with correct URL</p>
           <p><strong>2. Research:</strong> Find the correct website URL and company details</p>
           <p><strong>3. Manual Database Update:</strong> Add the corrected listing directly to the <code>listings</code> table</p>
-          <p><strong>4. Verification:</strong> Dashboard will automatically show as "Corrected" when URL exists in active listings</p>
-          <p><strong>5. Scraper Updates:</strong> Only modify scraper code if the issue is systematic (affects multiple entries)</p>
+          <p><strong>4. Verification:</strong> Dashboard shows "Corrected" when URL exists in listings + validates URL accessibility</p>
+          <p><strong>5. Validation Check:</strong> Green checkmark = URL is live and accessible, Yellow warning = HTTP error, Red = network error</p>
+          <p><strong>6. Scraper Updates:</strong> Only modify scraper code if issue is systematic (affects multiple entries)</p>
         </div>
 
         <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
