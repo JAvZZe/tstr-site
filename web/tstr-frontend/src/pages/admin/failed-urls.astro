@@ -1,50 +1,9 @@
 ---
-import { supabase } from '../../lib/supabase'
-
-// Force SSR for dynamic data
-export const prerender = false;
-
-// Fetch failed URLs data
-let failedUrls = []
-let fetchError = null
-
-try {
-  const result = await supabase
-    .from('pending_research')
-    .select('id, website, validation_error, business_name, created_at')
-    .order('created_at', { ascending: false })
-
-  failedUrls = result.data || []
-  fetchError = result.error
-} catch (err) {
-  console.error('Failed to fetch pending_research data:', err)
-  fetchError = err
-}
-
-// Check which URLs are now corrected (exist in listings table)
-const correctedUrls = []
-
-if (failedUrls && failedUrls.length > 0) {
-  try {
-    const websites = failedUrls.map(item => item.website).filter(Boolean)
-    if (websites.length > 0) {
-      const result = await supabase
-        .from('listings')
-        .select('website')
-        .in('website', websites)
-        .eq('status', 'active')
-
-      if (result.data) {
-        const correctedWebsites = result.data.map(listing => listing.website)
-        correctedUrls.push(...correctedWebsites)
-      }
-    }
-  } catch (err) {
-    console.error('Failed to check corrected URLs:', err)
-  }
-}
-
+// Temporarily disable dynamic content to test basic rendering
 const title = 'Failed URL Validations'
+const failedUrls = []
+const correctedUrls = []
+const fetchError = null
 ---
 
 <html lang="en">
@@ -71,44 +30,13 @@ const title = 'Failed URL Validations'
           <p class="text-gray-600 text-sm mt-1">
             URLs that failed validation. Green rows indicate URLs that have been corrected and now exist in the active listings.
           </p>
-          {failedUrls && (
-            <div class="flex flex-wrap gap-4 mt-2 text-sm">
-              <span class="text-green-600 font-medium">
-                Corrected: {correctedUrls.length}
-              </span>
-              <span class="text-red-600 font-medium">
-                Still Failed: {(failedUrls.length || 0) - correctedUrls.length}
-              </span>
-              {correctedUrls.length > 0 && (
-                <>
-                  <span class="text-green-600 font-medium validation-stat" data-type="valid">
-                    Valid URLs: 0
-                  </span>
-                  <span class="text-yellow-600 font-medium validation-stat" data-type="invalid">
-                    Invalid URLs: 0
-                  </span>
-                  <span class="text-red-600 font-medium validation-stat" data-type="error">
-                    Error URLs: 0
-                  </span>
-                </>
-              )}
-            </div>
-          )}
+          <div class="flex gap-4 mt-2 text-sm">
+            <span class="text-gray-600">Testing basic page load</span>
+          </div>
         </div>
 
         <div class="overflow-x-auto">
-          {error ? (
-            <div class="px-6 py-12 text-center">
-              <div class="text-red-500">
-                <svg class="mx-auto h-12 w-12 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                </svg>
-                <h3 class="mt-2 text-sm font-medium text-red-800">Error Loading Data</h3>
-                <p class="mt-1 text-sm text-red-600">Unable to fetch failed URLs data. Please check the console for details.</p>
-                <p class="mt-2 text-xs text-gray-500">Error: {error?.message || 'Unknown error'}</p>
-              </div>
-            </div>
-          ) : failedUrls && failedUrls.length > 0 ? (
+          {failedUrls && failedUrls.length > 0 ? (
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-gray-50">
                 <tr>
@@ -136,76 +64,13 @@ const title = 'Failed URL Validations'
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                {failedUrls.map((item) => {
-                  const isCorrected = correctedUrls.includes(item.website)
-                  return (
-                    <tr class={`hover:bg-gray-50 ${isCorrected ? 'bg-green-50' : ''}`}>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        {isCorrected ? (
-                          <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
-                            Corrected
-                          </span>
-                        ) : (
-                          <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">
-                            Failed
-                          </span>
-                        )}
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        {isCorrected ? (
-                          <span class="url-validation-status px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-medium" data-url={item.website}>
-                            Checking...
-                          </span>
-                        ) : (
-                          <span class="text-gray-400 text-xs">-</span>
-                        )}
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900 max-w-xs truncate" title={item.business_name}>
-                          {item.business_name}
-                        </div>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900 max-w-xs truncate" title={item.website}>
-                          {item.website}
-                        </div>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="text-sm text-red-600" title={item.validation_error}>
-                          {item.validation_error?.length > 50
-                            ? item.validation_error.substring(0, 50) + '...'
-                            : item.validation_error || 'Validation failed'}
-                        </span>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(item.created_at).toLocaleString()}
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div class="flex space-x-2">
-                          <a
-                            href={item.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="text-blue-600 hover:text-blue-900"
-                          >
-                            Test URL
-                          </a>
-                          <button
-                            class="text-green-600 hover:text-green-900 copy-url-btn"
-                            data-url={item.website}
-                          >
-                            Copy
-                          </button>
-                          {!isCorrected && (
-                            <span class="text-xs text-gray-500" title="Manually add corrected listing to database">
-                              Manual Fix Needed
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  )
-                })}
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap" colspan="6">
+                    <div class="text-center text-gray-500">
+                      Basic page test - no dynamic data loaded yet
+                    </div>
+                  </td>
+                </tr>
               </tbody>
             </table>
           ) : (
