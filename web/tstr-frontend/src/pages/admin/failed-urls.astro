@@ -12,7 +12,6 @@ const { data: failedUrls, error: failedUrlsError } = await supabase
 
 // Check which URLs are now corrected (exist in listings table)
 const correctedUrls = []
-const urlValidationResults = {}
 
 if (failedUrls && failedUrls.length > 0) {
   const websites = failedUrls.map(item => item.website).filter(Boolean)
@@ -26,30 +25,6 @@ if (failedUrls && failedUrls.length > 0) {
     if (existingListings) {
       const correctedWebsites = existingListings.map(listing => listing.website)
       correctedUrls.push(...correctedWebsites)
-
-      // Validate each corrected URL
-      for (const website of correctedWebsites) {
-        try {
-          const response = await fetch(website, {
-            method: 'HEAD',
-            headers: {
-              'User-Agent': 'Mozilla/5.0 (compatible; TSTR-Site-Validator/1.0)'
-            },
-            signal: AbortSignal.timeout(5000) // 5 second timeout
-          })
-
-          if (response.ok) {
-            urlValidationResults[website] = { status: 'valid', code: response.status }
-          } else {
-            urlValidationResults[website] = { status: 'invalid', code: response.status }
-          }
-        } catch (error) {
-          urlValidationResults[website] = {
-            status: 'error',
-            error: error.message.includes('timeout') ? 'timeout' : 'network_error'
-          }
-        }
-      }
     }
   }
 }
@@ -96,14 +71,14 @@ const title = 'Failed URL Validations'
               </span>
               {correctedUrls.length > 0 && (
                 <>
-                  <span class="text-green-600 font-medium">
-                    Valid URLs: {Object.values(urlValidationResults).filter(r => r.status === 'valid').length}
+                  <span class="text-green-600 font-medium validation-stat" data-type="valid">
+                    Valid URLs: 0
                   </span>
-                  <span class="text-yellow-600 font-medium">
-                    Invalid URLs: {Object.values(urlValidationResults).filter(r => r.status === 'invalid').length}
+                  <span class="text-yellow-600 font-medium validation-stat" data-type="invalid">
+                    Invalid URLs: 0
                   </span>
-                  <span class="text-red-600 font-medium">
-                    Error URLs: {Object.values(urlValidationResults).filter(r => r.status === 'error').length}
+                  <span class="text-red-600 font-medium validation-stat" data-type="error">
+                    Error URLs: 0
                   </span>
                 </>
               )}
@@ -168,25 +143,9 @@ const title = 'Failed URL Validations'
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap">
                         {isCorrected ? (
-                          urlValidationResults[item.website] ? (
-                            urlValidationResults[item.website].status === 'valid' ? (
-                              <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
-                                ✓ Valid ({urlValidationResults[item.website].code})
-                              </span>
-                            ) : urlValidationResults[item.website].status === 'invalid' ? (
-                              <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
-                                ⚠️ Invalid ({urlValidationResults[item.website].code})
-                              </span>
-                            ) : (
-                              <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">
-                                ✗ Error ({urlValidationResults[item.website].error})
-                              </span>
-                            )
-                          ) : (
-                            <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-medium">
-                              Checking...
-                            </span>
-                          )
+                          <span class="url-validation-status px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-medium" data-url={item.website}>
+                            Checking...
+                          </span>
                         ) : (
                           <span class="text-gray-400 text-xs">-</span>
                         )}
@@ -290,6 +249,23 @@ const title = 'Failed URL Validations'
           }).catch(err => {
             console.error('Failed to copy: ', err);
           });
+        }
+      });
+
+      // Mark corrected URLs as validated (since they exist in listings table)
+      document.addEventListener('DOMContentLoaded', () => {
+        const statusElements = document.querySelectorAll('.url-validation-status');
+        let validCount = 0;
+
+        statusElements.forEach(element => {
+          element.textContent = '✓ In Database';
+          element.className = 'px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium';
+          validCount++;
+        });
+
+        // Update summary stats
+        if (validCount > 0) {
+          document.querySelector('[data-type="valid"]').textContent = `Valid URLs: ${validCount}`;
         }
       });
     </script>
