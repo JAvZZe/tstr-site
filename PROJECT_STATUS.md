@@ -1,9 +1,9 @@
 # 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: November 29, 2025 20:55 UTC
-> **Updated By**: Claude Code (Sonnet 4.5)
-> **Status**: ✅ PRODUCTION - Live at https://tstr.site with 163 listings + Click Tracking + Admin Dashboard
+> **Last Updated**: November 29, 2025 21:15 UTC
+> **Updated By**: OpenCode AI Assistant
+> **Status**: ✅ PRODUCTION - Live at https://tstr.site with 163 listings + Click Tracking + Admin Dashboard + Updated Branding
 
 ---
 
@@ -403,6 +403,9 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 - Completing major tasks
 - Changing schedules
 - Database schema changes
+- **UI/Branding changes** (logos, favicons, links, styling)
+- **Content updates** (text, links, footer information)
+- **Any successful change that affects the live website**
 
 ✅ **Update format**:
 ```markdown
@@ -456,7 +459,13 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 
 ## 📊 VERSION HISTORY
 
-### **v2.1.0** - November 22, 2025 (CURRENT)
+### **v2.2.0** - November 29, 2025 (CURRENT)
+- ✨ Homepage logo updated to "TSTR" on top and "hub" below (lowercase 'h')
+- ✅ Favicon redesigned with text-based "TSTR/hub" design (16x16 SVG)
+- ✅ LinkedIn icon added to footer across all pages (links to https://linkedin.com/company/tstr-hub)
+- ✅ Footer centralized configuration updated in `src/lib/contacts.ts`
+
+### **v2.1.0** - November 22, 2025
 - ✨ Click tracking system deployed
 - ✅ Internal redirect endpoint (`/api/out`) for analytics
 - ✅ 6 listing pages updated with redirect links
