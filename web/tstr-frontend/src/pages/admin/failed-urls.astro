@@ -160,6 +160,11 @@ const title = 'Failed URL Validations'
                           >
                             Copy
                           </button>
+                          {!isCorrected && (
+                            <span class="text-xs text-gray-500" title="Manually add corrected listing to database">
+                              Manual Fix Needed
+                            </span>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -183,12 +188,19 @@ const title = 'Failed URL Validations'
 
       <!-- Remedial Actions Guide -->
       <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <h3 class="text-lg font-semibold text-blue-800 mb-3">Remedial Actions</h3>
+        <h3 class="text-lg font-semibold text-blue-800 mb-3">Correction Process</h3>
         <div class="text-sm text-blue-700 space-y-2">
-          <p><strong>Test URL:</strong> Click to open in new tab and verify if the site is accessible</p>
-          <p><strong>Copy URL:</strong> Copy the URL for manual testing or scraper updates</p>
-          <p><strong>Common Issues:</strong> Sites may be temporarily down, require different user agents, or have changed domains</p>
-          <p><strong>Next Steps:</strong> Update scraper logic or manually add corrected URLs to the database</p>
+          <p><strong>1. Investigate:</strong> Use "Test URL" to verify if the site is accessible with correct URL</p>
+          <p><strong>2. Research:</strong> Find the correct website URL and company details</p>
+          <p><strong>3. Manual Database Update:</strong> Add the corrected listing directly to the <code>listings</code> table</p>
+          <p><strong>4. Verification:</strong> Dashboard will automatically show as "Corrected" when URL exists in active listings</p>
+          <p><strong>5. Scraper Updates:</strong> Only modify scraper code if the issue is systematic (affects multiple entries)</p>
+        </div>
+
+        <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
+          <p class="text-sm text-yellow-800">
+            <strong>⚠️ Individual corrections do NOT automatically update scrapers.</strong> Manual fixes are for edge cases. Systematic issues require code changes.
+          </p>
         </div>
       </div>
     </div>
