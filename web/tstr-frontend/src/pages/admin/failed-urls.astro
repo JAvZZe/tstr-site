@@ -5,33 +5,43 @@ import { supabase } from '../../lib/supabase'
 export const prerender = false;
 
 // Fetch failed URLs data
-const { data: failedUrls, error: failedUrlsError } = await supabase
-  .from('pending_research')
-  .select('id, website, validation_error, business_name, created_at')
-  .order('created_at', { ascending: false })
+let failedUrls = []
+let fetchError = null
+
+try {
+  const result = await supabase
+    .from('pending_research')
+    .select('id, website, validation_error, business_name, created_at')
+    .order('created_at', { ascending: false })
+
+  failedUrls = result.data || []
+  fetchError = result.error
+} catch (err) {
+  console.error('Failed to fetch pending_research data:', err)
+  fetchError = err
+}
 
 // Check which URLs are now corrected (exist in listings table)
 const correctedUrls = []
 
 if (failedUrls && failedUrls.length > 0) {
-  const websites = failedUrls.map(item => item.website).filter(Boolean)
-  if (websites.length > 0) {
-    const { data: existingListings, error: listingsError } = await supabase
-      .from('listings')
-      .select('website')
-      .in('website', websites)
-      .eq('status', 'active')
+  try {
+    const websites = failedUrls.map(item => item.website).filter(Boolean)
+    if (websites.length > 0) {
+      const result = await supabase
+        .from('listings')
+        .select('website')
+        .in('website', websites)
+        .eq('status', 'active')
 
-    if (existingListings) {
-      const correctedWebsites = existingListings.map(listing => listing.website)
-      correctedUrls.push(...correctedWebsites)
+      if (result.data) {
+        const correctedWebsites = result.data.map(listing => listing.website)
+        correctedUrls.push(...correctedWebsites)
+      }
     }
+  } catch (err) {
+    console.error('Failed to check corrected URLs:', err)
   }
-}
-
-// Handle errors
-if (failedUrlsError) {
-  console.error('Failed to fetch pending_research data:', failedUrlsError)
 }
 
 const title = 'Failed URL Validations'
