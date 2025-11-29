@@ -318,47 +318,36 @@ const fetchError = null
         }
       });
 
-      // Wait for specific element to be available
-      function waitForElement(selector, timeout = 5000) {
+      // Simple element waiting with polling
+      function waitForElement(id, timeout = 10000) {
         return new Promise((resolve, reject) => {
-          const element = document.querySelector(selector);
-          if (element) {
-            resolve(element);
-            return;
-          }
-
-          const observer = new MutationObserver(() => {
-            const element = document.querySelector(selector);
+          const checkElement = () => {
+            const element = document.getElementById(id);
             if (element) {
-              observer.disconnect();
               resolve(element);
+            } else if (timeout <= 0) {
+              reject(new Error(`Element #${id} not found`));
+            } else {
+              timeout -= 100;
+              setTimeout(checkElement, 100);
             }
-          });
-
-          observer.observe(document.body, {
-            childList: true,
-            subtree: true
-          });
-
-          setTimeout(() => {
-            observer.disconnect();
-            reject(new Error(`Element ${selector} not found within ${timeout}ms`));
-          }, timeout);
+          };
+          checkElement();
         });
       }
 
       // Load data when page loads
       document.addEventListener('DOMContentLoaded', async () => {
-        console.log('Page loaded, waiting for table element...');
+        console.log('Page loaded, DOM content:', document.body.innerHTML.substring(0, 500));
 
         try {
           // Wait for the table element to be available
-          const tableElement = await waitForElement('#failed-urls-table');
-          console.log('Table element found, initializing Supabase...');
+          console.log('Waiting for table element...');
+          const tableElement = await waitForElement('failed-urls-table');
+          console.log('Table element found:', tableElement);
 
           const success = await initSupabase();
           console.log('Supabase init result:', success);
-
           if (success) {
             console.log('Loading failed URLs...');
             await loadFailedUrls();
@@ -366,7 +355,7 @@ const fetchError = null
             console.error('Failed to initialize Supabase');
             tableElement.innerHTML = `
               <tr>
-                <td colspan="6" class="px-6 py-12 text-center">
+                <td colspan="7" class="px-6 py-12 text-center">
                   <div class="text-red-500">
                     <h3 class="text-sm font-medium">Failed to Initialize</h3>
                     <p class="text-sm mt-1">Could not load Supabase client.</p>
@@ -378,20 +367,8 @@ const fetchError = null
           }
         } catch (error) {
           console.error('Failed to find table element:', error);
-          // Fallback: try to find it anyway
-          const fallbackTable = document.getElementById('failed-urls-table');
-          if (fallbackTable) {
-            fallbackTable.innerHTML = `
-              <tr>
-                <td colspan="6" class="px-6 py-12 text-center">
-                  <div class="text-red-500">
-                    <h3 class="text-sm font-medium">DOM Loading Issue</h3>
-                    <p class="text-sm mt-1">Page elements not ready. Please refresh.</p>
-                  </div>
-                </td>
-              </tr>
-            `;
-          }
+          console.log('Available elements:', document.querySelectorAll('[id]').length);
+          document.querySelectorAll('[id]').forEach(el => console.log('Element ID:', el.id));
         }
       });
     </script>
