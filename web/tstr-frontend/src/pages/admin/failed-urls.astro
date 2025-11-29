@@ -7,7 +7,7 @@ export const prerender = false;
 // Fetch failed URLs data
 const { data: failedUrls, error } = await supabase
   .from('pending_research')
-  .select('id, url, error_message, created_at')
+  .select('id, website, validation_error, business_name, created_at')
   .order('created_at', { ascending: false })
 
 const title = 'Failed URL Validations'
@@ -45,6 +45,9 @@ const title = 'Failed URL Validations'
               <thead class="bg-gray-50">
                 <tr>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Business
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     URL
                   </th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -62,15 +65,20 @@ const title = 'Failed URL Validations'
                 {failedUrls.map((item) => (
                   <tr class="hover:bg-gray-50">
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900 max-w-xs truncate" title={item.url}>
-                        {item.url}
+                      <div class="text-sm text-gray-900 max-w-xs truncate" title={item.business_name}>
+                        {item.business_name}
                       </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="text-sm text-red-600" title={item.error_message}>
-                        {item.error_message?.length > 50
-                          ? item.error_message.substring(0, 50) + '...'
-                          : item.error_message || 'Validation failed'}
+                      <div class="text-sm text-gray-900 max-w-xs truncate" title={item.website}>
+                        {item.website}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="text-sm text-red-600" title={item.validation_error}>
+                        {item.validation_error?.length > 50
+                          ? item.validation_error.substring(0, 50) + '...'
+                          : item.validation_error || 'Validation failed'}
                       </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -79,7 +87,7 @@ const title = 'Failed URL Validations'
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div class="flex space-x-2">
                         <a
-                          href={item.url}
+                          href={item.website}
                           target="_blank"
                           rel="noopener noreferrer"
                           class="text-blue-600 hover:text-blue-900"
@@ -88,7 +96,7 @@ const title = 'Failed URL Validations'
                         </a>
                         <button
                           class="text-green-600 hover:text-green-900 copy-url-btn"
-                          data-url={item.url}
+                          data-url={item.website}
                         >
                           Copy
                         </button>
