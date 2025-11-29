@@ -185,22 +185,33 @@ const fetchError = null
 
         } catch (error) {
           console.error('Failed to load failed URLs:', error);
-          document.getElementById('failed-urls-table').innerHTML = `
-            <tr>
-              <td colspan="6" class="px-6 py-12 text-center">
-                <div class="text-red-500">
-                  <h3 class="text-sm font-medium">Error Loading Data</h3>
-                  <p class="text-sm mt-1">${error.message}</p>
-                  <p class="text-xs mt-2 text-gray-600">Check browser console (F12) for detailed logs.</p>
-                </div>
-              </td>
-            </tr>
-          `;
+          const tableElement = document.getElementById('failed-urls-table');
+          if (tableElement) {
+            tableElement.innerHTML = `
+              <tr>
+                <td colspan="6" class="px-6 py-12 text-center">
+                  <div class="text-red-500">
+                    <h3 class="text-sm font-medium">Error Loading Data</h3>
+                    <p class="text-sm mt-1">${error.message}</p>
+                    <p class="text-xs mt-2 text-gray-600">Check browser console (F12) for detailed logs.</p>
+                  </div>
+                </td>
+              </tr>
+            `;
+          } else {
+            console.error('Could not find table element to show error');
+          }
         }
       }
 
       function updateTable(failedUrls, correctedUrls) {
         const tbody = document.getElementById('failed-urls-table');
+        console.log('Updating table, element found:', !!tbody);
+
+        if (!tbody) {
+          console.error('Table element not found for update');
+          return;
+        }
 
         if (!failedUrls || failedUrls.length === 0) {
           tbody.innerHTML = `
@@ -279,6 +290,13 @@ const fetchError = null
 
       function updateSummary(failedUrls, correctedUrls) {
         const summaryEl = document.getElementById('summary-stats');
+        console.log('Updating summary, element found:', !!summaryEl);
+
+        if (!summaryEl) {
+          console.error('Summary element not found for update');
+          return;
+        }
+
         const correctedCount = correctedUrls.length;
         const failedCount = failedUrls.length - correctedCount;
 
@@ -315,25 +333,38 @@ const fetchError = null
       // Load data when page loads
       document.addEventListener('DOMContentLoaded', async () => {
         console.log('Page loaded, initializing Supabase...');
-        const success = await initSupabase();
-        console.log('Supabase init result:', success);
-        if (success) {
-          console.log('Loading failed URLs...');
-          await loadFailedUrls();
-        } else {
-          console.error('Failed to initialize Supabase');
-          document.getElementById('failed-urls-table').innerHTML = `
-            <tr>
-              <td colspan="6" class="px-6 py-12 text-center">
-                <div class="text-red-500">
-                  <h3 class="text-sm font-medium">Failed to Initialize</h3>
-                  <p class="text-sm mt-1">Could not load Supabase client.</p>
-                  <p class="text-xs mt-2">Check browser console for details.</p>
-                </div>
-              </td>
-            </tr>
-          `;
-        }
+
+        // Wait a bit for DOM to be fully ready
+        setTimeout(async () => {
+          console.log('DOM ready, checking elements...');
+          const tableElement = document.getElementById('failed-urls-table');
+          console.log('Table element found:', !!tableElement);
+
+          if (!tableElement) {
+            console.error('Failed URLs table element not found!');
+            return;
+          }
+
+          const success = await initSupabase();
+          console.log('Supabase init result:', success);
+          if (success) {
+            console.log('Loading failed URLs...');
+            await loadFailedUrls();
+          } else {
+            console.error('Failed to initialize Supabase');
+            tableElement.innerHTML = `
+              <tr>
+                <td colspan="6" class="px-6 py-12 text-center">
+                  <div class="text-red-500">
+                    <h3 class="text-sm font-medium">Failed to Initialize</h3>
+                    <p class="text-sm mt-1">Could not load Supabase client.</p>
+                    <p class="text-xs mt-2">Check browser console for details.</p>
+                  </div>
+                </td>
+              </tr>
+            `;
+          }
+        }, 100);
       });
     </script>
   </body>
