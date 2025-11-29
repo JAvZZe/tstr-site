@@ -87,8 +87,8 @@ const title = 'Failed URL Validations'
                           Test URL
                         </a>
                         <button
-                          class="text-green-600 hover:text-green-900"
-                          onclick={`navigator.clipboard.writeText('${item.url}')`}
+                          class="text-green-600 hover:text-green-900 copy-url-btn"
+                          data-url={item.url}
                         >
                           Copy
                         </button>
@@ -123,5 +123,26 @@ const title = 'Failed URL Validations'
         </div>
       </div>
     </div>
+
+    <script>
+      // Handle copy URL functionality
+      document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('copy-url-btn')) {
+          const url = e.target.getAttribute('data-url');
+          navigator.clipboard.writeText(url).then(() => {
+            // Show temporary feedback
+            const originalText = e.target.textContent;
+            e.target.textContent = 'Copied!';
+            e.target.classList.add('text-green-700');
+            setTimeout(() => {
+              e.target.textContent = originalText;
+              e.target.classList.remove('text-green-700');
+            }, 1000);
+          }).catch(err => {
+            console.error('Failed to copy: ', err);
+          });
+        }
+      });
+    </script>
   </body>
 </html>
