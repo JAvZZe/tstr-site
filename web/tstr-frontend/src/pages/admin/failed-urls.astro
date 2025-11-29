@@ -1,0 +1,127 @@
+---
+import { supabase } from '../../lib/supabase-browser'
+
+// Force SSR for dynamic data
+export const prerender = false;
+
+// Fetch failed URLs data
+const { data: failedUrls, error } = await supabase
+  .from('pending_research')
+  .select('id, url, error_message, created_at')
+  .order('created_at', { ascending: false })
+
+const title = 'Failed URL Validations'
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+      <div class="flex items-center justify-between mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">{title}</h1>
+        <a href="/admin/dashboard" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
+          ← Back to Dashboard
+        </a>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h2 class="text-lg font-semibold text-gray-800">
+            URLs Requiring Manual Review ({failedUrls?.length || 0})
+          </h2>
+          <p class="text-gray-600 text-sm mt-1">
+            These URLs failed validation and need manual investigation for potential re-inclusion.
+          </p>
+        </div>
+
+        <div class="overflow-x-auto">
+          {failedUrls && failedUrls.length > 0 ? (
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    URL
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Error
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Date Failed
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                {failedUrls.map((item) => (
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900 max-w-xs truncate" title={item.url}>
+                        {item.url}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="text-sm text-red-600" title={item.error_message}>
+                        {item.error_message?.length > 50
+                          ? item.error_message.substring(0, 50) + '...'
+                          : item.error_message || 'Validation failed'}
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {new Date(item.created_at).toLocaleString()}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div class="flex space-x-2">
+                        <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="text-blue-600 hover:text-blue-900"
+                        >
+                          Test URL
+                        </a>
+                        <button
+                          class="text-green-600 hover:text-green-900"
+                          onclick={`navigator.clipboard.writeText('${item.url}')`}
+                        >
+                          Copy
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div class="px-6 py-12 text-center">
+              <div class="text-gray-500">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">All URLs Valid</h3>
+                <p class="mt-1 text-sm text-gray-500">No failed validations at this time.</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <!-- Remedial Actions Guide -->
+      <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-blue-800 mb-3">Remedial Actions</h3>
+        <div class="text-sm text-blue-700 space-y-2">
+          <p><strong>Test URL:</strong> Click to open in new tab and verify if the site is accessible</p>
+          <p><strong>Copy URL:</strong> Copy the URL for manual testing or scraper updates</p>
+          <p><strong>Common Issues:</strong> Sites may be temporarily down, require different user agents, or have changed domains</p>
+          <p><strong>Next Steps:</strong> Update scraper logic or manually add corrected URLs to the database</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
