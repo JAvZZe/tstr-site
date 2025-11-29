@@ -120,6 +120,6 @@ export const CONTENT = {
     { href: '/privacy', label: 'Privacy Policy' },
     { href: '/pricing', label: 'Pricing' },
     { href: '/submit', label: 'List Your Company' },
-    { href: 'linkedin.com/tstr-hub', label: 'LinkedIn', icon: 'linkedin' },
+    { href: 'https://linkedin.com/company/tstr-hub', label: 'LinkedIn', icon: 'linkedin' },
   ],
 } as const
