@@ -1,9 +1,6 @@
 ---
 import { supabase } from '../../lib/supabase'
 
-// Force SSR for dynamic data
-export const prerender = false;
-
 // Fetch dashboard data
 const { data: listings, error: listingsError } = await supabase
   .from('listings')
