@@ -122,9 +122,12 @@ const fetchError = null
 
       async function initSupabase() {
         try {
+          console.log('Loading Supabase library...');
           // Load Supabase dynamically
           const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+          console.log('Creating Supabase client...');
           supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          console.log('Supabase client created successfully');
           return true;
         } catch (error) {
           console.error('Failed to initialize Supabase:', error);
@@ -134,15 +137,19 @@ const fetchError = null
 
       async function loadFailedUrls() {
         try {
+          console.log('Starting to load failed URLs...');
           if (!supabaseClient) {
             throw new Error('Supabase client not initialized');
           }
 
+          console.log('Fetching failed URLs from pending_research...');
           // Fetch failed URLs
           const { data: failedUrls, error: failedError } = await supabaseClient
             .from('pending_research')
             .select('id, website, validation_error, business_name, created_at')
             .order('created_at', { ascending: false });
+
+          console.log('Failed URLs query result:', { data: failedUrls, error: failedError });
 
           if (failedError) {
             throw failedError;
@@ -151,7 +158,10 @@ const fetchError = null
           // Check which URLs are corrected
           const correctedUrls = [];
           if (failedUrls && failedUrls.length > 0) {
+            console.log(`Found ${failedUrls.length} failed URLs, checking corrections...`);
             const websites = failedUrls.map(item => item.website).filter(Boolean);
+            console.log('Websites to check:', websites);
+
             if (websites.length > 0) {
               const { data: listings, error: listingsError } = await supabaseClient
                 .from('listings')
@@ -159,12 +169,16 @@ const fetchError = null
                 .in('website', websites)
                 .eq('status', 'active');
 
+              console.log('Listings query result:', { data: listings, error: listingsError });
+
               if (listings) {
                 correctedUrls.push(...listings.map(l => l.website));
+                console.log('Corrected URLs found:', correctedUrls);
               }
             }
           }
 
+          console.log('Updating UI with data...');
           // Update the UI
           updateTable(failedUrls || [], correctedUrls);
           updateSummary(failedUrls || [], correctedUrls);
@@ -177,6 +191,7 @@ const fetchError = null
                 <div class="text-red-500">
                   <h3 class="text-sm font-medium">Error Loading Data</h3>
                   <p class="text-sm mt-1">${error.message}</p>
+                  <p class="text-xs mt-2 text-gray-600">Check browser console (F12) for detailed logs.</p>
                 </div>
               </td>
             </tr>
@@ -299,16 +314,21 @@ const fetchError = null
 
       // Load data when page loads
       document.addEventListener('DOMContentLoaded', async () => {
+        console.log('Page loaded, initializing Supabase...');
         const success = await initSupabase();
+        console.log('Supabase init result:', success);
         if (success) {
+          console.log('Loading failed URLs...');
           await loadFailedUrls();
         } else {
+          console.error('Failed to initialize Supabase');
           document.getElementById('failed-urls-table').innerHTML = `
             <tr>
               <td colspan="6" class="px-6 py-12 text-center">
                 <div class="text-red-500">
                   <h3 class="text-sm font-medium">Failed to Initialize</h3>
                   <p class="text-sm mt-1">Could not load Supabase client.</p>
+                  <p class="text-xs mt-2">Check browser console for details.</p>
                 </div>
               </td>
             </tr>
