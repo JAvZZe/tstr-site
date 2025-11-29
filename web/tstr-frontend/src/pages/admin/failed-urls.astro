@@ -10,6 +10,11 @@ const { data: failedUrls, error } = await supabase
   .select('id, website, validation_error, business_name, created_at')
   .order('created_at', { ascending: false })
 
+// Handle errors
+if (error) {
+  console.error('Failed to fetch pending_research data:', error)
+}
+
 const title = 'Failed URL Validations'
 ---
 
@@ -40,7 +45,18 @@ const title = 'Failed URL Validations'
         </div>
 
         <div class="overflow-x-auto">
-          {failedUrls && failedUrls.length > 0 ? (
+          {error ? (
+            <div class="px-6 py-12 text-center">
+              <div class="text-red-500">
+                <svg class="mx-auto h-12 w-12 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-red-800">Error Loading Data</h3>
+                <p class="mt-1 text-sm text-red-600">Unable to fetch failed URLs data. Please check the console for details.</p>
+                <p class="mt-2 text-xs text-gray-500">Error: {error?.message || 'Unknown error'}</p>
+              </div>
+            </div>
+          ) : failedUrls && failedUrls.length > 0 ? (
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-gray-50">
                 <tr>
