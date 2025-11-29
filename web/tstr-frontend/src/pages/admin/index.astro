@@ -1,0 +1,46 @@
+---
+const title = 'Admin Dashboard'
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-8">{title}</h1>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <a href="/admin/dashboard" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+          <h2 class="text-xl font-semibold text-gray-800 mb-3">Scraper Dashboard</h2>
+          <p class="text-gray-600 mb-4">Monitor scraper performance, view metrics by category, and track system health.</p>
+          <span class="text-blue-600 font-medium">View Dashboard →</span>
+        </a>
+
+        <a href="/admin/analytics" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+          <h2 class="text-xl font-semibold text-gray-800 mb-3">Analytics</h2>
+          <p class="text-gray-600 mb-4">View click tracking analytics and user engagement metrics.</p>
+          <span class="text-blue-600 font-medium">View Analytics →</span>
+        </a>
+
+        <a href="/admin/failed-urls" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+          <h2 class="text-xl font-semibold text-gray-800 mb-3">Failed URLs</h2>
+          <p class="text-gray-600 mb-4">Review URLs that failed validation and need manual attention.</p>
+          <span class="text-red-600 font-medium">View Failed URLs →</span>
+        </a>
+      </div>
+
+      <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-blue-800 mb-3">Admin Tools Overview</h3>
+        <div class="text-sm text-blue-700 space-y-2">
+          <p><strong>Scraper Dashboard:</strong> Real-time monitoring of scraping operations across all categories</p>
+          <p><strong>Analytics:</strong> Click tracking and user behavior insights</p>
+          <p><strong>Failed URLs:</strong> Remedial actions for validation failures</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
