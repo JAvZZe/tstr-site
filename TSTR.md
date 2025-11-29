@@ -21,6 +21,38 @@
 
 ---
 
+## 📊 PROJECT STATUS PROTOCOL (MANDATORY)
+
+**CRITICAL**: All agents MUST read and update `PROJECT_STATUS.md` before/after any work:
+
+### **Before Starting Work**:
+```bash
+# Read current project state
+cat PROJECT_STATUS.md
+```
+
+### **After Completing Changes**:
+1. **Update PROJECT_STATUS.md** with version increment and change details
+2. **Commit and push** the updated status document
+3. **Document ALL changes** that affect the live website:
+   - Code deployments
+   - UI/branding changes
+   - Infrastructure modifications
+   - Content updates
+   - Link changes
+   - Any successful change affecting tstr.site
+
+### **Protocol Requirements**:
+- ✅ **ALWAYS** update PROJECT_STATUS.md after successful changes
+- ✅ **NEVER** deploy changes without documenting them
+- ✅ **READ FIRST** - Check current state before making changes
+- ✅ **VERSION BUMP** - Increment version number for each update
+- ✅ **TIMESTAMP** - Include date/time and agent attribution
+
+**This is the SINGLE SOURCE OF TRUTH for tstr.site's current state, structure, and change history.**
+
+---
+
 ## Architecture
 
 ### Current Stack
