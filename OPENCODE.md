@@ -4,7 +4,7 @@ Guidance for OpenCode AI agent when working with code in this repository.
 
 ## System Overview
 
-**AI PROJECTS SPACE v2.0** - Multi-agent continuity system for long-running projects with persistent memory, reasoning, learning and self improvement, checkpoint/resume, and token-aware routing.
+**AI_PROJECTS_SPACE v2.0** - Multi-agent continuity system for long-running projects with persistent memory, reasoning, learning and self improvement, checkpoint/resume, and token-aware routing.
 
 **Purpose**: Handle complex multi-session tasks (like building the TSTR.site project) where context preservation, agent handoffs, and learning accumulation are critical.
 
@@ -29,7 +29,7 @@ Guidance for OpenCode AI agent when working with code in this repository.
 **Strategic Focus**: Hydrogen Infrastructure Testing + Biotech/Pharma/Life Sciences
 
 ### Project Locations
-- **TSTR.site**: `/media/al/AI_SSD/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/`
+- **TSTR.site**: `/media/al/AI_SSD/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/`
 - **File Cleanup**: 35K files project (not started yet)
 
 ## OpenCode Model Capabilities & Recommendations
@@ -106,7 +106,7 @@ Guidance for OpenCode AI agent when working with code in this repository.
 
 **OS**: Linux Ubuntu 24.04 (6.14.0-33-generic kernel)
 **Shell**: Bash scripting is native - use bash for automation, file operations, and system tasks.
-**Path**: `/home/al/AI PROJECTS SPACE/` - always work within this folder and subfolders, avoid saving project files to the PC root.
+**Path**: `/home/al/AI_PROJECTS_SPACE/` - always work within this folder and subfolders, avoid saving project files to the PC root.
 **Hardware**: 40GB RAM, i5-1135G7, NVIDIA MX330 GPU (CUDA 12.2), 39GB free SSD
 **External Storage**: 2x 1TB drives mounted (one has 35K files of the TSTR.site project to process and clean)
 
@@ -209,7 +209,7 @@ python3 db_utils.py learning-query [tags...]
 
 **ALL agents must use continuity system:**
 
-1. **Start Session**: `cd "/media/al/AI_SSD/AI PROJECTS SPACE" && ./bootstrap.sh TSTR.site`
+1. **Start Session**: `cd "/media/al/AI_SSD/AI_PROJECTS_SPACE" && ./bootstrap.sh TSTR.site`
 2. **During Work**: `./checkpoint.sh "progress description"`
 3. **Record Learnings**: Use database utils to add findings
 4. **Handoff**: `./handoff.sh <agent> <reason>`
@@ -326,7 +326,7 @@ OCI Scrapers → Supabase DB → Astro Build → Static Pages → Cloudflare Edg
 
 ### 1. Always Bootstrap First (TSTR.site Protocol)
 ```bash
-cd "/media/al/AI_SSD/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
+cd "/media/al/AI_SSD/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
 ./bootstrap.sh TSTR.site  # Loads project-specific learnings & context
 ```
 
@@ -342,7 +342,7 @@ cd "/media/al/AI_SSD/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-worki
 ### 3. Extract Learnings
 When you discover effective patterns:
 ```bash
-cd "/home/al/AI PROJECTS SPACE/SYSTEM/state"
+cd "/home/al/AI_PROJECTS_SPACE/SYSTEM/state"
 python3 db_utils.py learning-add \
   "OpenCode's GPT 5.1 Codex generates better Tailwind classes than manual writing" \
   "opencode-pattern" \
@@ -359,13 +359,13 @@ python3 db_utils.py learning-add \
 ### 5. TSTR.site Specific Protocol
 ```bash
 # During work
-cd "/media/al/AI_SSD/AI PROJECTS SPACE" && ./checkpoint.sh "description"
+cd "/media/al/AI_SSD/AI_PROJECTS_SPACE" && ./checkpoint.sh "description"
 
 # End of session
-cd "/media/al/AI_SSD/AI PROJECTS SPACE" && ./handoff.sh <agent> <reason>
+cd "/media/al/AI_SSD/AI_PROJECTS_SPACE" && ./handoff.sh <agent> <reason>
 
 # Check compliance
-cd "/media/al/AI_SSD/AI PROJECTS SPACE" && ./SYSTEM/enforcement/protocol_check.sh"
+cd "/media/al/AI_SSD/AI_PROJECTS_SPACE" && ./SYSTEM/enforcement/protocol_check.sh"
 ```
 
 ### 6. OpenCode Handoff Guidelines
@@ -386,14 +386,14 @@ cd "/media/al/AI_SSD/AI PROJECTS SPACE" && ./SYSTEM/enforcement/protocol_check.s
 
 **Handoff format:**
 ```bash
-cd "/media/al/AI_SSD/AI PROJECTS SPACE" && ./handoff.sh claude "Need database schema modification for new feature"
-cd "/media/al/AI_SSD/AI PROJECTS SPACE" && ./handoff.sh droid "Performance optimization needed for scraper batch processing"
+cd "/media/al/AI_SSD/AI_PROJECTS_SPACE" && ./handoff.sh claude "Need database schema modification for new feature"
+cd "/media/al/AI_SSD/AI_PROJECTS_SPACE" && ./handoff.sh droid "Performance optimization needed for scraper batch processing"
 ```
 
 ## File Structure Integration
 
 ```
-AI PROJECTS SPACE/
+AI_PROJECTS_SPACE/
 ├── checkpoint.sh, resume.sh, handoff.sh   # Core workflow
 ├── SYSTEM/
 │   ├── state/              # SQLite persistence
@@ -457,10 +457,10 @@ AI PROJECTS SPACE/
 
 ### If OpenCode Generates Poor Code
 ```bash
-cd "/home/al/AI PROJECTS SPACE" && ./checkpoint.sh "before attempting refactor"
+cd "/home/al/AI_PROJECTS_SPACE" && ./checkpoint.sh "before attempting refactor"
 # Use /undo in OpenCode
 # Try different prompt or model
-cd "/home/al/AI PROJECTS SPACE" && ./resume.sh  # If needed, revert to last checkpoint
+cd "/home/al/AI_PROJECTS_SPACE" && ./resume.sh  # If needed, revert to last checkpoint
 ```
 
 ### Model Switching
@@ -478,7 +478,7 @@ cd "/home/al/AI PROJECTS SPACE" && ./resume.sh  # If needed, revert to last chec
 **OpenCode-Focused Workflow:**
 ```bash
 # 1. Bootstrap project context
-cd "/media/al/AI_SSD/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
+cd "/media/al/AI_SSD/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
 ./bootstrap.sh TSTR.site
 
 # 2. Frontend development (OpenCode specialty)
@@ -514,7 +514,7 @@ bru run bruno/supabase/health/ --env production  # Simple tests only
 ### File Cleanup Project Workflow (35K Files)
 ```bash
 # 1. Bootstrap global system
-cd "/home/al/AI PROJECTS SPACE"
+cd "/home/al/AI_PROJECTS_SPACE"
 ./resume.sh
 
 # 2. Add tasks for file processing
@@ -529,7 +529,7 @@ python3 SYSTEM/state/db_utils.py task-add "FileCleanup" "Sample 100 files for an
 
 ### Check OpenCode Integration
 ```bash
-cd "/home/al/AI PROJECTS SPACE" && ./resume.sh
+cd "/home/al/AI_PROJECTS_SPACE" && ./resume.sh
 ```
 
 Should show:
@@ -539,7 +539,7 @@ Should show:
 
 ### Protocol Compliance
 ```bash
-cd "/home/al/AI PROJECTS SPACE" && ./SYSTEM/enforcement/protocol_check.sh
+cd "/home/al/AI_PROJECTS_SPACE" && ./SYSTEM/enforcement/protocol_check.sh
 ```
 
 Should show:
@@ -552,7 +552,7 @@ Should show:
 ### Track Your Effectiveness
 ```bash
 # Record learnings about model performance
-cd "/media/al/AI_SSD/AI PROJECTS SPACE/SYSTEM/state"
+cd "/media/al/AI_SSD/AI_PROJECTS_SPACE/SYSTEM/state"
 python3 << 'PYEOF'
 from db_utils import add_learning
 

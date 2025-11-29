@@ -9,7 +9,7 @@
 ## Assistant
 
 
-Now I need to check if the archive path is mentioned in the AI PROJECTS SPACE system files and update it where needed.
+Now I need to check if the archive path is mentioned in the AI_PROJECTS_SPACE system files and update it where needed.
 
 ```
 Tool: bash
@@ -225,7 +225,7 @@ Tool: bash
 
 Updated `/media/al/1TB_AI_ARCH/AI_PROJECTS_ARCHIVE/TSTR-site Archive` in:
 
-**AI PROJECTS SPACE system files:**
+**AI_PROJECTS_SPACE system files:**
 - `DEEPAGENT.md` - Fixed path from `TSTR.site/` to `TSTR-site Archive/`
 - `DROID.md` - Fixed path from `TSTR.site/CLAUDE.md` to `TSTR-site Archive/CLAUDE.md`
 - `CLAUDE.md` - Already correct
@@ -495,7 +495,7 @@ Please analyze this codebase and create an AGENTS.md file containing:
 The file you create will be given to agentic coding agents (such as yourself) that operate in this repository. Make it about 20 lines long.
 If there are Cursor rules (in .cursor/rules/ or .cursorrules) or Copilot rules (in .github/copilot-instructions.md), make sure to include them.
 
-If there's already an AGENTS.md, improve it if it's located in /media/al/AI_SSD/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working
+If there's already an AGENTS.md, improve it if it's located in /media/al/AI_SSD/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working
 
 ---
 
@@ -714,7 +714,7 @@ No response requested.
 
 2. **Archive Path Verification & Updates**: 
    - Task: Check if `/media/al/1TB_AI_ARCH/AI_PROJECTS_ARCHIVE/TSTR-site Archive` was correctly noted across all relevant files
-   - Fixed inconsistencies in AI PROJECTS SPACE system files:
+   - Fixed inconsistencies in AI_PROJECTS_SPACE system files:
      - `DEEPAGENT.md`: Changed `TSTR.site/` to `TSTR-site Archive/`
      - `DROID.md`: Fixed path from `TSTR.site/CLAUDE.md` to `TSTR-site Archive/CLAUDE.md`
    - Added archive path to TSTR.site project files:

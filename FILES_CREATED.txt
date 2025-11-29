@@ -2,7 +2,7 @@ TSTR.SITE - RLS POLICY FIX - FILES CREATED & LOCATIONS
 ======================================================
 
 PROJECT ROOT:
-  /home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/
+  /home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/
 
 DOCUMENTATION FILES (Read These First)
 --------------------------------------
@@ -11,35 +11,35 @@ DOCUMENTATION FILES (Read These First)
    Purpose: Navigation guide - START HERE
    Content: Links to all documentation, quick start guide
    Read Time: 3 minutes
-   Location: /home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/RLS_DOCUMENTATION_INDEX.md
+   Location: /home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/RLS_DOCUMENTATION_INDEX.md
 
 2. RLS_FIX_SUMMARY.txt (5.4K)
    Purpose: Quick reference overview
    Content: Issue, root cause, solution, deployment options
    Read Time: 2 minutes
-   Location: /home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/RLS_FIX_SUMMARY.txt
+   Location: /home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/RLS_FIX_SUMMARY.txt
 
 3. APPLY_RLS_POLICY_INSTRUCTIONS.md (4.7K)
    Purpose: Step-by-step deployment guide
    Content: 3 methods to apply the fix (CLI, Python, Dashboard)
    Read Time: 5 minutes
-   Location: /home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/APPLY_RLS_POLICY_INSTRUCTIONS.md
+   Location: /home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/APPLY_RLS_POLICY_INSTRUCTIONS.md
 
 4. DEPLOY_RLS_CHECKLIST.md (4.1K)
    Purpose: Verification checklist
    Content: Pre-deployment, deployment, verification, testing steps
    Read Time: 10 minutes
-   Location: /home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/DEPLOY_RLS_CHECKLIST.md
+   Location: /home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/DEPLOY_RLS_CHECKLIST.md
 
 5. RLS_PUBLIC_SUBMISSIONS_FIX.md (6.0K)
    Purpose: Full technical documentation
    Content: Root cause analysis, policy design, troubleshooting
    Read Time: 10 minutes
-   Location: /home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/RLS_PUBLIC_SUBMISSIONS_FIX.md
+   Location: /home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/RLS_PUBLIC_SUBMISSIONS_FIX.md
 
 6. FILES_CREATED.txt
    Purpose: This file - reference for all created files
-   Location: /home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/FILES_CREATED.txt
+   Location: /home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/FILES_CREATED.txt
 
 PYTHON SCRIPTS (Code to Execute Fix)
 -------------------------------------
@@ -48,13 +48,13 @@ PYTHON SCRIPTS (Code to Execute Fix)
    Purpose: Execute migration via psql command line
    Usage: python3 execute_public_submissions_rls.py
    Prerequisites: psql installed, database password
-   Location: /home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/web/tstr-automation/execute_public_submissions_rls.py
+   Location: /home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/web/tstr-automation/execute_public_submissions_rls.py
 
 2. apply_rls_policy.py (4.4K)
    Purpose: Alternative execution method using supabase-py
    Usage: python3 apply_rls_policy.py
    Prerequisites: supabase-py library installed
-   Location: /home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/apply_rls_policy.py
+   Location: /home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/apply_rls_policy.py
 
 SQL MIGRATION FILE (Primary)
 ----------------------------
@@ -64,7 +64,7 @@ SQL MIGRATION FILE (Primary)
    Usage: Via Supabase CLI (supabase db push --linked)
             Via dashboard (paste into SQL Editor)
             Via psql script
-   Location: /home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/web/tstr-automation/supabase/migrations/20251118000001_fix_rls_public_submissions.sql
+   Location: /home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/web/tstr-automation/supabase/migrations/20251118000001_fix_rls_public_submissions.sql
 
 TEST SCRIPTS (Browser Testing)
 ------------------------------
@@ -72,7 +72,7 @@ TEST SCRIPTS (Browser Testing)
 1. test_submit.js (2.7K)
    Purpose: Browser console test for form submission
    Usage: Open /submit page, paste into browser console, run testSubmission()
-   Location: /home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/test_submit.js
+   Location: /home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/test_submit.js
 
 DIRECTORY STRUCTURE
 -------------------

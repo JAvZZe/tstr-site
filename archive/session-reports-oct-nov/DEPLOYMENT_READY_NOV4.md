@@ -70,7 +70,7 @@ Updated `/tstr-frontend/src/lib/supabase.ts` to use **service role key for SSG b
 
 ### Step 1: Commit Changes
 ```bash
-cd '/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-frontend'
+cd '/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-frontend'
 
 git add .
 git commit -m "Launch Option A: Environmental Testing with full custom fields

@@ -599,7 +599,7 @@ EXTRACTED_DATA = {
 
 def create_final_jsonl():
     """Create final JSONL with all 64 PIDs."""
-    output_file = "/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/a2la_claude_complete.jsonl"
+    output_file = "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/a2la_claude_complete.jsonl"
 
     lines = []
     for pid, data in EXTRACTED_DATA.items():
@@ -740,7 +740,7 @@ def create_final_report():
 ## Output Files Generated
 
 ### Primary Deliverable
-- **File**: `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/a2la_claude_complete.jsonl`
+- **File**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/a2la_claude_complete.jsonl`
 - **Format**: One JSON record per line (JSONL)
 - **Records**: 64 PIDs with all extracted fields
 - **Fields**: pid, cert, org, city, state, country, scope, confidence, notes
@@ -815,7 +815,7 @@ Claude successfully extracted data for 64 PIDs with 39.1% high/medium confidence
 **Status**: COMPLETE (64/64 PIDs processed)
 """
 
-    report_file = "/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/A2LA_EXTRACTION_REPORT.md"
+    report_file = "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/A2LA_EXTRACTION_REPORT.md"
     Path(report_file).write_text(report)
     return report_file, report
 

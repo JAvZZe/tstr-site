@@ -183,10 +183,10 @@ CREATE POLICY IF NOT EXISTS "Allow authenticated submissions"
 **Database**:
 - Table: `public.listings`
 - RLS: Enabled
-- Current policies: `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/web/tstr-automation/migrations/fix_public_submissions_rls.sql`
+- Current policies: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/web/tstr-automation/migrations/fix_public_submissions_rls.sql`
 
 **Form Code**:
-- File: `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/web/tstr-frontend/src/pages/submit.astro`
+- File: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/web/tstr-frontend/src/pages/submit.astro`
 - Status: Correct - all fields generated and sent properly
 
 **Credentials**:

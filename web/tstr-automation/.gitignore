@@ -3,3 +3,10 @@ venv/
 .env
 *.pyc
 __pycache__/
+
+# Exclude report and data files
+*.md
+*.txt
+*.csv
+*.sql
+

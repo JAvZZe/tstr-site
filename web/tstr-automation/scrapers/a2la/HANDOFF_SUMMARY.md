@@ -101,7 +101,7 @@ Fallback: Use scope category as lower-confidence identification
 ## Output Files Created
 
 ### 1. `claude_extraction.jsonl` (10 records)
-**Location**: `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/claude_extraction.jsonl`
+**Location**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/claude_extraction.jsonl`
 
 **Format**: JSON Lines (one JSON object per line)
 
@@ -126,7 +126,7 @@ Fallback: Use scope category as lower-confidence identification
 - Confidence ratings assigned by likelihood
 
 ### 2. `EXTRACTION_TEMPLATE.md` (Comprehensive Guide)
-**Location**: `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/EXTRACTION_TEMPLATE.md`
+**Location**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/EXTRACTION_TEMPLATE.md`
 
 **Contents**:
 1. Data field definitions
@@ -141,7 +141,7 @@ Fallback: Use scope category as lower-confidence identification
 **For Gemini**: This is the authoritative reference for completing the extraction.
 
 ### 3. `extraction_plan.json`
-**Location**: `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/extraction_plan.json`
+**Location**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/extraction_plan.json`
 
 **Contents**:
 - Objective and scope
@@ -249,7 +249,7 @@ Before submitting:
 ### File Locations (Absolute Paths)
 ```
 Working Directory:
-/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/
+/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/
 
 Files:
 - claude_extraction.jsonl (update this)
@@ -332,7 +332,7 @@ Files:
 **Token Usage**: Moderate (documentation-heavy)
 
 **Key Files**:
-- Template: `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/EXTRACTION_TEMPLATE.md`
-- Results: `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/claude_extraction.jsonl`
-- Strategy: `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/extraction_plan.json`
+- Template: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/EXTRACTION_TEMPLATE.md`
+- Results: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/claude_extraction.jsonl`
+- Strategy: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/extraction_plan.json`
 

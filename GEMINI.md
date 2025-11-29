@@ -1,7 +1,7 @@
 # GEMINI.md - TSTR.site Project
 
-> **CRITICAL**: This project is part of the AI PROJECTS SPACE continuity system.
-> **Global System**: `/home/al/AI PROJECTS SPACE/`
+> **CRITICAL**: This project is part of the AI_PROJECTS_SPACE continuity system.
+> **Global System**: `/home/al/AI_PROJECTS_SPACE/`
 > **Project Context**: Read `TSTR.md` (this directory) for project-specific details.
 
 ---
@@ -35,12 +35,12 @@ This loads:
 
 **Checkpoint frequently**:
 ```bash
-cd "/home/al/AI PROJECTS SPACE" && ./checkpoint.sh "description of work completed"
+cd "/home/al/AI_PROJECTS_SPACE" && ./checkpoint.sh "description of work completed"
 ```
 
 **Extract learnings** after errors/discoveries:
 ```bash
-cd "/home/al/AI PROJECTS SPACE/SYSTEM/state" && python3 << 'PYEOF'
+cd "/home/al/AI_PROJECTS_SPACE/SYSTEM/state" && python3 << 'PYEOF'
 from db_utils import add_learning
 add_learning(
     "Your learning here",
@@ -53,7 +53,7 @@ PYEOF
 
 **Track tasks**:
 ```bash
-cd "/home/al/AI PROJECTS SPACE/SYSTEM/state" && python3 << 'PYEOF'
+cd "/home/al/AI_PROJECTS_SPACE/SYSTEM/state" && python3 << 'PYEOF'
 from db_utils import add_task, update_task
 task_id = add_task("TSTR.site", "Task description", assigned_to="gemini")
 # ... do work ...
@@ -64,7 +64,7 @@ PYEOF
 ### 3. Session End or Handoff
 
 ```bash
-cd "/home/al/AI PROJECTS SPACE" && ./handoff.sh <agent> <reason>
+cd "/home/al/AI_PROJECTS_SPACE" && ./handoff.sh <agent> <reason>
 ```
 
 ---
@@ -98,7 +98,7 @@ cd "/home/al/AI PROJECTS SPACE" && ./handoff.sh <agent> <reason>
 
 ## Quick Reference
 
-**Project Root**: `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working`
+**Project Root**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working`
 
 **Frontend**: `web/tstr-frontend/` (Astro + React + Tailwind)
 **Scrapers**: `web/tstr-automation/` (Python, deployed on OCI)
@@ -129,7 +129,7 @@ cd "/home/al/AI PROJECTS SPACE" && ./handoff.sh <agent> <reason>
 
 **Self-check compliance**:
 ```bash
-cd "/home/al/AI PROJECTS SPACE" && ./SYSTEM/enforcement/protocol_check.sh
+cd "/home/al/AI_PROJECTS_SPACE" && ./SYSTEM/enforcement/protocol_check.sh
 ```
 
 Should show:
@@ -203,4 +203,4 @@ const categories = (categoryData || [])
 ---
 
 **Last Updated**: 2025-11-22
-**System Version**: AI PROJECTS SPACE v2.0
+**System Version**: AI_PROJECTS_SPACE v2.0

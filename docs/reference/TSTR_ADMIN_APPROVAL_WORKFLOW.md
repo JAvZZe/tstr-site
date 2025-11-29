@@ -239,4 +239,4 @@ Currently NO notifications when new submissions arrive. Options:
 ---
 
 **Agent:** Claude Code (Sonnet 4.5) - avztest8@gmail.com
-**File Location:** /home/al/AI PROJECTS SPACE/TSTR_ADMIN_APPROVAL_WORKFLOW.md
+**File Location:** /home/al/AI_PROJECTS_SPACE/TSTR_ADMIN_APPROVAL_WORKFLOW.md

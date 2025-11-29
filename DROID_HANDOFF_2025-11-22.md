@@ -222,7 +222,7 @@ git push  # Auto-deploys to Cloudflare Pages
 
 1. **Start session:**
    ```bash
-   cd "/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
+   cd "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
    ./bootstrap.sh TSTR.site
    ```
 

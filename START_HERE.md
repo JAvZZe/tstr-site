@@ -23,7 +23,7 @@
 
 **Why this matters**: Last 3 agents forgot critical learnings #45, #67, #88 and repeated mistakes. Bootstrap prevents this.
 
-**If bootstrap.sh doesn't exist**: You're in the wrong directory or symlinks not created. Check you're in `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/`
+**If bootstrap.sh doesn't exist**: You're in the wrong directory or symlinks not created. Check you're in `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/`
 
 ---
 
@@ -97,7 +97,7 @@
 
 ### After Errors/Discoveries (3+ failed attempts OR new insights)
 ```bash
-cd "/home/al/AI PROJECTS SPACE/SYSTEM/state"
+cd "/home/al/AI_PROJECTS_SPACE/SYSTEM/state"
 python3 db_utils.py learning-add \
   "What you learned" \
   "gotcha" \
@@ -122,7 +122,7 @@ Because of symlinks, you can run:
 - `./resume.sh` - Load last checkpoint
 - `./handoff.sh agent reason` - Transfer to another agent
 
-All point to global system at `/home/al/AI PROJECTS SPACE/`
+All point to global system at `/home/al/AI_PROJECTS_SPACE/`
 
 ---
 

@@ -117,7 +117,7 @@ FROM listing_custom_fields
 
 ### File 1: browse.astro
 
-**Location**: `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-frontend/src/pages/browse.astro`
+**Location**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-frontend/src/pages/browse.astro`
 
 **Disclaimer Present**: ✓ YES
 **Line Numbers**: 363-368
@@ -142,7 +142,7 @@ FROM listing_custom_fields
 
 ### File 2: [country].astro
 
-**Location**: `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-frontend/src/pages/browse/[country].astro`
+**Location**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-frontend/src/pages/browse/[country].astro`
 
 **Disclaimer Present**: ✓ YES (confirmed via grep)
 
@@ -152,7 +152,7 @@ FROM listing_custom_fields
 
 ### File 3: [city].astro
 
-**Location**: `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-frontend/src/pages/browse/city/[city].astro`
+**Location**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-frontend/src/pages/browse/city/[city].astro`
 
 **Disclaimer Present**: ✓ YES (inferred from grep results)
 

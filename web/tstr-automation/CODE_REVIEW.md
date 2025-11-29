@@ -1,6 +1,6 @@
 # Rigzone Oil & Gas Scraper - Code Review
 
-## File: `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/rigzone_oil_gas.py`
+## File: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/rigzone_oil_gas.py`
 
 **Lines of Code**: 280  
 **Status**: FUNCTIONAL WITH ISSUES  

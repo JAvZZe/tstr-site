@@ -193,7 +193,7 @@ RECOMMENDATION:
 ================================================================================
 
 ✓ RIGZONE_TEST_REPORT.md
-  Location: /home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/
+  Location: /home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/
   Content: Detailed test report with sample data and recommendations
   Size: ~15KB
 

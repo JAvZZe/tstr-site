@@ -104,8 +104,8 @@ Free tier services risk: Supabase pauses after 7 days inactivity, OCI reclaims i
 ## Files Created/Modified
 
 ### Documentation Created (10 files)
-1. `/home/al/AI PROJECTS SPACE/SYSTEM/skills/supabase-mcp-integration.md`
-2. `/home/al/AI PROJECTS SPACE/SYSTEM/skills/free-tier-keep-alive-strategy.md`
+1. `/home/al/AI_PROJECTS_SPACE/SYSTEM/skills/supabase-mcp-integration.md`
+2. `/home/al/AI_PROJECTS_SPACE/SYSTEM/skills/free-tier-keep-alive-strategy.md`
 3. `SUPABASE_MCP_TEST_RESULTS.md`
 4. `MCP_AND_KEEPALIVE_SUMMARY.md`
 5. `TEST_MCP_NOW.md`

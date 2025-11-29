@@ -297,7 +297,7 @@ python3 scrapers/a2la_materials.py --limit 100
 
 ### Documentation
 6. `/web/tstr-automation/scrapers/TNI_ENVIRONMENTAL_REPORT.md` (detailed report)
-7. `/home/al/AI PROJECTS SPACE/TSTR_DUAL_SCRAPER_IMPLEMENTATION_SUMMARY.md` (this file)
+7. `/home/al/AI_PROJECTS_SPACE/TSTR_DUAL_SCRAPER_IMPLEMENTATION_SUMMARY.md` (this file)
 
 ### Test Utilities
 8. `/web/tstr-automation/test_tni_search.py` (debugging tool)

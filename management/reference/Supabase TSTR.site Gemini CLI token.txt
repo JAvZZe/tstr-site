@@ -1,2 +1,0 @@
-Supabase TSTR.site token for Gemini CLI
-sbp_a631aa1068898c9341aadfb71d9e72e9f5916a69

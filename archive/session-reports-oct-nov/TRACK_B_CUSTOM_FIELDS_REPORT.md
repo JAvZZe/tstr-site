@@ -344,8 +344,8 @@ pydantic==2.12.3
 ## References
 
 ### Source Documents
-- `/home/al/AI PROJECTS SPACE/TSTR_SCRAPER_ENHANCEMENT_PLAN.md` - Full enhancement plan
-- `/home/al/AI PROJECTS SPACE/TSTR_HYBRID_IMPLEMENTATION_PLAN.md` - Track A/B breakdown
+- `/home/al/AI_PROJECTS_SPACE/TSTR_SCRAPER_ENHANCEMENT_PLAN.md` - Full enhancement plan
+- `/home/al/AI_PROJECTS_SPACE/TSTR_HYBRID_IMPLEMENTATION_PLAN.md` - Track A/B breakdown
 - `/media/al/AvZ White 1TB WD MyPassport/PROJECTS/TSTR.site/TSTR.site-fixed/web/tstr-automation/SUPABASE_SETUP.sql` - Original schema
 
 ### Research Basis

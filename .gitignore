@@ -51,7 +51,7 @@ docs/credentials/
 /playwright/.cache/
 /playwright/.auth/
 
-# Global continuity system symlinks (point to parent AI PROJECTS SPACE)
+# Global continuity system symlinks (point to parent AI_PROJECTS_SPACE)
 checkpoint.sh
 resume.sh
 handoff.sh

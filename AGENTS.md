@@ -14,6 +14,30 @@ This loads:
 - Pending handoffs
 - Recent checkpoints
 
+## AI Agent CLI Functions (v2.0 Integration)
+
+**Available in all bash sessions** (added to ~/.bashrc):
+
+```bash
+# Complex reasoning, architecture, review, decisions
+ask-arch "your complex query here"
+
+# Continuation when Claude expensive, medium complexity
+ask-gemini "continue this task"
+
+# Code generation, batch processing, simple tasks
+ask-code "write a Python function for..."
+```
+
+**Context Dumping for Agent Handoffs:**
+```bash
+# Dump current system state to markdown (for external agents)
+python3 ../../../../SYSTEM/state/db_utils.py --dump > .context_dump/current_state.md
+
+# Add new learnings to the system
+python3 ../../../../SYSTEM/state/db_utils.py --learn "your learning here"
+```
+
 ## Commands
 
 ### Frontend (Astro + React)

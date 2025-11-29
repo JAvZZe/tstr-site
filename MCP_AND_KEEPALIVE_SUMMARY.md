@@ -31,7 +31,7 @@
 
 ### 2. Keep-Alive Strategy Documentation ✅
 
-**Created**: `/home/al/AI PROJECTS SPACE/SYSTEM/skills/free-tier-keep-alive-strategy.md`
+**Created**: `/home/al/AI_PROJECTS_SPACE/SYSTEM/skills/free-tier-keep-alive-strategy.md`
 
 **Comprehensive guide covering**:
 - Risk assessment for free tier services
@@ -66,7 +66,7 @@
 ## Documentation Created
 
 ### 1. Supabase MCP Integration Guide
-**Location**: `/home/al/AI PROJECTS SPACE/SYSTEM/skills/supabase-mcp-integration.md`
+**Location**: `/home/al/AI_PROJECTS_SPACE/SYSTEM/skills/supabase-mcp-integration.md`
 
 **Contents**:
 - Installation methods (3 options)
@@ -81,7 +81,7 @@
 - Current status (authentication complete)
 
 ### 2. Free Tier Keep-Alive Strategy
-**Location**: `/home/al/AI PROJECTS SPACE/SYSTEM/skills/free-tier-keep-alive-strategy.md`
+**Location**: `/home/al/AI_PROJECTS_SPACE/SYSTEM/skills/free-tier-keep-alive-strategy.md`
 
 **Contents**:
 - Risk assessment by service
@@ -150,10 +150,10 @@
 ## Files Modified/Created
 
 ### Created
-- `/home/al/AI PROJECTS SPACE/SYSTEM/skills/supabase-mcp-integration.md` (comprehensive guide)
-- `/home/al/AI PROJECTS SPACE/SYSTEM/skills/free-tier-keep-alive-strategy.md` (strategy guide)
-- `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/SUPABASE_MCP_TEST_RESULTS.md` (quick reference)
-- `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/MCP_AND_KEEPALIVE_SUMMARY.md` (this file)
+- `/home/al/AI_PROJECTS_SPACE/SYSTEM/skills/supabase-mcp-integration.md` (comprehensive guide)
+- `/home/al/AI_PROJECTS_SPACE/SYSTEM/skills/free-tier-keep-alive-strategy.md` (strategy guide)
+- `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/SUPABASE_MCP_TEST_RESULTS.md` (quick reference)
+- `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/MCP_AND_KEEPALIVE_SUMMARY.md` (this file)
 
 ### Updated
 - State database: Added 2 learnings (MCP gotcha + keep-alive pattern)
@@ -164,12 +164,12 @@
 ## Related Documentation
 
 **MCP Integration**:
-- Comprehensive: `/home/al/AI PROJECTS SPACE/SYSTEM/skills/supabase-mcp-integration.md`
+- Comprehensive: `/home/al/AI_PROJECTS_SPACE/SYSTEM/skills/supabase-mcp-integration.md`
 - Quick Reference: `./SUPABASE_MCP_TEST_RESULTS.md`
-- Bruno Skills: `/home/al/AI PROJECTS SPACE/SYSTEM/skills/bruno-api-management.md`
+- Bruno Skills: `/home/al/AI_PROJECTS_SPACE/SYSTEM/skills/bruno-api-management.md`
 
 **Keep-Alive Strategy**:
-- Comprehensive: `/home/al/AI PROJECTS SPACE/SYSTEM/skills/free-tier-keep-alive-strategy.md`
+- Comprehensive: `/home/al/AI_PROJECTS_SPACE/SYSTEM/skills/free-tier-keep-alive-strategy.md`
 - OCI Deployment: `./docs/reference/OCI_DEPLOYMENT_SUMMARY.md`
 - Supabase Analysis: `./docs/active/SUPABASE_STATUS_ANALYSIS_NOV8.md`
 

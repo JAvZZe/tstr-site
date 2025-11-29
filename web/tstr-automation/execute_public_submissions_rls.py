@@ -8,7 +8,7 @@ import os
 import sys
 
 # Read the migration SQL
-migration_file = '/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/web/tstr-automation/supabase/migrations/20251118000001_fix_rls_public_submissions.sql'
+migration_file = '/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/web/tstr-automation/supabase/migrations/20251118000001_fix_rls_public_submissions.sql'
 
 if not os.path.exists(migration_file):
     print(f"Error: Migration file not found: {migration_file}")

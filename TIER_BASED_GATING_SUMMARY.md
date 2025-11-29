@@ -1,6 +1,6 @@
 # Tier-Based Content Gating Implementation Summary
 
-**File Modified**: `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/web/tstr-frontend/src/pages/listing/[slug].astro`
+**File Modified**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/web/tstr-frontend/src/pages/listing/[slug].astro`
 
 **Date**: 2025-11-17
 

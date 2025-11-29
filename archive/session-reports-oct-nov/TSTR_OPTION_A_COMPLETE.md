@@ -38,7 +38,7 @@ created_at: timestamp       // Tracks submission time
 
 ### 2. Admin Approval Workflow Documentation ✓
 
-**File:** `/home/al/AI PROJECTS SPACE/TSTR_ADMIN_APPROVAL_WORKFLOW.md`
+**File:** `/home/al/AI_PROJECTS_SPACE/TSTR_ADMIN_APPROVAL_WORKFLOW.md`
 
 **Contents:**
 - How to access pending submissions in Supabase dashboard
@@ -60,7 +60,7 @@ created_at: timestamp       // Tracks submission time
 
 ### 3. Google AdSense Setup Guide ✓
 
-**File:** `/home/al/AI PROJECTS SPACE/TSTR_ADSENSE_SETUP_GUIDE.md`
+**File:** `/home/al/AI_PROJECTS_SPACE/TSTR_ADSENSE_SETUP_GUIDE.md`
 
 **Contents:**
 - Why AdSense for B2B directory
@@ -253,7 +253,7 @@ created_at: timestamp       // Tracks submission time
 
 **Next:** Create Privacy Policy + Apply for AdSense (total time: 45 minutes)
 
-**Questions?** Refer to the guides in `/home/al/AI PROJECTS SPACE/`
+**Questions?** Refer to the guides in `/home/al/AI_PROJECTS_SPACE/`
 
 ---
 

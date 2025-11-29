@@ -286,7 +286,7 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 - **Deployment**: Via GitHub Actions push to main
 
 ### **Local Paths (Linux)**
-- **Project Root**: `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/`
+- **Project Root**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/`
 - **Automation**: `web/tstr-automation/`
 - **Frontend**: `web/tstr-frontend/`
 - **Scrapers**: `web/tstr-automation/scrapers/`

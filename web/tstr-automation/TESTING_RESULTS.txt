@@ -321,7 +321,7 @@ The following documents have been generated in the project directory:
    - All findings consolidated
    - Decision support
 
-Location: /home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/
+Location: /home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/
 
 ================================================================================
 CONCLUSION

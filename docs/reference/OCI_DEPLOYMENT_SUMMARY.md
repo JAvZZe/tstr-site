@@ -264,10 +264,10 @@ crontab -e
 ## Documentation Files
 
 ### On Local Machine
-- `/home/al/AI PROJECTS SPACE/TSTR_ORACLE_SCRAPER_STATUS.md` - Status (last updated 2025-10-28)
-- `/home/al/AI PROJECTS SPACE/TSTR_ORACLE_SCRAPER_NOTES.md` - Technical notes
-- `/home/al/AI PROJECTS SPACE/TSTR_CREDENTIALS_MASTER.md` - Full credentials reference
-- `/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/HANDOFF_2025-10-27.md` - Detailed handoff doc
+- `/home/al/AI_PROJECTS_SPACE/TSTR_ORACLE_SCRAPER_STATUS.md` - Status (last updated 2025-10-28)
+- `/home/al/AI_PROJECTS_SPACE/TSTR_ORACLE_SCRAPER_NOTES.md` - Technical notes
+- `/home/al/AI_PROJECTS_SPACE/TSTR_CREDENTIALS_MASTER.md` - Full credentials reference
+- `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/HANDOFF_2025-10-27.md` - Detailed handoff doc
 
 ### On OCI Instance
 - `~/tstr-scraper/scraper.log` - Execution logs

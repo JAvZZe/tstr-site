@@ -43,7 +43,7 @@
 - **Oracle scraper:** External (Oracle Cloud) - connection string needs updating
 
 ### Credentials Location
-- **Master file:** `/home/al/AI PROJECTS SPACE/TSTR_CREDENTIALS_MASTER.md`
+- **Master file:** `/home/al/AI_PROJECTS_SPACE/TSTR_CREDENTIALS_MASTER.md`
 - **Current keys:**
   - PUBLIC_SUPABASE_URL: https://haimjeaetrsaauitrhfy.supabase.co
   - PUBLIC_SUPABASE_ANON_KEY: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
@@ -220,10 +220,10 @@ Before starting migration next week, ensure:
 ## Important Files Reference
 
 **Migration guide:**
-- `/home/al/AI PROJECTS SPACE/SUPABASE_PAUSE_CRISIS.md` - Full details
+- `/home/al/AI_PROJECTS_SPACE/SUPABASE_PAUSE_CRISIS.md` - Full details
 
 **Current credentials:**
-- `/home/al/AI PROJECTS SPACE/TSTR_CREDENTIALS_MASTER.md`
+- `/home/al/AI_PROJECTS_SPACE/TSTR_CREDENTIALS_MASTER.md`
 
 **Code to update:**
 - `/home/al/tstr-site-working/web/tstr-frontend/src/lib/supabase.ts`

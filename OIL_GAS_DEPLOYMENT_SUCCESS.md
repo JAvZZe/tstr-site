@@ -91,7 +91,7 @@ Fixed 3 critical schema issues:
 
 ## Learnings Recorded (Continuity System)
 
-4 learnings added to `/home/al/AI PROJECTS SPACE/SYSTEM/state/project.db`:
+4 learnings added to `/home/al/AI_PROJECTS_SPACE/SYSTEM/state/project.db`:
 
 1. **Cloudflare Bypass** - Playwright required for protected sites
 2. **Database Schema** - Required fields for TSTR listings table

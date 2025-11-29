@@ -179,4 +179,4 @@ or the source doesn't have them structured that way.
 
 ================================================================================
 Questions? Check the detailed reports in:
-/home/al/AI PROJECTS SPACE/ACTIVE_PROJECTS/
+/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/

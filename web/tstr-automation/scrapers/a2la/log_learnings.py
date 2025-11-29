@@ -2,7 +2,7 @@
 """Log learnings from A2LA A/B test to system database"""
 
 import sys
-sys.path.insert(0, "/home/al/AI PROJECTS SPACE/SYSTEM/state")
+sys.path.insert(0, "/home/al/AI_PROJECTS_SPACE/SYSTEM/state")
 
 from db_utils import add_learning
 
@@ -31,4 +31,4 @@ add_learning(
 )
 
 print("\n✓ All learnings logged to system database")
-print("✓ Location: /home/al/AI PROJECTS SPACE/SYSTEM/state/project.db")
+print("✓ Location: /home/al/AI_PROJECTS_SPACE/SYSTEM/state/project.db")
