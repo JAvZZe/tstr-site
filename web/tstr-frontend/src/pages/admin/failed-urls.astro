@@ -5,14 +5,32 @@ import { supabase } from '../../lib/supabase'
 export const prerender = false;
 
 // Fetch failed URLs data
-const { data: failedUrls, error } = await supabase
+const { data: failedUrls, error: failedUrlsError } = await supabase
   .from('pending_research')
   .select('id, website, validation_error, business_name, created_at')
   .order('created_at', { ascending: false })
 
+// Check which URLs are now corrected (exist in listings table)
+const correctedUrls = []
+if (failedUrls && failedUrls.length > 0) {
+  const websites = failedUrls.map(item => item.website).filter(Boolean)
+  if (websites.length > 0) {
+    const { data: existingListings, error: listingsError } = await supabase
+      .from('listings')
+      .select('website')
+      .in('website', websites)
+      .eq('status', 'active')
+
+    if (existingListings) {
+      const correctedWebsites = existingListings.map(listing => listing.website)
+      correctedUrls.push(...correctedWebsites)
+    }
+  }
+}
+
 // Handle errors
-if (error) {
-  console.error('Failed to fetch pending_research data:', error)
+if (failedUrlsError) {
+  console.error('Failed to fetch pending_research data:', failedUrlsError)
 }
 
 const title = 'Failed URL Validations'
@@ -37,11 +55,21 @@ const title = 'Failed URL Validations'
       <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200">
           <h2 class="text-lg font-semibold text-gray-800">
-            URLs Requiring Manual Review ({failedUrls?.length || 0})
+            Failed URL Management ({failedUrls?.length || 0} total)
           </h2>
           <p class="text-gray-600 text-sm mt-1">
-            These URLs failed validation and need manual investigation for potential re-inclusion.
+            URLs that failed validation. Green rows indicate URLs that have been corrected and now exist in the active listings.
           </p>
+          {failedUrls && (
+            <div class="flex space-x-4 mt-2 text-sm">
+              <span class="text-green-600 font-medium">
+                Corrected: {correctedUrls.length}
+              </span>
+              <span class="text-red-600 font-medium">
+                Still Failed: {(failedUrls.length || 0) - correctedUrls.length}
+              </span>
+            </div>
+          )}
         </div>
 
         <div class="overflow-x-auto">
@@ -61,6 +89,9 @@ const title = 'Failed URL Validations'
               <thead class="bg-gray-50">
                 <tr>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Business
                   </th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -78,48 +109,62 @@ const title = 'Failed URL Validations'
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                {failedUrls.map((item) => (
-                  <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900 max-w-xs truncate" title={item.business_name}>
-                        {item.business_name}
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900 max-w-xs truncate" title={item.website}>
-                        {item.website}
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="text-sm text-red-600" title={item.validation_error}>
-                        {item.validation_error?.length > 50
-                          ? item.validation_error.substring(0, 50) + '...'
-                          : item.validation_error || 'Validation failed'}
-                      </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(item.created_at).toLocaleString()}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div class="flex space-x-2">
-                        <a
-                          href={item.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class="text-blue-600 hover:text-blue-900"
-                        >
-                          Test URL
-                        </a>
-                        <button
-                          class="text-green-600 hover:text-green-900 copy-url-btn"
-                          data-url={item.website}
-                        >
-                          Copy
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                {failedUrls.map((item) => {
+                  const isCorrected = correctedUrls.includes(item.website)
+                  return (
+                    <tr class={`hover:bg-gray-50 ${isCorrected ? 'bg-green-50' : ''}`}>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        {isCorrected ? (
+                          <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                            Corrected
+                          </span>
+                        ) : (
+                          <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">
+                            Failed
+                          </span>
+                        )}
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900 max-w-xs truncate" title={item.business_name}>
+                          {item.business_name}
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900 max-w-xs truncate" title={item.website}>
+                          {item.website}
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="text-sm text-red-600" title={item.validation_error}>
+                          {item.validation_error?.length > 50
+                            ? item.validation_error.substring(0, 50) + '...'
+                            : item.validation_error || 'Validation failed'}
+                        </span>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {new Date(item.created_at).toLocaleString()}
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <div class="flex space-x-2">
+                          <a
+                            href={item.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-blue-600 hover:text-blue-900"
+                          >
+                            Test URL
+                          </a>
+                          <button
+                            class="text-green-600 hover:text-green-900 copy-url-btn"
+                            data-url={item.website}
+                          >
+                            Copy
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           ) : (
