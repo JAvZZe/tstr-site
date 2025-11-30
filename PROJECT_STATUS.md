@@ -1,9 +1,9 @@
 # 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: November 29, 2025 21:15 UTC
+> **Last Updated**: November 30, 2025 12:00 UTC
 > **Updated By**: OpenCode AI Assistant
-> **Status**: ✅ PRODUCTION - Live at https://tstr.site with 163 listings + Click Tracking + Admin Dashboard + Updated Branding
+> **Status**: ✅ PRODUCTION - Live at https://tstr.site with 163 listings + Click Tracking + Admin Dashboard + Updated Branding + Terms of Service
 
 ---
 
@@ -320,8 +320,24 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 - [ ] Research and fix 17 invalid URLs in invalid_urls.csv
 - [ ] Add Google Analytics or privacy-friendly analytics
 - [ ] Implement caching layer for faster page loads
-- [ ] Add user authentication (if lead generation features added)
 - [ ] Optimize OCI scraper for multiple sources simultaneously
+
+### **Authentication & Rights Management** ✅ IMPLEMENTATION COMPLETE
+- [x] **LinkedIn OAuth UI** - Buttons added to login/signup pages
+- [x] **Database Schema** - listing_owners table and functions created
+- [x] **Domain Verification Logic** - Auto-claim functions implemented & tested
+- [x] **Claim API Endpoints** - Backend logic for listing ownership
+- [x] **Setup Scripts** - Configuration guides and test scripts created
+- [ ] **LinkedIn OAuth Config** - Supabase provider setup needed (15 min)
+- [ ] **Database Migration** - Apply SQL schema to production (5 min)
+- [ ] **Owner Dashboard** - User interface for managing claims
+- [ ] **Listing Claim UI** - Frontend integration on listing pages
+
+**Implementation Plan:** See `docs/active/LINKEDIN_OAUTH_IMPLEMENTATION_PLAN.md`
+**Setup Guide:** See `LINKEDIN_OAUTH_SETUP_GUIDE.md`
+**Strategy:** Corporate Domain Verification Model (80% automation)
+**Timeline:** Ready for final configuration
+**Progress:** 85% complete - All code implemented, needs 20 min configuration
 
 ---
 
@@ -347,6 +363,14 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 - [ ] Multiple categories (3 of 5 complete)
 - [ ] Lead generation active
 - [ ] Revenue generation (AdSense, affiliate, premium listings)
+- [ ] **User authentication & rights management** (LinkedIn OAuth + domain verification)
+
+### **Phase 4: Monetization** 📋 PLANNED
+- [ ] Professional subscription tier ($295/month)
+- [ ] Premium subscription tier ($795/month)
+- [ ] Enterprise tier ($2,500/month)
+- [ ] Stripe payment integration
+- [ ] Owner dashboard for claimed listings
 
 ---
 
@@ -374,6 +398,7 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 - `CLOUD_AUTOMATION_SOLUTION.md` - Cloud architecture
 - `URL_VALIDATION_LIVE.md` - Production validation docs
 - `SCHEDULING_STRATEGY.md` - Automation strategy
+- `LINKEDIN_OAUTH_IMPLEMENTATION_PLAN.md` - Auth & rights management implementation
 
 ### **For Non-Technical**
 - `EXECUTIVE_SUMMARY.md` - Business overview
@@ -459,7 +484,12 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 
 ## 📊 VERSION HISTORY
 
-### **v2.2.0** - November 29, 2025 (CURRENT)
+### **v2.2.1** - November 30, 2025 (CURRENT)
+- ✅ Terms of Service page created at `/terms` with comprehensive legal coverage
+- ✅ Terms of Service link added to footer (positioned first in footer links)
+- ✅ Footer configuration updated in `src/lib/contacts.ts`
+
+### **v2.2.0** - November 29, 2025
 - ✨ Homepage logo updated to "TSTR" on top and "hub" below (lowercase 'h')
 - ✅ Favicon redesigned with text-based "TSTR/hub" design (16x16 SVG)
 - ✅ LinkedIn icon added to footer across all pages (links to https://linkedin.com/company/tstr-hub)

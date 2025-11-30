@@ -3,8 +3,8 @@ import { supabase } from '../../lib/supabase'
 import { getRedirectUrl } from '../../lib/redirect'
 import Footer from '../../components/Footer.astro'
 
-// Enable static prerendering for SEO
-export const prerender = true
+// Disable static prerendering for performance - use SSR instead
+export const prerender = false
 
 // Generate static paths for all active listings
 export async function getStaticPaths() {
