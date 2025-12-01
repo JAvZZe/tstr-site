@@ -1,9 +1,9 @@
 # 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: December 1, 2025 16:00 UTC
+> **Last Updated**: December 1, 2025 17:00 UTC
 > **Updated By**: OpenCode AI Assistant
-> **Status**: ✅ PRODUCTION - Live at https://tstr.site with 163 listings + Click Tracking + Admin Dashboard + Updated Branding + Terms of Service + Oil & Gas Scraper Integration + LinkedIn OAuth Provider Fix Applied
+> **Status**: ✅ PRODUCTION - Live at https://tstr.site with 163 listings + Click Tracking + Admin Dashboard + Updated Branding + Terms of Service + Oil & Gas Scraper Integration + LinkedIn OAuth Redirect URI Configuration
 
 ---
 
@@ -337,7 +337,7 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 - [ ] Implement caching layer for faster page loads
 - [ ] Optimize OCI scraper for multiple sources simultaneously
 
-### **Authentication & Rights Management** 🔄 TESTING REQUIRED
+### **Authentication & Rights Management** 🔄 REDIRECT URI CONFIGURATION NEEDED
 - [x] **LinkedIn OAuth UI** - Buttons added to login/signup pages
 - [x] **Database Schema** - listing_owners table and functions created ✅
 - [x] **Domain Verification Logic** - Auto-claim functions implemented & tested ✅
@@ -345,9 +345,10 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 - [x] **Setup Scripts** - Configuration guides and test scripts created
 - [x] **LinkedIn App Created** - App created and credentials documented ✅
 - [x] **Database Migration** - Applied to production ✅
-- [x] **Supabase Provider Setup** - Enable LinkedIn provider in Supabase dashboard (15 min)
+- [x] **Supabase Provider Setup** - LinkedIn provider configured with correct Client ID ✅
 - [x] **Environment Variables** - Update production env vars in Cloudflare Pages
 - [x] **Provider Name Fix** - Updated frontend to use 'linkedin_oidc' ✅
+- [ ] **LinkedIn Redirect URI** - Update LinkedIn app OAuth redirect URLs (5 min)
 - [ ] **Owner Dashboard** - User interface for managing claims
 - [ ] **Listing Claim UI** - Frontend integration on listing pages
 
@@ -502,10 +503,10 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 
 ## 📊 VERSION HISTORY
 
-### **v2.2.6** - December 1, 2025 (CURRENT)
-- ✅ LinkedIn OAuth provider name fixed ('linkedin' → 'linkedin_oidc')
-- ✅ Frontend updated to use correct Supabase provider identifier
-- 🔄 Ready for final testing of LinkedIn OAuth flow
+### **v2.2.7** - December 1, 2025 (CURRENT)
+- ✅ LinkedIn OAuth redirect URI configuration identified
+- ✅ Supabase provider Client ID corrected
+- 🔄 Need to update LinkedIn app redirect URIs
 - 🚧 Pending: Oil & Gas scraper deployment to OCI (requires SSH key access)
 
 ### **v2.2.2** - December 1, 2025
