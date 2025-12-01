@@ -1,9 +1,9 @@
 # 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: December 1, 2025 12:00 UTC
+> **Last Updated**: December 1, 2025 13:00 UTC
 > **Updated By**: OpenCode AI Assistant
-> **Status**: ✅ PRODUCTION - Live at https://tstr.site with 163 listings + Click Tracking + Admin Dashboard + Updated Branding + Terms of Service
+> **Status**: ✅ PRODUCTION - Live at https://tstr.site with 163 listings + Click Tracking + Admin Dashboard + Updated Branding + Terms of Service + Oil & Gas Scraper Integration
 
 ---
 
@@ -140,26 +140,38 @@ Last Scrape:      November 10, 2025 02:31 UTC (on schedule)
 - **Used By**: All scrapers, cleanup script
 
 #### 2. `dual_scraper.py`
-- **Purpose**: Primary scraper (directory + leads)
+- **Purpose**: Google Maps API scraper (pharma, biotech, etc.)
 - **Features**: Google Maps API, URL validation, duplicate detection
 - **Status**: ✅ PRODUCTION (deployed as cloud function)
 - **Validates**: Yes (automatic)
 - **Rate Limiting**: 0.5s between requests
 
-#### 3. `scraper.py`
+#### 3. `main_scraper.py` ✨ NEW
+- **Purpose**: Main scraper orchestrator
+- **Features**: Combines Google Maps + niche-specific scrapers
+- **Status**: ✅ CREATED (pending OCI deployment)
+- **Includes**: Oil & Gas, Materials, Environmental scrapers
+
+#### 4. `run_scraper.py` ✨ UPDATED
+- **Purpose**: OCI cron job entry point
+- **Features**: Runs main_scraper.py daily
+- **Status**: ✅ UPDATED (pending OCI deployment)
+- **Schedule**: Daily 2 AM GMT
+
+#### 5. `scraper.py`
 - **Purpose**: Secondary scraper (listings only)
 - **Features**: Alternative sources, duplicate detection, URL validation
 - **Status**: ✅ PRODUCTION (deployed as cloud function)
 - **Validates**: Yes (automatic)
 - **Rate Limiting**: 0.5s between requests
 
-#### 4. `cleanup_invalid_urls.py`
+#### 6. `cleanup_invalid_urls.py`
 - **Purpose**: Database validation & cleanup
 - **Features**: Re-validate existing URLs, move invalid to research
 - **Status**: ✅ PRODUCTION (deployed as cloud function)
 - **Mode**: Auto-move to pending_research
 
-#### 5. `main.py`
+#### 7. `main.py`
 - **Purpose**: Cloud Function entry points
 - **Features**: Wraps all scrapers for Google Cloud deployment
 - **Status**: ✅ DEPLOYED
@@ -231,26 +243,31 @@ Status:              Active on every scraper run
 ### **Daily @ 2:00 AM GMT (OCI Cron)**
 ```
 OCI Cron triggers
-    ↓
-run_scraper.py executes
-    ↓
-Scrapes pharmaceutical testing directories
-    ↓
+     ↓
+run_scraper.py executes main_scraper.py
+     ↓
+Runs Google Maps scraper (pharma, biotech)
+     ↓
+Runs niche scrapers:
+  - Oil & Gas (Contract Laboratory)
+  - Materials (A2LA)
+  - Environmental (TNI)
+     ↓
 Validates all URLs (95%+ success)
-    ↓
+     ↓
 Generates CSVs:
   - tstr_directory_import.csv (listings)
   - sales_contacts.csv (contact data)
   - invalid_urls.csv (failed validations)
-    ↓
+     ↓
 Checks Supabase for duplicates
-    ↓
+     ↓
 Inserts only new verified listings
-    ↓
+     ↓
 Logs to scraper.log
-    ↓
+     ↓
 Frontend (Cloudflare) reads updated Supabase data
-    ↓
+     ↓
 CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 ```
 
@@ -304,7 +321,7 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 - [x] Deploy Astro website (✅ Live at https://tstr.site)
 - [x] Connect custom domain (✅ tstr.site active)
 - [x] Automated scraping (✅ Daily cron on OCI)
-- [ ] Add Oil & Gas Testing category scrapers
+- [x] Add Oil & Gas Testing category scrapers (✅ Code integrated, pending deployment)
 - [ ] Expand Environmental Testing (currently 14 listings)
 
 ### **Medium Priority**
@@ -482,7 +499,14 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 
 ## 📊 VERSION HISTORY
 
-### **v2.2.2** - December 1, 2025 (CURRENT)
+### **v2.2.3** - December 1, 2025 (CURRENT)
+- ✅ Integrated Oil & Gas Testing scrapers into main pipeline
+- ✅ Created main_scraper.py orchestrator for all niche scrapers
+- ✅ Updated OCI run_scraper.py to include Oil & Gas scraping
+- ✅ Added Playwright dependency for Contract Laboratory scraping
+- 🚧 Pending: Deploy to OCI (requires SSH key access)
+
+### **v2.2.2** - December 1, 2025
 - ✅ Corrected biotech/pharma categorization: merged into "Biopharma & Life Sciences Testers"
 - ✅ Updated submit form to use merged category
 - ✅ Removed separate biotech searches from scraper config

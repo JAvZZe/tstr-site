@@ -1,0 +1,58 @@
+I'll help you connect Supabase to Claude Code. Let me check the latest documentation first to give you the most accurate guidance.Perfect! Here's how to connect Supabase to Claude Code using MCP (Model Context Protocol):
+
+## Quick Setup Steps
+
+**1. Get Your Credentials**
+- Go to [Supabase Settings](https://supabase.com/dashboard/account/tokens) and create a Personal Access Token
+- Get your project ref from your project settings (Project ID)
+
+**2. Choose Your Setup Method**
+
+### Option A: Project-Scoped (Recommended for MVP)
+Create a `.mcp.json` file in your project root:
+
+```json
+{
+  "mcpServers": {
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--read-only",
+        "--project-ref=YOUR_PROJECT_REF"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "YOUR_PERSONAL_ACCESS_TOKEN"
+      }
+    }
+  }
+}
+```
+
+Restart Claude Code to apply.
+
+### Option B: Quick CLI Command
+```bash
+claude mcp add supabase -s local -e SUPABASE_ACCESS_TOKEN=your_token_here -- npx -y @supabase/mcp-server-supabase@latest
+```
+
+**3. Start Using It**
+
+Once connected, you can prompt Claude Code with natural language:
+- "Create a users table with email and created_at fields"
+- "Show me my database schema"
+- "Deploy this Edge Function"
+- "Generate TypeScript types from my database"
+
+## Key Benefits for Your Lean MVP Approach
+
+The `--read-only` flag executes database queries as a read-only user, preventing unintended changes, perfect for testing. You can remove it when ready to make changes.
+
+Project scoping limits access to just one project, reducing risk during rapid iteration.
+
+## What You Can Do
+
+Available tools include creating/updating tables, managing Edge Functions, generating TypeScript types, fetching project config, and executing SQL queries.
+
+This setup lets you build database features conversationally - no clicking through dashboards. Perfect for quick MVP iterations!
