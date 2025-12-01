@@ -337,7 +337,7 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 - [ ] Implement caching layer for faster page loads
 - [ ] Optimize OCI scraper for multiple sources simultaneously
 
-### **Authentication & Rights Management** 🔄 ACCOUNT DASHBOARD IMPLEMENTATION
+### **Authentication & Rights Management** 🔄 LISTING OWNERSHIP FEATURES
 - [x] **LinkedIn OAuth UI** - Buttons added to login/signup pages
 - [x] **Database Schema** - listing_owners table and functions created ✅
 - [x] **Domain Verification Logic** - Auto-claim functions implemented & tested ✅
@@ -349,15 +349,16 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 - [x] **Environment Variables** - Update production env vars in Cloudflare Pages
 - [x] **Provider Name Fix** - Updated frontend to use 'linkedin_oidc' ✅
 - [x] **LinkedIn Redirect URI** - Update LinkedIn app OAuth redirect URLs ✅
-- [x] **User Profile Creation** - Automatic profile creation trigger (applying now)
+- [x] **User Profile Creation** - Automatic profile creation trigger ✅
+- [x] **Account Dashboard** - User profile display and management ✅
 - [ ] **Owner Dashboard** - User interface for managing claims
 - [ ] **Listing Claim UI** - Frontend integration on listing pages
 
 **Implementation Plan:** See `docs/active/LINKEDIN_OAUTH_IMPLEMENTATION_PLAN.md`
 **Setup Guide:** See `LINKEDIN_OAUTH_SETUP_GUIDE.md`
 **Strategy:** Corporate Domain Verification Model (80% automation)
-**Timeline:** Account dashboard implementation in progress
-**Progress:** 97% complete - OAuth working, profile creation needed
+**Timeline:** Listing ownership features implementation
+**Progress:** 98% complete - Account dashboard working, ownership features next
 
 ---
 
