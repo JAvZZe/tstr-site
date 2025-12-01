@@ -272,14 +272,15 @@ import { supabaseBrowser } from '../lib/supabase-browser'
       const contentDiv = document.getElementById('content')
 
       try {
-        // Get current user
-        const { data: { user }, error: userError } = await supabaseBrowser.auth.getUser()
+        // Get current session
+        const { data: { session }, error: sessionError } = await supabaseBrowser.auth.getSession()
 
-        if (userError || !user) {
-          // Redirect to login if not authenticated
-          window.location.href = '/login'
+        if (sessionError || !session) {
+          // Don't redirect here - let the auth state listener handle it
           return
         }
+
+        const user = session.user
 
         // Fetch user profile
         const { data: profile, error: profileError } = await supabaseBrowser
@@ -402,7 +403,16 @@ import { supabaseBrowser } from '../lib/supabase-browser'
       }
     }
 
-    // Load dashboard when page loads
+    // Listen for auth state changes (important for OAuth redirects)
+    supabaseBrowser.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        loadDashboard()
+      } else if (event === 'SIGNED_OUT' || !session) {
+        window.location.href = '/login'
+      }
+    })
+
+    // Also try to load immediately in case user is already authenticated
     loadDashboard()
   </script>
 </body>
