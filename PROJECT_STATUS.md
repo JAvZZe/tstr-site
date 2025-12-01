@@ -337,7 +337,7 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 - [ ] Implement caching layer for faster page loads
 - [ ] Optimize OCI scraper for multiple sources simultaneously
 
-### **Authentication & Rights Management** 🔄 REDIRECT URI CONFIGURATION NEEDED
+### **Authentication & Rights Management** 🔄 ACCOUNT DASHBOARD IMPLEMENTATION
 - [x] **LinkedIn OAuth UI** - Buttons added to login/signup pages
 - [x] **Database Schema** - listing_owners table and functions created ✅
 - [x] **Domain Verification Logic** - Auto-claim functions implemented & tested ✅
@@ -348,15 +348,16 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 - [x] **Supabase Provider Setup** - LinkedIn provider configured with correct Client ID ✅
 - [x] **Environment Variables** - Update production env vars in Cloudflare Pages
 - [x] **Provider Name Fix** - Updated frontend to use 'linkedin_oidc' ✅
-- [ ] **LinkedIn Redirect URI** - Update LinkedIn app OAuth redirect URLs (5 min)
+- [x] **LinkedIn Redirect URI** - Update LinkedIn app OAuth redirect URLs ✅
+- [x] **User Profile Creation** - Automatic profile creation trigger (applying now)
 - [ ] **Owner Dashboard** - User interface for managing claims
 - [ ] **Listing Claim UI** - Frontend integration on listing pages
 
 **Implementation Plan:** See `docs/active/LINKEDIN_OAUTH_IMPLEMENTATION_PLAN.md`
 **Setup Guide:** See `LINKEDIN_OAUTH_SETUP_GUIDE.md`
 **Strategy:** Corporate Domain Verification Model (80% automation)
-**Timeline:** Ready for final configuration
-**Progress:** 95% complete - LinkedIn app created, needs 20 min configuration
+**Timeline:** Account dashboard implementation in progress
+**Progress:** 97% complete - OAuth working, profile creation needed
 
 ---
 
