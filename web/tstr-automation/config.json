@@ -24,18 +24,7 @@
       "category": "Pharmaceutical Testing",
       "location": "Mumbai India"
     },
-    {
-      "category": "Biotech Testing",
-      "location": "San Francisco California"
-    },
-    {
-      "category": "Biotech Testing",
-      "location": "Cambridge UK"
-    },
-    {
-      "category": "Biotech Testing",
-      "location": "Singapore"
-    },
+
     {
       "category": "Environmental Testing",
       "location": "California"
@@ -74,7 +63,7 @@
     },
     {
       "name": "Biocompare",
-      "category": "Biotech Testing",
+      "category": "Pharmaceutical Testing",
       "url": "https://www.biocompare.com/Laboratory-Services/"
     }
   ]

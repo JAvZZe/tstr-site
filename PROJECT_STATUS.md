@@ -1,7 +1,7 @@
 # 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: November 30, 2025 12:00 UTC
+> **Last Updated**: December 1, 2025 12:00 UTC
 > **Updated By**: OpenCode AI Assistant
 > **Status**: ✅ PRODUCTION - Live at https://tstr.site with 163 listings + Click Tracking + Admin Dashboard + Updated Branding + Terms of Service
 
@@ -200,11 +200,10 @@ Last Scrape:      November 10, 2025 02:31 UTC (on schedule)
 Total Listings:        175
 Valid URLs:           95%+ (active validation)
 By Category:
-- Pharmaceutical:     108 listings
+- Biopharma & Life Sciences: 108 listings (includes biotech/pharma)
 - Materials Testing:   41 listings
 - Environmental:       14 listings
-- Oil & Gas Testing:   12 listings ✨ NEW
-- Biotech Testing:      0 (planned)
+- Oil & Gas Testing:   12 listings
 
 By Geographic Region:
 - United States:      Primary focus
@@ -305,7 +304,6 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 - [x] Deploy Astro website (✅ Live at https://tstr.site)
 - [x] Connect custom domain (✅ tstr.site active)
 - [x] Automated scraping (✅ Daily cron on OCI)
-- [ ] Add Biotech Testing category scrapers
 - [ ] Add Oil & Gas Testing category scrapers
 - [ ] Expand Environmental Testing (currently 14 listings)
 
@@ -325,10 +323,10 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 ### **Authentication & Rights Management** ✅ IMPLEMENTATION COMPLETE
 - [x] **LinkedIn OAuth UI** - Buttons added to login/signup pages
 - [x] **Database Schema** - listing_owners table and functions created
-- [x] **Domain Verification Logic** - Auto-claim functions implemented & tested
+- [x] **Domain Verification Logic** - Auto-claim functions implemented & tested ✅
 - [x] **Claim API Endpoints** - Backend logic for listing ownership
 - [x] **Setup Scripts** - Configuration guides and test scripts created
-- [ ] **LinkedIn OAuth Config** - Supabase provider setup needed (15 min)
+- [x] **LinkedIn OAuth Config** - Supabase provider setup completed ✅
 - [ ] **Database Migration** - Apply SQL schema to production (5 min)
 - [ ] **Owner Dashboard** - User interface for managing claims
 - [ ] **Listing Claim UI** - Frontend integration on listing pages
@@ -484,7 +482,13 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 
 ## 📊 VERSION HISTORY
 
-### **v2.2.1** - November 30, 2025 (CURRENT)
+### **v2.2.2** - December 1, 2025 (CURRENT)
+- ✅ Corrected biotech/pharma categorization: merged into "Biopharma & Life Sciences Testers"
+- ✅ Updated submit form to use merged category
+- ✅ Removed separate biotech searches from scraper config
+- ✅ Updated Biocompare source to use Pharmaceutical Testing category
+
+### **v2.2.1** - November 30, 2025
 - ✅ Terms of Service page created at `/terms` with comprehensive legal coverage
 - ✅ Terms of Service link added to footer (positioned first in footer links)
 - ✅ Footer configuration updated in `src/lib/contacts.ts`
