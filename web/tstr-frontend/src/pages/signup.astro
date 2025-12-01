@@ -352,7 +352,7 @@ import Footer from '../components/Footer.astro'
 
       try {
         const { data, error } = await supabaseBrowser.auth.signInWithOAuth({
-          provider: 'linkedin',
+          provider: 'linkedin_oidc',
           options: {
             redirectTo: `${window.location.origin}/account`
           }
