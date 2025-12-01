@@ -352,13 +352,15 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 - [x] **User Profile Creation** - Automatic profile creation trigger ✅
 - [x] **Account Dashboard** - User profile display and management ✅
 - [x] **End-to-End Testing** - LinkedIn OAuth + automatic profile creation ✅
+- [x] **Redirect Loop Fix** - Fixed auth state handling for OAuth callbacks ✅
 - [ ] **Owner Dashboard** - User interface for managing claims
 - [ ] **Listing Claim UI** - Frontend integration on listing pages
+- [ ] **Account Dashboard UX** - Improve styling and user experience
 
 **Implementation Plan:** See `docs/active/LINKEDIN_OAUTH_IMPLEMENTATION_PLAN.md`
 **Setup Guide:** See `LINKEDIN_OAUTH_SETUP_GUIDE.md`
 **Strategy:** Corporate Domain Verification Model (80% automation)
-**Timeline:** Ready for listing ownership features
+**Timeline:** Account dashboard UX improvements, then listing ownership features
 **Progress:** 100% complete - Authentication system fully operational
 
 ---
