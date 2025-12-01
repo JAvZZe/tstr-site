@@ -3,6 +3,9 @@
 ## Problem
 The automatic user profile creation trigger only works for new user signups. Users who signed up before the trigger was created (like existing LinkedIn OAuth users) don't have profile records in the `user_profiles` table, causing the account dashboard to show "Failed to load account profile."
 
+## Status: RESOLVED ✅
+The trigger is now working correctly for all new signups. This document is kept for reference in case manual intervention is needed for edge cases.
+
 ## Solution
 Manually create profile records for existing users.
 
