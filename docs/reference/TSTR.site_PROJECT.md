@@ -3,7 +3,7 @@
 **Project Type**: Live production directory site
 **External Path**: `/media/al/AvZ WD White My Passport/PROJECTS/TSTR.site`
 **Status**: 🟢 LIVE - Scrapers Deployed
-**Last Updated**: 2025-10-27 16:25 UTC
+**Last Updated**: 2025-12-01 12:00 UTC
 
 ---
 
@@ -20,7 +20,7 @@
   - Python 3.9.21 environment with all dependencies
   - Fixed dual_scraper.py structure (orphaned methods issue resolved)
   - Supabase integration working
-  - Currently scraping BIVDA (pharmaceutical testing companies)
+   - Currently scraping BIVDA (biopharma/biotech testing companies)
 
 ### 🔄 In Progress
 - **First production scrape**: Running now, targeting BIVDA + BBB sources
@@ -252,15 +252,15 @@ Identify high-value info that testing service buyers want per industry niche, th
 - **Pain point**: "I need ISO 17025 accredited lab for soil testing in Texas with 48hr turnaround"
 
 **2. Map Industry-Specific Data** (Orient)
-For each niche (Oil & Gas, Pharma, Biotech, etc.):
+For each niche (Oil & Gas, Biopharma & Life Sciences, etc.):
 - **Must-have data**: Accreditations (ISO, CLIA, CAP), certifications, test methods
 - **Nice-to-have**: Equipment lists, sample volume capacity, client logos, case studies
 - **Deal-breakers**: Price transparency, turnaround times, geographic coverage
 
-Example: Pharmaceutical Testing
+Example: Biopharma & Life Sciences Testing
 - Critical: FDA registration, GMP compliance, stability testing capabilities
 - Valuable: API testing experience, CMC support, regulatory filing support
-- Sources: BIVDA member directory, Pharmtech lists, FDA registered facilities
+- Sources: BIVDA member directory, Pharmtech lists, FDA registered facilities, Biocompare
 
 **3. Source Discovery** (Orient)
 - **Industry associations**: Member directories (like BIVDA for pharma)
@@ -292,8 +292,8 @@ For each potential source:
 
 ### Current Sources Configured
 1. **BBB** - Environmental Testing (US-focused, general)
-2. **BIVDA** - Pharmaceutical Testing (UK-focused, IVD manufacturers)
-3. **Biocompare** - Biotech Testing (lab services marketplace)
+2. **BIVDA** - Biopharma & Life Sciences Testing (UK-focused, IVD manufacturers)
+3. **Biocompare** - Biopharma & Life Sciences Testing (lab services marketplace)
 
 ### Next Sources to Research
 - **Oil & Gas**: API certifications, NDT testing labs

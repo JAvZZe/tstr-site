@@ -237,7 +237,7 @@ Based on typical scraper data:
 
 ```html
 <title>Testing Laboratories in United States | TSTR Hub</title>
-<meta name="description" content="Find verified testing service providers in United States. Oil & Gas, Pharmaceutical, Environmental testing labs.">
+<meta name="description" content="Find verified testing service providers in United States. Oil & Gas, Biopharma & Life Sciences, Environmental testing labs.">
 ```
 
 ### Breadcrumbs

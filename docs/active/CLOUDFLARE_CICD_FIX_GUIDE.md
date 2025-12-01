@@ -122,7 +122,7 @@ git push origin main
 1. Wait for build to complete (~2-3 minutes)
 2. Visit https://tstr.site
 3. Check the stats card - should show **127 Verified Labs** (not 19)
-4. First listing should be **WOUNDCHEK Laboratories BV** (Pharmaceutical)
+4. First listing should be **WOUNDCHEK Laboratories BV** (Biopharma & Life Sciences)
 5. Not **Element Singapore** (Materials Testing)
 
 ---

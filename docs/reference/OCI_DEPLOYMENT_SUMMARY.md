@@ -78,7 +78,7 @@ tail -50 scraper.log              # Last 50 lines of execution log
 
 **Source**: BIVDA (British In Vitro Diagnostics Association)
 - **URL**: https://www.bivda.org.uk/about-bivda/find-a-member/
-- **Companies Scraped**: 108 pharmaceutical/IVD testing companies
+- **Companies Scraped**: 108 biopharma/biotech testing companies
 - **Sales Contacts Extracted**: 64 decision-maker contacts
 - **Upload Success Rate**: 100% (all 108 listings in Supabase)
 - **Total Database Listings**: 127 (up from 19)
@@ -118,8 +118,7 @@ Key columns:
 
 ### Available Categories
 - Oil & Gas Testing
-- Pharmaceutical Testing ✅ (currently used)
-- Biotech Testing
+- Biopharma & Life Sciences Testing ✅ (currently used)
 - Environmental Testing
 - Materials Testing
 
@@ -235,7 +234,7 @@ crontab -e
 ### Priority 3: Verify Live Site
 - Visit https://tstr.site
 - Confirm 127 listings display
-- Check "Pharmaceutical Testing" category
+- Check "Biopharma & Life Sciences Testing" category
 - Test search functionality
 
 ### Priority 4: Set Up Monitoring

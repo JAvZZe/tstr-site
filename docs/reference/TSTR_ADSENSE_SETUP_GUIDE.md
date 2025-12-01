@@ -358,7 +358,7 @@ Subject: Advertising Opportunity - TSTR Hub Laboratory Directory
 
 Hi [Name],
 
-TSTR Hub is a B2B directory connecting testing laboratories with industrial clients in Oil & Gas, Pharma, Biotech, and Environmental sectors.
+TSTR Hub is a B2B directory connecting testing laboratories with industrial clients in Oil & Gas, Biopharma & Life Sciences, and Environmental sectors.
 
 Our audience:
 - 10,000 monthly visitors

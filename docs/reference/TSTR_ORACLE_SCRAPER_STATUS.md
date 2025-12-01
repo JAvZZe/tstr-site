@@ -1,6 +1,6 @@
 # Oracle Cloud Scraper - Status & Configuration
 
-**Last Updated**: 2025-10-28
+**Last Updated**: 2025-12-01
 **Status**: ✅ **OPERATIONAL**
 
 ## Deployment Summary
@@ -9,7 +9,7 @@ The TSTR.site scraper is successfully deployed on **Oracle Cloud** and running o
 
 ### Evidence of Success
 - **Last successful run**: 2025-10-27 18:52:00 UTC
-- **Listings added**: 108 new pharmaceutical testing labs (UK region)
+- **Listings added**: 108 new biopharma/biotech testing labs (UK region)
 - **Total database**: 127 listings (up from 19)
 - **Database**: Supabase (haimjeaetrsaauitrhfy.supabase.co)
 
