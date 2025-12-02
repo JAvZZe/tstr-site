@@ -87,6 +87,11 @@
 - Functions: `get_top_clicked_listings()`, `get_click_stats()`
 - Views: `potential_dead_links`
 - RLS: Enabled on clicks table
+- MCP Server: ✅ Configured in `web/tstr-automation/TSTR1.mcp.json`
+  - Server: @supabase/mcp-server-supabase@latest
+  - Project Ref: haimjeaetrsaauitrhfy
+  - Access Token: sbp_e290bc7ea1ba64ae4b0be38134b7b4a67ca24e04
+  - Mode: Read-only
 
 ### Scrapers (OCI)
 - Instance: 84.8.139.90 (Oracle Linux 9)
@@ -120,6 +125,11 @@
 ### Reading Project Context
 ```bash
 ./bootstrap.sh TSTR.site  # Loads project-specific learnings
+```
+
+**Note**: The bootstrap script file is `Link_to_bootstrap_agent.sh` in the project root. Always run bootstrap at the start of every session.
+
+```bash
 cat .ai-session.md         # Latest session notes
 cat ANALYTICS_SYSTEM.md    # Analytics documentation
 cat TSTR.md                # Primary project guide

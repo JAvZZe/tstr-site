@@ -16,6 +16,8 @@
 ./bootstrap.sh TSTR.site
 ```
 
+**Note**: The bootstrap script file is `Link_to_bootstrap_agent.sh` in the project root. Always run bootstrap at the start of every session.
+
 This loads:
 - **Project-specific learnings** (15 relevant from 90 total)
 - **Pending tasks** (filtered to TSTR.site only)
@@ -118,9 +120,15 @@ cd "/home/al/AI_PROJECTS_SPACE" && ./handoff.sh <agent> <reason>
 **Frontend**: `web/tstr-frontend/` (Astro + React + Tailwind)
 **Scrapers**: `web/tstr-automation/` (Python, deployed on OCI)
 **Database**: Supabase (https://haimjeaetrsaauitrhfy.supabase.co)
-**API Keys**: 
+**API Keys**:
 - Publishable: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
-- Secret: sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2
+- Service Role: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDQzNjU4NSwiZXhwIjoyMDc2MDEyNTg1fQ.zd47WtS1G1XzjP1obmr_lxHU_xJWtlhhu4ktm9xC5hA
+
+**MCP Server**: ✅ Configured in `web/tstr-automation/TSTR1.mcp.json`
+- Server: @supabase/mcp-server-supabase@latest
+- Project Ref: haimjeaetrsaauitrhfy
+- Access Token: sbp_e290bc7ea1ba64ae4b0be38134b7b4a67ca24e04
+- Mode: Read-only
 
 **Website**: http://tstr.site (LIVE - 163 listings as of 2025-11-17)
 

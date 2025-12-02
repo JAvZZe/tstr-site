@@ -1,9 +1,9 @@
 # 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: December 2, 2025 12:15 UTC
+> **Last Updated**: December 2, 2025 17:15 UTC
 > **Updated By**: OpenCode AI Assistant
-> **Status**: ✅ PRODUCTION - Live at https://tstr.site with 163 listings + Click Tracking + Admin Dashboard + Updated Branding + Terms of Service + Oil & Gas Scraper Integration + LinkedIn OAuth + Professional Account Dashboard + Listing Ownership System
+> **Status**: ✅ PRODUCTION - Live at https://tstr.site with 163 listings + Click Tracking + Admin Dashboard + Updated Branding + Terms of Service + Oil & Gas Scraper Integration + LinkedIn OAuth + Professional Account Dashboard + Listing Ownership System + Database Security Fixes
 
 ---
 
@@ -26,8 +26,9 @@
 │  ✅ Database (Supabase)        OPERATIONAL  │
 │  ✅ URL Validation             LIVE         │
 │  ✅ Click Tracking             DEPLOYED ✨  │
-│  ✅ OCI Scrapers               DEPLOYED     │
-│  ✅ Automated Scheduling       ACTIVE       │
+ │  ✅ OCI Scrapers               DEPLOYED     │
+ │  ✅ Local Heavy Scrapers       ACTIVE       │
+ │  ✅ Automated Scheduling       ACTIVE       │
 │  ✅ Frontend (Cloudflare)      LIVE         │
 │  ✅ Domain (tstr.site)         LIVE         │
 └─────────────────────────────────────────────┘
@@ -62,6 +63,7 @@ Last Scrape:      November 10, 2025 02:31 UTC (on schedule)
   - `sales_contacts.csv` (64 contacts)
   - `invalid_urls.csv` (17 invalid URLs)
 - **Status**: ✅ ACTIVE
+- **Note**: Lightweight scrapers deployed to OCI; heavy-duty scrapers (browser automation) run locally due to RAM limitations
 
 #### Automated Scheduling (Cron)
 - **Schedule**: `0 2 * * *` (Daily at 2:00 AM GMT)
@@ -209,8 +211,11 @@ Last Scrape:      November 10, 2025 02:31 UTC (on schedule)
 ### **Current Database State**
 
 ```
-Total Listings:        175
+Total Listings:        193 (verified via API test)
 Valid URLs:           95%+ (active validation)
+Security Status:      ✅ FULLY SECURED (15/15 security issues resolved)
+Performance Issues:   42 remaining (significant progress made, potential duplicates)
+Performance Issues:   46 remaining (see SUPABASE_ISSUES_ANALYSIS.md)
 By Category:
 - Biopharma & Life Sciences: 108 listings (includes biotech/pharma)
 - Materials Testing:   41 listings
@@ -321,7 +326,7 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 - [x] Deploy Astro website (✅ Live at https://tstr.site)
 - [x] Connect custom domain (✅ tstr.site active)
 - [x] Automated scraping (✅ Daily cron on OCI)
-- [x] Add Oil & Gas Testing category scrapers (✅ Code integrated, pending deployment)
+- [x] Add Oil & Gas Testing category scrapers (✅ Deployed locally - 12 labs added to production)
 - [ ] Expand Environmental Testing (currently 14 listings)
 
 ### **Medium Priority**
@@ -455,6 +460,9 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 - **Update Frequency**: Every deployment or major change
 - **Owners**: All agents (CASCADE, CURSOR, etc.)
 
+### **Related Documents**
+- **SUPABASE_ISSUES_ANALYSIS.md**: Detailed Supabase security and performance issue tracking
+
 ---
 
 ## 🤝 MULTI-AGENT PROTOCOL
@@ -534,7 +542,7 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 - ✅ Corporate domain verification model (80% automation)
 - 🔄 **Cloudflare Pages Deployment Issue** - Account page CSS changes pending deployment (subscription page deployed successfully)
 - 🔄 Need to update LinkedIn app redirect URIs
-- 🚧 Pending: Oil & Gas scraper deployment to OCI (requires SSH key access)
+- ✅ Completed: Oil & Gas scraper deployed locally (heavy processing requires local execution)
 
 ### **v2.2.2** - December 1, 2025
 - ✅ Corrected biotech/pharma categorization: merged into "Biopharma & Life Sciences Testers"

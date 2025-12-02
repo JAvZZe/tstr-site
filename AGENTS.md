@@ -7,12 +7,34 @@
 ./bootstrap.sh TSTR-site    # Load project context, learnings, and pending tasks
 ```
 
+**Note**: The bootstrap script file is `Link_to_bootstrap_agent.sh` in the project root. Always run bootstrap at the start of every session.
+
 This loads:
 - Project-specific learnings from database
 - Pending tasks for TSTR-site
 - Recent session context
 - Pending handoffs
 - Recent checkpoints
+
+## 🔑 SUPABASE CONFIGURATION
+
+**URL**: https://haimjeaetrsaauitrhfy.supabase.co
+**Anon Key**: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
+**Service Role Key**: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDQzNjU4NSwiZXhwIjoyMDc2MDEyNTg1fQ.zd47WtS1G1XzjP1obmr_lxHU_xJWtlhhu4ktm9xC5hA
+
+**MCP Server**: ✅ Configured in `web/tstr-automation/TSTR1.mcp.json`
+- Server: @supabase/mcp-server-supabase@latest
+- Project Ref: haimjeaetrsaauitrhfy
+- Access Token: sbp_e290bc7ea1ba64ae4b0be38134b7b4a67ca24e04
+- Mode: Read-only
+
+## 🔄 DEPLOYMENT NOTES
+
+**Cloudflare Pages Deployment Issues:**
+- CSS changes may take 1-2 hours to propagate globally
+- Subscription page deployed successfully, account page CSS pending
+- Check `ACCOUNT_BUTTON_IMPROVEMENTS_HANDOFF.md` for current status
+- Monitor: https://dash.cloudflare.com/pages → tstr-site → Deployments
 
 ## 📊 PROJECT STATUS PROTOCOL (MANDATORY)
 
@@ -91,6 +113,12 @@ cd web/tstr-automation
 pip install -r requirements.txt
 python scrapers/a2la_materials.py    # Run specific scraper
 ```
+
+**Scraper Deployment Strategy:**
+- **Heavy-duty scrapers** (requiring browser automation like Playwright/Selenium): Run locally due to OCI RAM limitations
+- **Lightweight scrapers** (simple HTTP/HTML parsing): Deploy to OCI when resources allow
+- **Current OCI instance**: 84.8.139.90 (Oracle Linux 9) - active for lightweight operations
+- **Resource decision**: Local execution for any scraper needing >1GB RAM or JavaScript rendering
 
 ## Code Style
 

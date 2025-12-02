@@ -142,6 +142,16 @@ Guidance for OpenCode AI agent when working with code in this repository.
 **Key URLs:**
 - **Live Site**: https://tstr.site
 - **Database**: https://haimjeaetrsaauitrhfy.supabase.co
+
+**API Keys:**
+- **Anon Key**: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
+- **Service Role Key**: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDQzNjU4NSwiZXhwIjoyMDc2MDEyNTg1fQ.zd47WtS1G1XzjP1obmr_lxHU_xJWtlhhu4ktm9xC5hA
+
+**MCP Server**: ✅ Configured in `web/tstr-automation/TSTR1.mcp.json`
+- Server: @supabase/mcp-server-supabase@latest
+- Project Ref: haimjeaetrsaauitrhfy
+- Access Token: sbp_e290bc7ea1ba64ae4b0be38134b7b4a67ca24e04
+- Mode: Read-only
 - **GitHub**: https://github.com/JAvZZe/tstr-site.git
 
 ## OpenCode Workflow Patterns
@@ -329,6 +339,8 @@ OCI Scrapers → Supabase DB → Astro Build → Static Pages → Cloudflare Edg
 cd "/media/al/AI_SSD/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
 ./bootstrap.sh TSTR.site  # Loads project-specific learnings & context
 ```
+
+**Note**: The bootstrap script file is `Link_to_bootstrap_agent.sh` in the project root. Always run bootstrap at the start of every session.
 
 ### 2. Use Plan Mode for Complex Features
 ```bash

@@ -1,7 +1,8 @@
 # Scraping Documentation Index
 
-**Last Updated**: 2025-10-15 18:23 UTC  
+**Last Updated**: 2025-11-22 12:00 UTC
 **Purpose**: Guide to all scraping-related documentation
+**Recent Update**: Added deployment strategy section (local vs OCI based on resource requirements)
 
 ---
 
@@ -108,11 +109,20 @@ Site population & Outreach campaigns
 - Purpose: Scrape directory listings + extract sales leads
 - Output: 2 CSV files (listings + contacts)
 - Status: ✅ Production-ready
+- Deployment: Local execution (heavy processing)
 
 **`web/tstr-automation/scraper.py`** - SECONDARY
 - Purpose: Directory listings only (no lead extraction)
 - Output: 1 CSV file (listings)
 - Status: ✅ Backup option
+- Deployment: Local execution (heavy processing)
+
+**OCI Scrapers** (Oracle Cloud Infrastructure)
+- Instance: 84.8.139.90 (Oracle Linux 9)
+- Status: ✅ ACTIVE (daily 2:00 AM GMT schedule)
+- Purpose: Lightweight scraping operations
+- Deployment: OCI (when resources allow)
+- Note: Heavy-duty scrapers (browser automation) run locally due to OCI RAM limitations
 
 ### Support Scripts
 
@@ -136,6 +146,21 @@ Site population & Outreach campaigns
 - Source: Output from `dual_scraper.py`
 - Contains: Decision-maker contacts for outreach
 - Fields: Name, email, title, LinkedIn, company
+
+---
+
+## 🚀 Deployment Strategy
+
+### Current State (2025-11-22)
+- **Heavy-duty scrapers** (Playwright, Selenium, browser automation): Run locally on development machines
+- **Lightweight scrapers** (simple HTTP requests, HTML parsing): Deployed to OCI when resources allow
+- **Reason**: OCI has low RAM allocation, insufficient for browser automation tools
+- **Future**: Migrate lightweight scrapers to OCI cron jobs when Oracle upgrades free tier resources
+
+### Resource Requirements
+- **Local advantages**: Unlimited RAM, full control, browser automation capability
+- **OCI limitations**: Resource-constrained, cannot handle memory-intensive operations
+- **Decision criteria**: Use local for any scraper requiring >1GB RAM or JavaScript rendering
 
 ---
 
