@@ -46,6 +46,16 @@ Last Scrape:      November 10, 2025 02:31 UTC (on schedule)
 
 ## 🛠️ DEPLOYED INFRASTRUCTURE
 
+### **Dashboard Enhancements**
+
+#### Scraper Monitoring Dashboard
+- **URL**: https://tstr.site/admin/dashboard
+- **Features**: Real-time scraper status, script details, source mapping
+- **OCI Scrapers**: Shows run_scraper.py details and daily cron status
+- **Local Scrapers**: Shows individual script names and automation status
+- **Source Mapping**: Displays which script handles each category
+- **Status**: ✅ LIVE - Complete scraper ecosystem visibility
+
 ### **Oracle Cloud Infrastructure (OCI)**
 
 #### Compute Instance
@@ -71,6 +81,7 @@ Last Scrape:      November 10, 2025 02:31 UTC (on schedule)
 - **Schedule**: Weekly (systemd timer)
 - **Sources**: Oil & Gas, A2LA Materials, TNI Environmental (heavy processing)
 - **Logs**: `local_scraper.log`
+- **Dashboard**: Enhanced with script details and source mapping
 - **Status**: ✅ ACTIVE (systemd timer configured)
 
 #### Automated Scheduling (Cron)

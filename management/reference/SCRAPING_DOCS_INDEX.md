@@ -1,8 +1,10 @@
 # Scraping Documentation Index
 
-**Last Updated**: 2025-11-22 12:00 UTC
+**Last Updated**: 2025-12-02 20:00 UTC
 **Purpose**: Guide to all scraping-related documentation
-**Recent Update**: Added deployment strategy section (local vs OCI based on resource requirements)
+**Recent Updates**:
+- Added deployment strategy section (local vs OCI based on resource requirements)
+- Added dashboard monitoring section with script details and source mapping
 
 ---
 
@@ -162,6 +164,28 @@ Site population & Outreach campaigns
 - **Local advantages**: Unlimited RAM, full control, browser automation capability
 - **OCI limitations**: Resource-constrained, cannot handle memory-intensive operations
 - **Decision criteria**: Use local for any scraper requiring >1GB RAM or JavaScript rendering
+
+---
+
+## 📊 Monitoring & Dashboard
+
+### **Scraper Dashboard** ⭐ NEW
+**Location**: https://tstr.site/admin/dashboard
+**Purpose**: Real-time monitoring of all scraper operations
+
+**Features**:
+- ✅ Live scraper status (OCI and Local)
+- ✅ Script details and file locations
+- ✅ Source mapping (which script handles each category)
+- ✅ Performance metrics by category
+- ✅ Recent activity and system health
+- ✅ Failed URL validation alerts
+
+**When to Use**:
+- Monitor scraper health and performance
+- Identify which script handles specific categories
+- Troubleshoot scraper issues
+- View automation status and schedules
 
 ---
 
