@@ -117,6 +117,7 @@ python scrapers/a2la_materials.py    # Run specific scraper
 **Scraper Deployment Strategy:**
 - **Heavy-duty scrapers** (requiring browser automation like Playwright/Selenium): Run locally due to OCI RAM limitations
 - **Lightweight scrapers** (simple HTTP/HTML parsing): Deploy to OCI when resources allow
+- **Local Automation**: Available with 40GB RAM - can run automated local scrapers
 - **Current OCI instance**: 84.8.139.90 (Oracle Linux 9) - active for lightweight operations
 - **Resource decision**: Local execution for any scraper needing >1GB RAM or JavaScript rendering
 

@@ -78,28 +78,55 @@ const title = 'Scraper Dashboard'
       <h1 class="text-3xl font-bold text-gray-900 mb-8">{title}</h1>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Last Scraper Run Status -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h2 class="text-xl font-semibold text-gray-800 mb-4">Scraper Status</h2>
-          <div class="space-y-3">
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Status:</span>
-              <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Active</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Last Run:</span>
-              <span class="text-gray-900 text-sm">{new Date(lastUpdate).toLocaleString()}</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Source:</span>
-              <span class="text-gray-900">OCI Daily Cron</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Frequency:</span>
-              <span class="text-gray-900">Daily @ 2:00 AM GMT</span>
-            </div>
-          </div>
-        </div>
+         <!-- OCI Scraper Status -->
+         <div class="bg-white rounded-lg shadow-md p-6">
+           <h2 class="text-xl font-semibold text-gray-800 mb-4">OCI Scraper Status</h2>
+           <div class="space-y-3">
+             <div class="flex justify-between items-center">
+               <span class="text-gray-600">Status:</span>
+               <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Active</span>
+             </div>
+             <div class="flex justify-between items-center">
+               <span class="text-gray-600">Last Run:</span>
+               <span class="text-gray-900 text-sm">{new Date(lastUpdate).toLocaleString()}</span>
+             </div>
+             <div class="flex justify-between items-center">
+               <span class="text-gray-600">Source:</span>
+               <span class="text-gray-900">OCI Daily Cron</span>
+             </div>
+             <div class="flex justify-between items-center">
+               <span class="text-gray-600">Frequency:</span>
+               <span class="text-gray-900">Daily @ 2:00 AM GMT</span>
+             </div>
+           </div>
+         </div>
+
+         <!-- Local Scraper Status -->
+         <div class="bg-white rounded-lg shadow-md p-6">
+           <h2 class="text-xl font-semibold text-gray-800 mb-4">Local Scraper Status</h2>
+           <div class="space-y-3">
+             <div class="flex justify-between items-center">
+               <span class="text-gray-600">Status:</span>
+               <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">Automation Ready</span>
+             </div>
+             <div class="flex justify-between items-center">
+               <span class="text-gray-600">Last Run:</span>
+               <span class="text-gray-900 text-sm">Oil & Gas: Nov 19, 2025</span>
+             </div>
+             <div class="flex justify-between items-center">
+               <span class="text-gray-600">Source:</span>
+               <span class="text-gray-900">Local Execution</span>
+             </div>
+             <div class="flex justify-between items-center">
+               <span class="text-gray-600">RAM Available:</span>
+               <span class="text-green-600 font-semibold">40GB</span>
+             </div>
+             <div class="flex justify-between items-center">
+               <span class="text-gray-600">Frequency:</span>
+               <span class="text-gray-900">Weekly (Manual/Cron Ready)</span>
+             </div>
+           </div>
+         </div>
 
         <!-- Data Quality Summary -->
         <div class="bg-white rounded-lg shadow-md p-6">

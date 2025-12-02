@@ -28,6 +28,7 @@
 │  ✅ Click Tracking             DEPLOYED ✨  │
  │  ✅ OCI Scrapers               DEPLOYED     │
  │  ✅ Local Heavy Scrapers       ACTIVE       │
+ │  ✅ Local Automation           READY        │
  │  ✅ Automated Scheduling       ACTIVE       │
 │  ✅ Frontend (Cloudflare)      LIVE         │
 │  ✅ Domain (tstr.site)         LIVE         │
@@ -63,7 +64,7 @@ Last Scrape:      November 10, 2025 02:31 UTC (on schedule)
   - `sales_contacts.csv` (64 contacts)
   - `invalid_urls.csv` (17 invalid URLs)
 - **Status**: ✅ ACTIVE
-- **Note**: Lightweight scrapers deployed to OCI; heavy-duty scrapers (browser automation) run locally due to RAM limitations
+- **Note**: Lightweight scrapers deployed to OCI; heavy-duty scrapers (browser automation) run locally. Local machine has 40GB RAM - sufficient for automated local execution
 
 #### Automated Scheduling (Cron)
 - **Schedule**: `0 2 * * *` (Daily at 2:00 AM GMT)

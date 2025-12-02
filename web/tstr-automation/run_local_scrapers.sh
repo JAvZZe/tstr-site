@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# TSTR.site Local Scraper Automation Script
+# Runs heavy-duty scrapers locally with 40GB RAM available
+
+set -e
+
+LOG_FILE="/media/al/AI_SSD/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/web/tstr-automation/local_scraper.log"
+SCRIPT_DIR="/media/al/AI_SSD/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/web/tstr-automation"
+
+echo "$(date): Starting local scraper automation" >> "$LOG_FILE"
+
+cd "$SCRIPT_DIR"
+
+# Run Oil & Gas scraper (heavy processing, browser automation)
+echo "$(date): Running Oil & Gas scraper..." >> "$LOG_FILE"
+python scrapers/oil_gas_playwright.py >> "$LOG_FILE" 2>&1
+
+# Run other heavy scrapers as needed
+# python scrapers/a2la_materials.py >> "$LOG_FILE" 2>&1
+
+echo "$(date): Local scraper automation completed" >> "$LOG_FILE"

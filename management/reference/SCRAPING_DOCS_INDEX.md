@@ -154,6 +154,7 @@ Site population & Outreach campaigns
 ### Current State (2025-11-22)
 - **Heavy-duty scrapers** (Playwright, Selenium, browser automation): Run locally on development machines
 - **Lightweight scrapers** (simple HTTP requests, HTML parsing): Deployed to OCI when resources allow
+- **Local Automation**: Ready with 40GB RAM available for automated execution
 - **Reason**: OCI has low RAM allocation, insufficient for browser automation tools
 - **Future**: Migrate lightweight scrapers to OCI cron jobs when Oracle upgrades free tier resources
 
