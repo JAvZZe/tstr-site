@@ -7,7 +7,7 @@ export const prerender = false;
 // Fetch dashboard data
 const { data: listings, error: listingsError } = await supabase
   .from('listings')
-  .select('id, name, created_at, updated_at, status, category:category_id(name, slug)')
+  .select('id, name, created_at, updated_at, status, category:category_id(name, slug), source_script, script_location')
   .eq('status', 'active')
 
 const { data: recentListings, error: recentError } = await supabase
@@ -216,6 +216,40 @@ const title = 'Scraper Dashboard'
                  </div>
                </div>
              </div>
+           </div>
+         </div>
+       </div>
+
+       <!-- Source Tracking Statistics -->
+       <div class="mt-8">
+         <h2 class="text-2xl font-semibold text-gray-800 mb-6">Data Source Statistics</h2>
+         <div class="bg-white rounded-lg shadow-md p-6">
+           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+             {(() => {
+               const sourceStats = listings?.reduce((acc, listing) => {
+                 const script = listing.source_script || 'Unknown';
+                 const location = listing.script_location || 'Unknown';
+                 const key = `${script} (${location})`;
+                 if (!acc[key]) {
+                   acc[key] = { count: 0, categories: new Set() };
+                 }
+                 acc[key].count++;
+                 if (listing.category?.name) {
+                   acc[key].categories.add(listing.category.name);
+                 }
+                 return acc;
+               }, {}) || {};
+
+               return Object.entries(sourceStats).map(([source, stats]) => (
+                 <div class="border rounded-lg p-4">
+                   <h3 class="font-semibold text-gray-800 mb-2">{source}</h3>
+                   <div class="space-y-1 text-sm text-gray-600">
+                     <p>Listings: <span class="font-medium text-gray-900">{stats.count}</span></p>
+                     <p>Categories: <span class="font-medium text-gray-900">{Array.from(stats.categories).join(', ')}</span></p>
+                   </div>
+                 </div>
+               ));
+             })()}
            </div>
          </div>
        </div>

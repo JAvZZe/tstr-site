@@ -20,20 +20,22 @@ from supabase import create_client
 
 load_dotenv()
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
 def generate_slug(name):
     """Generate URL-safe slug from business name"""
     if not name:
-        return ''
+        return ""
     # Convert to lowercase, remove special chars, replace spaces with hyphens
     slug = name.lower()
-    slug = re.sub(r'[^a-z0-9\s-]', '', slug)
-    slug = re.sub(r'[\s]+', '-', slug)
-    slug = slug.strip('-')
-    return slug or 'unnamed'
+    slug = re.sub(r"[^a-z0-9\s-]", "", slug)
+    slug = re.sub(r"[\s]+", "-", slug)
+    slug = slug.strip("-")
+    return slug or "unnamed"
 
 
 def scrape_contract_laboratory(dry_run=False, limit=None):
@@ -49,8 +51,8 @@ def scrape_contract_laboratory(dry_run=False, limit=None):
     """
 
     # Initialize Supabase
-    supabase_url = os.getenv('SUPABASE_URL')
-    supabase_key = os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+    supabase_url = os.getenv("SUPABASE_URL")
+    supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
     if not supabase_url or not supabase_key:
         raise ValueError("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env")
@@ -58,21 +60,26 @@ def scrape_contract_laboratory(dry_run=False, limit=None):
     supabase = create_client(supabase_url, supabase_key)
 
     # Get category ID for oil-gas-testing
-    category_result = supabase.table('categories').select('id').eq('slug', 'oil-gas-testing').execute()
+    category_result = (
+        supabase.table("categories")
+        .select("id")
+        .eq("slug", "oil-gas-testing")
+        .execute()
+    )
     if not category_result.data:
         raise ValueError("Category 'oil-gas-testing' not found in database")
-    category_id = category_result.data[0]['id']
+    category_id = category_result.data[0]["id"]
     logger.info(f"Category ID: {category_id}")
 
     listings = []
-    base_url = 'https://www.contractlaboratory.com'
-    directory_url = f'{base_url}/directory/laboratories/by-industry.cfm?i=45'
+    base_url = "https://www.contractlaboratory.com"
+    directory_url = f"{base_url}/directory/laboratories/by-industry.cfm?i=45"
 
     with sync_playwright() as p:
         # Launch browser (headless=True for production, False for debugging)
         browser = p.chromium.launch(headless=True)
         context = browser.new_context(
-            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
         )
         page = context.new_page()
 
@@ -84,21 +91,21 @@ def scrape_contract_laboratory(dry_run=False, limit=None):
             if page_num == 1:
                 url = directory_url
             else:
-                url = f'{directory_url}/page/{page_num}/?_sort=featured_vendor__desc'
+                url = f"{directory_url}/page/{page_num}/?_sort=featured_vendor__desc"
 
             logger.info(f"Fetching page {page_num}: {url}")
 
             try:
                 # Navigate to page
-                page.goto(url, wait_until='networkidle', timeout=30000)
+                page.goto(url, wait_until="networkidle", timeout=30000)
                 time.sleep(2)  # Give time for JS to render
 
                 # Get page HTML
                 html = page.content()
-                soup = BeautifulSoup(html, 'html.parser')
+                soup = BeautifulSoup(html, "html.parser")
 
                 # Find lab cards - HivePress uses <article> tags
-                lab_cards = soup.find_all('article', class_='hp-vendor--view-block')
+                lab_cards = soup.find_all("article", class_="hp-vendor--view-block")
 
                 logger.info(f"Found {len(lab_cards)} labs on page {page_num}")
 
@@ -108,39 +115,41 @@ def scrape_contract_laboratory(dry_run=False, limit=None):
 
                     try:
                         # Extract name from h4.hp-vendor__name > a
-                        name_elem = card.find('h4', class_='hp-vendor__name')
+                        name_elem = card.find("h4", class_="hp-vendor__name")
                         if not name_elem:
                             continue
 
-                        name_link = name_elem.find('a')
+                        name_link = name_elem.find("a")
                         if not name_link:
                             continue
 
                         business_name = name_link.get_text(strip=True)
 
                         # Extract profile URL
-                        profile_url = name_link.get('href', '')
-                        if profile_url and not profile_url.startswith('http'):
-                            profile_url = f'{base_url}{profile_url}'
+                        profile_url = name_link.get("href", "")
+                        if profile_url and not profile_url.startswith("http"):
+                            profile_url = f"{base_url}{profile_url}"
 
                         # Extract location from .hp-vendor__location span
-                        location_elem = card.find('div', class_='hp-vendor__location')
+                        location_elem = card.find("div", class_="hp-vendor__location")
                         address = None
                         if location_elem:
-                            location_span = location_elem.find('span')
+                            location_span = location_elem.find("span")
                             if location_span:
                                 address = location_span.get_text(strip=True)
 
                         listing = {
-                            'business_name': business_name,
-                            'slug': generate_slug(business_name),
-                            'address': address,
-                            'website': profile_url,
-                            'category_id': category_id,
-                            'location_id': 'aac4019b-7e93-4aec-ba55-150103da7d6f',  # Global location (default)
-                            'status': 'pending',
-                            'verified': False,
-                            'claimed': False
+                            "business_name": business_name,
+                            "slug": generate_slug(business_name),
+                            "address": address,
+                            "website": profile_url,
+                            "category_id": category_id,
+                            "location_id": "aac4019b-7e93-4aec-ba55-150103da7d6f",  # Global location (default)
+                            "status": "pending",
+                            "verified": False,
+                            "claimed": False,
+                            "source_script": "oil_gas_playwright.py",
+                            "script_location": "web/tstr-automation/scrapers/",
                         }
 
                         listings.append(listing)
@@ -159,10 +168,10 @@ def scrape_contract_laboratory(dry_run=False, limit=None):
 
         browser.close()
 
-    logger.info(f"\n{'='*70}")
+    logger.info(f"\n{'=' * 70}")
     logger.info(f"SCRAPING COMPLETE")
     logger.info(f"Total listings scraped: {len(listings)}")
-    logger.info(f"{'='*70}\n")
+    logger.info(f"{'=' * 70}\n")
 
     # Save to database if not dry run
     if not dry_run and listings:
@@ -173,10 +182,12 @@ def scrape_contract_laboratory(dry_run=False, limit=None):
         for listing in listings:
             try:
                 # Check for duplicates
-                existing = supabase.table('listings')\
-                    .select('id')\
-                    .eq('business_name', listing['business_name'])\
+                existing = (
+                    supabase.table("listings")
+                    .select("id")
+                    .eq("business_name", listing["business_name"])
                     .execute()
+                )
 
                 if existing.data:
                     logger.info(f"Duplicate skipped: {listing['business_name']}")
@@ -184,7 +195,7 @@ def scrape_contract_laboratory(dry_run=False, limit=None):
                     continue
 
                 # Insert listing
-                result = supabase.table('listings').insert(listing).execute()
+                result = supabase.table("listings").insert(listing).execute()
                 saved_count += 1
                 logger.info(f"Saved: {listing['business_name']}")
 
@@ -199,9 +210,13 @@ def scrape_contract_laboratory(dry_run=False, limit=None):
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description='Oil & Gas Testing Scraper (Playwright)')
-    parser.add_argument('--dry-run', action='store_true', help='Parse but don\'t save to database')
-    parser.add_argument('--limit', type=int, help='Limit number of listings to scrape')
+    parser = argparse.ArgumentParser(
+        description="Oil & Gas Testing Scraper (Playwright)"
+    )
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Parse but don't save to database"
+    )
+    parser.add_argument("--limit", type=int, help="Limit number of listings to scrape")
 
     args = parser.parse_args()
 
