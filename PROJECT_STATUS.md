@@ -28,7 +28,7 @@
 │  ✅ Click Tracking             DEPLOYED ✨  │
  │  ✅ OCI Scrapers               DEPLOYED     │
  │  ✅ Local Heavy Scrapers       ACTIVE       │
- │  ✅ Local Automation           READY        │
+ │  ✅ Local Automation           ACTIVE       │
  │  ✅ Automated Scheduling       ACTIVE       │
 │  ✅ Frontend (Cloudflare)      LIVE         │
 │  ✅ Domain (tstr.site)         LIVE         │
@@ -65,6 +65,13 @@ Last Scrape:      November 10, 2025 02:31 UTC (on schedule)
   - `invalid_urls.csv` (17 invalid URLs)
 - **Status**: ✅ ACTIVE
 - **Note**: Lightweight scrapers deployed to OCI; heavy-duty scrapers (browser automation) run locally. Local machine has 40GB RAM - sufficient for automated local execution
+
+#### Local Scraper Automation
+- **Script**: `run_local_scrapers.sh`
+- **Schedule**: Weekly (systemd timer)
+- **Sources**: Oil & Gas, A2LA Materials, TNI Environmental (heavy processing)
+- **Logs**: `local_scraper.log`
+- **Status**: ✅ ACTIVE (systemd timer configured)
 
 #### Automated Scheduling (Cron)
 - **Schedule**: `0 2 * * *` (Daily at 2:00 AM GMT)
