@@ -50,11 +50,12 @@ Last Scrape:      November 10, 2025 02:31 UTC (on schedule)
 
 #### Scraper Monitoring Dashboard
 - **URL**: https://tstr.site/admin/dashboard
-- **Features**: Real-time scraper status, script details, source mapping
+- **Features**: Real-time scraper status, script details, source mapping, data source statistics
 - **OCI Scrapers**: Shows run_scraper.py details and daily cron status
 - **Local Scrapers**: Shows individual script names and automation status
 - **Source Mapping**: Displays which script handles each category
-- **Status**: ✅ LIVE - Complete scraper ecosystem visibility
+- **Data Source Statistics**: Live breakdown of listings by scraper source
+- **Status**: ✅ LIVE - Complete scraper ecosystem visibility (deployed 2025-12-02)
 
 ### **Oracle Cloud Infrastructure (OCI)**
 
