@@ -1,90 +1,129 @@
-# 🚀 START HERE - TSTR.SITE
+# START HERE - TSTR.site Project
 
-**Last Updated**: October 17, 2025  
-**For**: All AI Agents (Claude Desktop, Claude Code CLI, Gemini CLI)
-
----
-
-## 📖 WHAT TO READ (IN ORDER)
-
-### **1️⃣ ALWAYS READ FIRST** ⭐
-- [`PROJECT_STATUS.md`](PROJECT_STATUS.md) - Current system state (SINGLE SOURCE OF TRUTH)
-
-### **2️⃣ READ FOR CONTEXT**
-- [`DEPLOYMENT_READY_SUMMARY.md`](DEPLOYMENT_READY_SUMMARY.md) - What's deployed, what's next
-- [`handoff_core.md`](handoff_core.md) - Recent session history (last 2-3 sessions)
-
-### **3️⃣ READ IF NEEDED**
-- [`AGENT_PROTOCOL.md`](AGENT_PROTOCOL.md) - Multi-agent coordination rules
-- [`AGENT_QUICK_REFERENCE.md`](AGENT_QUICK_REFERENCE.md) - Commands cheat sheet
-- [`Tstr.site Objectives and Context.docx`](Tstr.site%20Objectives%20and%20Context.docx) - Business goals
+**Project**: Global testing laboratory directory (Oil & Gas, Environmental, Materials Testing, etc.)
+**Status**: Production scrapers on OCI, frontend needs deployment
+**Location**: `/home/al/tstr-site-working`
 
 ---
 
-## 🎯 CURRENT PROJECT STATE
+## ⚠️ MANDATORY: Bootstrap Before ANY Work
 
-**System Status**: ✅ Backend automated, ⏳ Frontend needs deployment
+**Run this FIRST** (before reading anything else):
 
-### What's LIVE:
-- ✅ 3 Cloud Functions deployed (scrapers + cleanup)
-- ✅ Automated scheduling (every 3 days @ 2am Singapore)
-- ✅ Database operational (19 verified listings)
-- ✅ URL validation (95% success rate)
-
-### What's PENDING:
-- ⏳ Deploy Astro website to Netlify
-- ⏳ Setup auto-rebuild webhook
-- ⏳ Connect custom domain (tstr.site)
-
-**Cost**: $1.04/month ✅
-
----
-
-## 🛠️ QUICK ACTIONS
-
-### Check Status
 ```bash
-# View deployment status
-cat DEPLOYMENT_READY_SUMMARY.md
-
-# Check latest work
-tail -100 handoff_core.md
+./bootstrap.sh TSTR.site
 ```
 
-### Deploy Website (Next Step)
+**What this does**:
+- ✅ Loads 90 learnings from database (filtered for TSTR.site)
+- ✅ Shows pending tasks (for this project only)
+- ✅ Displays recent session context
+- ✅ Checks for handoffs
+- ✅ Reminds you of protocol
+
+**Why this matters**: Last 3 agents forgot critical learnings #45, #67, #88 and repeated mistakes. Bootstrap prevents this.
+
+**If bootstrap.sh doesn't exist**: You're in the wrong directory or symlinks not created. Check you're in `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/`
+
+---
+
+## New Agent Checklist (Read in Order)
+
+1. ✅ **This file** (you're here - quick orientation)
+2. 📋 **`TSTR.md`** - PRIMARY agent instructions (architecture, commands, priorities, troubleshooting)
+3. 🎯 **`ORGANIZATION_UPDATE_2025-11-22.md`** - Niche directory structure and strategic focus
+4. 📝 **`.ai-session.md`** - Latest session context, learnings, active tasks
+5. 🔄 **`HANDOFF_TO_CLAUDE.md`** - Current handoff from previous agent (if exists)
+6. 📊 **`PROJECT_STATUS.md`** - Deployment status, infrastructure details, costs
+
+**Niche-Specific Docs**:
+- 🔋 **`/Hydrogen Infrastructure Testing/`** - Hydrogen testing standards and implementations
+- 🧬 **`/Biotech Directory/`** - Biotech/Pharma/Life Sciences resources and workflows
+
+---
+
+## Current Priorities (P0)
+
+1. **Fix GitHub workflow failure** - Uncommitted changes blocking "Keep Supabase Active" workflow
+2. **Deploy frontend** - Build and deploy Astro site to Cloudflare Pages
+
+**Full priority list**: See `TSTR.md` → "Current Priorities"
+
+---
+
+## Quick Reference
+
+**Scrapers** (Active on OCI):
+- Location: OCI instance 84.8.139.90 at `~/tstr-scraper/`
+- Scheduler: Cron daily at 2 AM GMT
+- Status: ✅ Working (127 listings deployed)
+
+**Frontend** (Not deployed):
+- Location: `web/tstr-frontend/`
+- Target: Cloudflare Pages
+- Status: Built but needs deployment
+
+**Database**:
+- Supabase: https://haimjeaetrsaauitrhfy.supabase.co
+- Status: ✅ Operational
+
+**For all commands, troubleshooting, and details**: See `TSTR.md`
+
+---
+
+## File Organization
+
+**Root-level docs** (read these):
+- `TSTR.md` - Agent instructions
+- `.ai-session.md` - Session tracking
+- `PROJECT_STATUS.md` - Deployment status
+- `README.md` - Project overview
+
+**Technical docs**: `docs/` folder
+**Historical docs**: `archive/old-docs/` folder
+
+---
+
+**Remember**: First Principles. OODA Loop. Test before deploy. No theater, working code only.
+
+---
+
+## During Work (Protocol Compliance)
+
+### Every ~30 Minutes or After Significant Progress
 ```bash
-# Follow this guide
-cat DEPLOY_NOW.md
+./checkpoint.sh "what you accomplished"
 ```
 
-### Work on Project
+### After Errors/Discoveries (3+ failed attempts OR new insights)
 ```bash
-# Frontend
-cd web/tstr-frontend
+cd "/home/al/AI_PROJECTS_SPACE/SYSTEM/state"
+python3 db_utils.py learning-add \
+  "What you learned" \
+  "gotcha" \
+  5 \
+  "TSTR.site,relevant-tags"
+```
 
-# Automation scripts
-cd web/tstr-automation
+### End of Session
+```bash
+./checkpoint.sh "final state description"
+# OR if handing off to another agent
+./handoff.sh <agent-name> <reason>
 ```
 
 ---
 
-## 🚨 IMPORTANT RULES
+## Tools Available From This Folder
 
-1. **Always read PROJECT_STATUS.md FIRST**
-2. **Update PROJECT_STATUS.md after changes**
-3. **Log sessions in handoff_core.md**
-4. **Keep costs documented**
-5. **Test before deploying**
+Because of symlinks, you can run:
+- `./bootstrap.sh TSTR.site` - Load project context
+- `./checkpoint.sh "msg"` - Save state
+- `./resume.sh` - Load last checkpoint
+- `./handoff.sh agent reason` - Transfer to another agent
 
----
-
-## 📞 NEED HELP?
-
-- **Technical**: Read `PROJECT_REFERENCE.md`
-- **Deployment**: Read `DEPLOY_NOW.md`
-- **Multi-agent**: Read `AGENT_PROTOCOL.md`
-- **Quick commands**: Read `AGENT_QUICK_REFERENCE.md`
+All point to global system at `/home/al/AI_PROJECTS_SPACE/`
 
 ---
 
-**Remember**: Read first, act second, document after! ✅
+**Next step**: Read `TSTR.md` for full context.
