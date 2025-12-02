@@ -116,6 +116,7 @@ const country = locationHierarchy.find(l => l.level === 'country')
 // Hide sensitive data (phone, email) - can be gated client-side later
 let userTier = 'basic' // Set to 'basic' for SEO: shows website & certifications
 let isLoggedIn = false
+let isOwner = false
 
 // Format custom fields by type
 const formatFieldValue = (value, fieldType) => {
@@ -149,8 +150,8 @@ const allCertifications = [...customFields, ...standards]
 
 // Tier-based visibility rules (SEO-optimized for static build)
 const canViewFullAddress = true // Show location for SEO
-const canViewPhone = false // Hide for privacy (can be gated client-side)
-const canViewEmail = false // Hide for privacy (can be gated client-side)
+const canViewPhone = false // Hide for privacy (can be gated client-side for owners)
+const canViewEmail = false // Hide for privacy (can be gated client-side for owners)
 const canViewWebsite = true // Always show (public anyway + SEO value)
 const canViewCertifications = true // Always show (critical for SEO keywords)
 
@@ -246,6 +247,14 @@ const certificationCount = allCertifications.length
       margin-bottom: 0.5rem;
     }
 
+    .header-badges {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
     .category-badge {
       display: inline-block;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -254,7 +263,27 @@ const certificationCount = allCertifications.length
       border-radius: 4px;
       font-size: 0.85rem;
       font-weight: 500;
-      margin-bottom: 1rem;
+    }
+
+    .ownership-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .ownership-badge.claimed {
+      background: rgba(40, 167, 69, 0.1);
+      color: #28a745;
+      border: 1px solid #28a745;
+    }
+
+    .ownership-badge.pending {
+      background: rgba(255, 193, 7, 0.1);
+      color: #856404;
+      border: 1px solid #ffc107;
     }
 
     .info-section {
@@ -448,6 +477,118 @@ const certificationCount = allCertifications.length
       font-weight: 500;
     }
 
+    .claim-section {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, #f0f4ff 0%, #fff5f8 100%);
+      border: 2px solid #667eea;
+      border-radius: 8px;
+    }
+
+    .claim-card h3 {
+      color: #667eea;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    .claim-card p {
+      color: #555;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .claim-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .claim-status {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+
+    .claim-status.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .claim-status.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .claim-status.pending {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeaa7;
+    }
+
+    .claim-status-indicator {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .claim-status-indicator.claimed {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .claim-status-indicator.pending {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeaa7;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+    }
+
+    .btn-secondary:hover {
+      background: #f8f9ff;
+    }
+
+    .contact-hidden {
+      color: #999;
+      font-style: italic;
+      font-size: 0.9rem;
+    }
+
     @media (max-width: 768px) {
       .listing-title {
         font-size: 1.5rem;
@@ -472,6 +613,15 @@ const certificationCount = allCertifications.length
 
       .upgrade-btn {
         width: 100%;
+      }
+
+      .claim-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
       }
     }
   </style>
@@ -498,12 +648,15 @@ const certificationCount = allCertifications.length
     <a href="/browse" class="back-link">← Back to Browse</a>
 
     <div class="listing-card">
-      <div class="listing-header">
-        <h1 class="listing-title">{listing.business_name}</h1>
-        {listing.category?.name && (
-          <div class="category-badge">{listing.category.name}</div>
-        )}
-      </div>
+       <div class="listing-header">
+         <h1 class="listing-title">{listing.business_name}</h1>
+         <div class="header-badges">
+           {listing.category?.name && (
+             <div class="category-badge">{listing.category.name}</div>
+           )}
+           <div id="ownership-badge" class="ownership-badge" style="display: none;"></div>
+         </div>
+       </div>
 
       {listing.description && (
         <div class="info-section">
@@ -533,19 +686,31 @@ const certificationCount = allCertifications.length
             </>
           )}
 
-          {listing.phone && canViewPhone ? (
-            <div class="info-item">
-              <div class="info-label">Phone</div>
-              <div class="info-value"><a href={`tel:${listing.phone}`}>{listing.phone}</a></div>
-            </div>
-          ) : null}
+           {listing.phone ? (
+             <div class="info-item" id="phone-item">
+               <div class="info-label">Phone</div>
+               <div class="info-value">
+                 {canViewPhone ? (
+                   <a href={`tel:${listing.phone}`}>{listing.phone}</a>
+                 ) : (
+                   <span class="contact-hidden">Contact info available for verified owners</span>
+                 )}
+               </div>
+             </div>
+           ) : null}
 
-          {listing.email && canViewEmail ? (
-            <div class="info-item">
-              <div class="info-label">Email</div>
-              <div class="info-value"><a href={`mailto:${listing.email}`}>{listing.email}</a></div>
-            </div>
-          ) : null}
+           {listing.email ? (
+             <div class="info-item" id="email-item">
+               <div class="info-label">Email</div>
+               <div class="info-value">
+                 {canViewEmail ? (
+                   <a href={`mailto:${listing.email}`}>{listing.email}</a>
+                 ) : (
+                   <span class="contact-hidden">Contact info available for verified owners</span>
+                 )}
+               </div>
+             </div>
+           ) : null}
 
           {listing.website && canViewWebsite ? (
             <div class="info-item">
@@ -566,16 +731,232 @@ const certificationCount = allCertifications.length
             </div>
           ))}
         </div>
-      )}
+       )}
 
-      {allCertifications.length > 0 && (
-        <div class="disclaimer">
-          <strong>⚠️ Disclaimer:</strong> Certifications and capabilities listed are extracted from public databases and have not been independently verified by TSTR.site. We recommend verifying all credentials directly with the testing laboratory and relevant accreditation bodies before engaging services.
-        </div>
-      )}
-    </div>
-  </div>
+       {allCertifications.length > 0 && (
+         <div class="disclaimer">
+           <strong>⚠️ Disclaimer:</strong> Certifications and capabilities listed are extracted from public databases and have not been independently verified by TSTR.site. We recommend verifying all credentials directly with the testing laboratory and relevant accreditation bodies before engaging services.
+         </div>
+       )}
 
-  <Footer />
-</body>
+       <!-- Claim listing section -->
+       <div id="claim-section" class="claim-section" style="display: none;">
+         <div class="claim-card">
+           <h3>🏢 Claim This Listing</h3>
+           <p>Are you the owner or representative of this testing laboratory? Claim ownership to manage your listing and access additional features.</p>
+           <div class="claim-actions">
+             <button id="claim-btn" class="btn btn-primary">
+               <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+               </svg>
+               Claim This Listing
+             </button>
+             <button id="cancel-claim-btn" class="btn btn-secondary">Cancel</button>
+           </div>
+           <div id="claim-status" class="claim-status" style="display: none;"></div>
+         </div>
+       </div>
+
+       <!-- Claim status indicator -->
+       <div id="claim-status-indicator" class="claim-status-indicator" style="display: none;"></div>
+     </div>
+   </div>
+
+   <Footer />
+
+   <script type="module">
+     import { supabaseBrowser } from '../../lib/supabase-browser'
+
+     const listingId = '{listing.id}'
+     const listingName = '{listing.business_name}'
+
+     async function checkAuthAndClaimStatus() {
+       try {
+         // Check if user is authenticated
+         const { data: { user }, error: authError } = await supabaseBrowser.auth.getUser()
+
+         if (authError || !user) {
+           // User not logged in, hide claim section
+           return
+         }
+
+         // Check if listing is already claimed
+         const { data: existingClaim } = await supabaseBrowser
+           .from('listing_owners')
+           .select('status, verification_method')
+           .eq('user_id', user.id)
+           .eq('listing_id', listingId)
+           .single()
+
+         const claimSection = document.getElementById('claim-section')
+         const statusIndicator = document.getElementById('claim-status-indicator')
+
+         const ownershipBadge = document.getElementById('ownership-badge')
+
+         if (existingClaim && existingClaim.status === 'verified') {
+           // User is the verified owner - show full contact info
+           isOwner = true
+           showOwnerContactInfo()
+
+           const statusInfo = getClaimStatusInfo(existingClaim.status)
+           statusIndicator.innerHTML = `
+             <div class="claim-status-indicator claimed">
+               ${statusInfo.icon} ${statusInfo.text} - ${existingClaim.verification_method === 'domain_match' ? 'Auto-verified' : 'Manual verification'}
+             </div>
+           `
+           statusIndicator.style.display = 'block'
+           claimSection.style.display = 'none'
+
+           // Show ownership badge
+           ownershipBadge.innerHTML = `<span class="ownership-badge claimed">✓ Verified Owner</span>`
+           ownershipBadge.style.display = 'block'
+         } else if (existingClaim && existingClaim.status === 'pending') {
+           // User has pending claim
+           const statusInfo = getClaimStatusInfo(existingClaim.status)
+           statusIndicator.innerHTML = `
+             <div class="claim-status-indicator pending">
+               ${statusInfo.icon} ${statusInfo.text} - ${existingClaim.verification_method === 'domain_match' ? 'Auto-verified' : 'Manual verification'}
+             </div>
+           `
+           statusIndicator.style.display = 'block'
+           claimSection.style.display = 'none'
+
+           // Show pending badge
+           ownershipBadge.innerHTML = `<span class="ownership-badge pending">⏳ Claim Pending</span>`
+           ownershipBadge.style.display = 'block'
+         } else {
+           // Check if listing is already claimed by someone else
+           const { data: otherClaim } = await supabaseBrowser
+             .from('listings')
+             .select('claimed')
+             .eq('id', listingId)
+             .single()
+
+           if (otherClaim?.claimed) {
+             statusIndicator.innerHTML = `
+               <div class="claim-status-indicator claimed">
+                 ✓ This listing has been claimed by its owner
+               </div>
+             `
+             statusIndicator.style.display = 'block'
+             claimSection.style.display = 'none'
+
+             // Show claimed badge for other owners
+             ownershipBadge.innerHTML = `<span class="ownership-badge claimed">✓ Claimed</span>`
+             ownershipBadge.style.display = 'block'
+           } else {
+             // Show claim button
+             claimSection.style.display = 'block'
+           }
+         }
+
+         // Setup claim button handler
+         const claimBtn = document.getElementById('claim-btn')
+         const cancelBtn = document.getElementById('cancel-claim-btn')
+         const claimStatus = document.getElementById('claim-status')
+
+         claimBtn?.addEventListener('click', async () => {
+           claimBtn.disabled = true
+           claimBtn.innerHTML = '<span>Claiming...</span>'
+
+           try {
+             const response = await fetch('/api/claim-listing', {
+               method: 'POST',
+               headers: {
+                 'Content-Type': 'application/json',
+               },
+               body: JSON.stringify({ listingId })
+             })
+
+             const result = await response.json()
+
+             if (response.ok && result.success) {
+               claimStatus.className = 'claim-status success'
+               claimStatus.innerHTML = `<strong>✓ Success!</strong> ${result.message}`
+               claimStatus.style.display = 'block'
+
+               // Hide claim section and show status
+               claimSection.style.display = 'none'
+               statusIndicator.innerHTML = `
+                 <div class="claim-status-indicator ${result.claim.status === 'verified' ? 'claimed' : 'pending'}">
+                   ✓ ${result.claim.status === 'verified' ? 'Verified Owner' : 'Claim Pending'}
+                 </div>
+               `
+               statusIndicator.style.display = 'block'
+
+               // Reload page after 3 seconds to show updated state
+               setTimeout(() => {
+                 window.location.reload()
+               }, 3000)
+             } else {
+               throw new Error(result.error || 'Claim failed')
+             }
+           } catch (error) {
+             console.error('Claim error:', error)
+             claimStatus.className = 'claim-status error'
+             claimStatus.innerHTML = `<strong>✗ Error:</strong> ${error.message}`
+             claimStatus.style.display = 'block'
+             claimBtn.disabled = false
+             claimBtn.innerHTML = `
+               <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+               </svg>
+               Claim This Listing
+             `
+           }
+         })
+
+         cancelBtn?.addEventListener('click', () => {
+           claimSection.style.display = 'none'
+         })
+
+       } catch (error) {
+         console.error('Auth check error:', error)
+       }
+     }
+
+     function getClaimStatusInfo(status) {
+       switch (status) {
+         case 'verified':
+           return { text: 'Verified Owner', color: 'green', icon: '✓' }
+         case 'pending':
+           return { text: 'Claim Pending', color: 'yellow', icon: '⏳' }
+         case 'rejected':
+           return { text: 'Claim Rejected', color: 'red', icon: '✗' }
+         default:
+           return { text: 'Not Claimed', color: 'gray', icon: '?' }
+       }
+     }
+
+     function showOwnerContactInfo() {
+       // Show phone number if available
+       const phoneItem = document.getElementById('phone-item')
+       if (phoneItem && '{listing.phone}') {
+         const valueDiv = phoneItem.querySelector('.info-value')
+         if (valueDiv) {
+           valueDiv.innerHTML = `<a href="tel:{listing.phone}">{listing.phone}</a>`
+         }
+       }
+
+       // Show email if available
+       const emailItem = document.getElementById('email-item')
+       if (emailItem && '{listing.email}') {
+         const valueDiv = emailItem.querySelector('.info-value')
+         if (valueDiv) {
+           valueDiv.innerHTML = `<a href="mailto:{listing.email}">{listing.email}</a>`
+         }
+       }
+     }
+
+     // Initialize when page loads
+     document.addEventListener('DOMContentLoaded', checkAuthAndClaimStatus)
+
+     // Also check when auth state changes
+     supabaseBrowser.auth.onAuthStateChange((event, session) => {
+       if (event === 'SIGNED_IN' && session) {
+         checkAuthAndClaimStatus()
+       }
+     })
+   </script>
+ </body>
 </html>

@@ -1,0 +1,600 @@
+---
+export const prerender = false // Force SSR for auth page
+
+// Import Supabase client
+import { supabaseBrowser } from '../../lib/supabase-browser'
+import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Subscription - TSTR Hub</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f5f7fa;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3rem 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="60" cy="30" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+      opacity: 0.3;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+      position: relative;
+      z-index: 1;
+    }
+
+    .breadcrumb {
+      margin-top: 1.5rem;
+      opacity: 0.9;
+      font-size: 0.9rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .breadcrumb a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .current-plan-section {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+      border-left: 4px solid #667eea;
+    }
+
+    .current-plan-section h2 {
+      color: #333;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .current-plan-section h2::before {
+      content: '💎';
+      font-size: 1.2rem;
+    }
+
+    .plan-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .plan-card {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 1.5rem;
+      border-left: 3px solid #667eea;
+    }
+
+    .plan-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .plan-price {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #667eea;
+      margin-bottom: 1rem;
+    }
+
+    .plan-benefits {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .plan-benefits li {
+      padding: 0.5rem 0;
+      color: #555;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .plan-benefits li::before {
+      content: '✓';
+      color: #10b981;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .upgrade-section {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+    }
+
+    .upgrade-section h2 {
+      color: #333;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .upgrade-section h2::before {
+      content: '🚀';
+      font-size: 1.2rem;
+    }
+
+    .upgrade-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .upgrade-card {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 1.5rem;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .upgrade-card:hover {
+      border-color: #667eea;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .upgrade-card.recommended {
+      border-color: #667eea;
+      background: linear-gradient(135deg, #f0f4ff 0%, #fff5f8 100%);
+    }
+
+    .upgrade-card.recommended .upgrade-name {
+      color: #667eea;
+    }
+
+    .upgrade-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .upgrade-price {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #667eea;
+      margin-bottom: 1rem;
+    }
+
+    .upgrade-benefits {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      margin-bottom: 1.5rem;
+    }
+
+    .upgrade-benefits li {
+      padding: 0.25rem 0;
+      color: #555;
+      font-size: 0.9rem;
+    }
+
+    .upgrade-benefits li::before {
+      content: '+ ';
+      color: #10b981;
+      font-weight: 700;
+    }
+
+    .upgrade-btn {
+      display: block;
+      width: 100%;
+      padding: 0.875rem;
+      background: #667eea;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: background 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .upgrade-btn:hover {
+      background: #5568d3;
+    }
+
+    .upgrade-card.recommended .upgrade-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .support-section {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+    }
+
+    .support-section h2 {
+      color: #333;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .support-section h2::before {
+      content: '💬';
+      font-size: 1.2rem;
+    }
+
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .support-item {
+      text-align: center;
+      padding: 1.5rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .support-item h3 {
+      color: #333;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .support-item p {
+      color: #666;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .support-link {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: #667eea;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: background 0.3s;
+    }
+
+    .support-link:hover {
+      background: #5568d3;
+    }
+
+    .back-link {
+      display: inline-block;
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: #764ba2;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+    }
+
+    .error-message {
+      background: #fee;
+      border: 1px solid #fcc;
+      color: #c33;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 1.5rem 1rem;
+      }
+
+      header h1 {
+        font-size: 1.5rem;
+      }
+
+      .container {
+        padding: 0 1rem;
+      }
+
+      .plan-details {
+        grid-template-columns: 1fr;
+      }
+
+      .upgrade-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .support-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Manage Your Subscription</h1>
+    <p>View your current plan and explore upgrade options</p>
+    <div class="breadcrumb">
+      <a href="/">Home</a> / <a href="/account">Account</a> / <span>Subscription</span>
+    </div>
+  </header>
+
+  <div class="container">
+    <a href="/account" class="back-link">← Back to Account</a>
+
+    <div id="content">
+      <div class="loading">Loading your subscription details...</div>
+    </div>
+  </div>
+
+  <script>
+    import { supabaseBrowser } from '../../lib/supabase-browser'
+
+    async function loadSubscriptionPage() {
+      const contentDiv = document.getElementById('content')
+
+      try {
+        // Get current session
+        const { data: { session }, error: sessionError } = await supabaseBrowser.auth.getSession()
+
+        if (sessionError || !session) {
+          window.location.href = '/login'
+          return
+        }
+
+        const user = session.user
+
+        // Fetch user profile
+        const { data: profile, error: profileError } = await supabaseBrowser
+          .from('user_profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single()
+
+        if (profileError) {
+          console.error('Profile fetch error:', profileError)
+          contentDiv.innerHTML = `
+            <div class="error-message">
+              Failed to load subscription details. Please try again later.
+            </div>
+          `
+          return
+        }
+
+        const currentTier = profile?.subscription_tier || 'free'
+
+        // Define tier information
+        const tierInfo = {
+          free: {
+            name: 'Free',
+            price: '$0/month',
+            benefits: [
+              'Basic directory listing',
+              'Company name & description',
+              'General location display',
+              'Browse all listings'
+            ]
+          },
+          basic: {
+            name: 'Basic',
+            price: '$0/month',
+            benefits: [
+              'Everything in Free',
+              'Sign up to unlock contact details',
+              'Basic search filters',
+              'Save favorite listings'
+            ]
+          },
+          professional: {
+            name: 'Professional',
+            price: '$295/month',
+            benefits: [
+              'Everything in Basic',
+              'Full contact information displayed',
+              'Detailed capabilities & certifications',
+              'Equipment list',
+              'Up to 3 case studies',
+              'Basic analytics dashboard',
+              'Email support'
+            ]
+          },
+          premium: {
+            name: 'Premium',
+            price: '$795/month',
+            benefits: [
+              'Everything in Professional',
+              'Priority ranking in searches',
+              'Real-time lead notifications',
+              'Featured case study section',
+              'Advanced analytics dashboard',
+              'Monthly performance reports',
+              '48-hour early access to RFQs',
+              'Priority email support'
+            ]
+          },
+          enterprise: {
+            name: 'Enterprise',
+            price: 'Custom',
+            benefits: [
+              'Everything in Premium',
+              'Category exclusivity',
+              'Full analytics API access',
+              'Custom CRM integration',
+              'Co-branded marketing',
+              'Dedicated account manager',
+              'White-label profile widget',
+              'Custom contract terms'
+            ]
+          }
+        }
+
+        const currentTierData = tierInfo[currentTier]
+
+        // Determine available upgrades
+        const upgradeTiers = []
+        if (currentTier === 'free' || currentTier === 'basic') {
+          upgradeTiers.push('professional', 'premium', 'enterprise')
+        } else if (currentTier === 'professional') {
+          upgradeTiers.push('premium', 'enterprise')
+        } else if (currentTier === 'premium') {
+          upgradeTiers.push('enterprise')
+        }
+
+        const upgradeHtml = upgradeTiers.map(tier => {
+          const tierData = tierInfo[tier]
+          const isRecommended = tier === 'professional' && currentTier === 'free'
+          const additionalBenefits = tierData.benefits.slice(currentTierData.benefits.length)
+
+          return `
+            <div class="upgrade-card ${isRecommended ? 'recommended' : ''}">
+              <div class="upgrade-name">${tierData.name}</div>
+              <div class="upgrade-price">${tierData.price}</div>
+              <ul class="upgrade-benefits">
+                ${additionalBenefits.map(benefit => `<li>${benefit}</li>`).join('')}
+              </ul>
+              <a href="${tier === 'enterprise' ? '${MAILTO_LINKS.enterprisePlan}' : '${MAILTO_LINKS.professionalPlan}'}" class="upgrade-btn">
+                Contact Sales
+              </a>
+            </div>
+          `
+        }).join('')
+
+        contentDiv.innerHTML = `
+          <div class="current-plan-section">
+            <h2>Your Current Plan</h2>
+            <div class="plan-details">
+              <div class="plan-card">
+                <div class="plan-name">${currentTierData.name}</div>
+                <div class="plan-price">${currentTierData.price}</div>
+                <ul class="plan-benefits">
+                  ${currentTierData.benefits.map(benefit => `<li>${benefit}</li>`).join('')}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          ${upgradeTiers.length > 0 ? `
+            <div class="upgrade-section">
+              <h2>Upgrade Your Plan</h2>
+              <div class="upgrade-grid">
+                ${upgradeHtml}
+              </div>
+            </div>
+          ` : ''}
+
+          <div class="support-section">
+            <h2>Need Help?</h2>
+            <div class="support-grid">
+              <div class="support-item">
+                <h3>💰 Billing Questions</h3>
+                <p>Questions about pricing, payments, or invoices</p>
+                <a href="${MAILTO_LINKS.professionalPlan}" class="support-link">Contact Billing</a>
+              </div>
+              <div class="support-item">
+                <h3>🔧 Technical Support</h3>
+                <p>Help with your account or platform features</p>
+                <a href="mailto:${CONTACTS.support}" class="support-link">Get Support</a>
+              </div>
+              <div class="support-item">
+                <h3>📈 Sales Team</h3>
+                <p>Discuss custom plans or enterprise solutions</p>
+                <a href="${MAILTO_LINKS.enterprisePlan}" class="support-link">Talk to Sales</a>
+              </div>
+            </div>
+          </div>
+        `
+
+      } catch (error) {
+        console.error('Subscription page error:', error)
+        contentDiv.innerHTML = `
+          <div class="error-message">
+            An unexpected error occurred. Please refresh the page.
+          </div>
+        `
+      }
+    }
+
+    // Listen for auth state changes
+    supabaseBrowser.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        loadSubscriptionPage()
+      } else if (event === 'SIGNED_OUT' || !session) {
+        window.location.href = '/login'
+      }
+    })
+
+    // Load immediately
+    loadSubscriptionPage()
+  </script>
+</body>
+</html>

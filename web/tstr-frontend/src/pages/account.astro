@@ -317,6 +317,107 @@ import { supabaseBrowser } from '../lib/supabase-browser'
       margin-bottom: 1rem;
     }
 
+    .listings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .listing-item {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .listing-item:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .listing-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .listing-header h4 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    .listing-header h4 a {
+      color: #333;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .listing-header h4 a:hover {
+      color: #667eea;
+    }
+
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .status-badge.verified {
+      background: rgba(40, 167, 69, 0.1);
+      color: #28a745;
+    }
+
+    .status-badge.pending {
+      background: rgba(255, 193, 7, 0.1);
+      color: #ffc107;
+    }
+
+    .status-badge.rejected {
+      background: rgba(220, 53, 69, 0.1);
+      color: #dc3545;
+    }
+
+    .listing-details {
+      margin-bottom: 1rem;
+    }
+
+    .listing-details p {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .listing-details a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .listing-details a:hover {
+      text-decoration: underline;
+    }
+
+    .listing-actions {
+      text-align: right;
+    }
+
+    .no-listings {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+    }
+
+    .no-listings p {
+      margin-bottom: 1rem;
+    }
+
     @media (max-width: 768px) {
       .dashboard-grid {
         grid-template-columns: 1fr;
@@ -340,6 +441,19 @@ import { supabaseBrowser } from '../lib/supabase-browser'
 
       .card {
         padding: 1.5rem;
+      }
+
+      .listings-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .listing-header {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .listing-actions {
+        text-align: center;
       }
     }
   </style>
@@ -390,6 +504,30 @@ import { supabaseBrowser } from '../lib/supabase-browser'
           return
         }
 
+        // Fetch user's claimed listings
+        const { data: claimedListings, error: claimsError } = await supabaseBrowser
+          .from('listing_owners')
+          .select(`
+            status,
+            verification_method,
+            verified_at,
+            created_at,
+            listing:listings (
+              id,
+              business_name,
+              slug,
+              website,
+              location,
+              category:category_id (name)
+            )
+          `)
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+
+        if (claimsError) {
+          console.error('Claims fetch error:', claimsError)
+        }
+
         const tier = profile?.subscription_tier || 'free'
         const tierDisplay = tier.charAt(0).toUpperCase() + tier.slice(1)
         const companyName = profile?.company_name || 'Not provided'
@@ -431,9 +569,23 @@ import { supabaseBrowser } from '../lib/supabase-browser'
           ]
         }
 
-        const benefitsHtml = benefits.map(b => `<li>${b}</li>`).join('')
+         const benefitsHtml = benefits.map(b => `<li>${b}</li>`).join('')
 
-        contentDiv.innerHTML = `
+         // Helper function for claim status
+         function getClaimStatusInfo(status) {
+           switch (status) {
+             case 'verified':
+               return { text: 'Verified', color: 'green', icon: '✓' }
+             case 'pending':
+               return { text: 'Pending', color: 'yellow', icon: '⏳' }
+             case 'rejected':
+               return { text: 'Rejected', color: 'red', icon: '✗' }
+             default:
+               return { text: 'Unknown', color: 'gray', icon: '?' }
+           }
+         }
+
+         contentDiv.innerHTML = `
           <div class="dashboard-grid">
             <div class="card">
               <h3>👤 Account Information</h3>
@@ -497,6 +649,49 @@ import { supabaseBrowser } from '../lib/supabase-browser'
               <ul class="benefits-list">
                 ${benefitsHtml}
               </ul>
+            </div>
+
+            <div class="card full-width">
+              <h3>🏢 My Listings</h3>
+              <div id="listings-content">
+                ${claimedListings && claimedListings.length > 0 ? `
+                  <div class="listings-grid">
+                    ${claimedListings.map(claim => {
+                      const listing = claim.listing
+                      const statusInfo = getClaimStatusInfo(claim.status)
+                      return `
+                        <div class="listing-item">
+                          <div class="listing-header">
+                            <h4><a href="/listing/${listing.slug}" target="_blank">${listing.business_name}</a></h4>
+                            <span class="status-badge ${claim.status}">${statusInfo.icon} ${statusInfo.text}</span>
+                          </div>
+                          <div class="listing-details">
+                            <p><strong>Category:</strong> ${listing.category?.name || 'N/A'}</p>
+                            <p><strong>Location:</strong> ${listing.location?.name || 'N/A'}</p>
+                            ${listing.website ? `<p><strong>Website:</strong> <a href="${listing.website}" target="_blank">${listing.website}</a></p>` : ''}
+                            <p><strong>Verification:</strong> ${claim.verification_method === 'domain_match' ? 'Auto-verified (Domain Match)' : 'Manual Verification'}</p>
+                            <p><strong>Claimed:</strong> ${new Date(claim.created_at).toLocaleDateString()}</p>
+                            ${claim.verified_at ? `<p><strong>Verified:</strong> ${new Date(claim.verified_at).toLocaleDateString()}</p>` : ''}
+                          </div>
+                          <div class="listing-actions">
+                            <a href="/listing/${listing.slug}" class="btn btn-secondary" target="_blank">
+                              <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"/>
+                              </svg>
+                              View Listing
+                            </a>
+                          </div>
+                        </div>
+                      `
+                    }).join('')}
+                  </div>
+                ` : `
+                  <div class="no-listings">
+                    <p>You haven't claimed any listings yet.</p>
+                    <p><a href="/browse" class="btn btn-primary">Browse Listings</a></p>
+                  </div>
+                `}
+              </div>
             </div>
           </div>
 

@@ -1,9 +1,9 @@
 # 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: December 1, 2025 18:00 UTC
+> **Last Updated**: December 2, 2025 12:00 UTC
 > **Updated By**: OpenCode AI Assistant
-> **Status**: ✅ PRODUCTION - Live at https://tstr.site with 163 listings + Click Tracking + Admin Dashboard + Updated Branding + Terms of Service + Oil & Gas Scraper Integration + LinkedIn OAuth + Professional Account Dashboard
+> **Status**: ✅ PRODUCTION - Live at https://tstr.site with 163 listings + Click Tracking + Admin Dashboard + Updated Branding + Terms of Service + Oil & Gas Scraper Integration + LinkedIn OAuth + Professional Account Dashboard + Listing Ownership System
 
 ---
 
@@ -353,9 +353,11 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 - [x] **Account Dashboard** - User profile display and management ✅
 - [x] **End-to-End Testing** - LinkedIn OAuth + automatic profile creation ✅
 - [x] **Redirect Loop Fix** - Fixed auth state handling for OAuth callbacks ✅
-- [ ] **Owner Dashboard** - User interface for managing claims
-- [ ] **Listing Claim UI** - Frontend integration on listing pages
+- [x] **Owner Dashboard** - "My Listings" section showing owned/claimed listings ✅
+- [x] **Listing Claim UI** - Claim buttons and status indicators on listing pages ✅
 - [x] **Account Dashboard UX** - Improved styling, icons, and user experience ✅
+- [x] **Owner Contact Access** - Verified owners can view full contact info (phone/email) ✅
+- [x] **Subscription Management Page** - `/account/subscription` created with upgrade options ✅
 
 **Implementation Plan:** See `docs/active/LINKEDIN_OAUTH_IMPLEMENTATION_PLAN.md`
 **Setup Guide:** See `LINKEDIN_OAUTH_SETUP_GUIDE.md`
@@ -522,9 +524,14 @@ CRITICAL: Keeps OCI instance active (prevents Oracle shelving)
 
 ## 📊 VERSION HISTORY
 
-### **v2.2.7** - December 1, 2025 (CURRENT)
-- ✅ LinkedIn OAuth redirect URI configuration identified
-- ✅ Supabase provider Client ID corrected
+### **v2.3.1** - December 2, 2025 (CURRENT)
+- ✅ **Subscription Management Page** - Created `/account/subscription` with current plan display and upgrade options
+- ✅ **Listing Ownership System** - Complete implementation of claim functionality
+- ✅ Claim buttons on listing pages for authenticated users
+- ✅ Domain-based auto-verification for ownership claims
+- ✅ "My Listings" section in account dashboard
+- ✅ Owner badges and status indicators on listings
+- ✅ Contact info access for verified owners (phone/email)
 - 🔄 Need to update LinkedIn app redirect URIs
 - 🚧 Pending: Oil & Gas scraper deployment to OCI (requires SSH key access)
 
