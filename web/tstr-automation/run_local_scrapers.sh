@@ -12,11 +12,15 @@ echo "$(date): Starting local scraper automation" >> "$LOG_FILE"
 
 cd "$SCRIPT_DIR"
 
+# Test basic functionality first
+echo "$(date): Testing scraper environment..." >> "$LOG_FILE"
+python3 -c "import sys; print(f'Python version: {sys.version}')">> "$LOG_FILE" 2>&1
+
 # Run Oil & Gas scraper (heavy processing, browser automation)
 echo "$(date): Running Oil & Gas scraper..." >> "$LOG_FILE"
-python scrapers/oil_gas_playwright.py >> "$LOG_FILE" 2>&1
+python3 scrapers/oil_gas_playwright.py >> "$LOG_FILE" 2>&1
 
 # Run other heavy scrapers as needed
-# python scrapers/a2la_materials.py >> "$LOG_FILE" 2>&1
+# python3 scrapers/a2la_materials.py >> "$LOG_FILE" 2>&1
 
 echo "$(date): Local scraper automation completed" >> "$LOG_FILE"
