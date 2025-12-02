@@ -82,6 +82,7 @@ Last Scrape:      November 10, 2025 02:31 UTC (on schedule)
 - **Sources**: Oil & Gas, A2LA Materials, TNI Environmental (heavy processing)
 - **Logs**: `local_scraper.log`
 - **Dashboard**: Enhanced with script details and source mapping
+- **Database**: Source tracking fields added (source_script, script_location)
 - **Status**: ✅ ACTIVE (systemd timer configured)
 
 #### Automated Scheduling (Cron)
