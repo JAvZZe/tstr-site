@@ -91,6 +91,14 @@ const title = 'Scraper Dashboard'
                <span class="text-gray-900 text-sm">{new Date(lastUpdate).toLocaleString()}</span>
              </div>
              <div class="flex justify-between items-center">
+               <span class="text-gray-600">Script:</span>
+               <span class="text-gray-900 text-sm">run_scraper.py</span>
+             </div>
+             <div class="flex justify-between items-center">
+               <span class="text-gray-600">Location:</span>
+               <span class="text-gray-900 text-sm">/home/opc/tstr-scraper/</span>
+             </div>
+             <div class="flex justify-between items-center">
                <span class="text-gray-600">Source:</span>
                <span class="text-gray-900">OCI Daily Cron</span>
              </div>
@@ -114,8 +122,12 @@ const title = 'Scraper Dashboard'
                <span class="text-gray-900 text-sm">Oil & Gas: Dec 2, 2025 (Test Run)</span>
              </div>
              <div class="flex justify-between items-center">
-               <span class="text-gray-600">Source:</span>
-               <span class="text-gray-900">Local Execution</span>
+               <span class="text-gray-600">Script:</span>
+               <span class="text-gray-900 text-sm">scrapers/oil_gas_playwright.py</span>
+             </div>
+             <div class="flex justify-between items-center">
+               <span class="text-gray-600">Location:</span>
+               <span class="text-gray-900 text-sm">web/tstr-automation/</span>
              </div>
              <div class="flex justify-between items-center">
                <span class="text-gray-600">RAM Available:</span>
@@ -165,9 +177,52 @@ const title = 'Scraper Dashboard'
         </div>
       </div>
 
-      <!-- Scraper Performance by Category -->
-      <div class="mt-8">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-6">Scraper Performance by Category</h2>
+       <!-- Scraper Sources -->
+       <div class="mt-8">
+         <h2 class="text-2xl font-semibold text-gray-800 mb-6">Scraper Sources & Scripts</h2>
+         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+             <div>
+               <h3 class="text-lg font-semibold text-gray-800 mb-4">OCI Scrapers (Daily)</h3>
+               <div class="space-y-2">
+                 <div class="flex justify-between">
+                   <span class="text-gray-600">Pharmaceutical Testing:</span>
+                   <span class="text-gray-900 text-sm">dual_scraper.py</span>
+                 </div>
+                 <div class="flex justify-between">
+                   <span class="text-gray-600">Biotech Testing:</span>
+                   <span class="text-gray-900 text-sm">dual_scraper.py</span>
+                 </div>
+                 <div class="flex justify-between">
+                   <span class="text-gray-600">Materials Testing:</span>
+                   <span class="text-gray-900 text-sm">dual_scraper.py</span>
+                 </div>
+               </div>
+             </div>
+             <div>
+               <h3 class="text-lg font-semibold text-gray-800 mb-4">Local Scrapers (Weekly)</h3>
+               <div class="space-y-2">
+                 <div class="flex justify-between">
+                   <span class="text-gray-600">Oil & Gas Testing:</span>
+                   <span class="text-gray-900 text-sm">oil_gas_playwright.py</span>
+                 </div>
+                 <div class="flex justify-between">
+                   <span class="text-gray-600">A2LA Materials:</span>
+                   <span class="text-gray-900 text-sm">a2la_materials.py</span>
+                 </div>
+                 <div class="flex justify-between">
+                   <span class="text-gray-600">TNI Environmental:</span>
+                   <span class="text-gray-900 text-sm">tni_environmental.py</span>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+
+       <!-- Scraper Performance by Category -->
+       <div class="mt-8">
+         <h2 class="text-2xl font-semibold text-gray-800 mb-6">Scraper Performance by Category</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categoryMetrics.map((category) => (
             <div class="bg-white rounded-lg shadow-md p-6">
