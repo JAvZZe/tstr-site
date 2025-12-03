@@ -4,10 +4,19 @@
 
 **When starting any session in this project:**
 ```bash
-./bootstrap.sh TSTR-site    # Load project context, learnings, and pending tasks
+./start-agent.sh    # Recommended: Complete initialization with status
+# OR
+./bootstrap.sh TSTR-site    # Direct bootstrap (legacy)
 ```
 
-**Note**: The bootstrap script file is `Link_to_bootstrap_agent.sh` in the project root. Always run bootstrap at the start of every session.
+**Quick Start Commands:**
+```bash
+tstr-agent          # Alias for ./start-agent.sh (after ~/.bashrc reload)
+./start-agent.sh    # Full agent initialization
+./monitoring/daily_check.sh  # System health check
+```
+
+**Note**: The bootstrap script file is `Link_to_bootstrap_agent.sh` in the project root. Always run agent initialization at the start of every session.
 
 This loads:
 - Project-specific learnings from database
