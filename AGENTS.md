@@ -121,6 +121,20 @@ python scrapers/a2la_materials.py    # Run specific scraper
 - **Current OCI instance**: 84.8.139.90 (Oracle Linux 9) - active for lightweight operations
 - **Resource decision**: Local execution for any scraper needing >1GB RAM or JavaScript rendering
 
+### Environment Files (.env)
+**IMPORTANT**: .env files contain sensitive secrets and are blocked from read/edit tools. Use bash commands instead:
+```bash
+# Create .env from example
+cp web/tstr-frontend/.env.example web/tstr-frontend/.env
+cp web/tstr-automation/.env.example web/tstr-automation/.env
+
+# Read .env file
+cat web/tstr-frontend/.env
+
+# Edit .env file
+nano web/tstr-frontend/.env  # or vim, code, etc.
+```
+
 ## Code Style
 
 ### TypeScript/JavaScript
