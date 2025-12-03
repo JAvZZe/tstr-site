@@ -1,7 +1,7 @@
 # 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2025-12-03 17:06 UTC
+> **Last Updated**: 2025-12-03 17:16 UTC
 > **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at https://tstr.site
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -90,6 +90,11 @@ Last Scrape:      November 10, 2025 02:31 UTC
 2. **Invalid URLs**: 17 URLs failed validation. Action: Manual research.
 3. **Custom Fields**: Missing specialized data. Fix: Enhance extraction logic.
 4. **Submit Page**: ✅ FIXED - 500 Internal Server Error resolved (API key and category name mismatches)
+
+### **Security & Database Fixes** ✅ COMPLETE
+1. **RLS Policy Fixes**: ✅ Successfully corrected column name issues in Row Level Security policies
+2. **Migration Applied**: `20251203000001_fix_rls_policies_column_names.sql` deployed and version-controlled
+3. **Hybrid Fix Approach**: ✅ Supabase agent applied immediate fixes + version-controlled migrations completed
 
 ---
 

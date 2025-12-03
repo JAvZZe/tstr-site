@@ -1,0 +1,6 @@
+claims.business_email -> business_email (keep as auth.jwt() ->> 'email')
+listing_ownership.user_id -> user_id
+subscription_invoices.user_id -> user_id
+listing_owners.user_id -> user_id
+listings.owner_id -> owner_id
+user_profiles.id -> id

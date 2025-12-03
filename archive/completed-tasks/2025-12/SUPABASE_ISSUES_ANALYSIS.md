@@ -41,6 +41,12 @@
 - ✅ **Auth RLS Initialization Plan**: `subscription_invoices` table policy optimized to avoid per-row auth re-evaluation
 - ✅ **Auth RLS Initialization Plan**: `user_profiles` table policy optimized to avoid per-row auth re-evaluation
 
+**Additional RLS Policy Fixes (December 2025)**: ✅ COMPLETE
+- ✅ **RLS Policy Column Corrections**: Successfully fixed column name issues in user access policies (claims uses business_email, listing_ownership/listing_owners/invoices use user_id, listings uses owner_id)
+- ✅ **Migration Applied**: `20251203000001_fix_rls_policies_column_names.sql` deployed and version-controlled
+- ✅ **Hybrid Fix Approach**: Supabase agent applied immediate fixes + version-controlled migrations completed
+- ✅ **Policy Validation**: All 10 RLS policies created successfully for claims, listing_owners, listing_ownership, listings, subscription_invoices tables
+
 ## 📋 What You Need to Check Manually
 
 ### **IMMEDIATE (5 minutes)**
