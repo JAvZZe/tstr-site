@@ -1,7 +1,7 @@
 # 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2025-12-03 18:42 UTC
+> **Last Updated**: 2025-12-03 19:15 UTC
 > **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at https://tstr.site
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -89,7 +89,7 @@ Last Scrape:      November 10, 2025 02:31 UTC
 1. **Biotech & Oil/Gas Categories**: Not yet deployed (0 listings). Plan: Deploy scrapers.
 2. **Invalid URLs**: 17 URLs failed validation. Action: Manual research.
 3. **Custom Fields**: Missing specialized data. Fix: Enhance extraction logic.
-4. **Submit Page**: ✅ FIXED - 500 Internal Server Error resolved (API key and category name mismatches)
+4. **Submit Page**: ✅ FIXED - 500 Internal Server Error resolved (API key corrected, RLS policies applied)
 
 ### **Security & Database Fixes** ✅ COMPLETE
 1. **RLS Policy Fixes**: ✅ Successfully corrected column name issues in Row Level Security policies
