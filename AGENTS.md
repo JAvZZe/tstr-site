@@ -28,7 +28,7 @@ This loads:
 ## 🔑 SUPABASE CONFIGURATION
 
 **URL**: https://haimjeaetrsaauitrhfy.supabase.co
-**Anon Key**: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
+**Anon Key**: sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2
 **Service Role Key**: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDQzNjU4NSwiZXhwIjoyMDc2MDEyNTg1fQ.zd47WtS1G1XzjP1obmr_lxHU_xJWtlhhu4ktm9xC5hA
 
 **MCP Server**: ✅ Configured in `web/tstr-automation/TSTR1.mcp.json`

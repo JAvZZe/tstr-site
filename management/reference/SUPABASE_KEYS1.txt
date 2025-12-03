@@ -2,10 +2,10 @@ PROJECT URL
 https://haimjeaetrsaauitrhfy.supabase.co
 
 ANON PUBLIC KEY (JWT Token - Use this for client-side authentication)
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNjAxNTksImV4cCI6MjA3NTYzNjE1OX0.1SoHZoMAeap4p2Fy4HxzHJ4IRZWZ78VamGd0JWQ0OqM
+sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2
 
 SERVICE ROLE KEY (Full database access - Server-side only, NEVER expose to client)
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyOTQzOTQ5MywiZXhwIjoyMDQ1MDE1NDkzfQ.wRSn8jEemYqU2bkLnCqhU-GmCMI9AqIh9xQVIRKQwwE
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDQzNjU4NSwiZXhwIjoyMDc2MDEyNTg1fQ.zd47WtS1G1XzjP1obmr_lxHU_xJWtlhhu4ktm9xC5hA
 
 IMPORTANT NOTES:
 - ANON KEY: JWT token format (eyJhbGci...) - Used in frontend (.env file)

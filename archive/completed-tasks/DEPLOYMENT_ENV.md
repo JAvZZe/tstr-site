@@ -10,7 +10,7 @@
 ### Supabase
 ```bash
 SUPABASE_URL=https://haimjeaetrsaauitrhfy.supabase.co
-SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNjAxNTksImV4cCI6MjA3NTYzNjE1OX0.1SoHZoMAeap4p2Fy4HxzHJ4IRZWZ78VamGd0JWQ0OqM
+SUPABASE_ANON_KEY=sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2
 SUPABASE_SERVICE_ROLE_KEY=sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2
 ```
 
@@ -64,7 +64,7 @@ netlify deploy --prod
 
 # Set environment variables
 netlify env:set PUBLIC_SUPABASE_URL "https://haimjeaetrsaauitrhfy.supabase.co"
-netlify env:set PUBLIC_SUPABASE_ANON_KEY "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNjAxNTksImV4cCI6MjA3NTYzNjE1OX0.1SoHZoMAeap4p2Fy4HxzHJ4IRZWZ78VamGd0JWQ0OqM"
+netlify env:set PUBLIC_SUPABASE_ANON_KEY "sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2"
 ```
 
 ### Google Cloud Scheduler
