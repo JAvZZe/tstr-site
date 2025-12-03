@@ -89,7 +89,7 @@ Last Scrape:      November 10, 2025 02:31 UTC
 1. **Biotech & Oil/Gas Categories**: Not yet deployed (0 listings). Plan: Deploy scrapers.
 2. **Invalid URLs**: 17 URLs failed validation. Action: Manual research.
 3. **Custom Fields**: Missing specialized data. Fix: Enhance extraction logic.
-4. **Submit Page**: ✅ FIXED - 500 Internal Server Error resolved (API key corrected, RLS policies applied)
+4. **Submit Page**: 🔄 TROUBLESHOOTING - 500 error persists, additional key fixes applied, awaiting deployment
 
 ### **Security & Database Fixes** ✅ COMPLETE
 1. **RLS Policy Fixes**: ✅ Successfully corrected column name issues in Row Level Security policies
