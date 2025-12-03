@@ -1,8 +1,8 @@
 # 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2025-12-03 16:43 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2025-12-03 18:55 UTC
+> **Updated By**: opencode
 > **Status**: ✅ PRODUCTION - Live at https://tstr.site
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -89,12 +89,13 @@ Last Scrape:      November 10, 2025 02:31 UTC
 1. **Biotech & Oil/Gas Categories**: Not yet deployed (0 listings). Plan: Deploy scrapers.
 2. **Invalid URLs**: 17 URLs failed validation. Action: Manual research.
 3. **Custom Fields**: Missing specialized data. Fix: Enhance extraction logic.
+4. **Submit Page**: ✅ FIXED - 500 Internal Server Error resolved (API key and category name mismatches)
 
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
 
-### **v2.3.4** - December 3, 2025 (CURRENT)
+### **v2.3.5** - December 3, 2025 (CURRENT)
 - ✅ **System Health Verification Complete** - Phase 1 verification passed (93/100 health score)
 - ✅ **Listing Count Updated** - Corrected from 163 to 191 verified listings
 - ✅ **Build Process Verified** - Frontend builds successfully with Cloudflare adapter

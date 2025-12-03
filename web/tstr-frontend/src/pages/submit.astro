@@ -168,13 +168,14 @@ import Footer from '../components/Footer.astro'
 
         <div class="form-group">
           <label for="category">Category <span class="required">*</span></label>
-            <select id="category" name="category" required>
-              <option value="">Select a category</option>
-              <option value="Biopharma & Life Sciences Testing">Biopharma & Life Sciences Testing</option>
-              <option value="Environmental Testing">Environmental Testing</option>
-              <option value="Materials Testing">Materials Testing</option>
-              <option value="Oil & Gas Testing">Oil & Gas Testing</option>
-            </select>
+             <select id="category" name="category" required>
+               <option value="">Select a category</option>
+               <option value="Biopharma & Life Sciences Testers">Biopharma & Life Sciences Testers</option>
+               <option value="Environmental Testers">Environmental Testers</option>
+               <option value="Materials Testers">Materials Testers</option>
+               <option value="Oil & Gas Testers">Oil & Gas Testers</option>
+               <option value="Hydrogen Infrastructure Testers">Hydrogen Infrastructure Testers</option>
+             </select>
         </div>
 
         <div class="form-group">
@@ -214,7 +215,7 @@ import Footer from '../components/Footer.astro'
 
     // Initialize Supabase client (using public credentials)
     const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co'
-    const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNjAxNTksImV4cCI6MjA3NTYzNjE1OX0.1SoHZoMAeap4p2Fy4HxzHJ4IRZWZ78VamGd0JWQ0OqM'
+    const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO'
     const supabase = createClient(supabaseUrl, supabaseKey)
 
     const form = document.getElementById('submitForm')
