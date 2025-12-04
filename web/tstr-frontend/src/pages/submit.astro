@@ -1,9 +1,6 @@
 ---
 // Submit page for company listings
----
-
----
-import Footer from '../components/Footer.astro'
+export const prerender = true
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -208,7 +205,18 @@ import Footer from '../components/Footer.astro'
     </div>
   </main>
 
-  <Footer />
+   <footer style="background: linear-gradient(135deg, #667eea 0%, #059669 100%); color: white; text-align: center; padding: 2rem 1rem; margin-top: auto;">
+     <p>&copy; 2025 TSTR Hub - Specialist Testing Services, Products and Solutions Directory</p>
+     <p style="margin-top: 0.5rem; opacity: 0.8; font-size: 0.9rem;">
+       Connecting industries with certified testers worldwide
+     </p>
+     <p style="margin-top: 1rem;">
+       <a href="/terms" style="color: white; text-decoration: none; margin: 0 1rem;">Terms of Service</a>
+       <a href="/privacy" style="color: white; text-decoration: none; margin: 0 1rem;">Privacy Policy</a>
+       <a href="/pricing" style="color: white; text-decoration: none; margin: 0 1rem;">Pricing</a>
+       <a href="/submit" style="color: white; text-decoration: none; margin: 0 1rem;">List Your Company</a>
+     </p>
+   </footer>
 
    <script type="module" is:inline>
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
