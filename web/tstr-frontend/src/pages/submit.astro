@@ -210,12 +210,12 @@ import Footer from '../components/Footer.astro'
 
   <Footer />
 
-  <script>
+   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
     // Initialize Supabase client (using public credentials)
-    const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co'
-    const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ1NDUzMTMsImV4cCI6MjA1MDEyMTMxM30.a4z9mqyKFiB-GgW_1sF5VcNlqjdMD-1h-RIu5WUwCos'
+    const supabaseUrl = 'https://haimjeaetrsaauitrhfy.supabase.co'
+    const supabaseKey = 'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO'
     const supabase = createClient(supabaseUrl, supabaseKey)
 
     const form = document.getElementById('submitForm')

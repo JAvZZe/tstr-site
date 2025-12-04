@@ -37,7 +37,7 @@ Set in Cloudflare Dashboard → Pages → tstr-site → Settings → Environment
 | Variable | Value |
 |----------|-------|
 | `PUBLIC_SUPABASE_URL` | `https://haimjeaetrsaauitrhfy.supabase.co` |
-| `PUBLIC_SUPABASE_ANON_KEY` | `sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2` |
+| `PUBLIC_SUPABASE_ANON_KEY` | `sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO` |
 
 ---
 
@@ -52,14 +52,14 @@ Set in Cloudflare Dashboard → Pages → tstr-site → Settings → Environment
 netlify env:set PUBLIC_SUPABASE_URL "https://haimjeaetrsaauitrhfy.supabase.co"
 
 # Set Supabase Anon Key
-netlify env:set PUBLIC_SUPABASE_ANON_KEY "sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2"
+netlify env:set PUBLIC_SUPABASE_ANON_KEY "sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO"
 ```
 
 Or set them in the Netlify dashboard:
 1. Go to Site Settings → Environment Variables
 2. Add:
    - `PUBLIC_SUPABASE_URL` = `https://haimjeaetrsaauitrhfy.supabase.co`
-   - `PUBLIC_SUPABASE_ANON_KEY` = `sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2`
+    - `PUBLIC_SUPABASE_ANON_KEY` = `sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO`
 
 ### **Step 5: Deploy!** (3 minutes)
 
