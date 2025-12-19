@@ -156,6 +156,24 @@ const providerName = Astro.url.searchParams.get('provider') || '';
     </div>
 
     <script>
+        import { supabaseBrowser } from '../lib/supabase-browser'
+
+        // Check auth status and redirect if needed
+        supabaseBrowser.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                // User is authenticated
+                const urlParams = new URLSearchParams(window.location.search)
+                const listingId = urlParams.get('id')
+
+                if (listingId) {
+                    // Redirect to listing page for claiming
+                    window.location.href = `/listing/${listingId}?claim=true`
+                }
+                // If no listing ID, stay on claim page (current behavior)
+            }
+            // If not authenticated, stay on claim page (current behavior)
+        })
+
         const form = document.getElementById('claim-form') as HTMLFormElement;
         const msg = document.getElementById('status-msg') as HTMLElement;
         const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;

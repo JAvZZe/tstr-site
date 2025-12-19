@@ -365,6 +365,46 @@ const categoryDisplayName = getCategoryDisplayName(categoryParam)
       font-size: 0.95rem;
     }
 
+    .listing-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      align-items: center;
+    }
+
+    .visit-btn {
+      background: #667eea;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+
+    .visit-btn:hover {
+      background: #764ba2;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(102,126,234,0.3);
+    }
+
+    .claim-link {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .claim-link:hover {
+      color: #764ba2;
+      border-bottom-color: #764ba2;
+    }
+
     .detail-item {
       display: flex;
       gap: 0.5rem;
@@ -675,32 +715,43 @@ const categoryDisplayName = getCategoryDisplayName(categoryParam)
               </div>
             )}
 
-            <div class="listing-details">
-              {lab.address && (
-                <div class="detail-item">
-                  <span class="detail-icon">📍</span>
-                  <span>{lab.address}</span>
-                </div>
-              )}
-              {lab.phone && (
-                <div class="detail-item">
-                  <span class="detail-icon">📞</span>
-                  <span>{lab.phone}</span>
-                </div>
-              )}
-              {lab.email && (
-                <div class="detail-item">
-                  <span class="detail-icon">✉️</span>
-                  <a href={`mailto:${lab.email}`}>{lab.email}</a>
-                </div>
-              )}
-              {lab.website && (
-                <div class="detail-item">
-                  <span class="detail-icon">🌐</span>
-                  <a href={getRedirectUrl(lab.website, lab.id)} target="_blank" rel="noopener noreferrer">{lab.website}</a>
-                </div>
-              )}
-            </div>
+             <div class="listing-details">
+               {lab.address && (
+                 <div class="detail-item">
+                   <span class="detail-icon">📍</span>
+                   <span>{lab.address}</span>
+                 </div>
+               )}
+               {lab.phone && (
+                 <div class="detail-item">
+                   <span class="detail-icon">📞</span>
+                   <span>{lab.phone}</span>
+                 </div>
+               )}
+               {lab.email && (
+                 <div class="detail-item">
+                   <span class="detail-icon">✉️</span>
+                   <a href={`mailto:${lab.email}`}>{lab.email}</a>
+                 </div>
+               )}
+               {lab.website && (
+                 <div class="detail-item">
+                   <span class="detail-icon">🌐</span>
+                   <a href={getRedirectUrl(lab.website, lab.id)} target="_blank" rel="noopener noreferrer">{lab.website}</a>
+                 </div>
+               )}
+             </div>
+
+             <div class="listing-actions">
+               {lab.website && (
+                 <a href={getRedirectUrl(lab.website, lab.id)} class="visit-btn" target="_blank" rel="noopener noreferrer">
+                   Visit Website
+                 </a>
+               )}
+               <a href="#" class="claim-link" data-listing-id={lab.id} data-listing-name={lab.business_name}>
+                 Is this you? Claim
+               </a>
+             </div>
           </div>
         )
       })}
@@ -759,6 +810,13 @@ const categoryDisplayName = getCategoryDisplayName(categoryParam)
   <Footer />
 
   <script define:vars={{ locationOptions, allCategories, allStandards }}>
+    // Import Supabase browser client for auth checks
+    import { createClient } from '@supabase/supabase-js'
+
+    const supabaseUrl = 'https://haimjeaetrsaauitrhfy.supabase.co'
+    const supabaseKey = 'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO'
+    const supabase = createClient(supabaseUrl, supabaseKey)
+
     // Data for autocomplete dropdowns
     const locationData = JSON.parse(JSON.stringify(locationOptions || []))
     const categoriesData = JSON.parse(JSON.stringify(allCategories || []))
@@ -1116,6 +1174,39 @@ const categoryDisplayName = getCategoryDisplayName(categoryParam)
     if (urlParams.toString()) {
       filterListings()
     }
+
+    // Claim button functionality
+    document.addEventListener('DOMContentLoaded', () => {
+      const claimLinks = document.querySelectorAll('.claim-link')
+
+      claimLinks.forEach(link => {
+        link.addEventListener('click', async (e) => {
+          e.preventDefault()
+
+          const listingId = link.getAttribute('data-listing-id')
+          const listingName = link.getAttribute('data-listing-name')
+
+          try {
+            // Check authentication status
+            const { data: { user } } = await supabase.auth.getUser()
+
+            if (user) {
+              // Authenticated user - redirect to listing page
+              window.location.href = `/listing/${listingId}?claim=true`
+            } else {
+              // Non-authenticated user - redirect to login with return URL
+              const returnUrl = `/listing/${listingId}?claim=true`
+              window.location.href = `/login?redirect_to=${encodeURIComponent(returnUrl)}`
+            }
+          } catch (error) {
+            console.error('Auth check failed:', error)
+            // Fallback to login page
+            const returnUrl = `/listing/${listingId}?claim=true`
+            window.location.href = `/login?redirect_to=${encodeURIComponent(returnUrl)}`
+          }
+        })
+      })
+    })
   </script>
 </body>
 </html>

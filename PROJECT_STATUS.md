@@ -1,8 +1,8 @@
 # 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2025-12-03 19:15 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2025-12-19 11:26 UTC
+> **Updated By**: AI Projects Space
 > **Status**: ✅ PRODUCTION - Live at https://tstr.site
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -10,7 +10,7 @@
 
 ## 🎯 PROJECT OVERVIEW
 **Name**: TSTR.SITE
-**Type**: Testing Laboratory Directory Platform
+**Type**: Testers & Testing Services Directory Platform
 **Stack**: Astro 5.14.4 + React 18.3.1 + Supabase + Python Scrapers
 **Deployment**: OCI (Scrapers) + Cloudflare Pages (Frontend)
 **Status**: ✅ LIVE - 191 listings
@@ -67,6 +67,7 @@ Last Scrape:      November 10, 2025 02:31 UTC
 ## 📝 PENDING TASKS
 
 ### **High Priority**
+- [x] **Claim Button Visibility Enhancement**: Make claim buttons visible to all users on unclaimed listings (Lead Magnet Strategy) ✅ COMPLETED
 - [ ] Expand Environmental Testing (currently 14 listings)
 - [ ] **Oil & Gas Scraper**: Complete OCI deployment (Currently Local)
 
@@ -89,7 +90,7 @@ Last Scrape:      November 10, 2025 02:31 UTC
 1. **Biotech & Oil/Gas Categories**: Not yet deployed (0 listings). Plan: Deploy scrapers.
 2. **Invalid URLs**: 17 URLs failed validation. Action: Manual research.
 3. **Custom Fields**: Missing specialized data. Fix: Enhance extraction logic.
-4. **Submit Page**: 🔄 TROUBLESHOOTING - 500 error persists, additional key fixes applied, awaiting deployment
+4. **Submit Page**: ✅ FIXED - Replaced Footer component import with inline HTML. Prerenders successfully now.
 
 ### **Security & Database Fixes** ✅ COMPLETE
 1. **RLS Policy Fixes**: ✅ Successfully corrected column name issues in Row Level Security policies
@@ -100,7 +101,33 @@ Last Scrape:      November 10, 2025 02:31 UTC
 
 ## 📊 VERSION HISTORY (LATEST)
 
-### **v2.3.5** - December 3, 2025 (CURRENT)
+### **v2.3.9** - December 19, 2025 (CURRENT)
+- 🎯 **Claim Button Visibility Enhancement**: Implemented lead magnet strategy for claim buttons
+  - Added "Is this you? Claim" links to all browse page listings
+  - Implemented client-side auth routing (login → claim page → listing page)
+  - Updated login page to handle redirect_to parameter for seamless flow
+  - Enhanced claim page with auth state handling
+  - Added URL parameter detection for direct claim flow on listing pages
+  - All unclaimed listings now show claim buttons to drive user registrations
+
+### **v2.3.8** - December 16, 2025
+- 🔒 **Security Hardening Deployed**: All 12 functions now have secure search_path=pg_catalog, public (verified via SQL query)
+- 🛡️ **View Security Fixed**: potential_dead_links view set to security_invoker
+- 📊 **Performance Monitoring**: pg_stat_statements extension enabled for query analysis
+- ✅ **Vulnerability Resolved**: Eliminated function shadowing attack vector
+
+### **v2.3.7** - December 16, 2025
+- 🔒 **Critical Security Fix**: Removed SUPABASE_SERVICE_ROLE_KEY from frontend .env to prevent client-side exposure
+- 📊 **Observability Enhancement**: Created migration to enable pg_stat_statements extension for performance monitoring
+- 📋 **Manual Deployment**: Created MANUAL_MIGRATION_DEPLOYMENT.md due to CLI sync issues
+- ✅ **Security Verification**: Confirmed no schema errors and proper key isolation between frontend/backend
+
+### **v2.3.6** - December 4, 2025
+- 📋 **Claim Button Visibility Project Plan**: Comprehensive plan created for making claim buttons visible to all users as lead magnets
+- 🎯 **First Principles Strategy**: Adopted "Lead Magnet" approach - claim buttons drive user registrations and verified listings
+- 🛠️ **Implementation Roadmap**: 5-phase plan covering browse page buttons, auth routing, login redirects, and testing
+
+### **v2.3.5** - December 3, 2025
 - ✅ **System Health Verification Complete** - Phase 1 verification passed (93/100 health score)
 - ✅ **Listing Count Updated** - Corrected from 163 to 191 verified listings
 - ✅ **Build Process Verified** - Frontend builds successfully with Cloudflare adapter

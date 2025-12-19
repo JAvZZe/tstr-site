@@ -770,15 +770,19 @@ const certificationCount = allCertifications.length
      const listingId = '{listing.id}'
      const listingName = '{listing.business_name}'
 
-     async function checkAuthAndClaimStatus() {
-       try {
-         // Check if user is authenticated
-         const { data: { user }, error: authError } = await supabaseBrowser.auth.getUser()
+      async function checkAuthAndClaimStatus() {
+        try {
+          // Check URL parameters for claim flow
+          const urlParams = new URLSearchParams(window.location.search)
+          const isClaimFlow = urlParams.get('claim') === 'true'
 
-         if (authError || !user) {
-           // User not logged in, hide claim section
-           return
-         }
+          // Check if user is authenticated
+          const { data: { user }, error: authError } = await supabaseBrowser.auth.getUser()
+
+          if (authError || !user) {
+            // User not logged in, hide claim section
+            return
+          }
 
          // Check if listing is already claimed
          const { data: existingClaim } = await supabaseBrowser
@@ -824,31 +828,31 @@ const certificationCount = allCertifications.length
            // Show pending badge
            ownershipBadge.innerHTML = `<span class="ownership-badge pending">⏳ Claim Pending</span>`
            ownershipBadge.style.display = 'block'
-         } else {
-           // Check if listing is already claimed by someone else
-           const { data: otherClaim } = await supabaseBrowser
-             .from('listings')
-             .select('claimed')
-             .eq('id', listingId)
-             .single()
+            } else {
+              // Check if listing is already claimed by someone else
+              const { data: otherClaim } = await supabaseBrowser
+                .from('listings')
+                .select('claimed')
+                .eq('id', listingId)
+                .single()
 
-           if (otherClaim?.claimed) {
-             statusIndicator.innerHTML = `
-               <div class="claim-status-indicator claimed">
-                 ✓ This listing has been claimed by its owner
-               </div>
-             `
-             statusIndicator.style.display = 'block'
-             claimSection.style.display = 'none'
+              if (otherClaim?.claimed) {
+                statusIndicator.innerHTML = `
+                  <div class="claim-status-indicator claimed">
+                    ✓ This listing has been claimed by its owner
+                  </div>
+                `
+                statusIndicator.style.display = 'block'
+                claimSection.style.display = 'none'
 
-             // Show claimed badge for other owners
-             ownershipBadge.innerHTML = `<span class="ownership-badge claimed">✓ Claimed</span>`
-             ownershipBadge.style.display = 'block'
-           } else {
-             // Show claim button
-             claimSection.style.display = 'block'
-           }
-         }
+                // Show claimed badge for other owners
+                ownershipBadge.innerHTML = `<span class="ownership-badge claimed">✓ Claimed</span>`
+                ownershipBadge.style.display = 'block'
+              } else {
+                // Show claim button - always show if redirected from claim button
+                claimSection.style.display = isClaimFlow ? 'block' : 'block'
+              }
+            }
 
          // Setup claim button handler
          const claimBtn = document.getElementById('claim-btn')

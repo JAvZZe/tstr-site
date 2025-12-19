@@ -304,11 +304,21 @@ import Footer from '../components/Footer.astro'
         }
 
         if (data.user) {
-          showMessage('Sign in successful! Redirecting...', 'success')
-          // Redirect after 1 second
-          setTimeout(() => {
-            window.location.href = '/account'
-          }, 1000)
+          // Check for redirect_to parameter
+          const urlParams = new URLSearchParams(window.location.search)
+          const redirectTo = urlParams.get('redirect_to')
+
+          if (redirectTo) {
+            showMessage('Sign in successful! Redirecting to claim page...', 'success')
+            setTimeout(() => {
+              window.location.href = redirectTo
+            }, 1000)
+          } else {
+            showMessage('Sign in successful! Redirecting...', 'success')
+            setTimeout(() => {
+              window.location.href = '/account'
+            }, 1000)
+          }
         }
 
       } catch (err) {
@@ -325,11 +335,16 @@ import Footer from '../components/Footer.astro'
       linkedinBtn.disabled = true
       linkedinBtn.textContent = 'Connecting...'
 
+      // Check for redirect_to parameter
+      const urlParams = new URLSearchParams(window.location.search)
+      const redirectTo = urlParams.get('redirect_to')
+      const redirectUrl = redirectTo ? redirectTo : '/account'
+
       try {
         const { data, error } = await supabaseBrowser.auth.signInWithOAuth({
           provider: 'linkedin_oidc',
           options: {
-            redirectTo: `${window.location.origin}/account`
+            redirectTo: `${window.location.origin}${redirectUrl}`
           }
         })
 
