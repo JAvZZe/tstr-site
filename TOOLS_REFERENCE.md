@@ -21,8 +21,9 @@
 4. **pip** - Package manager for Python
 5. **Git** - Version control
 6. **Wrangler** - Cloudflare Pages CLI (via npx)
-7. **Claude CLI** - Available but not yet configured
-8. **Gemini CLI** - Available but not yet configured
+7. **Playwright** - v1.40.0 (end-to-end testing framework)
+8. **Claude CLI** - Available but not yet configured (currently not in use due to low funds)
+9. **Gemini CLI** - Available but not yet configured
 
 ---
 
@@ -88,10 +89,6 @@
 
 #### 1. Supabase CLI
 - **Purpose**: Direct database operations, migrations
-- **Install**:
-  ```powershell
-  npm install -g supabase
-  ```
 - **Use Cases**:
   - Database migrations
   - Local development

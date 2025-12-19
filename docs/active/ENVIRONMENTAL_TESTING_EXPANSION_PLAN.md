@@ -49,10 +49,63 @@ Create dedicated landing pages for environmental testing subcategories:
 ### Phase 2: Data Acquisition Strategy
 
 #### Option A: Fix TNI Scraper (Recommended)
-- **Pros**: High-quality accredited data, existing infrastructure
+- **Pros**: High-quality accredited data, existing infrastructure, comprehensive coverage
 - **Cons**: Complex dependencies (libpostal, system libraries)
 - **Effort**: 4-6 hours to resolve dependencies
 - **Yield**: 2,000-5,000 potential listings nationwide
+
+**Detailed Implementation Steps:**
+1. **Install System Dependencies**:
+   ```bash
+   # Ubuntu/Debian
+   sudo apt-get install libpostal-dev libpostal-data
+   # Or macOS
+   brew install libpostal
+   ```
+
+2. **Install Python Dependencies**:
+   ```bash
+   cd web/tstr-automation
+   pip install postal
+   # Verify installation
+   python -c "from postal.parser import parse_address; print('OK')"
+   ```
+
+3. **Test Scraper Components**:
+   ```bash
+   # Test location parsing
+   python3 -c "from location_parser import LocationParser; lp = LocationParser(); print('Location parser OK')"
+
+   # Test URL validation
+   python3 -c "from url_validator import URLValidator; uv = URLValidator(); print('URL validator OK')"
+   ```
+
+4. **Run Full Scraper**:
+   ```bash
+   # Test with small sample
+   python3 scrapers/tni_environmental.py --states 2 --limit 10 --dry-run
+
+   # Full production run
+   python3 scrapers/tni_environmental.py --states 50 --limit 5000
+   ```
+
+5. **Data Processing & Validation**:
+   - Verify custom fields extraction (7 fields per listing)
+   - Check for duplicates and data quality
+   - Validate accreditation status
+   - Categorize listings into subcategories
+
+6. **Database Import**:
+   ```bash
+   # Import to Supabase
+   python3 import_to_supabase.py environmental_testing_expanded.csv
+   ```
+
+**Risk Mitigation:**
+- **Dependency Issues**: Have Option B ready as fallback
+- **Data Quality**: Implement validation checks before import
+- **Rate Limiting**: Respect TNI LAMS server limits (3-second delays)
+- **Backup Strategy**: Export data locally before database import
 
 #### Option B: Alternative Data Sources
 - **NELAP Directory**: Direct API or scraping (if available)
