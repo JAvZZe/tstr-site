@@ -1,7 +1,7 @@
 # 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2025-12-19 11:26 UTC
+> **Last Updated**: 2025-12-19 13:47 UTC
 > **Updated By**: AI Projects Space
 > **Status**: ✅ PRODUCTION - Live at https://tstr.site
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -68,7 +68,7 @@ Last Scrape:      November 10, 2025 02:31 UTC
 
 ### **High Priority**
 - [x] **Claim Button Visibility Enhancement**: Make claim buttons visible to all users on unclaimed listings (Lead Magnet Strategy) ✅ COMPLETED
-- [ ] Expand Environmental Testing (currently 14 listings)
+- [ ] **Environmental Testing Expansion**: Expand from 14 to 200+ listings across subcategories (Air Quality, Water Quality, Soil Testing, etc.) - Plan created, execution starting
 - [ ] **Oil & Gas Scraper**: Complete OCI deployment (Currently Local)
 
 ### **Medium Priority**
@@ -104,11 +104,12 @@ Last Scrape:      November 10, 2025 02:31 UTC
 ### **v2.3.9** - December 19, 2025 (CURRENT)
 - 🎯 **Claim Button Visibility Enhancement**: Implemented lead magnet strategy for claim buttons
   - Added "Is this you? Claim" links to all browse page listings
+  - Added visible claim buttons to individual listing pages for non-auth users
   - Implemented client-side auth routing (login → claim page → listing page)
   - Updated login page to handle redirect_to parameter for seamless flow
   - Enhanced claim page with auth state handling
   - Added URL parameter detection for direct claim flow on listing pages
-  - All unclaimed listings now show claim buttons to drive user registrations
+  - All unclaimed listings now show claim buttons on both browse and individual pages to drive user registrations
 
 ### **v2.3.8** - December 16, 2025
 - 🔒 **Security Hardening Deployed**: All 12 functions now have secure search_path=pg_catalog, public (verified via SQL query)
