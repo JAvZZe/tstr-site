@@ -589,6 +589,43 @@ const certificationCount = allCertifications.length
       font-size: 0.9rem;
     }
 
+    .public-claim-section {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, #f0f4ff 0%, #fff5f8 100%);
+      border: 2px solid #667eea;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .public-claim-section h3 {
+      color: #667eea;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    .public-claim-section p {
+      color: #555;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .public-claim-section .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .public-claim-section .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
     @media (max-width: 768px) {
       .listing-title {
         font-size: 1.5rem;
@@ -739,8 +776,17 @@ const certificationCount = allCertifications.length
          </div>
        )}
 
-       <!-- Claim listing section -->
-       <div id="claim-section" class="claim-section" style="display: none;">
+        <!-- Public claim button for non-authenticated users -->
+        <div id="public-claim-section" class="public-claim-section" style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, #f0f4ff 0%, #fff5f8 100%); border: 2px solid #667eea; border-radius: 8px; text-align: center;">
+          <h3 style="color: #667eea; margin-bottom: 0.5rem; font-size: 1.2rem;">🏢 Is this your company?</h3>
+          <p style="color: #555; margin-bottom: 1.5rem; line-height: 1.6;">Take ownership of your testing laboratory listing to manage your profile and receive direct leads.</p>
+          <button id="public-claim-btn" class="btn btn-primary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: transform 0.2s;">
+            Claim This Listing
+          </button>
+        </div>
+
+        <!-- Claim listing section -->
+        <div id="claim-section" class="claim-section" style="display: none;">
          <div class="claim-card">
            <h3>🏢 Claim This Listing</h3>
            <p>Are you the owner or representative of this testing laboratory? Claim ownership to manage your listing and access additional features.</p>
@@ -779,10 +825,25 @@ const certificationCount = allCertifications.length
           // Check if user is authenticated
           const { data: { user }, error: authError } = await supabaseBrowser.auth.getUser()
 
+          // Handle public claim button for non-authenticated users
+          const publicClaimSection = document.getElementById('public-claim-section')
+          const publicClaimBtn = document.getElementById('public-claim-btn')
+
+          if (publicClaimBtn) {
+            publicClaimBtn.addEventListener('click', () => {
+              const returnUrl = `${window.location.pathname}?claim=true`
+              window.location.href = `/login?redirect_to=${encodeURIComponent(returnUrl)}`
+            })
+          }
+
           if (authError || !user) {
-            // User not logged in, hide claim section
+            // User not logged in, show public claim section, hide authenticated claim section
+            if (publicClaimSection) publicClaimSection.style.display = 'block'
             return
           }
+
+          // User is authenticated, hide public claim section
+          if (publicClaimSection) publicClaimSection.style.display = 'none'
 
          // Check if listing is already claimed
          const { data: existingClaim } = await supabaseBrowser
