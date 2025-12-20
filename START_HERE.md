@@ -1,7 +1,7 @@
 # START HERE - TSTR.site Project
 
 **Project**: Global testing laboratory directory (Oil & Gas, Environmental, Materials Testing, etc.)
-**Status**: Production scrapers on OCI, frontend needs deployment
+**Status**: Production - scrapers on OCI, frontend LIVE at https://tstr.site
 **Location**: `/home/al/tstr-site-working`
 
 ---
@@ -65,8 +65,7 @@ cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 
 ## Current Priorities (P0)
 
-1. **Fix GitHub workflow failure** - Uncommitted changes blocking "Keep Supabase Active" workflow
-2. **Deploy frontend** - Build and deploy Astro site to Cloudflare Pages
+1. **Fix OCI SSH access** - Locate correct SSH key path and verify scraper logs
 
 **Full priority list**: See `TSTR.md` → "Current Priorities"
 
