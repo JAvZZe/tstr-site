@@ -2,7 +2,7 @@
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
 > **Last Updated**: 2025-12-20 09:40 UTC
-> **Updated By**: opencode
+> **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at https://tstr.site
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -51,6 +51,8 @@ Last Scrape:      November 10, 2025 02:31 UTC
 - **Instance**: 84.8.139.90 (Oracle Linux 9, Python 3.9.21)
 - **Status**: ✅ OPERATIONAL (Free Tier)
 - **Scrapers**: `run_scraper.py` (Daily 2 AM GMT)
+- **SSH Access**: ✅ VERIFIED (Key: `/media/al/69AD-FC41/AI_PROJECTS_ARCHIVE/Oracle_Cloud_Machines/avz_Oracle_Linux_9_pvt_ssh-key-2025-10-25.key`)
+- **Last Run**: December 20, 2025 02:29 UTC (106 listings, 66 contacts)
 
 ### **Database (Supabase)**
 - **URL**: https://haimjeaetrsaauitrhfy.supabase.co
@@ -68,6 +70,7 @@ Last Scrape:      November 10, 2025 02:31 UTC
 
 ### **High Priority**
 - [x] **Claim Button Visibility Enhancement**: Make claim buttons visible to all users on unclaimed listings (Lead Magnet Strategy) ✅ COMPLETED
+- [x] **OCI SSH Access Fix**: Located correct SSH key path and verified scraper functionality ✅ COMPLETED
 - [ ] **Environmental Testing Expansion**: Expand from 14 to 200+ listings across subcategories (Air Quality, Water Quality, Soil Testing, etc.) - Plan created, execution starting
 - [ ] **Oil & Gas Scraper**: Complete OCI deployment (Currently Local)
 

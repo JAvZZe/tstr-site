@@ -57,11 +57,11 @@ cat PROJECT_STATUS.md
 
 ### Current Stack
 
-**Frontend** (Not deployed yet):
+**Frontend** (LIVE):
 - Astro 5.14.4 + React 18.3.1 + Tailwind CSS
 - Location: `web/tstr-frontend/`
 - Target: Cloudflare Pages (free tier)
-- Status: Built but not deployed
+- Status: ✅ LIVE at https://tstr.site
 
 **Scrapers** (ACTIVE in production):
 - Python 3.9.21 on Oracle Linux 9
@@ -131,7 +131,7 @@ web/tstr-automation/
 - **Instance IP**: 84.8.139.90
 - **OS**: Oracle Linux 9, Python 3.9.21
 - **Path**: `~/tstr-scraper/` on OCI instance
-- **SSH Key**: `/media/al/1TB_AI_ARCH/AI_PROJECTS_ARCHIVE/Oracle Cloud Machines/avz Oracle Linux 9 pvt ssh-key-2025-10-25.key`
+- **SSH Key**: `/media/al/69AD-FC41/AI_PROJECTS_ARCHIVE/Oracle_Cloud_Machines/avz_Oracle_Linux_9_pvt_ssh-key-2025-10-25.key`
 - **Access**: `ssh -i "<key_path>" opc@84.8.139.90`
 
 ### External Archive
@@ -180,15 +180,10 @@ web/tstr-automation/
 ## Current Priorities
 
 ### P0 - Critical
-1. **Fix GitHub workflow failure**: Workflow "Keep Supabase Active" failed due to uncommitted changes
-   - Commit changes in `GEMINI.md` and `PROJECT_STATUS.md`
-   - Update `web/tstr-automation/.gitignore` to exclude report files (*.md, *.txt, *.csv, *.sql in automation folder)
-   - Re-evaluate untracked Python files in scrapers/
-
-2. **Frontend deployment**: Build and deploy Astro frontend to Cloudflare Pages
-   - Ensure `.env` has correct Supabase keys
-   - Test locally first
-   - Deploy via GitHub push
+1. **Fix OCI SSH access**: Locate correct SSH key path and verify scraper logs
+    - Current key path may be outdated
+    - Verify scraper cron jobs are running
+    - Check for any scraper failures
 
 ### P1 - High
 3. **Expand scraper coverage**: Add more testing categories and regions
@@ -207,7 +202,7 @@ web/tstr-automation/
 ### OCI Scraper Management
 ```bash
 # SSH to OCI instance
-ssh -i "/media/al/1TB_AI_ARCH/AI_PROJECTS_ARCHIVE/Oracle Cloud Machines/avz Oracle Linux 9 pvt ssh-key-2025-10-25.key" opc@84.8.139.90
+ssh -i "/media/al/69AD-FC41/AI_PROJECTS_ARCHIVE/Oracle_Cloud_Machines/avz_Oracle_Linux_9_pvt_ssh-key-2025-10-25.key" opc@84.8.139.90
 
 # Check cron schedule
 ssh opc@84.8.139.90 "crontab -l"
@@ -216,7 +211,7 @@ ssh opc@84.8.139.90 "crontab -l"
 ssh opc@84.8.139.90 "tail -100 ~/tstr-scraper/scraper.log"
 
 # Run scraper manually
-ssh opc@84.8.139.90 "cd ~/tstr-scraper && python3 main_scraper.py"
+ssh opc@84.8.139.90 "cd ~/tstr-scraper && python3 run_scraper.py"
 ```
 
 ### Local Development
