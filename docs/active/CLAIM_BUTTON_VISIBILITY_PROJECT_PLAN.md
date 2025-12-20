@@ -247,4 +247,126 @@
 
 ---
 
-**Ready to implement tomorrow. This plan transforms claim buttons from hidden authenticated-only features into visible lead magnets that drive user acquisition and listing verification.**
+## 🔄 **UPDATED: Unified Claim System Architecture**
+
+### **Executive Summary**
+Following analysis of existing claim systems, we've decided to **unify the two separate claim flows** into a single, consistent system with save/resume functionality and 100% domain verification.
+
+### **Current Issues Resolved**
+- **Two Systems Problem**: Separate authenticated (`/api/claim-listing`) and anonymous (`/api/claim_submission`) flows created inconsistency
+- **No Save/Resume**: Users lose progress if interrupted during claiming
+- **Incomplete Domain Verification**: Anonymous claims bypassed domain verification
+- **Wrong Redirects**: Browse page claim buttons redirect to listing pages instead of claim form
+
+### **Unified System Design**
+
+#### **Single Entry Point**
+```
+All Claim Buttons → /claim?id={listing_id}&provider={company_name}
+    ↓
+Authentication Check
+    ├── Authenticated → Pre-filled form
+    └── Anonymous → Login prompt → Pre-filled form
+        ↓
+Progressive Form with Auto-Save
+    ├── Simple Version: Name + Email (immediate)
+    └── Full Version: All fields + save/resume (future)
+        ↓
+100% Domain Verification
+    ├── Email domain matches website → Auto-approve
+    └── No match → Manual verification required
+        ↓
+Success: Owner badge + account access
+```
+
+#### **Save/Resume System**
+- **Auto-save**: Every 30 seconds to database `draft_data` field
+- **Resume Token**: Unique token emailed for recovery
+- **Expiration**: Drafts expire after 30 days
+- **Recovery URL**: `/claim?resume={token}`
+
+#### **Domain Verification (MANDATORY)**
+- **All Claims**: 100% go through domain verification
+- **Auto-approve**: Exact domain match or common variations
+- **Manual Review**: Non-matching domains require admin approval
+- **No Exceptions**: Anonymous and authenticated claims both verified
+
+### **Implementation Roadmap**
+
+#### **Phase 1: Unify APIs (Week 1)**
+- Create single `/api/claim` endpoint
+- Migrate `claims` table data to `listing_owners`
+- Add `draft_data`, `resume_token`, `draft_expires_at` columns
+- Apply domain verification to all claims
+
+#### **Phase 2: Save/Resume System (Week 2)**
+- Implement auto-save every 30 seconds
+- Add email resume functionality
+- Create resume token system
+- Add draft expiration logic
+
+#### **Phase 3: Fix Browse Page Redirects (Week 3)**
+- Update browse page JavaScript to redirect to `/claim?id=X&provider=Y`
+- Remove incorrect redirects to listing pages
+- Test end-to-end flow: browse → claim → login → form
+
+#### **Phase 4: Enhanced Form & Testing (Week 4)**
+- Add multi-step form with progress indicators
+- Implement full field set with validation
+- Comprehensive testing of save/resume scenarios
+- Performance optimization
+
+### **Database Changes**
+```sql
+-- Add to listing_owners table
+ALTER TABLE listing_owners
+ADD COLUMN draft_data JSONB,
+ADD COLUMN resume_token TEXT UNIQUE,
+ADD COLUMN draft_expires_at TIMESTAMPTZ,
+ADD COLUMN verification_attempts INTEGER DEFAULT 0;
+
+-- New indexes
+CREATE INDEX idx_listing_owners_resume_token ON listing_owners(resume_token);
+CREATE INDEX idx_listing_owners_draft_expires ON listing_owners(draft_expires_at);
+```
+
+### **Success Metrics**
+- **Conversion**: 70%+ claim button clicks complete form
+- **Verification**: 100% claims go through domain verification (80% auto-approve)
+- **Retention**: <10% abandonment with save/resume
+- **Consistency**: Single system across all entry points
+
+### **Key Decisions**
+1. **Unify Systems**: Single claim flow for consistency
+2. **Save/Resume**: Required for good UX, prevents abandonment
+3. **Domain Verification**: 100% of claims, no exceptions
+4. **Progressive Enhancement**: Simple form first, full form later
+
+---
+
+## 🤝 Updated Handoff Notes
+
+### Current Status
+- ✅ Comprehensive unified plan created
+- ✅ All phases defined with specific code changes
+- ✅ Save/resume system designed
+- ✅ 100% domain verification requirement documented
+- ✅ Database schema changes specified
+
+### Next Steps for Implementation
+1. **Start with Phase 1**: Create unified `/api/claim` endpoint
+2. **Database Migration**: Add new columns to `listing_owners` table
+3. **Fix Browse Redirects**: Update JavaScript to use correct claim page URLs
+4. **Implement Save/Resume**: Add auto-save and email recovery
+5. **Test End-to-End**: Verify complete claim flow works
+
+### Files to Modify (Updated)
+- `web/tstr-frontend/src/pages/api/claim.ts` (new unified API)
+- `web/tstr-frontend/src/pages/browse.astro` (fix redirects)
+- `web/tstr-frontend/src/pages/claim.astro` (add save/resume)
+- `web/tstr-frontend/src/lib/domain-verification.ts` (enhance)
+- `supabase/migrations/` (new migration file)
+
+---
+
+**Ready to implement the unified claim system. This transforms the claim process from fragmented flows into a seamless, saveable experience with complete domain verification.**
