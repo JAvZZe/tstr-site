@@ -1,7 +1,7 @@
 # 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2025-12-20 09:40 UTC
+> **Last Updated**: 2025-12-20 10:06 UTC
 > **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at https://tstr.site
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -61,8 +61,9 @@ Last Scrape:      November 10, 2025 02:31 UTC
 
 ### **Frontend (Cloudflare Pages)**
 - **URL**: https://tstr.site
+- **Stack**: Astro 5.16.6 + React 18.3.1 + Tailwind CSS
 - **Features**: Category filters, Click tracking, Admin dashboard, LinkedIn OAuth
-- **Status**: ✅ LIVE
+- **Status**: ✅ LIVE (Upgraded to latest secure versions)
 
 ---
 
