@@ -7,12 +7,12 @@ Parses addresses using libpostal and links to hierarchical locations table
 import os
 import logging
 from typing import Optional, Dict, Tuple
-from postal.parser import parse_address
+
+# from postal.parser import parse_address  # Commented out due to dependency issues
 from supabase import create_client, Client
 
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -50,10 +50,10 @@ class LocationParser:
 
         # Stats for monitoring
         self.stats = {
-            'cache_hits': 0,
-            'cache_misses': 0,
-            'created_locations': 0,
-            'parse_errors': 0
+            "cache_hits": 0,
+            "cache_misses": 0,
+            "created_locations": 0,
+            "parse_errors": 0,
         }
 
         # Load existing locations into cache
@@ -61,27 +61,27 @@ class LocationParser:
 
         # Country name normalization map (common variations)
         self.country_aliases = {
-            'usa': 'United States',
-            'us': 'United States',
-            'united states of america': 'United States',
-            'uk': 'United Kingdom',
-            'gb': 'United Kingdom',
-            'great britain': 'United Kingdom',
-            'uae': 'United Arab Emirates',
-            'south korea': 'Republic of Korea',
-            'korea': 'Republic of Korea',
-            'singapore': 'Singapore',  # City-state
-            'dubai': 'United Arab Emirates',  # City, but helps identify country
-            'abu dhabi': 'United Arab Emirates'
+            "usa": "United States",
+            "us": "United States",
+            "united states of america": "United States",
+            "uk": "United Kingdom",
+            "gb": "United Kingdom",
+            "great britain": "United Kingdom",
+            "uae": "United Arab Emirates",
+            "south korea": "Republic of Korea",
+            "korea": "Republic of Korea",
+            "singapore": "Singapore",  # City-state
+            "dubai": "United Arab Emirates",  # City, but helps identify country
+            "abu dhabi": "United Arab Emirates",
         }
 
         # City-states that are both city and country
         self.city_states = {
-            'singapore': 'Singapore',
-            'monaco': 'Monaco',
-            'vatican city': 'Vatican City',
-            'hong kong': 'Hong Kong',
-            'macau': 'Macau'
+            "singapore": "Singapore",
+            "monaco": "Monaco",
+            "vatican city": "Vatican City",
+            "hong kong": "Hong Kong",
+            "macau": "Macau",
         }
 
     def _load_locations_cache(self):
@@ -89,7 +89,7 @@ class LocationParser:
         logger.info("Loading locations cache...")
 
         try:
-            result = self.supabase.from_('locations').select('*').execute()
+            result = self.supabase.from_("locations").select("*").execute()
 
             for loc in result.data:
                 # Cache by multiple keys for flexible lookup
@@ -132,11 +132,34 @@ class LocationParser:
             return {}
 
         try:
-            # libpostal returns list of (value, label) tuples
-            parsed = parse_address(raw_address)
+            # Simple regex-based parsing as fallback for libpostal
+            import re
+
+            # Pattern for US addresses: street, city, state zip
+            us_pattern = r"(.+?),\s*([^,]+),\s*([A-Z]{2})\s+(\d{5}(?:-\d{4})?)"
+            match = re.search(us_pattern, raw_address.strip())
 
             components = {}
-            for value, label in parsed:
+            if match:
+                components["road"] = match.group(1).strip()
+                components["city"] = match.group(2).strip()
+                components["state"] = match.group(3).strip()
+                components["postcode"] = match.group(4).strip()
+                components["country"] = "United States"
+            else:
+                # Fallback: split by comma
+                parts = [p.strip() for p in raw_address.split(",")]
+                if len(parts) >= 1:
+                    components["road"] = parts[0]
+                if len(parts) >= 2:
+                    components["city"] = parts[-2]
+                if len(parts) >= 3:
+                    state_zip = parts[-1].split()
+                    if len(state_zip) >= 1:
+                        components["state"] = state_zip[0]
+                    if len(state_zip) >= 2:
+                        components["postcode"] = state_zip[1]
+                    components["country"] = "United States"
                 # If duplicate labels (e.g., multiple 'road' entries), concatenate
                 if label in components:
                     components[label] = f"{components[label]} {value}"
@@ -147,7 +170,7 @@ class LocationParser:
 
         except Exception as e:
             logger.error(f"Failed to parse address '{raw_address}': {e}")
-            self.stats['parse_errors'] += 1
+            self.stats["parse_errors"] += 1
             return {}
 
     def normalize_country(self, country: str) -> str:
@@ -161,7 +184,7 @@ class LocationParser:
             Normalized country name
         """
         if not country:
-            return ''
+            return ""
 
         country_lower = country.lower().strip()
 
@@ -178,7 +201,7 @@ class LocationParser:
         level: str,
         parent_id: Optional[str] = None,
         latitude: Optional[float] = None,
-        longitude: Optional[float] = None
+        longitude: Optional[float] = None,
     ) -> Dict:
         """
         Find existing location or create new entry
@@ -197,17 +220,22 @@ class LocationParser:
         cache_key = f"{name.lower()}:{level}"
 
         if cache_key in self.location_cache:
-            self.stats['cache_hits'] += 1
+            self.stats["cache_hits"] += 1
             return self.location_cache[cache_key]
 
-        self.stats['cache_misses'] += 1
+        self.stats["cache_misses"] += 1
 
         # Try to find in database
-        query = self.supabase.from_('locations').select('*').eq('name', name).eq('level', level)
+        query = (
+            self.supabase.from_("locations")
+            .select("*")
+            .eq("name", name)
+            .eq("level", level)
+        )
 
         # For cities, also filter by parent (same city name can exist in multiple countries)
-        if parent_id and level == 'city':
-            query = query.eq('parent_id', parent_id)
+        if parent_id and level == "city":
+            query = query.eq("parent_id", parent_id)
 
         result = query.execute()
 
@@ -219,28 +247,30 @@ class LocationParser:
         # Not found, create new location
         logger.info(f"Creating new {level}: {name}")
 
-        slug = name.lower().replace(' ', '-').replace('.', '')
+        slug = name.lower().replace(" ", "-").replace(".", "")
 
         new_location_data = {
-            'name': name,
-            'slug': slug,
-            'level': level,
-            'parent_id': parent_id
+            "name": name,
+            "slug": slug,
+            "level": level,
+            "parent_id": parent_id,
         }
 
         # Add coordinates if provided
         if latitude is not None:
-            new_location_data['latitude'] = latitude
+            new_location_data["latitude"] = latitude
         if longitude is not None:
-            new_location_data['longitude'] = longitude
+            new_location_data["longitude"] = longitude
 
         try:
-            insert_result = self.supabase.from_('locations').insert(new_location_data).execute()
+            insert_result = (
+                self.supabase.from_("locations").insert(new_location_data).execute()
+            )
             location = insert_result.data[0]
 
             # Add to cache
             self.location_cache[cache_key] = location
-            self.stats['created_locations'] += 1
+            self.stats["created_locations"] += 1
 
             return location
 
@@ -254,7 +284,7 @@ class LocationParser:
         state: Optional[str],
         country: str,
         latitude: Optional[float] = None,
-        longitude: Optional[float] = None
+        longitude: Optional[float] = None,
     ) -> str:
         """
         Navigate/create location hierarchy and return deepest location_id
@@ -275,46 +305,44 @@ class LocationParser:
         country = self.normalize_country(country)
 
         # Get Global location (should always exist as root)
-        global_loc = self._get_or_create_location('Global', 'global')
+        global_loc = self._get_or_create_location("Global", "global")
 
         # Get or create country
         country_loc = self._get_or_create_location(
-            name=country,
-            level='country',
-            parent_id=global_loc['id']
+            name=country, level="country", parent_id=global_loc["id"]
         )
 
         # If no city provided, return country location_id
         if not city:
-            return country_loc['id']
+            return country_loc["id"]
 
         # If state provided, create state level (optional middle tier)
-        parent_id = country_loc['id']
+        parent_id = country_loc["id"]
         if state:
             state_loc = self._get_or_create_location(
                 name=state,
-                level='region',  # Using 'region' level for states
-                parent_id=country_loc['id']
+                level="region",  # Using 'region' level for states
+                parent_id=country_loc["id"],
             )
-            parent_id = state_loc['id']
+            parent_id = state_loc["id"]
 
         # Get or create city
         city_loc = self._get_or_create_location(
             name=city,
-            level='city',
+            level="city",
             parent_id=parent_id,
             latitude=latitude,
-            longitude=longitude
+            longitude=longitude,
         )
 
-        return city_loc['id']
+        return city_loc["id"]
 
     def parse_and_link(
         self,
         address: str,
         latitude: Optional[float] = None,
         longitude: Optional[float] = None,
-        fallback_country: Optional[str] = None
+        fallback_country: Optional[str] = None,
     ) -> Optional[str]:
         """
         Main method: Parse address and return location_id
@@ -339,7 +367,9 @@ class LocationParser:
         """
         if not address:
             if fallback_country:
-                logger.warning(f"No address provided, using fallback country: {fallback_country}")
+                logger.warning(
+                    f"No address provided, using fallback country: {fallback_country}"
+                )
                 return self.find_or_create_hierarchy(None, None, fallback_country)
             return None
 
@@ -353,9 +383,13 @@ class LocationParser:
             return None
 
         # Extract relevant components
-        city = components.get('city') or components.get('suburb') or components.get('city_district')
-        state = components.get('state') or components.get('state_district')
-        country = components.get('country')
+        city = (
+            components.get("city")
+            or components.get("suburb")
+            or components.get("city_district")
+        )
+        state = components.get("state") or components.get("state_district")
+        country = components.get("country")
 
         # Check if city is actually a city-state
         if city and not country:
@@ -394,10 +428,12 @@ class LocationParser:
                 state=state,
                 country=country,
                 latitude=latitude,
-                longitude=longitude
+                longitude=longitude,
             )
 
-            logger.info(f"✓ Linked address to location_id: {location_id[:8]}... ({city or country})")
+            logger.info(
+                f"✓ Linked address to location_id: {location_id[:8]}... ({city or country})"
+            )
             return location_id
 
         except Exception as e:
@@ -420,7 +456,12 @@ class LocationParser:
             depth = 0
 
             while current_id and depth < max_depth:
-                result = self.supabase.from_('locations').select('level, parent_id').eq('id', current_id).execute()
+                result = (
+                    self.supabase.from_("locations")
+                    .select("level, parent_id")
+                    .eq("id", current_id)
+                    .execute()
+                )
 
                 if not result.data:
                     logger.error(f"Location {current_id} not found in database")
@@ -429,15 +470,17 @@ class LocationParser:
                 location = result.data[0]
 
                 # Reached global level (root)
-                if location['level'] == 'global':
+                if location["level"] == "global":
                     return True
 
                 # Move up to parent
-                current_id = location['parent_id']
+                current_id = location["parent_id"]
                 depth += 1
 
             # Exceeded max depth or no parent found
-            logger.error(f"Location {location_id} has broken hierarchy (depth: {depth})")
+            logger.error(
+                f"Location {location_id} has broken hierarchy (depth: {depth})"
+            )
             return False
 
         except Exception as e:
@@ -453,11 +496,12 @@ class LocationParser:
         """
         return {
             **self.stats,
-            'cache_hit_rate': (
-                self.stats['cache_hits'] / (self.stats['cache_hits'] + self.stats['cache_misses'])
-                if (self.stats['cache_hits'] + self.stats['cache_misses']) > 0
+            "cache_hit_rate": (
+                self.stats["cache_hits"]
+                / (self.stats["cache_hits"] + self.stats["cache_misses"])
+                if (self.stats["cache_hits"] + self.stats["cache_misses"]) > 0
                 else 0
-            )
+            ),
         }
 
 
@@ -467,7 +511,7 @@ def parse_address_to_location_id(
     supabase_url: Optional[str] = None,
     supabase_key: Optional[str] = None,
     latitude: Optional[float] = None,
-    longitude: Optional[float] = None
+    longitude: Optional[float] = None,
 ) -> Optional[str]:
     """
     Convenience function to parse address and get location_id in one call
@@ -483,8 +527,8 @@ def parse_address_to_location_id(
         location_id (UUID) or None
     """
     # Use env variables if not provided
-    supabase_url = supabase_url or os.getenv('SUPABASE_URL')
-    supabase_key = supabase_key or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+    supabase_url = supabase_url or os.getenv("SUPABASE_URL")
+    supabase_key = supabase_key or os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
     if not supabase_url or not supabase_key:
         raise ValueError("Missing Supabase credentials")
@@ -504,11 +548,13 @@ if __name__ == "__main__":
     load_dotenv()
 
     # Initialize parser
-    supabase_url = os.getenv('SUPABASE_URL')
-    supabase_key = os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+    supabase_url = os.getenv("SUPABASE_URL")
+    supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
     if not supabase_url or not supabase_key:
-        print("Error: Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY environment variables")
+        print(
+            "Error: Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY environment variables"
+        )
         sys.exit(1)
 
     client = create_client(supabase_url, supabase_key)
@@ -520,7 +566,7 @@ if __name__ == "__main__":
         "45 King's Road, London SW3 4ND, United Kingdom",
         "10 Orchard Road, Singapore 238841",
         "1 Marina Boulevard, Singapore 018989",
-        "Khalifa Tower, Sheikh Zayed Road, Dubai, UAE"
+        "Khalifa Tower, Sheikh Zayed Road, Dubai, UAE",
     ]
 
     print("\n" + "=" * 70)
@@ -544,7 +590,7 @@ if __name__ == "__main__":
     print("=" * 70)
     stats = parser.get_stats()
     for key, value in stats.items():
-        if key == 'cache_hit_rate':
+        if key == "cache_hit_rate":
             print(f"  {key}: {value:.1%}")
         else:
             print(f"  {key}: {value}")

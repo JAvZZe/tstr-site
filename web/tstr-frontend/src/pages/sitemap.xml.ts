@@ -88,12 +88,28 @@ export const GET: APIRoute = async () => {
     changefreq: 'weekly'
   }));
 
+  // Environmental testing subcategory pages
+  const environmentalSubcategories = [
+    'air-quality',
+    'water-quality',
+    'soil-testing',
+    'noise-vibration',
+    'esg-sustainability'
+  ];
+
+  const subcategoryPages = environmentalSubcategories.map(subcat => ({
+    url: `/environmental-testing/${subcat}`,
+    priority: '0.8',
+    changefreq: 'weekly'
+  }));
+
   // Combine all pages
   const allPages = [
     ...staticPages,
     ...standardPages,
     ...categoryPages,
     ...categoryRegionPages,
+    ...subcategoryPages,
     ...standardSearchPages.slice(0, 50), // Limit to top 50
     ...categoryBrowsePages
   ];

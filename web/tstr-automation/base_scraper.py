@@ -26,8 +26,7 @@ from url_validator import URLValidator
 load_dotenv()
 
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -55,7 +54,8 @@ class BaseNicheScraper(ABC):
         category_slug: str,
         source_name: str,
         rate_limit_seconds: float = 2.0,
-        user_agent: Optional[str] = None
+        user_agent: Optional[str] = None,
+        dry_run: bool = False,
     ):
         """
         Initialize base scraper
@@ -69,31 +69,46 @@ class BaseNicheScraper(ABC):
         self.category_slug = category_slug
         self.source_name = source_name
         self.rate_limit_seconds = rate_limit_seconds
+        self.dry_run = dry_run
 
-        # Initialize Supabase client
-        supabase_url = os.getenv('SUPABASE_URL')
-        supabase_key = os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+        if not dry_run:
+            # Initialize Supabase client
+            supabase_url = os.getenv("SUPABASE_URL")
+            supabase_key = os.getenv("SUPABASE_ANON_KEY") or os.getenv(
+                "SUPABASE_SERVICE_ROLE_KEY"
+            )
 
-        if not supabase_url or not supabase_key:
-            raise ValueError("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY")
+            if not supabase_url or not supabase_key:
+                raise ValueError(
+                    "Missing SUPABASE_URL or SUPABASE_ANON_KEY/SUPABASE_SERVICE_ROLE_KEY"
+                )
 
-        self.supabase = create_client(supabase_url, supabase_key)
+            self.supabase = create_client(supabase_url, supabase_key)
 
-        # Get category_id from database
-        self.category_id = self._get_category_id()
+            # Get category_id from database
+            self.category_id = self._get_category_id()
 
-        # Load custom fields for this category
-        self.custom_fields = self._load_custom_fields()
+            # Load custom fields for this category
+            self.custom_fields = self._load_custom_fields()
+
+            # Initialize location parser
+            self.location_parser = LocationParser(self.supabase)
+        else:
+            self.supabase = None
+            self.category_id = None
+            self.custom_fields = []
+            self.location_parser = None
 
         # Initialize utility components
-        self.location_parser = LocationParser(self.supabase)
+        if not dry_run:
+            self.location_parser = LocationParser(self.supabase)
         self.url_validator = URLValidator()
 
         # Initialize requests session with headers
         self.session = requests.Session()
-        self.session.headers.update({
-            'User-Agent': user_agent or self._get_default_user_agent()
-        })
+        self.session.headers.update(
+            {"User-Agent": user_agent or self._get_default_user_agent()}
+        )
 
         # Rate limiting tracker: {domain: last_request_time}
         self.last_request_times = {}
@@ -103,24 +118,32 @@ class BaseNicheScraper(ABC):
 
         # Statistics
         self.stats = {
-            'listings_scraped': 0,
-            'listings_saved': 0,
-            'listings_skipped_duplicate': 0,
-            'listings_failed': 0,
-            'custom_fields_populated': 0,
-            'rate_limit_delays': 0,
-            'robots_blocked': 0
+            "listings_scraped": 0,
+            "listings_saved": 0,
+            "listings_skipped_duplicate": 0,
+            "listings_failed": 0,
+            "custom_fields_populated": 0,
+            "rate_limit_delays": 0,
+            "robots_blocked": 0,
         }
 
     def _get_category_id(self) -> str:
         """Get category UUID from database by slug"""
         try:
-            result = self.supabase.from_('categories').select('id').eq('slug', self.category_slug).single().execute()
+            result = (
+                self.supabase.from_("categories")
+                .select("id")
+                .eq("slug", self.category_slug)
+                .single()
+                .execute()
+            )
 
             if not result.data:
-                raise ValueError(f"Category '{self.category_slug}' not found in database")
+                raise ValueError(
+                    f"Category '{self.category_slug}' not found in database"
+                )
 
-            return result.data['id']
+            return result.data["id"]
 
         except Exception as e:
             logger.error(f"Failed to get category_id for '{self.category_slug}': {e}")
@@ -134,13 +157,20 @@ class BaseNicheScraper(ABC):
             Dict mapping field_name to field definition {id, label, field_type, options, ...}
         """
         try:
-            result = self.supabase.from_('custom_fields').select('*').eq('category_id', self.category_id).execute()
+            result = (
+                self.supabase.from_("custom_fields")
+                .select("*")
+                .eq("category_id", self.category_id)
+                .execute()
+            )
 
             custom_fields = {}
             for field in result.data:
-                custom_fields[field['field_name']] = field
+                custom_fields[field["field_name"]] = field
 
-            logger.info(f"Loaded {len(custom_fields)} custom fields for category '{self.category_slug}'")
+            logger.info(
+                f"Loaded {len(custom_fields)} custom fields for category '{self.category_slug}'"
+            )
             return custom_fields
 
         except Exception as e:
@@ -150,8 +180,8 @@ class BaseNicheScraper(ABC):
     def _get_default_user_agent(self) -> str:
         """Return default User-Agent string"""
         return (
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-            '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         )
 
     def check_robots_allowed(self, url: str) -> bool:
@@ -184,12 +214,12 @@ class BaseNicheScraper(ABC):
         rp = self.robots_cache[domain]
 
         # Check if our user agent can fetch this URL
-        user_agent = self.session.headers.get('User-Agent', '*')
+        user_agent = self.session.headers.get("User-Agent", "*")
         allowed = rp.can_fetch(user_agent, url)
 
         if not allowed:
             logger.warning(f"URL blocked by robots.txt: {url}")
-            self.stats['robots_blocked'] += 1
+            self.stats["robots_blocked"] += 1
 
         return allowed
 
@@ -208,7 +238,7 @@ class BaseNicheScraper(ABC):
                 sleep_time = self.rate_limit_seconds - elapsed
                 logger.debug(f"Rate limiting: sleeping {sleep_time:.2f}s for {domain}")
                 time.sleep(sleep_time)
-                self.stats['rate_limit_delays'] += 1
+                self.stats["rate_limit_delays"] += 1
 
         self.last_request_times[domain] = time.time()
 
@@ -235,15 +265,17 @@ class BaseNicheScraper(ABC):
                 response = self.session.get(url, timeout=15)
                 response.raise_for_status()
 
-                soup = BeautifulSoup(response.content, 'html.parser')
+                soup = BeautifulSoup(response.content, "html.parser")
                 return soup
 
             except requests.exceptions.RequestException as e:
-                logger.warning(f"Attempt {attempt+1}/{max_retries} failed for {url}: {e}")
+                logger.warning(
+                    f"Attempt {attempt + 1}/{max_retries} failed for {url}: {e}"
+                )
 
                 if attempt < max_retries - 1:
                     # Exponential backoff
-                    sleep_time = 2 ** attempt
+                    sleep_time = 2**attempt
                     time.sleep(sleep_time)
                 else:
                     logger.error(f"Failed to fetch {url} after {max_retries} attempts")
@@ -273,18 +305,20 @@ class BaseNicheScraper(ABC):
             }
         """
         # Default implementation - subclasses should override with source-specific selectors
-        logger.warning("Using default extract_standard_fields - subclass should override this method")
+        logger.warning(
+            "Using default extract_standard_fields - subclass should override this method"
+        )
 
         return {
-            'business_name': '',
-            'description': '',
-            'address': '',
-            'location_id': None,
-            'phone': '',
-            'email': '',
-            'website': url,
-            'latitude': None,
-            'longitude': None
+            "business_name": "",
+            "description": "",
+            "address": "",
+            "location_id": None,
+            "phone": "",
+            "email": "",
+            "website": url,
+            "latitude": None,
+            "longitude": None,
         }
 
     @abstractmethod
@@ -318,7 +352,12 @@ class BaseNicheScraper(ABC):
         """
         raise NotImplementedError("Subclass must implement get_listing_urls()")
 
-    def is_duplicate(self, website: str, phone: Optional[str] = None, business_name: Optional[str] = None) -> bool:
+    def is_duplicate(
+        self,
+        website: str,
+        phone: Optional[str] = None,
+        business_name: Optional[str] = None,
+    ) -> bool:
         """
         Check if listing already exists in database
 
@@ -333,7 +372,12 @@ class BaseNicheScraper(ABC):
         try:
             # Check by website URL (primary key for duplicates) - only if website is provided
             if website and website.strip():
-                query = self.supabase.from_('listings').select('id').eq('website', website).eq('category_id', self.category_id)
+                query = (
+                    self.supabase.from_("listings")
+                    .select("id")
+                    .eq("website", website)
+                    .eq("category_id", self.category_id)
+                )
                 result = query.execute()
 
                 if result.data:
@@ -341,7 +385,12 @@ class BaseNicheScraper(ABC):
 
             # Check by phone if provided
             if phone and phone.strip():
-                query = self.supabase.from_('listings').select('id').eq('phone', phone).eq('category_id', self.category_id)
+                query = (
+                    self.supabase.from_("listings")
+                    .select("id")
+                    .eq("phone", phone)
+                    .eq("category_id", self.category_id)
+                )
                 result = query.execute()
 
                 if result.data:
@@ -349,7 +398,12 @@ class BaseNicheScraper(ABC):
 
             # Fallback: Check by business name for sources without website/phone
             if business_name and business_name.strip():
-                query = self.supabase.from_('listings').select('id').eq('business_name', business_name).eq('category_id', self.category_id)
+                query = (
+                    self.supabase.from_("listings")
+                    .select("id")
+                    .eq("business_name", business_name)
+                    .eq("category_id", self.category_id)
+                )
                 result = query.execute()
 
                 if result.data:
@@ -362,10 +416,7 @@ class BaseNicheScraper(ABC):
             return False
 
     def save_listing(
-        self,
-        standard_fields: Dict,
-        custom_fields: Dict,
-        source_url: str
+        self, standard_fields: Dict, custom_fields: Dict, source_url: str
     ) -> Optional[str]:
         """
         Save listing to database (listings + custom field values)
@@ -381,60 +432,65 @@ class BaseNicheScraper(ABC):
         try:
             # Check for duplicates
             if self.is_duplicate(
-                standard_fields.get('website', ''),
-                standard_fields.get('phone'),
-                standard_fields.get('business_name')
+                standard_fields.get("website", ""),
+                standard_fields.get("phone"),
+                standard_fields.get("business_name"),
             ):
-                logger.info(f"Skipping duplicate listing: {standard_fields.get('business_name', 'Unknown')}")
-                self.stats['listings_skipped_duplicate'] += 1
+                logger.info(
+                    f"Skipping duplicate listing: {standard_fields.get('business_name', 'Unknown')}"
+                )
+                self.stats["listings_skipped_duplicate"] += 1
                 return None
 
             # Generate slug from business name
-            business_name = standard_fields.get('business_name', '')
+            business_name = standard_fields.get("business_name", "")
             if business_name:
                 # Create URL-safe slug
                 import re
-                slug = re.sub(r'[^a-z0-9]+', '-', business_name.lower()).strip('-')
+
+                slug = re.sub(r"[^a-z0-9]+", "-", business_name.lower()).strip("-")
                 # Truncate if too long
                 slug = slug[:100] if len(slug) > 100 else slug
             else:
-                slug = 'listing'
+                slug = "listing"
 
             # Prepare listing data
             listing_data = {
-                'business_name': business_name,
-                'slug': slug,
-                'description': standard_fields.get('description', ''),
-                'category_id': self.category_id,
-                'location_id': standard_fields.get('location_id'),
-                'address': standard_fields.get('address', ''),
-                'phone': standard_fields.get('phone', ''),
-                'email': standard_fields.get('email', ''),
-                'website': standard_fields.get('website', ''),
-                'latitude': standard_fields.get('latitude'),
-                'longitude': standard_fields.get('longitude'),
-                'status': 'active'
+                "business_name": business_name,
+                "slug": slug,
+                "description": standard_fields.get("description", ""),
+                "category_id": self.category_id,
+                "location_id": standard_fields.get("location_id"),
+                "address": standard_fields.get("address", ""),
+                "phone": standard_fields.get("phone", ""),
+                "email": standard_fields.get("email", ""),
+                "website": standard_fields.get("website", ""),
+                "latitude": standard_fields.get("latitude"),
+                "longitude": standard_fields.get("longitude"),
+                "status": "active",
             }
 
             # Insert listing
-            result = self.supabase.from_('listings').insert(listing_data).execute()
+            result = self.supabase.from_("listings").insert(listing_data).execute()
 
             if not result.data:
                 logger.error("Failed to insert listing - no data returned")
                 return None
 
-            listing_id = result.data[0]['id']
-            logger.info(f"✓ Saved listing: {standard_fields.get('business_name', 'Unknown')} (ID: {listing_id[:8]}...)")
+            listing_id = result.data[0]["id"]
+            logger.info(
+                f"✓ Saved listing: {standard_fields.get('business_name', 'Unknown')} (ID: {listing_id[:8]}...)"
+            )
 
             # Save custom field values
             self._save_custom_field_values(listing_id, custom_fields)
 
-            self.stats['listings_saved'] += 1
+            self.stats["listings_saved"] += 1
             return listing_id
 
         except Exception as e:
             logger.error(f"Failed to save listing: {e}")
-            self.stats['listings_failed'] += 1
+            self.stats["listings_failed"] += 1
             return None
 
     def _save_custom_field_values(self, listing_id: str, custom_fields: Dict):
@@ -453,7 +509,7 @@ class BaseNicheScraper(ABC):
 
             for field_name, field_value in custom_fields.items():
                 # Skip empty values
-                if field_value is None or field_value == '' or field_value == []:
+                if field_value is None or field_value == "" or field_value == []:
                     continue
 
                 # Get custom_field_id
@@ -461,33 +517,37 @@ class BaseNicheScraper(ABC):
                     logger.warning(f"Unknown custom field: {field_name}")
                     continue
 
-                custom_field_id = self.custom_fields[field_name]['id']
+                custom_field_id = self.custom_fields[field_name]["id"]
 
                 # Convert value to appropriate format based on field_type
-                field_type = self.custom_fields[field_name]['field_type']
+                field_type = self.custom_fields[field_name]["field_type"]
 
-                if field_type in ['multi_select', 'select']:
+                if field_type in ["multi_select", "select"]:
                     # Store as JSON array
                     if isinstance(field_value, list):
                         field_value_json = field_value
                     else:
                         field_value_json = [field_value]
-                elif field_type == 'boolean':
+                elif field_type == "boolean":
                     field_value_json = bool(field_value)
                 else:
                     # Text, number, date, url, email, phone
                     field_value_json = str(field_value)
 
-                values_to_insert.append({
-                    'listing_id': listing_id,
-                    'custom_field_id': custom_field_id,
-                    'value': field_value_json
-                })
+                values_to_insert.append(
+                    {
+                        "listing_id": listing_id,
+                        "custom_field_id": custom_field_id,
+                        "value": field_value_json,
+                    }
+                )
 
-                self.stats['custom_fields_populated'] += 1
+                self.stats["custom_fields_populated"] += 1
 
             if values_to_insert:
-                self.supabase.from_('listing_custom_fields').insert(values_to_insert).execute()
+                self.supabase.from_("listing_custom_fields").insert(
+                    values_to_insert
+                ).execute()
                 logger.info(f"  Saved {len(values_to_insert)} custom field values")
 
         except Exception as e:
@@ -509,7 +569,7 @@ class BaseNicheScraper(ABC):
             # Fetch page
             soup = self.fetch_page(url)
             if not soup:
-                self.stats['listings_failed'] += 1
+                self.stats["listings_failed"] += 1
                 return False
 
             # Extract standard fields
@@ -522,14 +582,14 @@ class BaseNicheScraper(ABC):
             listing_id = self.save_listing(standard_fields, custom_fields, url)
 
             if listing_id:
-                self.stats['listings_scraped'] += 1
+                self.stats["listings_scraped"] += 1
                 return True
             else:
                 return False
 
         except Exception as e:
             logger.error(f"Error scraping listing {url}: {e}")
-            self.stats['listings_failed'] += 1
+            self.stats["listings_failed"] += 1
             return False
 
     def run(self, limit: Optional[int] = None, dry_run: bool = False):
@@ -548,6 +608,7 @@ class BaseNicheScraper(ABC):
 
         if dry_run:
             logger.info("DRY RUN MODE - No database writes")
+            dry_run_data = []
 
         # Get listing URLs
         listing_urls = self.get_listing_urls()
@@ -562,15 +623,54 @@ class BaseNicheScraper(ABC):
             logger.info(f"\n[{idx}/{len(listing_urls)}] Processing listing...")
 
             if dry_run:
-                # Just fetch and log
+                # Extract data but don't save
                 soup = self.fetch_page(url)
                 if soup:
                     logger.info("  Successfully fetched")
+                    # Extract fields
+                    standard_fields = self.extract_standard_fields(soup, url)
+                    custom_fields = self.extract_custom_fields(soup, url)
+                    # Combine
+                    listing_data = {**standard_fields, **custom_fields}
+                    dry_run_data.append(listing_data)
             else:
                 self.scrape_listing(url)
 
+        # Write to CSV in dry run
+        if dry_run and dry_run_data:
+            self._write_dry_run_csv(dry_run_data)
+
         # Print summary
         self._print_summary()
+
+    def _write_dry_run_csv(self, data: List[Dict]):
+        """Write dry run data to CSV file"""
+        import csv
+        import os
+
+        if not data:
+            return
+
+        # Create output directory if needed
+        output_dir = "scraped_data"
+        os.makedirs(output_dir, exist_ok=True)
+
+        filename = f"{output_dir}/{self.category_slug}_dry_run.csv"
+
+        # Get all unique keys
+        all_keys = set()
+        for item in data:
+            all_keys.update(item.keys())
+
+        fieldnames = sorted(all_keys)
+
+        with open(filename, "w", newline="", encoding="utf-8") as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            for row in data:
+                writer.writerow(row)
+
+        logger.info(f"Dry run data written to {filename} ({len(data)} records)")
 
     def _print_summary(self):
         """Print scraping statistics"""
@@ -586,9 +686,12 @@ class BaseNicheScraper(ABC):
         logger.info(f"URLs blocked by robots.txt: {self.stats['robots_blocked']}")
 
         # Location parser stats
-        location_stats = self.location_parser.get_stats()
-        logger.info(f"\nLocation parser cache hit rate: {location_stats['cache_hit_rate']:.1%}")
-        logger.info(f"New locations created: {location_stats['created_locations']}")
+        if self.location_parser:
+            location_stats = self.location_parser.get_stats()
+            logger.info(
+                f"\nLocation parser cache hit rate: {location_stats['cache_hit_rate']:.1%}"
+            )
+            logger.info(f"New locations created: {location_stats['created_locations']}")
 
     def get_stats(self) -> Dict:
         """Return scraping statistics"""
