@@ -3,7 +3,7 @@
 **Date:** November 2, 2025  
 **Scraper:** `tni_environmental.py`  
 **Target:** TNI LAMS (NELAP) Environmental Testing Laboratory Database  
-**Working Directory:** `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation`
+**Working Directory:** `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation`
 
 ---
 
@@ -272,14 +272,14 @@ The scraper successfully extracted data for 285 listings. Here are 5 examples of
 
 ## Files Modified
 
-- ✓ `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/tni_environmental.py`
+- ✓ `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/tni_environmental.py`
   - Fixed hardcoded state limit (line 261)
   - Fixed hardcoded labs-per-state limit (line 262)
 
 ## Files Created
 
-- `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/production_deployment.log`
-- `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/DEPLOYMENT_REPORT.md` (this file)
+- `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/production_deployment.log`
+- `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/DEPLOYMENT_REPORT.md` (this file)
 
 ---
 

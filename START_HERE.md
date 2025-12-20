@@ -6,16 +6,37 @@
 
 ---
 
-## ⚠️ MANDATORY: Bootstrap Before ANY Work
+## 🚨 CRITICAL: MANDATORY FIRST STEP FOR ALL AGENTS
 
-**Run this FIRST** (before reading anything else):
+**⚠️ ALWAYS RUN GLOBAL BOOTSTRAP BEFORE ANY PROJECT WORK:**
+
+```bash
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
+```
+
+**This provides:**
+- Global system context and learnings
+- Cross-project task coordination
+- Agent handoff information
+- Learning system access for optimal decision making
+
+**Failure to bootstrap may result in:**
+- Missing critical context
+- Duplicating work already done
+- Breaking continuity across agents
+
+---
+
+## ⚠️ PROJECT BOOTSTRAP (After Global Bootstrap)
+
+**Run this SECOND** (after global bootstrap):
 
 ```bash
 ./bootstrap.sh TSTR.site
 ```
 
 **What this does**:
-- ✅ Loads 90 learnings from database (filtered for TSTR.site)
+- ✅ Loads project-specific learnings from database (filtered for TSTR.site)
 - ✅ Shows pending tasks (for this project only)
 - ✅ Displays recent session context
 - ✅ Checks for handoffs
@@ -23,7 +44,7 @@
 
 **Why this matters**: Last 3 agents forgot critical learnings #45, #67, #88 and repeated mistakes. Bootstrap prevents this.
 
-**If bootstrap.sh doesn't exist**: You're in the wrong directory or symlinks not created. Check you're in `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/`
+**If bootstrap.sh doesn't exist**: You're in the wrong directory or symlinks not created. Check you're in `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/`
 
 ---
 
@@ -97,7 +118,7 @@
 
 ### After Errors/Discoveries (3+ failed attempts OR new insights)
 ```bash
-cd "/home/al/AI_PROJECTS_SPACE/SYSTEM/state"
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state"
 python3 db_utils.py learning-add \
   "What you learned" \
   "gotcha" \
@@ -122,7 +143,7 @@ Because of symlinks, you can run:
 - `./resume.sh` - Load last checkpoint
 - `./handoff.sh agent reason` - Transfer to another agent
 
-All point to global system at `/home/al/AI_PROJECTS_SPACE/`
+All point to global system at `/media/al/AI_DATA/AI_PROJECTS_SPACE/`
 
 ---
 

@@ -2,6 +2,15 @@
 
 ═══════════════════════════════════════════════════════════════
 
+🚨 CRITICAL FIRST STEP FOR ALL AGENTS
+──────────────────────────────────────────────────────────────
+⚠️ ALWAYS RUN GLOBAL BOOTSTRAP BEFORE PROJECT WORK:
+
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
+
+This provides global context, learnings, and task coordination.
+Failure to bootstrap may result in missing critical information.
+
 🎯 WHAT TO LOAD IN CLAUDE DESKTOP
 ───────────────────────────────────────────────────────────────
 

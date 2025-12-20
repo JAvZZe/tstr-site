@@ -410,4 +410,4 @@ Best regards,
 ---
 
 **Agent:** Claude Code (Sonnet 4.5) - avztest8@gmail.com
-**File Location:** /home/al/AI_PROJECTS_SPACE/TSTR_ADSENSE_SETUP_GUIDE.md
+**File Location:** /media/al/AI_DATA/AI_PROJECTS_SPACE/TSTR_ADSENSE_SETUP_GUIDE.md

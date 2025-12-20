@@ -193,7 +193,7 @@ If you have questions about:
 
 All reports are saved in:
 ```
-/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/
+/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/
 ├── USER_SUMMARY.txt
 ├── DEPLOYMENT_SUMMARY_QUICK.txt
 ├── ENVIRONMENTAL_TESTING_DEPLOYMENT_REPORT.md

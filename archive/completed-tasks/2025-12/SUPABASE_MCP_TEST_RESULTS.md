@@ -135,7 +135,7 @@ Agent: [Uses MCP to query]
 
 ## Documentation Created
 
-**Comprehensive Guide**: `/home/al/AI_PROJECTS_SPACE/SYSTEM/skills/supabase-mcp-integration.md`
+**Comprehensive Guide**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/skills/supabase-mcp-integration.md`
 
 **Includes**:
 - Installation methods (3 options)
@@ -174,6 +174,6 @@ When resuming this work:
 
 ---
 
-**For Full Details**: See `/home/al/AI_PROJECTS_SPACE/SYSTEM/skills/supabase-mcp-integration.md`
+**For Full Details**: See `/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/skills/supabase-mcp-integration.md`
 
 **Status**: Testing complete, awaiting credential refresh to validate full functionality

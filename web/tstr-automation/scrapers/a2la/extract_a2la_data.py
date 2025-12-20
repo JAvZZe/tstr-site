@@ -116,7 +116,7 @@ def main():
     plan = build_extraction_plan()
     
     # Save extraction plan
-    plan_path = Path("/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/extraction_plan.json")
+    plan_path = Path("/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/extraction_plan.json")
     plan_path.write_text(json.dumps(plan, indent=2))
     print(f"Extraction plan saved to: {plan_path}")
     
@@ -129,7 +129,7 @@ def main():
         "extraction_results": []
     }
     
-    results_path = Path("/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/claude_extraction.jsonl")
+    results_path = Path("/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/claude_extraction.jsonl")
     
     # Pre-populate with known data as baseline
     for pid in PIDS:

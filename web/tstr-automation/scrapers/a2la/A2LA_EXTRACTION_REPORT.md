@@ -106,7 +106,7 @@
 ## Output Files Generated
 
 ### Primary Deliverable
-- **File**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/a2la_claude_complete.jsonl`
+- **File**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/a2la_claude_complete.jsonl`
 - **Format**: One JSON record per line (JSONL)
 - **Records**: 64 PIDs with all extracted fields
 - **Fields**: pid, cert, org, city, state, country, scope, confidence, notes

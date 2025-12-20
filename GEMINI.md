@@ -1,37 +1,68 @@
 # GEMINI.md - TSTR.site Project
 
 > **CRITICAL**: This project is part of the AI_PROJECTS_SPACE continuity system.
-> **Global System**: `/home/al/AI_PROJECTS_SPACE/`
+> **Global System**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/`
 > **Project Context**: Read `TSTR.md` (this directory) for project-specific details.
+
+---
+
+## ⚠️ MANDATORY NOTE: Uncertainty and Certainty
+
+AI agents should make it explicit when they do not know and are guessing. If they present a solution as fact, they should calculate an evidence-based level of certainty or probability that it is correct, and what other potential solutions there may be.
+
+---
+
+## 🚨 CRITICAL: Mandatory First Step
+
+### ⚠️ ALWAYS BOOTSTRAP BEFORE STARTING WORK
+
+**Before using Gemini for any task, you MUST run:**
+
+```bash
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
+```
+
+**What this provides:**
+- **Project-specific learnings** and context from the continuity system
+- **Pending tasks** filtered to relevant projects
+- **Session history** and handoff information from other agents
+- **Learning system access** that may affect model selection and task routing decisions
+
+**Why mandatory:**
+- Gemini is integrated with the multi-agent continuity system
+- Bootstrap ensures you have full context and don't duplicate work
+- Provides access to accumulated knowledge and task state
+- Required for all agents (Claude, Gemini, OpenHands, OpenCode, etc.)
+
+**Failure to bootstrap may result in:**
+- Missing important context and learnings
+- Duplicating work already done by other agents
+- Inefficient task routing and model selection
+- Breaking continuity across the multi-agent system
 
 ---
 
 ## Mandatory Protocol for ALL Agents
 
-### 1. Session Start (ALWAYS)
+## Mandatory Protocol for ALL Agents
 
-**NEW (2025-11-20)**: Use bootstrap script instead of resume.sh:
+### 1. Global Bootstrap (MANDATORY - See Top of Document)
+The mandatory global bootstrap step is documented at the top of this file. Always run the global bootstrap first.
+
+### 2. Project-Specific Context (Optional)
+After global bootstrap, you may run project-specific bootstrap for additional TSTR.site context:
 
 ```bash
 ./bootstrap.sh TSTR.site
 ```
 
-**Note**: The bootstrap script file is `Link_to_bootstrap_agent.sh` in the project root. Always run bootstrap at the start of every session.
+**What this adds:**
+- **TSTR.site-specific learnings** (filtered from global database)
+- **Project-focused context** (vs. overwhelming global context)
+- **High-confidence learnings only** (≥4 rating)
+- **Project-specific task filtering**
 
-This loads:
-- **Project-specific learnings** (15 relevant from 90 total)
-- **Pending tasks** (filtered to TSTR.site only)
-- **Recent session context** (what was last done)
-- **Handoff context** from previous agents
-- **Protocol reminders** with absolute paths
-
-**Why bootstrap > resume**:
-- resume.sh: Shows ALL learnings (overwhelming)
-- bootstrap.sh: Shows TSTR.site learnings only (manageable)
-- Filters by project name in tags AND content
-- High confidence only (≥4)
-
-**Symlinks available**: In this folder, just run `./bootstrap.sh TSTR.site`
+**When to use**: For deep TSTR.site work requiring extensive project history. The global bootstrap provides sufficient context for most tasks.
 
 ### 2. During Work
 
@@ -42,7 +73,7 @@ cd "/home/al/AI_PROJECTS_SPACE" && ./checkpoint.sh "description of work complete
 
 **Extract learnings** after errors/discoveries:
 ```bash
-cd "/home/al/AI_PROJECTS_SPACE/SYSTEM/state" && python3 << 'PYEOF'
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state" && python3 << 'PYEOF'
 from db_utils import add_learning
 add_learning(
     "Your learning here",
@@ -55,7 +86,7 @@ PYEOF
 
 **Track tasks**:
 ```bash
-cd "/home/al/AI_PROJECTS_SPACE/SYSTEM/state" && python3 << 'PYEOF'
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state" && python3 << 'PYEOF'
 from db_utils import add_task, update_task
 task_id = add_task("TSTR.site", "Task description", assigned_to="gemini")
 # ... do work ...
@@ -100,7 +131,7 @@ cd "/home/al/AI_PROJECTS_SPACE" && ./handoff.sh <agent> <reason>
 
 ## Quick Reference
 
-**Project Root**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working`
+**Project Root**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working`
 
 **Frontend**: `web/tstr-frontend/` (Astro + React + Tailwind)
 **Scrapers**: `web/tstr-automation/` (Python, deployed on OCI)

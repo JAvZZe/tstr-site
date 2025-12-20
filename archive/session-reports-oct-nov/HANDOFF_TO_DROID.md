@@ -373,7 +373,7 @@ If contact page doesn't exist, fallback links are broken.
 **Added to system database:**
 
 ```bash
-cd "/home/al/AI_PROJECTS_SPACE/SYSTEM/state"
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state"
 python3 << 'PYEOF'
 from db_utils import add_learning
 

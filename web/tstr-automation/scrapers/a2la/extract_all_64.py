@@ -10,8 +10,8 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 # Read PID lists
-PIDS_FILE = "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/a2la_pids_final.txt"
-COLLECTED_FILE = "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/a2la_pids_collected.txt"
+PIDS_FILE = "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/a2la_pids_final.txt"
+COLLECTED_FILE = "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/a2la_pids_collected.txt"
 
 def read_pids() -> List[str]:
     """Read 64 PIDs from file."""
@@ -116,7 +116,7 @@ def build_search_queries(pid: str, cert: str, scope: str) -> List[Dict[str, str]
 def get_gemini_data() -> Dict[str, Dict]:
     """Load Gemini's partial extraction results."""
     gemini_data = {}
-    gemini_file = "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/claude_extraction.jsonl"
+    gemini_file = "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/claude_extraction.jsonl"
 
     if Path(gemini_file).exists():
         with open(gemini_file, 'r') as f:
@@ -197,7 +197,7 @@ def main():
                 extraction_plan[pid]["needs_extraction"] = False
 
     # Save extraction plan
-    plan_file = "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/extraction_plan_64.json"
+    plan_file = "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/extraction_plan_64.json"
     with open(plan_file, 'w') as f:
         # Serialize queries for JSON
         plan_for_json = {}

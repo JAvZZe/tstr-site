@@ -236,7 +236,7 @@ droid mcp add bruno "npx -y @hungthai1401/bruno-mcp"
 
 ## Related Documentation
 
-- **Skills Guide**: `/home/al/AI_PROJECTS_SPACE/SYSTEM/skills/bruno-api-management.md`
+- **Skills Guide**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/skills/bruno-api-management.md`
 - **TSTR.site Main**: `../TSTR.md`
 - **Project Status**: `../PROJECT_STATUS.md`
 - **Bruno Docs**: https://docs.usebruno.com/

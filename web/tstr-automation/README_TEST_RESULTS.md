@@ -69,7 +69,7 @@ This directory now contains comprehensive testing documentation:
 ## Test Scope
 
 ### What Was Tested
-- **Scraper File**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/rigzone_oil_gas.py`
+- **Scraper File**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/rigzone_oil_gas.py`
 - **Sample Size**: 5 test companies with realistic mock HTML
 - **Test Type**: Dry-run field extraction (no database writes)
 - **Fields Tested**: 
@@ -316,7 +316,7 @@ Start with: **TEST_SUMMARY.txt**
 ## Files in This Directory
 
 ```
-/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/
+/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/
 
 TESTING_RESULTS.txt         ← Executive Summary (START HERE)
 RIGZONE_TEST_REPORT.md      ← Detailed Technical Report

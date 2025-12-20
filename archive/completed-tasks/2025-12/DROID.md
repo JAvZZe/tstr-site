@@ -1,7 +1,7 @@
 # DROID.md - TSTR.site Project
 
 > **CRITICAL**: This project is part of the AI_PROJECTS_SPACE continuity system.
-> **Global System**: `/home/al/AI_PROJECTS_SPACE/`
+> **Global System**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/`
 > **Project Context**: Read `TSTR.md` (this directory) for project-specific details.
 
 ---
@@ -72,7 +72,7 @@ cd "/home/al/AI_PROJECTS_SPACE" && ./checkpoint.sh "description of work complete
 
 **Extract learnings** after errors/discoveries:
 ```bash
-cd "/home/al/AI_PROJECTS_SPACE/SYSTEM/state" && python3 << 'PYEOF'
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state" && python3 << 'PYEOF'
 from db_utils import add_learning
 add_learning(
     "Your learning here",
@@ -85,7 +85,7 @@ PYEOF
 
 **Track tasks**:
 ```bash
-cd "/home/al/AI_PROJECTS_SPACE/SYSTEM/state" && python3 << 'PYEOF'
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state" && python3 << 'PYEOF'
 from db_utils import add_task, update_task
 task_id = add_task("TSTR.site", "Task description", assigned_to="droid")
 # ... do work ...
@@ -134,7 +134,7 @@ Read + Grep + Glob simultaneously to save time
 
 ## Quick Reference
 
-**Project Root**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working`
+**Project Root**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working`
 
 **Frontend**: `web/tstr-frontend/` (Astro + React + Tailwind)
 **Scrapers**: `web/tstr-automation/` (Python, deployed on OCI)

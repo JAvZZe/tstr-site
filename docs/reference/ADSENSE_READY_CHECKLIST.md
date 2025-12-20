@@ -274,7 +274,7 @@ Monitor:
 
 ## Documentation Reference
 
-All guides available in: `/home/al/AI_PROJECTS_SPACE/`
+All guides available in: `/media/al/AI_DATA/AI_PROJECTS_SPACE/`
 
 1. **TSTR_FEATURE_ROADMAP.md** - Full 50-70 hour feature plan
 2. **TSTR_ADSENSE_SETUP_GUIDE.md** - Detailed AdSense implementation

@@ -1,6 +1,6 @@
 # Biotech Outreach Workflow - Quick Reference
 
-**Location**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/Biotech Directory`
+**Location**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/Biotech Directory`
 
 **Database**: `~/memory/db/tstr.db` (shared, outside this folder)  
 **Drafts**: `~/memory/drafts/` (shared, outside this folder)
@@ -36,7 +36,7 @@
 
 ### View Dashboard
 ```bash
-cd "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/Biotech Directory"
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/Biotech Directory"
 python3 dashboard.py
 ```
 
@@ -165,7 +165,7 @@ Sponsor (0)
 
 ### Morning (5 minutes)
 ```bash
-cd "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/Biotech Directory"
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/Biotech Directory"
 
 # Check dashboard
 python3 dashboard.py

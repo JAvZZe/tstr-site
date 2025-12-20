@@ -10,7 +10,7 @@
 To support focused vertical development, project documentation is now organized by industry niche:
 
 #### 1. **Hydrogen Infrastructure Testing**
-**Path**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/Hydrogen Infrastructure Testing`
+**Path**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/Hydrogen Infrastructure Testing`
 
 **Contents**: All session documentation, implementation notes, and handoffs related to hydrogen testing standards
 - Hydrogen standards implementation (ASME, ISO)
@@ -22,7 +22,7 @@ To support focused vertical development, project documentation is now organized 
 **Purpose**: Centralized knowledge base for hydrogen infrastructure testing vertical
 
 #### 2. **Biotech Directory**
-**Path**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/Biotech Directory`
+**Path**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/Biotech Directory`
 
 **Contents**: Biotech/Pharma/Life Sciences testing resources
 - Biotech listings summaries

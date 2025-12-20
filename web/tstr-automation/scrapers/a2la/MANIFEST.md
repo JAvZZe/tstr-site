@@ -2,7 +2,7 @@
 
 **Project Status**: COMPLETE (64/64 PIDs)  
 **Completion Date**: 2025-11-03  
-**Working Directory**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/`
+**Working Directory**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/`
 
 ## Primary Deliverable
 
@@ -230,4 +230,4 @@ Generated: 2025-11-03
 
 ---
 
-**File Location**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/`
+**File Location**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/`

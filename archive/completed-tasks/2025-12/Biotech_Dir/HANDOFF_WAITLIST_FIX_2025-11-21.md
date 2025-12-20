@@ -6,7 +6,7 @@
 
 **What Needs To Be Done:**
 ```bash
-cd "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
 
 # Reset the API file (removes Droid Shield blocker)
 git checkout web/tstr-frontend/src/pages/api/submit.ts

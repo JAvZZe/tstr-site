@@ -347,7 +347,7 @@ LIMIT 100;
 
 ## Learnings Recorded
 
-**Global Learning Database**: `/home/al/AI_PROJECTS_SPACE/SYSTEM/state/project.db`
+**Global Learning Database**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state/project.db`
 
 1. **Internal Redirects for SEO**
    - Tag: `TSTR.site`, `seo`, `analytics`, `pattern`

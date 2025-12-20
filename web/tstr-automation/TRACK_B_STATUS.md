@@ -169,8 +169,8 @@ class OilGasScraper(BaseNicheScraper):
 - `/home/al/tstr-site-working/web/tstr-automation/backfill_location_ids.py` - Reference for libpostal usage
 - `/home/al/tstr-site-working/web/tstr-automation/migrations/FINAL_ONE_BLOCK.sql` - Custom fields schema
 - `/home/al/tstr-site-working/web/tstr-automation/migrations/fix_locations_rls.sql` - RLS fix
-- `/home/al/AI_PROJECTS_SPACE/TSTR_HYBRID_IMPLEMENTATION_PLAN.md` - Overall strategy doc
-- `/home/al/AI_PROJECTS_SPACE/install_libpostal.sh` - Installation script
+- `/media/al/AI_DATA/AI_PROJECTS_SPACE/TSTR_HYBRID_IMPLEMENTATION_PLAN.md` - Overall strategy doc
+- `/media/al/AI_DATA/AI_PROJECTS_SPACE/install_libpostal.sh` - Installation script
 
 ### Database State
 - **Supabase URL**: https://haimjeaetrsaauitrhfy.supabase.co

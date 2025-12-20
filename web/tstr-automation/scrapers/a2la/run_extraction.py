@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 # Load extraction plan
-PLAN_FILE = "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/extraction_plan_64.json"
+PLAN_FILE = "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/extraction_plan_64.json"
 
 def load_plan() -> Dict:
     """Load the extraction plan."""
@@ -18,7 +18,7 @@ def load_plan() -> Dict:
 
 def load_gemini_results() -> Dict[str, Dict]:
     """Load Gemini's partial results."""
-    gemini_file = "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/claude_extraction.jsonl"
+    gemini_file = "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/claude_extraction.jsonl"
     gemini_data = {}
 
     if Path(gemini_file).exists():
@@ -106,7 +106,7 @@ def main():
     instructions = generate_search_instructions()
 
     # Save instructions
-    instr_file = "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/EXTRACTION_INSTRUCTIONS.txt"
+    instr_file = "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/EXTRACTION_INSTRUCTIONS.txt"
     Path(instr_file).write_text(instructions)
 
     print(instructions)

@@ -158,7 +158,7 @@ git push origin main
 
 ### Recording Learnings
 ```python
-cd "/home/al/AI_PROJECTS_SPACE/SYSTEM/state"
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state"
 python3 << 'PYEOF'
 from db_utils import add_learning
 add_learning(
@@ -218,7 +218,7 @@ PYEOF
 ## Query Global Learnings
 
 ```bash
-cd "/home/al/AI_PROJECTS_SPACE/SYSTEM/state"
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state"
 python3 << 'PYEOF'
 from db_utils import query_learnings
 

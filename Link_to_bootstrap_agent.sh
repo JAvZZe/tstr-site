@@ -1,1 +1,1 @@
-/media/al/AI_SSD/AI_PROJECTS_SPACE/SYSTEM/bootstrap_agent.sh
+../../../SYSTEM/bootstrap_agent.sh

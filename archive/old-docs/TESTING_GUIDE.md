@@ -217,7 +217,7 @@ WHERE billing_email = 'test@example.com';
 
 ```bash
 # Run in project root
-cd "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
 
 # Test get_user_tier function
 supabase db remote psql -c "SELECT get_user_tier('<user-uuid-from-signup>');"

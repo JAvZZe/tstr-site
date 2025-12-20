@@ -5,25 +5,38 @@
 
 ---
 
-## ⚡ START EVERY SESSION
+## 🚨 CRITICAL FIRST STEP
 
 ```bash
-# 1. Read this FIRST
+# ⚠️ MANDATORY: Global bootstrap FIRST
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
+```
+
+---
+
+## ⚡ PROJECT SESSION PROTOCOL
+
+```bash
+# 1. Global bootstrap (above - required)
+# 2. Project bootstrap
+./bootstrap.sh TSTR.site
+
+# 3. Read current state
 PROJECT_STATUS.md
 
-# 2. Check recent context
+# 4. Check recent context
 handoff_core.md (last 2-3 sessions)
 
-# 3. Understand request
+# 5. Understand request
 User's actual request
 
-# 4. Do work
+# 6. Do work
 Make changes, test, deploy
 
-# 5. Update THIS
+# 7. Update THIS
 PROJECT_STATUS.md (always!)
 
-# 6. Log session
+# 8. Log session
 handoff_core.md (append)
 ```
 

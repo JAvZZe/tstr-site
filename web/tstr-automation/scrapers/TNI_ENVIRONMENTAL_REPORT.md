@@ -16,7 +16,7 @@ Successfully implemented a web scraper for the TNI LAMS (Laboratory Accreditatio
 ## Implementation Details
 
 ### File Location
-`/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/tni_environmental.py`
+`/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/tni_environmental.py`
 
 ### Architecture
 - **Base Class:** Extends `BaseNicheScraper` from `base_scraper.py`

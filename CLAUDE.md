@@ -1,22 +1,51 @@
 # CLAUDE.md - TSTR.site Project
 
 > **CRITICAL**: This project is part of the AI_PROJECTS_SPACE continuity system.
-> **Global System**: `/home/al/AI_PROJECTS_SPACE/`
+> **Global System**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/`
 > **Project Context**: Read `TSTR.md` (this directory) for project-specific details.
+
+---
+
+## ⚠️ MANDATORY NOTE: Uncertainty and Certainty
+
+AI agents should make it explicit when they do not know and are guessing. If they present a solution as fact, they should calculate an evidence-based level of certainty or probability that it is correct, and what other potential solutions there may be.
+
+---
+
+## 🚨 CRITICAL: MANDATORY FIRST STEP FOR ALL AGENTS
+
+### ⚠️ ALWAYS RUN GLOBAL BOOTSTRAP BEFORE ANY PROJECT WORK
+
+```bash
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
+```
+
+**This provides:**
+- Global system context and learnings
+- Cross-project task coordination
+- Agent handoff information
+- Learning system access for optimal decision making
+
+**Failure to bootstrap may result in:**
+- Missing critical context
+- Duplicating work already done
+- Breaking continuity across agents
 
 ---
 
 ## Mandatory Protocol for ALL Agents
 
-### 1. Session Start (ALWAYS)
+### 1. Global Bootstrap (MANDATORY - See Above)
 
-**NEW (2025-11-20)**: Use bootstrap script instead of resume.sh:
+### 2. Project Session Start (ALWAYS)
+
+**After global bootstrap, run project-specific bootstrap:**
 
 ```bash
 ./bootstrap.sh TSTR.site
 ```
 
-**Note**: The bootstrap script file is `Link_to_bootstrap_agent.sh` in the project root. Always run bootstrap at the start of every session.
+**Note**: The bootstrap script file is `Link_to_bootstrap_agent.sh` in the project root. Always run project bootstrap after global bootstrap.
 
 This loads:
 - **Project-specific learnings** (15 relevant from 90 total)
@@ -72,7 +101,7 @@ cd "/home/al/AI_PROJECTS_SPACE" && ./checkpoint.sh "description of work complete
 
 **Extract learnings** after errors/discoveries:
 ```bash
-cd "/home/al/AI_PROJECTS_SPACE/SYSTEM/state" && python3 << 'PYEOF'
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state" && python3 << 'PYEOF'
 from db_utils import add_learning
 add_learning(
     "Your learning here",
@@ -85,7 +114,7 @@ PYEOF
 
 **Track tasks**:
 ```bash
-cd "/home/al/AI_PROJECTS_SPACE/SYSTEM/state" && python3 << 'PYEOF'
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state" && python3 << 'PYEOF'
 from db_utils import add_task, update_task
 task_id = add_task("TSTR.site", "Task description", assigned_to="claude")
 # ... do work ...
@@ -115,7 +144,7 @@ cd "/home/al/AI_PROJECTS_SPACE" && ./handoff.sh <agent> <reason>
 
 ## Quick Reference
 
-**Project Root**: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working`
+**Project Root**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working`
 
 **Frontend**: `web/tstr-frontend/` (Astro + React + Tailwind)
 **Scrapers**: `web/tstr-automation/` (Python, deployed on OCI)

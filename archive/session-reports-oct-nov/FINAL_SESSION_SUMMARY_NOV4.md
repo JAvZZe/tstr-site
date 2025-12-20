@@ -91,7 +91,7 @@ console.log('Error:', cfError)
 
 ### Option 1: Deploy Now (Acceptable)
 ```bash
-cd '/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-frontend'
+cd '/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-frontend'
 
 # Commit changes
 git add .

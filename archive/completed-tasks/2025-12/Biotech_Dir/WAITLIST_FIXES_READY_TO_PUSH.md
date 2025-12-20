@@ -36,7 +36,7 @@ The commit is blocked because Droid Shield detects the JWT token as a secret.
 ### Step 1: Commit and Push
 
 ```bash
-cd "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
 
 # Files are already staged, just commit:
 git commit -m "fix(waitlist): Fix invalid API key and oversized checkmark icons

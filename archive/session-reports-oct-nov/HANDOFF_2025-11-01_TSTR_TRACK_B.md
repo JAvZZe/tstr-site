@@ -111,7 +111,7 @@ class OilGasScraper(BaseNicheScraper):
 ### Files to Reference
 
 **Strategy Documents**:
-- `/home/al/AI_PROJECTS_SPACE/TSTR_HYBRID_IMPLEMENTATION_PLAN.md` - Overall plan
+- `/media/al/AI_DATA/AI_PROJECTS_SPACE/TSTR_HYBRID_IMPLEMENTATION_PLAN.md` - Overall plan
 - `/home/al/tstr-site-working/web/tstr-automation/TRACK_B_STATUS.md` - Detailed status (THIS FILE IS CRITICAL)
 
 **Implementation References**:
@@ -269,13 +269,13 @@ Before starting next session, verify these exist:
 
 **Status/Planning**:
 - ✓ `/home/al/tstr-site-working/web/tstr-automation/TRACK_B_STATUS.md` (detailed)
-- ✓ `/home/al/AI_PROJECTS_SPACE/TSTR_HYBRID_IMPLEMENTATION_PLAN.md` (strategy)
-- ✓ `/home/al/AI_PROJECTS_SPACE/HANDOFF_2025-11-01_TSTR_TRACK_B.md` (this file)
+- ✓ `/media/al/AI_DATA/AI_PROJECTS_SPACE/TSTR_HYBRID_IMPLEMENTATION_PLAN.md` (strategy)
+- ✓ `/media/al/AI_DATA/AI_PROJECTS_SPACE/HANDOFF_2025-11-01_TSTR_TRACK_B.md` (this file)
 
 **Implementation References**:
 - ✓ `/home/al/tstr-site-working/web/tstr-automation/backfill_location_ids.py`
 - ✓ `/home/al/tstr-site-working/web/tstr-automation/migrations/FINAL_ONE_BLOCK.sql`
-- ✓ `/home/al/AI_PROJECTS_SPACE/install_libpostal.sh`
+- ✓ `/media/al/AI_DATA/AI_PROJECTS_SPACE/install_libpostal.sh`
 
 **Frontend (for reference)**:
 - ✓ `/home/al/tstr-site-working/web/tstr-frontend/src/pages/index.astro`
@@ -287,7 +287,7 @@ All files confirmed present.
 
 ## Handoff Complete
 
-**Resume with**: `./resume.sh` from `/home/al/AI_PROJECTS_SPACE/`
+**Resume with**: `./resume.sh` from `/media/al/AI_DATA/AI_PROJECTS_SPACE/`
 
 **Read first**: `/home/al/tstr-site-working/web/tstr-automation/TRACK_B_STATUS.md`
 

@@ -597,7 +597,7 @@ GOOGLE_MAPS_API_KEY=...  # For geocoding if needed
 
 ### File Structure
 ```
-/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/
+/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/
 ├── location_parser.py          # Address normalization module
 ├── base_scraper.py             # Abstract base class
 ├── scrapers/

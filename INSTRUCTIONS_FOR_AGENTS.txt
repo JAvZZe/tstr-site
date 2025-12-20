@@ -10,6 +10,27 @@ APPROACH: MVP first → generate income → improve/pivot
 
 CONSTRAINT: FREE TIERS ONLY - Currently $1.04/month ✅
 
+## 🚨 CRITICAL: MANDATORY FIRST STEP FOR ALL AGENTS
+
+**⚠️ ALWAYS RUN GLOBAL BOOTSTRAP BEFORE ANY WORK:**
+
+```bash
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
+```
+
+**This provides:**
+- Global system context and learnings
+- Cross-project task coordination
+- Agent handoff information
+- Learning system access for optimal decision making
+
+**Failure to bootstrap may result in:**
+- Missing critical context
+- Duplicating work already done
+- Breaking continuity across agents
+
+---
+
 MANDATORY PROTOCOL (Every Session):
 1. Read START_HERE.md first
 2. Check PROJECT_STATUS.md  

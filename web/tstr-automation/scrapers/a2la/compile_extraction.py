@@ -600,7 +600,7 @@ EXTRACTED_DATA = {
 def create_jsonl_output():
     """Create complete JSONL output file with all 64 PIDs."""
 
-    output_file = "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/a2la_claude_complete.jsonl"
+    output_file = "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/a2la_claude_complete.jsonl"
 
     lines = []
     for pid, data in EXTRACTED_DATA.items():
@@ -703,7 +703,7 @@ To complete the remaining PIDs with "Not Found" status:
 - **a2la_claude_complete.jsonl** - Complete extraction data for all 64 PIDs
 """
 
-    report_file = "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/A2LA_EXTRACTION_REPORT.md"
+    report_file = "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/A2LA_EXTRACTION_REPORT.md"
     Path(report_file).write_text(report)
     return report_file, report
 

@@ -35,5 +35,5 @@
 ---
 
 **See Also:**
-- `/home/al/AI_PROJECTS_SPACE/SUPABASE_STATUS_ANALYSIS_NOV8.md` - Full analysis
-- `/home/al/AI_PROJECTS_SPACE/SUPABASE_PAUSE_CRISIS.md` - Original crisis document
+- `/media/al/AI_DATA/AI_PROJECTS_SPACE/SUPABASE_STATUS_ANALYSIS_NOV8.md` - Full analysis
+- `/media/al/AI_DATA/AI_PROJECTS_SPACE/SUPABASE_PAUSE_CRISIS.md` - Original crisis document

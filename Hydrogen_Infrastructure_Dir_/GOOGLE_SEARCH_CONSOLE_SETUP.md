@@ -47,10 +47,10 @@ Choose the easiest verification method:
 
 1. GSC will provide a file like: `google1234567890abcdef.html`
 2. Download this file
-3. Upload to: `/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/web/tstr-frontend/public/`
+3. Upload to: `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/web/tstr-frontend/public/`
 4. Commit and deploy:
    ```bash
-   cd "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
+   cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
    git add web/tstr-frontend/public/google*.html
    git commit -m "Add Google Search Console verification"
    git push origin main
@@ -284,7 +284,7 @@ After 48 hours:
 ### Deploy Sitemap and Robots.txt
 
 ```bash
-cd "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
 
 # Add new files
 git add web/tstr-frontend/public/robots.txt

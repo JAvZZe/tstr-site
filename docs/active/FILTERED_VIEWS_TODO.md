@@ -311,5 +311,5 @@ When implementing filtered views:
 ---
 
 **Agent:** Claude Code (Sonnet 4.5) - avztest8@gmail.com
-**File:** /home/al/AI_PROJECTS_SPACE/FILTERED_VIEWS_TODO.md
+**File:** /media/al/AI_DATA/AI_PROJECTS_SPACE/FILTERED_VIEWS_TODO.md
 **For:** Next session implementation

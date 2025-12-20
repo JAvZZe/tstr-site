@@ -223,7 +223,7 @@ If rejected due to "new domain":
 
 ## Documentation Reference
 
-All guides in: `/home/al/AI_PROJECTS_SPACE/`
+All guides in: `/media/al/AI_DATA/AI_PROJECTS_SPACE/`
 
 1. **ADSENSE_APPROVAL_WAITING.md** - This file
 2. **ADSENSE_READY_CHECKLIST.md** - What to do when approved

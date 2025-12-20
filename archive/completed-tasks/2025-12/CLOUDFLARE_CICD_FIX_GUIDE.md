@@ -208,4 +208,4 @@ After fixing CI/CD:
 
 **After fixing, update**:
 - `/media/al/.../TSTR.site/SESSION_STATE.json` - Change `"deployment_issue"` to `"RESOLVED"`
-- `/home/al/AI_PROJECTS_SPACE/` - Run `./checkpoint.sh "CI/CD fixed - auto-deploy working"`
+- `/media/al/AI_DATA/AI_PROJECTS_SPACE/` - Run `./checkpoint.sh "CI/CD fixed - auto-deploy working"`

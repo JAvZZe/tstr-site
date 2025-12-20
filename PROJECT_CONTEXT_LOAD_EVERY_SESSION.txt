@@ -1,14 +1,24 @@
 TSTR.SITE - AGENT PROTOCOL (Load Every Session)
 ═══════════════════════════════════════════════════════════════
 
-📋 6-STEP PROTOCOL (Mandatory)
-───────────────────────────────────────────────────────────────
-1. Read START_HERE.md (navigation)
-2. Check PROJECT_STATUS.md (current state)  
-3. Review handoff_core.md (last 100 lines)
-4. Do work
-5. Update PROJECT_STATUS.md
-6. Log session in handoff_core.md
+🚨 CRITICAL FIRST STEP FOR ALL AGENTS
+──────────────────────────────────────────────────────────────
+⚠️ ALWAYS RUN GLOBAL BOOTSTRAP BEFORE PROJECT WORK:
+
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
+
+This provides global context, learnings, and task coordination.
+Failure to bootstrap may result in missing critical information.
+
+📋 7-STEP PROTOCOL (Mandatory)
+──────────────────────────────────────────────────────────────
+1. Global bootstrap (above - mandatory for all agents)
+2. Read START_HERE.md (navigation)
+3. Check PROJECT_STATUS.md (current state)
+4. Review handoff_core.md (last 100 lines)
+5. Do work
+6. Update PROJECT_STATUS.md
+7. Log session in handoff_core.md
 
 🎯 PROJECT ESSENTIALS
 ───────────────────────────────────────────────────────────────

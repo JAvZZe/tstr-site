@@ -290,7 +290,7 @@ management/link_whale_labs_to_standards.py - Link capabilities
 
 ### Bootstrap Session
 ```bash
-cd "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
 ./bootstrap.sh TSTR.site
 ```
 
@@ -310,7 +310,7 @@ curl -s "https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/listing_capabilities?s
 
 ### Deploy Changes
 ```bash
-cd "/home/al/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
 npm run build  # Test locally first
 git add .
 git commit -m "description"
