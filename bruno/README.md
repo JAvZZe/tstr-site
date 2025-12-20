@@ -52,6 +52,8 @@ bruno/
 │   └── listings/                   # CRUD operations (P1)
 │       ├── get-all-listings.bru    # Retrieve listings
 │       └── get-by-category.bru     # Category filtering
+├── infrastructure/                 # Infrastructure access info
+│   └── oci-access.bru              # OCI SSH and scraper status
 └── scrapers/                       # Future: scraper endpoints
 ```
 
@@ -99,6 +101,16 @@ bruno/
 - Tests: Category filtering (Pharmaceutical)
 - Expected: All results match category filter
 - Run: `bru run bruno/supabase/listings/get-by-category.bru --env production`
+
+### Infrastructure Access (Reference)
+
+**oci-access.bru**
+- **Purpose**: Reference collection for infrastructure access information
+- **Contents**: SSH key paths, OCI instance details, scraper status checks
+- **Note**: Contains access documentation, not executable tests
+- **SSH Key Path**: `/media/al/69AD-FC41/AI_PROJECTS_ARCHIVE/Oracle_Cloud_Machines/avz_Oracle_Linux_9_pvt_ssh-key-2025-10-25.key`
+- **OCI Instance**: `84.8.139.90` (Oracle Linux 9, Python 3.9.21)
+- **Scraper Path**: `~/tstr-scraper/` on OCI instance
 
 ---
 
