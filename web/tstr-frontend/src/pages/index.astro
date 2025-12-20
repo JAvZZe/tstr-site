@@ -115,6 +115,26 @@ if (allCategories && allCategories.length > 0) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TSTR Hub - Specialist Testing Services, Products and Solutions Directory</title>
+  <meta name="description" content={`Find and compare ${totalListings} verified testing laboratories and certification bodies worldwide. ISO 17025 accredited labs for materials testing, environmental analysis, biotech, hydrogen infrastructure, and more. Get quotes from certified providers.`} />
+  <meta name="keywords" content="testing laboratory, ISO 17025, certification body, materials testing, environmental testing, biotech testing, hydrogen testing, accredited labs, testing services" />
+  <meta property="og:title" content="TSTR Hub - Specialist Testing Services Directory" />
+  <meta property="og:description" content={`Directory of ${totalListings} verified testing laboratories and certification bodies. Compare ISO 17025 accredited labs worldwide.`} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tstr.site" />
+  <script type="application/ld+json">
+  {{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "TSTR Hub",
+    "description": "Specialist Testing Services, Products and Solutions Directory",
+    "url": "https://tstr.site",
+    "potentialAction": {{
+      "@type": "SearchAction",
+      "target": "https://tstr.site/browse?search={{search_term_string}}",
+      "query-input": "required name=search_term_string"
+    }}
+  }}
+  </script>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
      crossorigin="anonymous"></script>
