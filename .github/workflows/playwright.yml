@@ -20,6 +20,9 @@ jobs:
     - name: Start dev server
       run: npm run dev &
       shell: bash
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
     - name: Wait for server
       run: sleep 10
     - name: Run Playwright tests
