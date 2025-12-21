@@ -22,7 +22,7 @@ if (!categoryData) {
   return Astro.redirect('/404');
 }
 
-// Fetch listings with soil testing capabilities
+// Fetch listings with custom fields for soil testing
 const { data: listings, error: listingsError } = await supabase
   .from('listings')
   .select(`
@@ -31,11 +31,17 @@ const { data: listings, error: listingsError } = await supabase
     region,
     featured,
     verified,
-    custom_fields,
     location:location_id (
       id,
       name,
       slug
+    ),
+    listing_custom_field_values (
+      custom_field_id,
+      value,
+      custom_fields (
+        name
+      )
     )
   `)
   .eq('status', 'active')
@@ -45,13 +51,12 @@ const { data: listings, error: listingsError } = await supabase
 
 // Filter listings that have soil testing
 const soilTestingListings = listings?.filter(listing => {
-  const testTypes = listing.custom_fields?.test_types || [];
-  return Array.isArray(testTypes) && testTypes.some(type =>
-    type.toLowerCase().includes('soil') ||
-    type.toLowerCase().includes('contamination') ||
-    type.toLowerCase().includes('heavy metals') ||
-    type.toLowerCase().includes('remediation')
-  );
+  return listing.listing_custom_field_values?.some(field => {
+    return field.custom_fields?.name === 'test_types' &&
+           (field.value?.toLowerCase().includes('soil') ||
+            field.value?.toLowerCase().includes('contamination') ||
+            field.value?.toLowerCase().includes('heavy metals'));
+  });
 }) || [];
 
 // Group filtered listings by region

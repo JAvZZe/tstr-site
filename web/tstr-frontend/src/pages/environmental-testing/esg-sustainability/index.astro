@@ -22,7 +22,7 @@ if (!categoryData) {
   return Astro.redirect('/404');
 }
 
-// Fetch listings with ESG/sustainability testing capabilities
+// Fetch listings with custom fields for ESG/sustainability testing
 const { data: listings, error: listingsError } = await supabase
   .from('listings')
   .select(`
@@ -31,11 +31,17 @@ const { data: listings, error: listingsError } = await supabase
     region,
     featured,
     verified,
-    custom_fields,
     location:location_id (
       id,
       name,
       slug
+    ),
+    listing_custom_field_values (
+      custom_field_id,
+      value,
+      custom_fields (
+        name
+      )
     )
   `)
   .eq('status', 'active')
@@ -45,15 +51,18 @@ const { data: listings, error: listingsError } = await supabase
 
 // Filter listings that have ESG/sustainability testing
 const esgListings = listings?.filter(listing => {
-  const testTypes = listing.custom_fields?.test_types || [];
-  const esgReporting = listing.custom_fields?.esg_reporting;
-  return (Array.isArray(testTypes) && testTypes.some(type =>
-    type.toLowerCase().includes('esg') ||
-    type.toLowerCase().includes('sustainability') ||
-    type.toLowerCase().includes('carbon') ||
-    type.toLowerCase().includes('ghg') ||
-    type.toLowerCase().includes('emissions')
-  )) || esgReporting === true;
+  const hasESGTestTypes = listing.listing_custom_field_values?.some(field => {
+    return field.custom_fields?.name === 'test_types' &&
+           (field.value?.toLowerCase().includes('esg') ||
+            field.value?.toLowerCase().includes('sustainability') ||
+            field.value?.toLowerCase().includes('carbon') ||
+            field.value?.toLowerCase().includes('ghg'));
+  });
+  const hasESGReporting = listing.listing_custom_field_values?.some(field => {
+    return field.custom_fields?.name === 'esg_reporting' &&
+           field.value === 'true';
+  });
+  return hasESGTestTypes || hasESGReporting;
 }) || [];
 
 // Group filtered listings by region

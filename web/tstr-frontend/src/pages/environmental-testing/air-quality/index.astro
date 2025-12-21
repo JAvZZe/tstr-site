@@ -22,7 +22,7 @@ if (!categoryData) {
   return Astro.redirect('/404');
 }
 
-// Fetch listings with air quality testing capabilities
+// Fetch listings with custom fields for air quality testing
 const { data: listings, error: listingsError } = await supabase
   .from('listings')
   .select(`
@@ -31,11 +31,17 @@ const { data: listings, error: listingsError } = await supabase
     region,
     featured,
     verified,
-    custom_fields,
     location:location_id (
       id,
       name,
       slug
+    ),
+    listing_custom_field_values (
+      custom_field_id,
+      value,
+      custom_fields (
+        name
+      )
     )
   `)
   .eq('status', 'active')
@@ -45,12 +51,10 @@ const { data: listings, error: listingsError } = await supabase
 
 // Filter listings that have air quality testing
 const airQualityListings = listings?.filter(listing => {
-  const testTypes = listing.custom_fields?.test_types || [];
-  return Array.isArray(testTypes) && testTypes.some(type =>
-    type.toLowerCase().includes('air quality') ||
-    type.toLowerCase().includes('emissions') ||
-    type.toLowerCase().includes('particulate')
-  );
+  return listing.listing_custom_field_values?.some(field => {
+    return field.custom_fields?.name === 'test_types' &&
+           field.value?.toLowerCase().includes('air quality');
+  });
 }) || [];
 
 // Group filtered listings by region
