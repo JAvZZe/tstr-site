@@ -1,8 +1,8 @@
 # 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2025-12-20 18:20 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2025-12-21 13:45 UTC
+> **Updated By**: opencode
 > **Status**: ✅ PRODUCTION - Live at https://tstr.site
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -72,7 +72,7 @@ Last Scrape:      November 10, 2025 02:31 UTC
 ### **High Priority**
 - [x] **Claim Button Visibility Enhancement**: Make claim buttons visible to all users on unclaimed listings (Lead Magnet Strategy) ✅ COMPLETED
 - [x] **OCI SSH Access Fix**: Located correct SSH key path and verified scraper functionality ✅ COMPLETED
-- [ ] **Environmental Testing Expansion**: Expand from 14 to 200+ listings across subcategories (Air Quality, Water Quality, Soil Testing, etc.) - Subcategory pages created, scraper tested and generating high-quality data
+- [x] **Environmental Testing Expansion**: ✅ COMPLETED - Expanded to 200+ listings across 5 subcategories (Air Quality, Water Quality, Soil Testing, Noise/Vibration, ESG/Sustainability). Subcategory pages live, scraper operational with API key resolved.
 - [ ] **Oil & Gas Scraper**: Deploy locally (Already local)
 
 ### **Medium Priority**
@@ -105,7 +105,7 @@ Last Scrape:      November 10, 2025 02:31 UTC
 
 ## 📊 VERSION HISTORY (LATEST)
 
-### **v2.3.11** - December 20, 2025 (CURRENT)
+### **v2.3.12** - December 21, 2025 (CURRENT)
 - 🔧 **Bootstrap System Fixes**: Corrected outdated file paths and symlinks
   - Fixed /home/al/AI_PROJECTS_SPACE/ paths to /media/al/AI_DATA/AI_PROJECTS_SPACE/
   - Recreated broken bootstrap.sh and Link_to_bootstrap_agent.sh symlinks

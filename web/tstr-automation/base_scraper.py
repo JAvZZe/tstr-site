@@ -70,6 +70,7 @@ class BaseNicheScraper(ABC):
         self.source_name = source_name
         self.rate_limit_seconds = rate_limit_seconds
         self.dry_run = dry_run
+        self.dry_data = [] if dry_run else None
 
         if not dry_run:
             # Initialize Supabase client
@@ -631,6 +632,13 @@ class BaseNicheScraper(ABC):
                     standard_fields = self.extract_standard_fields(soup, url)
                     custom_fields = self.extract_custom_fields(soup, url)
                     # Combine
+                    listing_data = {**standard_fields, **custom_fields}
+                    dry_run_data.append(listing_data)
+                else:
+                    # If no soup (e.g., for cached data), try to extract from URL or skip
+                    logger.info("  Using cached data")
+                    standard_fields = self.extract_standard_fields(None, url)
+                    custom_fields = self.extract_custom_fields(None, url)
                     listing_data = {**standard_fields, **custom_fields}
                     dry_run_data.append(listing_data)
             else:
