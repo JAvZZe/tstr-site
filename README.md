@@ -269,3 +269,4 @@ TSTR.site/
 **For current status, always start with `handoff_core.md`**
 #   D e p l o y   f i x  
  <!-- Last deployment: 2025-10-28 - CI/CD test -->
+# Test workflow trigger
