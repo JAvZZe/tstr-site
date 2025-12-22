@@ -104,7 +104,7 @@ cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 
 ---
 
-**Remember**: First Principles. OODA Loop. Test before deploy. No theater, working code only.
+**Remember**: First Principles. OODA Loop. Test before deploy. No theater, working code only. NB: Always test your assumptions and verify the work to see if it was done correctly. Admit when you do not know. Score the certainty levels.
 
 ---
 
