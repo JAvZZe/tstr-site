@@ -1,0 +1,902 @@
+---
+export const prerender = false // Force SSR for auth page
+
+// Import Supabase client
+import { supabaseBrowser } from '../../lib/supabase-browser'
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bulk Management - TSTR Hub</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f5f7fa;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3rem 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="60" cy="30" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+        opacity: 0.3;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+      position: relative;
+      z-index: 1;
+    }
+
+    .breadcrumb {
+      display: flex;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      opacity: 0.9;
+      position: relative;
+      z-index: 1;
+    }
+
+    .breadcrumb a {
+      color: white;
+      text-decoration: none;
+      opacity: 0.9;
+      transition: opacity 0.2s;
+    }
+
+    .breadcrumb a:hover {
+      opacity: 1;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .actions-bar {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .bulk-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      padding: 0.5rem 1rem;
+      border: 2px solid #e0e0e0;
+      background: white;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .action-btn:hover {
+      border-color: #667eea;
+      background: #f8f9ff;
+    }
+
+    .action-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .action-btn.primary {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .action-btn.primary:hover {
+      background: #5a6fd8;
+    }
+
+    .action-btn.danger {
+      border-color: #dc3545;
+      color: #dc3545;
+    }
+
+    .action-btn.danger:hover {
+      background: #f8d7da;
+    }
+
+    .selection-info {
+      font-size: 0.9rem;
+      color: #666;
+      margin-left: auto;
+    }
+
+    .listings-table {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .table-header {
+      background: #f8f9fa;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .table-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .select-all {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 1rem 2rem;
+      text-align: left;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    th {
+      background: #f8f9fa;
+      font-weight: 600;
+      color: #666;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    tr:hover {
+      background: #f9f9fa;
+    }
+
+    .checkbox-cell {
+      width: 50px;
+      text-align: center;
+    }
+
+    .checkbox {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .listing-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .listing-name {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .listing-category {
+      color: #666;
+      font-size: 0.85rem;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-active {
+      background: rgba(40, 167, 69, 0.1);
+      color: #28a745;
+    }
+
+    .status-inactive {
+      background: rgba(108, 117, 125, 0.1);
+      color: #6c757d;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.375rem 0.75rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5a6fd8;
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 8px;
+      padding: 2rem;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .no-listings {
+      text-align: center;
+      padding: 3rem;
+      color: #666;
+    }
+
+    .no-listings h3 {
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+    }
+
+    .error-message {
+      background: #fee;
+      border: 1px solid #fcc;
+      color: #c33;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+
+    .success-message {
+      background: #efe;
+      border: 1px solid #cfc;
+      color: #363;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: #764ba2;
+    }
+
+    @media (max-width: 768px) {
+      .actions-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .bulk-actions {
+        justify-content: center;
+      }
+
+      .selection-info {
+        margin-left: 0;
+        margin-top: 1rem;
+        text-align: center;
+      }
+
+      .table-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .modal-content {
+        margin: 1rem;
+        padding: 1.5rem;
+      }
+
+      header {
+        padding: 1.5rem 1rem;
+      }
+
+      .container {
+        padding: 0 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><a href="/">TSTR Hub</a></h1>
+    <p>Bulk Listing Management</p>
+    <div class="breadcrumb">
+      <a href="/">Home</a>
+      <span>›</span>
+      <a href="/account">Account</a>
+      <span>›</span>
+      <span>Bulk Management</span>
+    </div>
+  </header>
+
+  <div class="container">
+    <a href="/account" class="back-link">← Back to Account</a>
+
+    <div id="content">
+      <div class="loading">Loading your listings...</div>
+    </div>
+
+    <!-- Bulk Edit Modal -->
+    <div id="bulk-edit-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Bulk Edit Listings</h2>
+          <button class="modal-close" id="edit-modal-close">&times;</button>
+        </div>
+        <form id="bulk-edit-form">
+          <div class="form-group">
+            <label class="form-label" for="bulk-description">Update Description (Optional)</label>
+            <textarea class="form-textarea" id="bulk-description" name="description" placeholder="Enter new description for selected listings..."></textarea>
+            <small style="color: #666; font-size: 0.85rem;">Leave empty to keep existing descriptions</small>
+          </div>
+          <div id="edit-messages"></div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="cancel-edit">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="save-edit">Update Listings</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Bulk Export Modal -->
+    <div id="bulk-export-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Export Listings</h2>
+          <button class="modal-close" id="export-modal-close">&times;</button>
+        </div>
+        <div id="export-content">
+          <p>Your listings data will be exported as a CSV file including:</p>
+          <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+            <li>Business Name</li>
+            <li>Category</li>
+            <li>Contact Information</li>
+            <li>Location</li>
+            <li>Status</li>
+            <li>Analytics (clicks, leads)</li>
+          </ul>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="cancel-export">Cancel</button>
+            <button type="button" class="btn btn-primary" id="confirm-export">Download CSV</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import { supabaseBrowser } from '../../lib/supabase-browser'
+
+    let selectedListings = new Set()
+    let allListings = []
+
+    async function loadListings() {
+      const contentDiv = document.getElementById('content')
+
+      try {
+        // Get current session
+        const { data: { session }, error: sessionError } = await supabaseBrowser.auth.getSession()
+
+        if (sessionError || !session) {
+          window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname)
+          return
+        }
+
+        const user = session.user
+
+        // Get user's owned listings
+        const { data: ownedListings, error: ownershipError } = await supabaseBrowser
+          .from('listing_owners')
+          .select(`
+            listing_id,
+            status,
+            listing:listings (
+              id,
+              business_name,
+              status,
+              category:category_id (name),
+              phone,
+              email,
+              website,
+              address
+            )
+          `)
+          .eq('user_id', user.id)
+          .eq('status', 'verified')
+
+        if (ownershipError || !ownedListings || ownedListings.length === 0) {
+          contentDiv.innerHTML = `
+            <div class="no-listings">
+              <h3>No Listings Available</h3>
+              <p>You don't have any verified listings yet. Claim listings to access bulk management features.</p>
+              <a href="/browse" style="color: #667eea; text-decoration: none; font-weight: 500;">Browse Listings →</a>
+            </div>
+          `
+          return
+        }
+
+        allListings = ownedListings.map(item => item.listing)
+
+        // Render bulk management interface
+        contentDiv.innerHTML = `
+          <div class="actions-bar">
+            <div class="bulk-actions">
+              <button class="action-btn" id="select-all-btn">
+                <input type="checkbox" id="select-all-checkbox" class="checkbox">
+                Select All
+              </button>
+              <button class="action-btn" id="bulk-edit-btn" disabled>
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                </svg>
+                Bulk Edit
+              </button>
+              <button class="action-btn" id="bulk-export-btn" disabled>
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 011.414-1.414L7 10.586 5.707 8.293z" clip-rule="evenodd"/>
+                </svg>
+                Export CSV
+              </button>
+            </div>
+            <div class="selection-info" id="selection-info">
+              0 listings selected
+            </div>
+          </div>
+
+          <div class="listings-table">
+            <div class="table-header">
+              <h3 class="table-title">Your Listings</h3>
+              <div class="select-all">
+                <input type="checkbox" id="header-select-all" class="checkbox">
+                <label for="header-select-all" style="cursor: pointer;">Select All</label>
+              </div>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th class="checkbox-cell">
+                    <input type="checkbox" id="table-select-all" class="checkbox">
+                  </th>
+                  <th>Listing</th>
+                  <th>Status</th>
+                  <th>Contact Info</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${allListings.map(listing => `
+                  <tr>
+                    <td class="checkbox-cell">
+                      <input type="checkbox" class="checkbox listing-checkbox" data-listing-id="${listing.id}">
+                    </td>
+                    <td>
+                      <div class="listing-info">
+                        <div class="listing-name">${listing.business_name}</div>
+                        <div class="listing-category">${listing.category?.name || 'Uncategorized'}</div>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="status-badge status-${listing.status || 'inactive'}">${listing.status || 'inactive'}</span>
+                    </td>
+                    <td>
+                      <div style="font-size: 0.85rem; color: #666;">
+                        ${listing.phone ? `📞 ${listing.phone}<br>` : ''}
+                        ${listing.email ? `✉️ ${listing.email}<br>` : ''}
+                        ${listing.website ? `🌐 ${listing.website}` : ''}
+                      </div>
+                    </td>
+                    <td>
+                      <div class="actions">
+                        <a href="/account/listing/${listing.id}/edit" class="btn btn-primary">
+                          Edit
+                        </a>
+                        <a href="/listing/${listing.id}" class="btn btn-secondary" target="_blank">
+                          View
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `
+
+        // Set up event handlers
+        setupEventHandlers()
+
+      } catch (error) {
+        console.error('Load listings error:', error)
+        contentDiv.innerHTML = `
+          <div class="error-message">
+            An unexpected error occurred. Please refresh the page.
+          </div>
+        `
+      }
+    }
+
+    function setupEventHandlers() {
+      // Select all checkboxes
+      const selectAllCheckbox = document.getElementById('table-select-all')
+      const headerSelectAll = document.getElementById('header-select-all')
+      const selectAllBtn = document.getElementById('select-all-btn')
+      const selectAllBtnCheckbox = document.getElementById('select-all-checkbox')
+      const listingCheckboxes = document.querySelectorAll('.listing-checkbox')
+
+      function updateSelection() {
+        selectedListings.clear()
+        listingCheckboxes.forEach(checkbox => {
+          if (checkbox.checked) {
+            selectedListings.add(checkbox.dataset.listingId)
+          }
+        })
+
+        const count = selectedListings.size
+        document.getElementById('selection-info').textContent = `${count} listing${count !== 1 ? 's' : ''} selected`
+
+        // Enable/disable bulk action buttons
+        const bulkEditBtn = document.getElementById('bulk-edit-btn')
+        const bulkExportBtn = document.getElementById('bulk-export-btn')
+        bulkEditBtn.disabled = count === 0
+        bulkExportBtn.disabled = count === 0
+
+        // Update select all states
+        const allChecked = count === allListings.length && count > 0
+        const someChecked = count > 0 && count < allListings.length
+        selectAllCheckbox.checked = allChecked
+        selectAllBtnCheckbox.checked = allChecked
+        headerSelectAll.checked = allChecked
+        selectAllCheckbox.indeterminate = someChecked
+        selectAllBtnCheckbox.indeterminate = someChecked
+        headerSelectAll.indeterminate = someChecked
+      }
+
+      selectAllCheckbox.addEventListener('change', () => {
+        const checked = selectAllCheckbox.checked
+        listingCheckboxes.forEach(checkbox => {
+          checkbox.checked = checked
+        })
+        updateSelection()
+      })
+
+      headerSelectAll.addEventListener('change', () => {
+        const checked = headerSelectAll.checked
+        listingCheckboxes.forEach(checkbox => {
+          checkbox.checked = checked
+        })
+        updateSelection()
+      })
+
+      selectAllBtn.addEventListener('click', () => {
+        const checked = !selectAllBtnCheckbox.checked
+        selectAllBtnCheckbox.checked = checked
+        listingCheckboxes.forEach(checkbox => {
+          checkbox.checked = checked
+        })
+        updateSelection()
+      })
+
+      listingCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateSelection)
+      })
+
+      // Bulk actions
+      document.getElementById('bulk-edit-btn').addEventListener('click', () => {
+        if (selectedListings.size === 0) return
+        document.getElementById('bulk-edit-modal').classList.add('show')
+      })
+
+      document.getElementById('bulk-export-btn').addEventListener('click', () => {
+        if (selectedListings.size === 0) return
+        document.getElementById('bulk-export-modal').classList.add('show')
+      })
+
+      // Modal handlers
+      document.getElementById('edit-modal-close').addEventListener('click', () => {
+        document.getElementById('bulk-edit-modal').classList.remove('show')
+      })
+
+      document.getElementById('export-modal-close').addEventListener('click', () => {
+        document.getElementById('bulk-export-modal').classList.remove('show')
+      })
+
+      document.getElementById('cancel-edit').addEventListener('click', () => {
+        document.getElementById('bulk-edit-modal').classList.remove('show')
+      })
+
+      document.getElementById('cancel-export').addEventListener('click', () => {
+        document.getElementById('bulk-export-modal').classList.remove('show')
+      })
+
+      // Bulk edit form
+      document.getElementById('bulk-edit-form').addEventListener('submit', async (e) => {
+        e.preventDefault()
+
+        const formData = new FormData(e.target)
+        const description = formData.get('description')?.toString().trim()
+
+        if (!description) {
+          alert('Please enter a description to update.')
+          return
+        }
+
+        const editMessages = document.getElementById('edit-messages')
+        editMessages.innerHTML = '<div style="color: #666;">Updating listings...</div>'
+
+        try {
+          // Update each selected listing
+          const updatePromises = Array.from(selectedListings).map(listingId =>
+            fetch('/api/listing/update', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                listingId: listingId,
+                description: description
+              })
+            })
+          )
+
+          const results = await Promise.all(updatePromises)
+          const successCount = results.filter(r => r.ok).length
+          const failCount = results.length - successCount
+
+          if (successCount > 0) {
+            editMessages.innerHTML = `
+              <div style="color: #28a745;">
+                ✓ Successfully updated ${successCount} listing${successCount !== 1 ? 's' : ''}.
+                ${failCount > 0 ? ` ${failCount} failed.` : ''}
+              </div>
+            `
+            setTimeout(() => {
+              document.getElementById('bulk-edit-modal').classList.remove('show')
+              loadListings() // Refresh the list
+            }, 2000)
+          } else {
+            editMessages.innerHTML = '<div style="color: #dc3545;">✗ Failed to update any listings.</div>'
+          }
+        } catch (error) {
+          console.error('Bulk edit error:', error)
+          editMessages.innerHTML = '<div style="color: #dc3545;">✗ Network error. Please try again.</div>'
+        }
+      })
+
+      // Bulk export
+      document.getElementById('confirm-export').addEventListener('click', () => {
+        const selectedData = allListings.filter(listing => selectedListings.has(listing.id))
+
+        // Create CSV content
+        const headers = ['Business Name', 'Category', 'Phone', 'Email', 'Website', 'Address', 'Status']
+        const csvContent = [
+          headers.join(','),
+          ...selectedData.map(listing => [
+            `"${listing.business_name}"`,
+            `"${listing.category?.name || ''}"`,
+            `"${listing.phone || ''}"`,
+            `"${listing.email || ''}"`,
+            `"${listing.website || ''}"`,
+            `"${listing.address || ''}"`,
+            `"${listing.status || 'inactive'}"`
+          ].join(','))
+        ].join('\n')
+
+        // Download CSV
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+        const link = document.createElement('a')
+        const url = URL.createObjectURL(blob)
+        link.setAttribute('href', url)
+        link.setAttribute('download', 'listings-export.csv')
+        link.style.visibility = 'hidden'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+
+        document.getElementById('bulk-export-modal').classList.remove('show')
+      })
+
+      // Close modals when clicking outside
+      document.getElementById('bulk-edit-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'bulk-edit-modal') {
+          document.getElementById('bulk-edit-modal').classList.remove('show')
+        }
+      })
+
+      document.getElementById('bulk-export-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'bulk-export-modal') {
+          document.getElementById('bulk-export-modal').classList.remove('show')
+        }
+      })
+    }
+
+    // Listen for auth state changes
+    supabaseBrowser.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        loadListings()
+      } else if (event === 'SIGNED_OUT' || !session) {
+        window.location.href = '/login'
+      }
+    })
+
+    // Try to load immediately
+    loadListings()
+  </script>
+</body>
+</html>

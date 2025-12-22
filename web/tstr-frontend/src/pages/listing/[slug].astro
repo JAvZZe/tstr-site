@@ -749,12 +749,12 @@ const certificationCount = allCertifications.length
              </div>
            ) : null}
 
-          {listing.website && canViewWebsite ? (
-            <div class="info-item">
-              <div class="info-label">Website</div>
-              <div class="info-value"><a href={getRedirectUrl(listing.website, listing.id)} target="_blank" rel="noopener noreferrer">{listing.website}</a></div>
-            </div>
-          ) : null}
+           {listing.website && canViewWebsite ? (
+             <div class="info-item">
+               <div class="info-label">Website</div>
+               <div class="info-value"><a href={getRedirectUrl(listing.website, listing.id)} target="_blank" rel="noopener noreferrer" onclick="trackContactAccess('website', '{listing.website}')">{listing.website}</a></div>
+             </div>
+           ) : null}
         </div>
       </div>
 
@@ -993,25 +993,61 @@ const certificationCount = allCertifications.length
        }
      }
 
-     function showOwnerContactInfo() {
-       // Show phone number if available
-       const phoneItem = document.getElementById('phone-item')
-       if (phoneItem && '{listing.phone}') {
-         const valueDiv = phoneItem.querySelector('.info-value')
-         if (valueDiv) {
-           valueDiv.innerHTML = `<a href="tel:{listing.phone}">{listing.phone}</a>`
-         }
-       }
+      window.trackContactAccess = async function(contactType, contactValue) {
+        try {
+          // Only track if listing is claimed (leads only matter for claimed listings)
+          const response = await fetch('/api/leads/create', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              listingId: '{listing.id}',
+              contactType: contactType,
+              contactValue: contactValue
+            })
+          })
 
-       // Show email if available
-       const emailItem = document.getElementById('email-item')
-       if (emailItem && '{listing.email}') {
-         const valueDiv = emailItem.querySelector('.info-value')
-         if (valueDiv) {
-           valueDiv.innerHTML = `<a href="mailto:{listing.email}">{listing.email}</a>`
-         }
-       }
-     }
+          // We don't need to wait for the response or show errors to users
+          // Lead tracking should be invisible to maintain good UX
+          if (!response.ok) {
+            console.warn('Failed to track contact access:', await response.text())
+          }
+        } catch (error) {
+          // Silently fail - don't disrupt user experience
+          console.warn('Lead tracking error:', error)
+        }
+      }
+
+      function showOwnerContactInfo() {
+        // Show phone number if available
+        const phoneItem = document.getElementById('phone-item')
+        if (phoneItem && '{listing.phone}') {
+          const valueDiv = phoneItem.querySelector('.info-value')
+          if (valueDiv) {
+            const phoneLink = document.createElement('a')
+            phoneLink.href = `tel:{listing.phone}`
+            phoneLink.textContent = '{listing.phone}'
+            phoneLink.addEventListener('click', () => trackContactAccess('phone', '{listing.phone}'))
+            valueDiv.innerHTML = ''
+            valueDiv.appendChild(phoneLink)
+          }
+        }
+
+        // Show email if available
+        const emailItem = document.getElementById('email-item')
+        if (emailItem && '{listing.email}') {
+          const valueDiv = emailItem.querySelector('.info-value')
+          if (valueDiv) {
+            const emailLink = document.createElement('a')
+            emailLink.href = `mailto:{listing.email}`
+            emailLink.textContent = '{listing.email}'
+            emailLink.addEventListener('click', () => trackContactAccess('email', '{listing.email}'))
+            valueDiv.innerHTML = ''
+            valueDiv.appendChild(emailLink)
+          }
+        }
+      }
 
      // Initialize when page loads
      document.addEventListener('DOMContentLoaded', checkAuthAndClaimStatus)

@@ -1,0 +1,823 @@
+---
+export const prerender = false // Force SSR for auth page
+
+// Import Supabase client
+import { supabaseBrowser } from '../../lib/supabase-browser'
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lead Management - TSTR Hub</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f5f7fa;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3rem 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="60" cy="30" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+      opacity: 0.3;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+      position: relative;
+      z-index: 1;
+    }
+
+    .breadcrumb {
+      display: flex;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      opacity: 0.9;
+      position: relative;
+      z-index: 1;
+    }
+
+    .breadcrumb a {
+      color: white;
+      text-decoration: none;
+      opacity: 0.9;
+      transition: opacity 0.2s;
+    }
+
+    .breadcrumb a:hover {
+      opacity: 1;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: #666;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .filters {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .filter-label {
+      font-weight: 500;
+      color: #333;
+      font-size: 0.9rem;
+    }
+
+    .filter-select {
+      padding: 0.5rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    .leads-table {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .table-header {
+      background: #f8f9fa;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .table-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 1rem 2rem;
+      text-align: left;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    th {
+      background: #f8f9fa;
+      font-weight: 600;
+      color: #666;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    tr:hover {
+      background: #f9f9fa;
+    }
+
+    .lead-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .lead-business {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .lead-contact {
+      color: #666;
+      font-size: 0.85rem;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-new {
+      background: rgba(255, 193, 7, 0.1);
+      color: #856404;
+    }
+
+    .status-contacted {
+      background: rgba(0, 123, 255, 0.1);
+      color: #0056b3;
+    }
+
+    .status-qualified {
+      background: rgba(40, 167, 69, 0.1);
+      color: #155724;
+    }
+
+    .status-converted {
+      background: rgba(23, 162, 184, 0.1);
+      color: #0c5460;
+    }
+
+    .status-lost {
+      background: rgba(220, 53, 69, 0.1);
+      color: #721c24;
+    }
+
+    .contact-type {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .contact-phone {
+      background: rgba(0, 123, 255, 0.1);
+      color: #0056b3;
+    }
+
+    .contact-email {
+      background: rgba(40, 167, 69, 0.1);
+      color: #155724;
+    }
+
+    .contact-website {
+      background: rgba(255, 193, 7, 0.1);
+      color: #856404;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.375rem 0.75rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5a6fd8;
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .btn-success {
+      background: #28a745;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #218838;
+    }
+
+    .btn-warning {
+      background: #ffc107;
+      color: #212529;
+    }
+
+    .btn-warning:hover {
+      background: #e0a800;
+    }
+
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c82333;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 8px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .form-textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .no-leads {
+      text-align: center;
+      padding: 3rem;
+      color: #666;
+    }
+
+    .no-leads h3 {
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+    }
+
+    .error-message {
+      background: #fee;
+      border: 1px solid #fcc;
+      color: #c33;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: #764ba2;
+    }
+
+    @media (max-width: 768px) {
+      .filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filter-group {
+        justify-content: space-between;
+      }
+
+      .table-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .modal-content {
+        margin: 1rem;
+        padding: 1.5rem;
+      }
+
+      header {
+        padding: 1.5rem 1rem;
+      }
+
+      .container {
+        padding: 0 1rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><a href="/">TSTR Hub</a></h1>
+    <p>Lead Management Dashboard</p>
+    <div class="breadcrumb">
+      <a href="/">Home</a>
+      <span>›</span>
+      <a href="/account">Account</a>
+      <span>›</span>
+      <span>Leads</span>
+    </div>
+  </header>
+
+  <div class="container">
+    <a href="/account" class="back-link">← Back to Account</a>
+
+    <div id="content">
+      <div class="loading">Loading your leads...</div>
+    </div>
+
+    <!-- Status Update Modal -->
+    <div id="status-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Update Lead Status</h2>
+          <button class="modal-close" id="modal-close">&times;</button>
+        </div>
+        <form id="status-form">
+          <div class="form-group">
+            <label class="form-label" for="lead-status">Status</label>
+            <select class="form-select" id="lead-status" name="status" required>
+              <option value="new">New</option>
+              <option value="contacted">Contacted</option>
+              <option value="qualified">Qualified</option>
+              <option value="converted">Converted</option>
+              <option value="lost">Lost</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="lead-notes">Notes (Optional)</label>
+            <textarea class="form-textarea" id="lead-notes" name="notes" placeholder="Add notes about this lead..."></textarea>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="cancel-update">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="save-status">Update Status</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import { supabaseBrowser } from '../../lib/supabase-browser'
+
+    let currentLeadId = null
+    let currentFilter = 'all'
+
+    async function loadLeads() {
+      const contentDiv = document.getElementById('content')
+
+      try {
+        // Get current session
+        const { data: { session }, error: sessionError } = await supabaseBrowser.auth.getSession()
+
+        if (sessionError || !session) {
+          window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname)
+          return
+        }
+
+        const user = session.user
+
+        // Get user's owned listings first
+        const { data: ownedListings, error: ownershipError } = await supabaseBrowser
+          .from('listing_owners')
+          .select('listing_id')
+          .eq('user_id', user.id)
+          .eq('status', 'verified')
+
+        if (ownershipError || !ownedListings || ownedListings.length === 0) {
+          contentDiv.innerHTML = `
+            <div class="no-leads">
+              <h3>No Leads Available</h3>
+              <p>You don't have any verified listings yet. Leads will appear here when visitors access your contact information.</p>
+              <a href="/account" style="color: #667eea; text-decoration: none; font-weight: 500;">Manage Your Listings →</a>
+            </div>
+          `
+          return
+        }
+
+        const listingIds = ownedListings.map(item => item.listing_id)
+
+        // Get leads for owned listings
+        let query = supabaseBrowser
+          .from('leads')
+          .select(`
+            id,
+            contact_type,
+            contact_value,
+            status,
+            owner_notes,
+            created_at,
+            contacted_at,
+            converted_at,
+            listing:listings (
+              business_name,
+              category:category_id (name)
+            )
+          `)
+          .in('listing_id', listingIds)
+          .order('created_at', { ascending: false })
+
+        // Apply status filter
+        if (currentFilter !== 'all') {
+          query = query.eq('status', currentFilter)
+        }
+
+        const { data: leads, error: leadsError } = await query
+
+        if (leadsError) {
+          console.error('Leads fetch error:', leadsError)
+          contentDiv.innerHTML = '<div class="error-message">Failed to load leads. Please try again.</div>'
+          return
+        }
+
+        // Calculate stats
+        const stats = {
+          total: leads?.length || 0,
+          new: leads?.filter(l => l.status === 'new').length || 0,
+          contacted: leads?.filter(l => l.status === 'contacted').length || 0,
+          qualified: leads?.filter(l => l.status === 'qualified').length || 0,
+          converted: leads?.filter(l => l.status === 'converted').length || 0,
+          lost: leads?.filter(l => l.status === 'lost').length || 0
+        }
+
+        // Render dashboard
+        contentDiv.innerHTML = `
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-value">${stats.total}</div>
+              <div class="stat-label">Total Leads</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">${stats.new}</div>
+              <div class="stat-label">New Leads</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">${stats.contacted}</div>
+              <div class="stat-label">Contacted</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">${stats.converted}</div>
+              <div class="stat-label">Converted</div>
+            </div>
+          </div>
+
+          <div class="filters">
+            <div class="filter-group">
+              <span class="filter-label">Filter by Status:</span>
+              <select class="filter-select" id="status-filter">
+                <option value="all">All Leads</option>
+                <option value="new">New</option>
+                <option value="contacted">Contacted</option>
+                <option value="qualified">Qualified</option>
+                <option value="converted">Converted</option>
+                <option value="lost">Lost</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="leads-table">
+            <div class="table-header">
+              <h3 class="table-title">Your Leads</h3>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Business</th>
+                  <th>Contact Type</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${leads && leads.length > 0 ? leads.map(lead => `
+                  <tr>
+                    <td>
+                      <div class="lead-info">
+                        <div class="lead-business">${lead.listing?.business_name || 'Unknown'}</div>
+                        <div class="lead-contact">${lead.listing?.category?.name || 'Uncategorized'}</div>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="contact-type contact-${lead.contact_type}">${lead.contact_type}</span>
+                    </td>
+                    <td>
+                      <span class="status-badge status-${lead.status}">${lead.status}</span>
+                    </td>
+                    <td>${new Date(lead.created_at).toLocaleDateString()}</td>
+                    <td>
+                      <div class="actions">
+                        <button class="btn btn-primary btn-sm" onclick="openStatusModal('${lead.id}', '${lead.status}', '${(lead.owner_notes || '').replace(/'/g, "\\'")}')">
+                          Update
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                `).join('') : `
+                  <tr>
+                    <td colspan="5" class="no-leads">
+                      <h3>No leads found</h3>
+                      <p>No leads match your current filter. Try changing the filter or check back later.</p>
+                    </td>
+                  </tr>
+                `}
+              </tbody>
+            </table>
+          </div>
+        `
+
+        // Set up filter handler
+        const filterSelect = document.getElementById('status-filter')
+        filterSelect.value = currentFilter
+        filterSelect.addEventListener('change', (e) => {
+          currentFilter = e.target.value
+          loadLeads()
+        })
+
+      } catch (error) {
+        console.error('Load leads error:', error)
+        contentDiv.innerHTML = `
+          <div class="error-message">
+            An unexpected error occurred. Please refresh the page.
+          </div>
+        `
+      }
+    }
+
+    // Modal functions
+    window.openStatusModal = function(leadId, currentStatus, notes) {
+      currentLeadId = leadId
+      document.getElementById('lead-status').value = currentStatus
+      document.getElementById('lead-notes').value = notes || ''
+      document.getElementById('status-modal').classList.add('show')
+    }
+
+    function closeStatusModal() {
+      document.getElementById('status-modal').classList.remove('show')
+      currentLeadId = null
+    }
+
+    // Set up modal event handlers
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('modal-close').addEventListener('click', closeStatusModal)
+      document.getElementById('cancel-update').addEventListener('click', closeStatusModal)
+
+      document.getElementById('status-form').addEventListener('submit', async (e) => {
+        e.preventDefault()
+
+        const formData = new FormData(e.target)
+        const status = formData.get('status')
+        const notes = formData.get('notes')
+
+        try {
+          const response = await fetch('/api/leads/update-status', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              leadId: currentLeadId,
+              status: status,
+              notes: notes
+            })
+          })
+
+          const result = await response.json()
+
+          if (result.success) {
+            closeStatusModal()
+            loadLeads() // Refresh the list
+          } else {
+            alert('Failed to update lead status: ' + (result.error || 'Unknown error'))
+          }
+        } catch (error) {
+          console.error('Update status error:', error)
+          alert('Network error. Please try again.')
+        }
+      })
+
+      // Close modal when clicking outside
+      document.getElementById('status-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'status-modal') {
+          closeStatusModal()
+        }
+      })
+    })
+
+    // Listen for auth state changes
+    supabaseBrowser.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        loadLeads()
+      } else if (event === 'SIGNED_OUT' || !session) {
+        window.location.href = '/login'
+      }
+    })
+
+    // Try to load immediately
+    loadLeads()
+  </script>
+</body>
+</html>
