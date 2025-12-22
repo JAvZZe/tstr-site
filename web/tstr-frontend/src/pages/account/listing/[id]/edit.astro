@@ -1,0 +1,542 @@
+---
+export const prerender = false // Force SSR for auth and dynamic content
+
+// Import Supabase client
+import { supabaseBrowser } from '../../../../lib/supabase-browser'
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Listing - TSTR Hub</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f5f7fa;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3rem 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="60" cy="30" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+      opacity: 0.3;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+      position: relative;
+      z-index: 1;
+    }
+
+    .breadcrumb {
+      display: flex;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      opacity: 0.9;
+      position: relative;
+      z-index: 1;
+    }
+
+    .breadcrumb a {
+      color: white;
+      text-decoration: none;
+      opacity: 0.9;
+      transition: opacity 0.2s;
+    }
+
+    .breadcrumb a:hover {
+      opacity: 1;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+    }
+
+    .card h2 {
+      font-size: 1.5rem;
+      color: #333;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+    }
+
+    .card h2::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 2px;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .help-text {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 0.25rem;
+    }
+
+    .error-message {
+      background: #fee;
+      border: 1px solid #fcc;
+      color: #c33;
+      padding: 0.75rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .success-message {
+      background: #efe;
+      border: 1px solid #cfc;
+      color: #363;
+      padding: 0.75rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      min-height: 40px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+    }
+
+    .btn-secondary:hover {
+      background: #f8f9ff;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(102, 126, 234, 0.2);
+    }
+
+    .back-link {
+      display: inline-block;
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: #764ba2;
+    }
+
+    @media (max-width: 768px) {
+      .button-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      header {
+        padding: 1.5rem 1rem;
+      }
+
+      .container {
+        padding: 0 1rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><a href="/">TSTR Hub</a></h1>
+    <p>Edit Your Listing</p>
+    <div class="breadcrumb">
+      <a href="/">Home</a>
+      <span>›</span>
+      <a href="/account">Account</a>
+      <span>›</span>
+      <span>Edit Listing</span>
+    </div>
+  </header>
+
+  <div class="container">
+    <a href="/account" class="back-link">← Back to Account</a>
+
+    <div id="content">
+      <div class="loading">Loading listing details...</div>
+    </div>
+  </div>
+
+  <script>
+    import { supabaseBrowser } from '../../../../lib/supabase-browser'
+
+    async function loadEditForm() {
+      const contentDiv = document.getElementById('content')
+      const pathParts = window.location.pathname.split('/')
+      const listingId = pathParts[3] // Extract from URL path: /account/listing/[id]/edit
+
+      if (!listingId) {
+        contentDiv.innerHTML = `
+          <div class="error-message">
+            Invalid listing ID. Please go back to your account dashboard.
+          </div>
+        `
+        return
+      }
+
+      try {
+        // Get current session
+        const { data: { session }, error: sessionError } = await supabaseBrowser.auth.getSession()
+
+        if (sessionError || !session) {
+          window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search)
+          return
+        }
+
+        const user = session.user
+
+        // Verify ownership
+        const { data: ownership, error: ownershipError } = await supabaseBrowser
+          .from('listing_owners')
+          .select('status, verification_method')
+          .eq('user_id', user.id)
+          .eq('listing_id', listingId)
+          .eq('status', 'verified')
+          .single()
+
+        if (ownershipError || !ownership) {
+          contentDiv.innerHTML = `
+            <div class="error-message">
+              You don't have permission to edit this listing. Only verified owners can make changes.
+            </div>
+          `
+          return
+        }
+
+        // Fetch listing details
+        const { data: listing, error: listingError } = await supabaseBrowser
+          .from('listings')
+          .select(`
+            id,
+            business_name,
+            description,
+            address,
+            phone,
+            email,
+            website,
+            category:category_id (id, name),
+            location:location_id (id, name)
+          `)
+          .eq('id', listingId)
+          .single()
+
+        if (listingError || !listing) {
+          contentDiv.innerHTML = `
+            <div class="error-message">
+              Listing not found or no longer available.
+            </div>
+          `
+          return
+        }
+
+        // Render edit form
+        contentDiv.innerHTML = `
+          <div class="card">
+            <h2>📝 Edit Listing Details</h2>
+            <p>Update your testing laboratory information. Changes will be reviewed for accuracy.</p>
+
+            <form id="edit-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="business_name">Business Name *</label>
+                  <input type="text" id="business_name" name="business_name" value="${listing.business_name || ''}" required>
+                  <div class="help-text">Your official company name</div>
+                </div>
+
+                <div class="form-group">
+                  <label for="website">Website</label>
+                  <input type="url" id="website" name="website" value="${listing.website || ''}" placeholder="https://example.com">
+                  <div class="help-text">Your company website URL</div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" placeholder="Describe your testing services, certifications, and expertise...">${listing.description || ''}</textarea>
+                <div class="help-text">Brief overview of your testing capabilities and services</div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" id="email" name="email" value="${listing.email || ''}" placeholder="contact@company.com">
+                  <div class="help-text">Primary contact email</div>
+                </div>
+
+                <div class="form-group">
+                  <label for="phone">Phone</label>
+                  <input type="tel" id="phone" name="phone" value="${listing.phone || ''}" placeholder="+1 (555) 123-4567">
+                  <div class="help-text">Business phone number</div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="address">Address</label>
+                <textarea id="address" name="address" placeholder="Street address, city, state, postal code">${listing.address || ''}</textarea>
+                <div class="help-text">Full business address</div>
+              </div>
+
+              <div id="messages"></div>
+
+              <div class="button-group">
+                <button type="button" id="cancel-btn" class="btn btn-secondary">
+                  Cancel
+                </button>
+                <button type="submit" id="save-btn" class="btn btn-primary">
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        `
+
+        // Add form handlers
+        const form = document.getElementById('edit-form')
+        const cancelBtn = document.getElementById('cancel-btn')
+        const saveBtn = document.getElementById('save-btn')
+        const messagesDiv = document.getElementById('messages')
+
+        cancelBtn.addEventListener('click', () => {
+          window.location.href = '/account'
+        })
+
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault()
+
+          // Clear previous messages
+          messagesDiv.innerHTML = ''
+
+          // Get form data
+          const formData = new FormData(form)
+          const updateData = {
+            business_name: formData.get('business_name')?.toString().trim(),
+            description: formData.get('description')?.toString().trim(),
+            address: formData.get('address')?.toString().trim(),
+            phone: formData.get('phone')?.toString().trim(),
+            email: formData.get('email')?.toString().trim(),
+            website: formData.get('website')?.toString().trim(),
+          }
+
+          // Basic validation
+          if (!updateData.business_name) {
+            messagesDiv.innerHTML = '<div class="error-message">Business name is required.</div>'
+            return
+          }
+
+          // Show loading state
+          saveBtn.disabled = true
+          saveBtn.innerHTML = `
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" class="animate-spin">
+              <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+            </svg>
+            Saving...
+          `
+
+          try {
+            // Call update API
+            const response = await fetch('/api/listing/update', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                listingId: listingId,
+                ...updateData
+              })
+            })
+
+            const result = await response.json()
+
+            if (result.success) {
+              messagesDiv.innerHTML = '<div class="success-message">✓ Listing updated successfully!</div>'
+
+              // Redirect after short delay
+              setTimeout(() => {
+                window.location.href = '/account?updated=' + listingId
+              }, 1500)
+            } else {
+              messagesDiv.innerHTML = '<div class="error-message">' + (result.message || 'Failed to update listing.') + '</div>'
+            }
+          } catch (error) {
+            console.error('Update error:', error)
+            messagesDiv.innerHTML = '<div class="error-message">Network error. Please try again.</div>'
+          } finally {
+            saveBtn.disabled = false
+            saveBtn.innerHTML = `
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+              Save Changes
+            `
+          }
+        })
+
+      } catch (error) {
+        console.error('Load error:', error)
+        contentDiv.innerHTML = `
+          <div class="error-message">
+            An unexpected error occurred. Please refresh the page.
+          </div>
+        `
+      }
+    }
+
+    // Listen for auth state changes
+    supabaseBrowser.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        loadEditForm()
+      } else if (event === 'SIGNED_OUT' || !session) {
+        window.location.href = '/login'
+      }
+    })
+
+    // Try to load immediately
+    loadEditForm()
+  </script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 ---
-import { supabaseBrowser as supabase } from '../../lib/supabase-browser'
+import { supabase } from '../../lib/supabase'
 
 // Force SSR for dynamic data
 export const prerender = false;
@@ -27,6 +27,20 @@ const { data: pendingResearch, error: researchError } = await supabase
   .from('pending_research')
   .select('id, url, error_message, created_at')
 
+// Fetch claims data
+const { data: claims, error: claimsError } = await supabase
+  .from('claims')
+  .select('id, provider_name, contact_name, business_email, phone, created_at, status')
+  .order('created_at', { ascending: false })
+
+// Fetch auth users (requires service role, but using anon for now - may need backend API)
+const { data: users, error: usersError } = await supabase.auth.admin.listUsers()
+
+// Calculate claims metrics
+const totalClaims = claims?.length || 0
+const pendingClaims = claims?.filter(c => !c.status || c.status === 'pending').length || 0
+const recentClaims = claims?.filter(c => new Date(c.created_at) > lastWeek).length || 0
+
 const { data: categories, error: categoriesError } = await supabase
   .from('categories')
   .select('id, name, slug')
@@ -51,6 +65,35 @@ const listingsByCategory = listings?.reduce((acc, listing) => {
   acc[categoryName].push(listing)
   return acc
 }, {}) || {}
+
+// For environmental testing, get subcategory breakdown
+let environmentalSubcategories = {}
+if (listingsByCategory['Environmental Testing']) {
+  const envListings = listingsByCategory['Environmental Testing']
+  // Fetch custom fields for environmental listings
+  const envListingIds = envListings.map(l => l.id)
+  if (envListingIds.length > 0) {
+    const { data: customFields } = await supabase
+      .from('listing_custom_field_values')
+      .select(`
+        listing_id,
+        value,
+        custom_fields (name)
+      `)
+      .in('listing_id', envListingIds)
+      .eq('custom_fields.name', 'test_types')
+
+    environmentalSubcategories = customFields?.reduce((acc, field) => {
+      const value = field.value?.toLowerCase() || ''
+      if (value.includes('air quality')) acc['Air Quality'] = (acc['Air Quality'] || 0) + 1
+      if (value.includes('water quality')) acc['Water Quality'] = (acc['Water Quality'] || 0) + 1
+      if (value.includes('soil')) acc['Soil Testing'] = (acc['Soil Testing'] || 0) + 1
+      if (value.includes('noise') || value.includes('vibration')) acc['Noise/Vibration'] = (acc['Noise/Vibration'] || 0) + 1
+      if (value.includes('esg') || value.includes('sustainability')) acc['ESG/Sustainability'] = (acc['ESG/Sustainability'] || 0) + 1
+      return acc
+    }, {}) || {}
+  }
+}
 
 // Calculate category metrics
 const categoryMetrics = Object.entries(listingsByCategory).map(([categoryName, categoryListings]) => {
@@ -254,35 +297,48 @@ const title = 'Scraper Dashboard'
          </div>
        </div>
 
-       <!-- Scraper Performance by Category -->
-       <div class="mt-8">
-         <h2 class="text-2xl font-semibold text-gray-800 mb-6">Scraper Performance by Category</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categoryMetrics.map((category) => (
-            <div class="bg-white rounded-lg shadow-md p-6">
-              <h3 class="text-lg font-semibold text-gray-800 mb-4">{category.name}</h3>
-              <div class="space-y-3">
-                <div class="flex justify-between items-center">
-                  <span class="text-gray-600">Total Listings:</span>
-                  <span class="text-gray-900 font-semibold">{category.total}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                  <span class="text-gray-600">New (7 days):</span>
-                  <span class="text-blue-600 font-semibold">{category.recent}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                  <span class="text-gray-600">Last Updated:</span>
-                  <span class="text-gray-500 text-sm">{category.lastUpdate ? new Date(category.lastUpdate).toLocaleDateString() : 'Unknown'}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                  <span class="text-gray-600">Success Rate:</span>
-                  <span class="text-green-600 font-semibold">95%+</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+        <!-- Scraper Performance by Category -->
+        <div class="mt-8">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-6">Scraper Performance by Category</h2>
+         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+           {categoryMetrics.map((category) => (
+             <div class="bg-white rounded-lg shadow-md p-6">
+               <h3 class="text-lg font-semibold text-gray-800 mb-4">{category.name}</h3>
+               <div class="space-y-3">
+                 <div class="flex justify-between items-center">
+                   <span class="text-gray-600">Total Listings:</span>
+                   <span class="text-gray-900 font-semibold">{category.total}</span>
+                 </div>
+                 <div class="flex justify-between items-center">
+                   <span class="text-gray-600">New (7 days):</span>
+                   <span class="text-blue-600 font-semibold">{category.recent}</span>
+                 </div>
+                 <div class="flex justify-between items-center">
+                   <span class="text-gray-600">Last Updated:</span>
+                   <span class="text-gray-500 text-sm">{category.lastUpdate ? new Date(category.lastUpdate).toLocaleDateString() : 'Unknown'}</span>
+                 </div>
+                 <div class="flex justify-between items-center">
+                   <span class="text-gray-600">Success Rate:</span>
+                   <span class="text-green-600 font-semibold">95%+</span>
+                 </div>
+                 {category.name === 'Environmental Testing' && Object.keys(environmentalSubcategories).length > 0 && (
+                   <div class="mt-4 pt-4 border-t border-gray-200">
+                     <span class="text-sm font-medium text-gray-700 mb-2 block">Subcategories:</span>
+                     <div class="space-y-1">
+                       {Object.entries(environmentalSubcategories).map(([sub, count]) => (
+                         <div class="flex justify-between text-sm">
+                           <span class="text-gray-600">{sub}:</span>
+                           <span class="text-gray-900">{count}</span>
+                         </div>
+                       ))}
+                     </div>
+                   </div>
+                 )}
+               </div>
+             </div>
+           ))}
+         </div>
+       </div>
 
       <!-- Recent Activity & System Health -->
       <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -330,21 +386,71 @@ const title = 'Scraper Dashboard'
         </div>
       </div>
 
-      <!-- Additional Dashboard Sections -->
-      <div class="mt-8 bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-semibold text-gray-800 mb-4">Quick Actions</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <a href="/admin/analytics" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-center transition-colors">
-            View Analytics
-          </a>
-          <a href="/browse" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-center transition-colors">
-            Browse Listings
-          </a>
-          <a href="/submit" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-center transition-colors">
-            Add New Listing
-          </a>
-        </div>
-      </div>
+       <!-- User Management Section -->
+       <div class="mt-8">
+         <h2 class="text-2xl font-semibold text-gray-800 mb-6">👥 User & Claims Management</h2>
+         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+           <!-- Claims Overview -->
+           <div class="bg-white rounded-lg shadow-md p-6">
+             <h3 class="text-lg font-semibold text-gray-800 mb-4">Claims Status</h3>
+             <div class="space-y-3">
+               <div class="flex justify-between items-center">
+                 <span class="text-gray-600">Total Claims:</span>
+                 <span class="text-gray-900 font-semibold">{totalClaims}</span>
+               </div>
+               <div class="flex justify-between items-center">
+                 <span class="text-gray-600">Pending Review:</span>
+                 <span class="text-orange-600 font-semibold">{pendingClaims}</span>
+               </div>
+               <div class="flex justify-between items-center">
+                 <span class="text-gray-600">Recent (7 days):</span>
+                 <span class="text-blue-600 font-semibold">{recentClaims}</span>
+               </div>
+             </div>
+           </div>
+
+           <!-- Recent Claims -->
+           <div class="bg-white rounded-lg shadow-md p-6">
+             <h3 class="text-lg font-semibold text-gray-800 mb-4">Recent Claims</h3>
+             <div class="space-y-3 max-h-64 overflow-y-auto">
+               {claims?.slice(0, 5).map((claim) => (
+                 <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                   <div class="flex-1">
+                     <span class="text-gray-900 text-sm font-medium">{claim.provider_name}</span>
+                     <span class="text-gray-500 text-xs block">{claim.business_email}</span>
+                   </div>
+                   <span class={`px-2 py-1 rounded-full text-xs font-medium ${
+                     claim.status === 'approved' ? 'bg-green-100 text-green-800' :
+                     claim.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                     'bg-yellow-100 text-yellow-800'
+                   }`}>
+                     {claim.status || 'pending'}
+                   </span>
+                 </div>
+               )) || <p class="text-gray-500 text-sm">No claims yet</p>}
+             </div>
+           </div>
+         </div>
+       </div>
+
+       <!-- Additional Dashboard Sections -->
+       <div class="mt-8 bg-white rounded-lg shadow-md p-6">
+         <h2 class="text-xl font-semibold text-gray-800 mb-4">Quick Actions</h2>
+         <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+           <a href="/admin/analytics" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-center transition-colors">
+             View Analytics
+           </a>
+           <a href="/admin/claims" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-center transition-colors">
+             Manage Claims
+           </a>
+           <a href="/browse" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-center transition-colors">
+             Browse Listings
+           </a>
+           <a href="/submit" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-center transition-colors">
+             Add New Listing
+           </a>
+         </div>
+       </div>
     </div>
   </body>
 </html>

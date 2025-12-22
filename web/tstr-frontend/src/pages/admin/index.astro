@@ -13,7 +13,7 @@ const title = 'Admin Dashboard'
     <div class="container mx-auto px-4 py-8">
       <h1 class="text-3xl font-bold text-gray-900 mb-8">{title}</h1>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <a href="/admin/dashboard" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
           <h2 class="text-xl font-semibold text-gray-800 mb-3">Scraper Dashboard</h2>
           <p class="text-gray-600 mb-4">Monitor scraper performance, view metrics by category, and track system health.</p>
@@ -24,6 +24,12 @@ const title = 'Admin Dashboard'
           <h2 class="text-xl font-semibold text-gray-800 mb-3">Analytics</h2>
           <p class="text-gray-600 mb-4">View click tracking analytics and user engagement metrics.</p>
           <span class="text-blue-600 font-medium">View Analytics →</span>
+        </a>
+
+        <a href="/admin/claims" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+          <h2 class="text-xl font-semibold text-gray-800 mb-3">Claims Management</h2>
+          <p class="text-gray-600 mb-4">Review and manage business claims for listings ownership.</p>
+          <span class="text-orange-600 font-medium">Manage Claims →</span>
         </a>
 
         <a href="/admin/failed-urls" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
@@ -38,6 +44,7 @@ const title = 'Admin Dashboard'
         <div class="text-sm text-blue-700 space-y-2">
           <p><strong>Scraper Dashboard:</strong> Real-time monitoring of scraping operations across all categories</p>
           <p><strong>Analytics:</strong> Click tracking and user behavior insights</p>
+          <p><strong>Claims Management:</strong> Review and approve/reject business ownership claims</p>
           <p><strong>Failed URLs:</strong> Remedial actions for validation failures</p>
         </div>
       </div>
