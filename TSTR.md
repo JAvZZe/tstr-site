@@ -132,7 +132,8 @@ web/tstr-automation/
 - **OS**: Oracle Linux 9, Python 3.9.21
 - **Path**: `~/tstr-scraper/` on OCI instance
 - **SSH Key**: `/media/al/69AD-FC41/AI_PROJECTS_ARCHIVE/Oracle_Cloud_Machines/avz_Oracle_Linux_9_pvt_ssh-key-2025-10-25.key`
-- **Access**: `ssh -i "<key_path>" opc@84.8.139.90`
+- **Access**: Copy key to local with proper permissions: `cp "<key_path>" /tmp/oci-key.pem && chmod 600 /tmp/oci-key.pem && ssh -i /tmp/oci-key.pem opc@84.8.139.90`
+- **Note**: External drive filesystem may prevent direct chmod; use local copy for access
 
 ### External Archive
 - **Project Archive**: `/media/al/1TB_AI_ARCH/AI_PROJECTS_ARCHIVE/TSTR-site Archive/`
@@ -201,17 +202,21 @@ web/tstr-automation/
 
 ### OCI Scraper Management
 ```bash
+# Prepare SSH key (external drive permissions issue)
+cp "/media/al/69AD-FC41/AI_PROJECTS_ARCHIVE/Oracle_Cloud_Machines/avz_Oracle_Linux_9_pvt_ssh-key-2025-10-25.key" /tmp/oci-key.pem
+chmod 600 /tmp/oci-key.pem
+
 # SSH to OCI instance
-ssh -i "/media/al/69AD-FC41/AI_PROJECTS_ARCHIVE/Oracle_Cloud_Machines/avz_Oracle_Linux_9_pvt_ssh-key-2025-10-25.key" opc@84.8.139.90
+ssh -i /tmp/oci-key.pem opc@84.8.139.90
 
 # Check cron schedule
-ssh opc@84.8.139.90 "crontab -l"
+ssh -i /tmp/oci-key.pem opc@84.8.139.90 "crontab -l"
 
 # View scraper logs
-ssh opc@84.8.139.90 "tail -100 ~/tstr-scraper/scraper.log"
+ssh -i /tmp/oci-key.pem opc@84.8.139.90 "tail -100 ~/tstr-scraper/scraper.log"
 
 # Run scraper manually
-ssh opc@84.8.139.90 "cd ~/tstr-scraper && python3 run_scraper.py"
+ssh -i /tmp/oci-key.pem opc@84.8.139.90 "cd ~/tstr-scraper && python3 run_scraper.py"
 ```
 
 ### Local Development

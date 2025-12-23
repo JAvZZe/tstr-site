@@ -1,8 +1,8 @@
 # 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2025-12-22 07:45 UTC
-> **Updated By**: opencode
+> **Last Updated**: 2025-12-22 07:32 UTC
+> **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at https://tstr.site
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -169,11 +169,23 @@ Last Scrape:      November 10, 2025 02:31 UTC
 
 ## 📊 VERSION HISTORY (LATEST)
 
-### **v2.3.15** - December 22, 2025 (CURRENT)
+### **v2.3.16** - December 23, 2025 (CURRENT)
+- 🔧 **OCI SSH Access Fully Verified**: Resolved key permission issues preventing access
+  - Identified external drive filesystem limitations preventing chmod operations
+  - Implemented workaround: copy SSH key to /tmp/oci-key.pem with 600 permissions
+  - Verified cron schedule active (daily 2 AM GMT) and scraper execution successful
+  - Confirmed scraper operational: processed 107 listings today with 67 contacts
+  - Updated documentation with corrected access procedure
+- 📚 **Documentation Updates**: Synchronized SSH access procedures across all docs
+  - Updated TSTR.md with permission fix requirements
+  - Added learning: External drive SSH keys require local copy for proper permissions
+  - Ensured single source of truth for infrastructure access
+
+### **v2.3.15** - December 22, 2025
 - 📝 **Phase 1: Core Listing Management Complete**: Implemented full listing edit functionality for verified owners
-  - Created `/account/listing/[id]/edit` page with comprehensive form validation
-  - Built `/api/listing/update` endpoint with ownership verification and audit logging
-  - Enhanced account dashboard with edit buttons for verified listing owners
+  - Created `/account/listing/[id]/edit.astro` with comprehensive form validation
+  - Built `/api/listing/update.ts` with owner verification and audit logging
+  - Enhanced account dashboard with edit buttons for verified owners
   - Added security controls, input sanitization, and proper error handling
   - Integrated with existing authentication and database systems
 - 🔒 **Security Enhancements**: Strengthened listing management with proper access controls
