@@ -748,9 +748,9 @@ const categoryDisplayName = getCategoryDisplayName(categoryParam)
                    Visit Website
                  </a>
                )}
-               <a href="#" class="claim-link" data-listing-id={lab.id} data-listing-name={lab.business_name}>
-                 Is this you? Claim
-               </a>
+                <a href="/claim" class="claim-link">
+                  Is this you? Claim
+                </a>
              </div>
           </div>
         )
@@ -809,14 +809,7 @@ const categoryDisplayName = getCategoryDisplayName(categoryParam)
 
   <Footer />
 
-  <script define:vars={{ locationOptions, allCategories, allStandards }}>
-    // Import Supabase browser client for auth checks
-    import { createClient } from '@supabase/supabase-js'
-
-    const supabaseUrl = 'https://haimjeaetrsaauitrhfy.supabase.co'
-    const supabaseKey = 'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO'
-    const supabase = createClient(supabaseUrl, supabaseKey)
-
+    <script define:vars={{ locationOptions, allCategories, allStandards }}>
     // Data for autocomplete dropdowns
     const locationData = JSON.parse(JSON.stringify(locationOptions || []))
     const categoriesData = JSON.parse(JSON.stringify(allCategories || []))
@@ -1186,25 +1179,11 @@ const categoryDisplayName = getCategoryDisplayName(categoryParam)
           const listingId = link.getAttribute('data-listing-id')
           const listingName = link.getAttribute('data-listing-name')
 
-          try {
-            // Check authentication status
-            const { data: { user } } = await supabase.auth.getUser()
-
-            if (user) {
-              // Authenticated user - redirect to unified claim page
-              window.location.href = `/claim?id=${listingId}&provider=${encodeURIComponent(listingName)}`
-            } else {
-              // Non-authenticated user - redirect to login with return URL
-              const returnUrl = `/claim?id=${listingId}&provider=${encodeURIComponent(listingName)}`
-              window.location.href = `/login?redirect_to=${encodeURIComponent(returnUrl)}`
-            }
-          } catch (error) {
-            console.error('Auth check failed:', error)
-            // Fallback to login page
-            const returnUrl = `/listing/${listingId}?claim=true`
-            window.location.href = `/login?redirect_to=${encodeURIComponent(returnUrl)}`
-          }
+          // For now, always redirect to claim page (simplified for testing)
+          window.location.href = `/claim?id=${listingId}&provider=${encodeURIComponent(listingName)}`
         })
+      })
+    })
       })
     })
   </script>
