@@ -107,9 +107,12 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Check domain verification for ALL claims
+    // Temporarily disabled until migration is applied
     let domainVerified = false
     let verificationMethod = 'manual_review'
 
+    // TODO: Re-enable domain verification after migration
+    /*
     if (user) {
       // For authenticated users, check against their email domain
       domainVerified = canAutoClaim(user.email, claimData.website || '')
@@ -128,6 +131,7 @@ export const POST: APIRoute = async ({ request }) => {
         }
       }
     }
+    */
 
     // Handle existing listing claims (authenticated users only)
     if (listingId && user) {
@@ -226,7 +230,8 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Handle new claim submissions (anonymous or authenticated)
-    const verificationToken = domainVerified ? null : generateVerificationToken()
+    // Temporarily simplified until migration applied
+    const verificationToken = null // generateVerificationToken() when migration done
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
 
     const newClaim = {
@@ -235,14 +240,8 @@ export const POST: APIRoute = async ({ request }) => {
       business_email: claimData.business_email,
       phone: claimData.phone,
       website: claimData.website,
-      verification_status: domainVerified ? 'verified' : 'pending',
-      verification_method: verificationMethod,
-      verified_at: domainVerified ? new Date().toISOString() : null,
-      domain_verified: domainVerified,
-      ...(verificationToken && {
-        verification_token: verificationToken,
-        token_expires_at: expiresAt.toISOString()
-      })
+      // Note: New columns (verification_status, etc.) will be added after migration
+      // For now, using basic insert
     }
 
     const { data: insertedClaim, error } = await supabase
