@@ -1,7 +1,7 @@
 # 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2025-12-23 06:41 UTC
+> **Last Updated**: 2025-12-23 06:45 UTC
 > **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at https://tstr.site
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -180,6 +180,22 @@ Last Scrape:      November 10, 2025 02:31 UTC
   - Updated TSTR.md with permission fix requirements
   - Added learning: External drive SSH keys require local copy for proper permissions
   - Ensured single source of truth for infrastructure access
+
+### **v2.3.16** - December 23, 2025 (CURRENT)
+- 🔧 **OCI SSH Access Fully Verified**: Resolved key permission issues preventing access
+  - Identified external drive filesystem limitations preventing chmod operations
+  - Implemented workaround: copy SSH key to /tmp/oci-key.pem with 600 permissions
+  - Verified cron schedule active (daily 2 AM GMT) and scraper execution successful
+  - Confirmed scraper operational: processed 107 listings today with 67 contacts
+  - Updated documentation with corrected access procedure
+- 🎯 **Unified Claim System Complete**: Implemented comprehensive claim system with save/resume functionality
+  - Created unified `/api/claim.ts` endpoint replacing separate authenticated/anonymous APIs
+  - Applied 100% domain verification for all claims (auto-approve matches, manual review others)
+  - Added database migration with draft_data, resume_token, draft_expires_at columns and RLS policies
+  - Implemented auto-save every 30 seconds and email resume functionality
+  - Enhanced claim page with save draft button and improved UX
+  - Updated browse page redirects to use new unified system
+  - Build successful, dev server running, system ready for testing
 
 ### **v2.3.15** - December 22, 2025
 - 📝 **Phase 1: Core Listing Management Complete**: Implemented full listing edit functionality for verified owners
