@@ -2,6 +2,8 @@
 import '../styles/global.css';
 
 const providerName = Astro.url.searchParams.get('provider') || '';
+const listingId = Astro.url.searchParams.get('id') || '';
+const resumeToken = Astro.url.searchParams.get('resume') || '';
 ---
 
 <!DOCTYPE html>
@@ -102,21 +104,30 @@ const providerName = Astro.url.searchParams.get('provider') || '';
                     />
                 </div>
 
-                <!-- Submit Button -->
-                <button
-                    type="submit"
-                    id="submit-btn"
-                    class="w-full px-6 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-200 transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                >
-                    <span id="btn-text">Verify & Claim Profile</span>
-                    <span id="btn-loading" class="hidden">
-                        <svg class="animate-spin h-5 w-5 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Verifying...
-                    </span>
-                </button>
+                 <!-- Action Buttons -->
+                 <div class="flex gap-3">
+                     <button
+                         type="button"
+                         id="save-draft-btn"
+                         class="flex-1 px-6 py-4 text-lg font-semibold text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 focus:ring-4 focus:ring-gray-200 transition duration-200 shadow-md hover:shadow-lg"
+                     >
+                         Save Draft
+                     </button>
+                     <button
+                         type="submit"
+                         id="submit-btn"
+                         class="flex-1 px-6 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-200 transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                     >
+                         <span id="btn-text">Verify & Claim Profile</span>
+                         <span id="btn-loading" class="hidden">
+                             <svg class="animate-spin h-5 w-5 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                             </svg>
+                             Verifying...
+                         </span>
+                     </button>
+                 </div>
 
                 <div id="status-msg" class="text-center text-sm font-medium min-h-[24px]"></div>
             </form>
@@ -158,31 +169,90 @@ const providerName = Astro.url.searchParams.get('provider') || '';
     <script>
         import { supabaseBrowser } from '../lib/supabase-browser'
 
-        // Check auth status and redirect if needed
-        supabaseBrowser.auth.getSession().then(({ data: { session } }) => {
-            if (session) {
-                // User is authenticated
-                const urlParams = new URLSearchParams(window.location.search)
-                const listingId = urlParams.get('id')
-
-                if (listingId) {
-                    // Redirect to listing page for claiming
-                    window.location.href = `/listing/${listingId}?claim=true`
-                }
-                // If no listing ID, stay on claim page (current behavior)
-            }
-            // If not authenticated, stay on claim page (current behavior)
-        })
-
         const form = document.getElementById('claim-form') as HTMLFormElement;
         const msg = document.getElementById('status-msg') as HTMLElement;
         const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
         const btnText = document.getElementById('btn-text') as HTMLElement;
         const btnLoading = document.getElementById('btn-loading') as HTMLElement;
+        const saveDraftBtn = document.getElementById('save-draft-btn') as HTMLButtonElement;
+
+        // Auto-save functionality
+        let autoSaveTimeout: number;
+        const AUTO_SAVE_DELAY = 30000; // 30 seconds
+
+        function scheduleAutoSave() {
+            clearTimeout(autoSaveTimeout);
+            autoSaveTimeout = setTimeout(() => {
+                saveDraft(true); // Silent auto-save
+            }, AUTO_SAVE_DELAY);
+        }
+
+        function saveDraft(silent = false) {
+            const formData = new FormData(form);
+            const payload = Object.fromEntries(formData);
+
+            // Only save if there's data
+            if (!payload.provider_name && !payload.contact_name && !payload.business_email) {
+                return;
+            }
+
+            fetch('/api/claim', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    mode: 'save_draft',
+                    ...payload
+                })
+            }).then(res => res.json()).then(data => {
+                if (data.success && !silent) {
+                    showMessage('Draft saved! Resume link sent to your email.', 'success');
+                }
+            }).catch(() => {
+                // Silent fail for auto-save
+            });
+        }
+
+        // Load draft if resume token present
+        const urlParams = new URLSearchParams(window.location.search);
+        const resumeToken = urlParams.get('resume');
+
+        if (resumeToken) {
+            fetch('/api/claim', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ resumeToken })
+            }).then(res => res.json()).then(data => {
+                if (data.success && data.draft) {
+                    // Populate form with draft data
+                    Object.keys(data.draft).forEach(key => {
+                        const input = form.elements.namedItem(key) as HTMLInputElement;
+                        if (input) input.value = data.draft[key];
+                    });
+                    showMessage('Draft loaded successfully!', 'success');
+                }
+            });
+        }
+
+        // Check auth status
+        supabaseBrowser.auth.getSession().then(({ data: { session } }) => {
+            if (session && listingId) {
+                // Authenticated user with listing ID - proceed with claim
+                return;
+            }
+            // Stay on page for anonymous claims or new submissions
+        });
+
+        // Form input event listeners for auto-save
+        form.addEventListener('input', scheduleAutoSave);
+
+        // Save draft button
+        if (saveDraftBtn) {
+            saveDraftBtn.addEventListener('click', () => saveDraft(false));
+        }
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             // Show loading state
             btnText.classList.add('hidden');
             btnLoading.classList.remove('hidden');
@@ -193,8 +263,13 @@ const providerName = Astro.url.searchParams.get('provider') || '';
             const formData = new FormData(form);
             const payload = Object.fromEntries(formData);
 
+            // Add listing ID if present
+            if (listingId) {
+                payload.listingId = listingId;
+            }
+
             try {
-                const res = await fetch('/api/claim_submission', {
+                const res = await fetch('/api/claim', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -203,9 +278,15 @@ const providerName = Astro.url.searchParams.get('provider') || '';
                 const data = await res.json();
 
                 if (res.ok) {
-                    msg.textContent = '✅ Claim submitted successfully! Check your email for verification.';
-                    msg.className = 'text-center text-sm font-medium text-green-600 bg-green-50 p-4 rounded-lg border border-green-200';
-                    form.reset();
+                    if (data.method === 'auto') {
+                        msg.textContent = `✅ ${data.message}`;
+                        msg.className = 'text-center text-sm font-medium text-green-600 bg-green-50 p-4 rounded-lg border border-green-200';
+                        // Redirect to account after successful auto-claim
+                        setTimeout(() => window.location.href = '/account', 2000);
+                    } else {
+                        msg.textContent = `✅ ${data.message}`;
+                        msg.className = 'text-center text-sm font-medium text-blue-600 bg-blue-50 p-4 rounded-lg border border-blue-200';
+                    }
                 } else {
                     msg.textContent = `❌ ${data.error || 'Error submitting claim. Please try again.'}`;
                     msg.className = 'text-center text-sm font-medium text-red-600 bg-red-50 p-4 rounded-lg border border-red-200';
@@ -220,6 +301,15 @@ const providerName = Astro.url.searchParams.get('provider') || '';
                 submitBtn.disabled = false;
             }
         });
+
+        function showMessage(text: string, type: 'success' | 'error' | 'info') {
+            msg.textContent = text;
+            msg.className = `text-center text-sm font-medium min-h-[24px] ${
+                type === 'success' ? 'text-green-600 bg-green-50 p-4 rounded-lg border border-green-200' :
+                type === 'error' ? 'text-red-600 bg-red-50 p-4 rounded-lg border border-red-200' :
+                'text-blue-600 bg-blue-50 p-4 rounded-lg border border-blue-200'
+            }`;
+        }
     </script>
 </body>
 </html>
