@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase'
 import { CONTENT } from '../lib/contacts'
 import Footer from '../components/Footer.astro'
 import { getRedirectUrl } from '../lib/redirect'
+import BaseLayout from '../layouts/BaseLayout.astro'
 
 // Fetch all active listings with location hierarchy, category, and capabilities
 const { data: listings, error } = await supabase

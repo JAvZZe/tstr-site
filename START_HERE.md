@@ -132,6 +132,17 @@ python3 db_utils.py learning-add \
 ./handoff.sh <agent-name> <reason>
 ```
 
+## AI Agent Selection Guide
+
+### When to Use Each Agent
+
+- **Claude Sonnet 4.5**: Complex reasoning, architecture, review, decisions ($$$)
+- **Gemini 2.5 Pro**: Continuation when Claude depleted, medium complexity (FREE, rate-limited)
+- **OpenRouter**: Batch processing, simple tasks, free tier
+- **Qwen3-Coder**: Cost-effective bulk processing and repetitive tasks ($0.45/1M input, $1.50/1M output)
+  - Ideal for: Generating multiple similar components, repetitive code tasks, bulk operations
+  - Use for: Creating multiple category pages, standard API endpoints, consistent UI patterns
+
 ---
 
 ## Tools Available From This Folder

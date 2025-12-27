@@ -1,4 +1,5 @@
 ---
+import Header from '../components/Header.astro'
 const { title = "TSTR Hub - Specialist Testing Services, Products and Solutions Directory", description = "Find and compare verified testing laboratories and certification bodies worldwide. ISO 17025 accredited labs for materials testing, environmental analysis, biotech, hydrogen infrastructure, and more." } = Astro.props;
 ---
 
@@ -16,6 +17,7 @@ const { title = "TSTR Hub - Specialist Testing Services, Products and Solutions 
      crossorigin="anonymous"></script>
 </head>
 <body>
+  <Header />
   <slot />
 </body>
 </html>

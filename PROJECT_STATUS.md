@@ -1,7 +1,7 @@
 # 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2025-12-27 08:00 UTC
+> **Last Updated**: 2025-12-27 09:15 UTC
 > **Updated By**: opencode
 > **Status**: ✅ PRODUCTION - Live at https://tstr.site
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -169,7 +169,15 @@ Last Scrape:      November 10, 2025 02:31 UTC
 
 ## 📊 VERSION HISTORY (LATEST)
 
-### **v2.3.17** - December 27, 2025 (CURRENT)
+### **v2.3.18** - December 27, 2025 (CURRENT)
+- 🎨 **Homepage Logo Updated**: Replaced SVG logo with new PNG T-logo in Header component
+  - Created Header.astro component with larger T-logo (TSTR-Logo-New.png)
+  - Resized logo to 90px height to match "TSTR hub" text block
+  - Adjusted container to inline-flex with auto width and 2rem padding
+  - Updated index.astro to use Header component instead of inline header
+  - Removed unused CSS styles from index.astro
+
+### **v2.3.17** - December 27, 2025
 - 🎨 **Homepage Logo Updated**: Replaced favicon logo with updated SVG logo placed next to "TSTR hub" text
   - Removed img element from header h1.logo
   - Changed flex-direction from column to row for side-by-side layout

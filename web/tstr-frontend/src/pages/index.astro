@@ -1,6 +1,7 @@
 ---
 import { supabase } from '../lib/supabase'
 import Footer from '../components/Footer.astro'
+import Header from '../components/Header.astro'
 
 // Fetch all active listings with location data and category from database
 const { data: listings, error } = await supabase
@@ -154,73 +155,7 @@ if (allCategories && allCategories.length > 0) {
       background: #f5f5f5;
     }
     
-    header {
-      background: linear-gradient(135deg, #667eea 0%, #059669 100%);
-      color: white;
-      padding: 3rem 2rem;
-      text-align: center;
-      position: relative;
-    }
 
-    .header-cta {
-      position: absolute;
-      top: 2rem;
-      right: 2rem;
-      background: white;
-      color: #667eea;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-
-    .header-cta:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-    
-    header h1.logo {
-      font-size: 0; /* Reset font-size for flex layout */
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      width: 200px;
-      height: 200px;
-      margin: 0 auto 0.5rem auto;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      backdrop-filter: blur(10px);
-      border: 2px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .logo-tstr {
-      font-size: 2.5rem;
-      line-height: 1;
-      margin-bottom: -0.2rem;
-      letter-spacing: 0.1em;
-    }
-
-    .logo-hub {
-      font-size: 3.2rem;
-      line-height: 1;
-      letter-spacing: 0.05em;
-    }
-
-    header p {
-      font-size: 1.25rem;
-      opacity: 0.95;
-    }
     
     main {
       max-width: 1200px;
@@ -364,21 +299,7 @@ if (allCategories && allCategories.length > 0) {
   </style>
 </head>
 <body>
-  <header>
-    <a href="/pricing" class="header-cta" style="margin-right: 1rem;">Pricing</a>
-    <a href="/submit" class="header-cta">Get Started Free</a>
-    <h1 class="logo">
-      <svg version="1.1" viewBox="0.0 0.0 960.0 720.0" fill="none" stroke="none" stroke-linecap="square" stroke-miterlimit="10" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="40" height="40" style="margin-right: 1rem;"><clipPath id="p.0"><path d="m0 0l960.0 0l0 720.0l-960.0 0l0 -720.0z" clip-rule="nonzero"/></clipPath><g clip-path="url(#p.0)"><path fill="#000000" fill-opacity="0.0" d="m0 0l960.0 0l0 720.0l-960.0 0z" fill-rule="evenodd"/><path fill="#666666" d="m427.43045 280.65076l0 371.75787l-154.4252 0l0 -371.75787z" fill-rule="evenodd"/><path stroke="#434343" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m427.43045 280.65076l0 371.75787l-154.4252 0l0 -371.75787z" fill-rule="evenodd"/><path fill="#666666" d="m686.99475 280.65076l0 371.75787l-142.07874 0l0 -371.75787z" fill-rule="evenodd"/><path stroke="#434343" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m686.99475 280.65076l0 371.75787l-142.07874 0l0 -371.75787z" fill-rule="evenodd"/><path fill="#666666" d="m273.00525 67.59138l413.98425 0l0 142.07874l-413.98425 0z" fill-rule="evenodd"/><path stroke="#434343" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m273.00525 67.59138l413.98425 0l0 142.07874l-413.98425 0z" fill-rule="evenodd"/></g></svg>
-      <div>
-        <span class="logo-tstr">TSTR</span>
-        <span class="logo-hub">hub</span>
-      </div>
-    </h1>
-    <p>Specialist Testing Services, Products and Solutions Directory</p>
-    <p style="font-size: 1rem; margin-top: 0.5rem; opacity: 0.85;">
-      Oil & Gas • Biopharma & Life Sciences • Environmental • Materials Testing
-    </p>
-  </header>
+   <Header />
 
   <main>
     <!-- Value Propositions Section -->
