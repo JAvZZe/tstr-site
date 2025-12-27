@@ -109,6 +109,9 @@ ask-gemini "continue this task"
 
 # Code generation, batch processing, simple tasks
 ask-code "write a Python function for..."
+
+# Cost-effective bulk processing and repetitive tasks
+qwen "generate multiple components for all categories"
 ```
 
 **Context Dumping for Agent Handoffs:**

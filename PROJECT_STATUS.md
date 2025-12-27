@@ -1,8 +1,8 @@
 # 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2025-12-23 18:08 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2025-12-27 08:00 UTC
+> **Updated By**: opencode
 > **Status**: ✅ PRODUCTION - Live at https://tstr.site
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -169,7 +169,15 @@ Last Scrape:      November 10, 2025 02:31 UTC
 
 ## 📊 VERSION HISTORY (LATEST)
 
-### **v2.3.16** - December 23, 2025 (CURRENT)
+### **v2.3.17** - December 27, 2025 (CURRENT)
+- 🎨 **Homepage Logo Updated**: Replaced favicon logo with updated SVG logo placed next to "TSTR hub" text
+  - Removed img element from header h1.logo
+  - Changed flex-direction from column to row for side-by-side layout
+  - Inlined updated SVG logo with new design (taller top bar, adjusted positioning)
+  - Updated TSTR Grey Logo.svg file with new SVG content
+  - Logo now appears next to text instead of above it
+
+### **v2.3.16** - December 23, 2025
 - 🔧 **OCI SSH Access Fully Verified**: Resolved key permission issues preventing access
   - Identified external drive filesystem limitations preventing chmod operations
   - Implemented workaround: copy SSH key to /tmp/oci-key.pem with 600 permissions
@@ -248,6 +256,26 @@ Last Scrape:      November 10, 2025 02:31 UTC
   - Skipped unimplemented claim tests to match current functionality
   - CI should now pass with working authentication and database access
 
+---
+
+## 🤖 AI AGENT UTILIZATION
+
+### Current Agent Capabilities
+- **Claude Sonnet 4.5**: Complex reasoning, architecture, review, decisions
+- **Gemini 2.5 Pro**: Continuation when Claude depleted, medium complexity (FREE)
+- **OpenRouter**: Batch processing, simple tasks, free tier models
+- **Qwen3-Coder**: Cost-effective bulk processing and repetitive tasks ($0.45/1M input, $1.50/1M output)
+  - Specialized in: Generating multiple similar components, repetitive code tasks, bulk operations
+  - Recommended for: Creating multiple category pages, standard API endpoints, consistent UI patterns
+
+### Agent Selection Guidelines
+- **Architecture decisions**: Use Claude
+- **Continuation work**: Use Gemini when Claude tokens are limited
+- **Bulk operations**: Use Qwen3-Coder for cost-effective processing
+- **Simple queries**: Use OpenRouter for free tier models
+
+---
+
 ### **v2.3.8** - December 16, 2025
 - 🔒 **Security Hardening Deployed**: All 12 functions now have secure search_path=pg_catalog, public (verified via SQL query)
 - 🛡️ **View Security Fixed**: potential_dead_links view set to security_invoker
@@ -288,5 +316,6 @@ Last Scrape:      November 10, 2025 02:31 UTC
 ## 🔗 IMPORTANT LINKS
 - **Live Site**: https://tstr.site
 - **GitHub**: https://github.com/JAvZZe/tstr-site
+- **AI Agent Guidelines**: See `START_HERE.md` for agent selection guide
 - **Supabase**: https://supabase.com/dashboard/project/haimjeaetrsaauitrhfy
 - **OCI SSH**: `ssh -i /tmp/oci-key.pem opc@84.8.139.90`
