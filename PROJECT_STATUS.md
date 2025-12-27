@@ -1,8 +1,8 @@
 # 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2025-12-27 12:15 UTC
-> **Updated By**: opencode
+> **Last Updated**: 2025-12-27 13:44 UTC
+> **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at https://tstr.site
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -169,7 +169,12 @@ Last Scrape:      November 10, 2025 02:31 UTC
 
 ## 📊 VERSION HISTORY (LATEST)
 
-### **v2.3.19** - December 27, 2025 (CURRENT)
+### **v2.3.20** - December 27, 2025 (CURRENT)
+- 🎨 **Homepage Logo Updated**: Replaced old SVG with new narrower SVG logo in Header component
+  - Updated inline SVG with new viewBox and paths
+  - Maintained 90px height and side-by-side layout
+
+### **v2.3.19** - December 27, 2025
 - 🎨 **Homepage Logo Updated**: Replaced PNG logo with inlined SVG logo in Header component
   - Changed img src to inline SVG with 90px height
   - Maintained side-by-side layout with "TSTR hub" text
