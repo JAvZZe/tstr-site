@@ -1,0 +1,21 @@
+---
+const { title = "TSTR Hub - Specialist Testing Services, Products and Solutions Directory", description = "Find and compare verified testing laboratories and certification bodies worldwide. ISO 17025 accredited labs for materials testing, environmental analysis, biotech, hydrogen infrastructure, and more." } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+  <slot />
+</body>
+</html>
