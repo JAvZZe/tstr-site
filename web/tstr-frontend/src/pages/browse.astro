@@ -1,6 +1,6 @@
 ---
 import { supabase } from '../lib/supabase'
-import { CONTENT } from '../lib/contacts'
+import { CONTENT, CONTACTS, MAILTO_LINKS } from '../lib/contacts'
 import Footer from '../components/Footer.astro'
 import { getRedirectUrl } from '../lib/redirect'
 import BaseLayout from '../layouts/BaseLayout.astro'
@@ -777,7 +777,7 @@ const categoryDisplayName = getCategoryDisplayName(categoryParam)
           We'll find the perfect testing partner for your needs—at no cost to you.
         </p>
         <a
-          href="mailto:tstr.site1@gmail.com?subject=Request Free Concierge Search"
+          href={MAILTO_LINKS.enterprisePlan}
           id="concierge-link"
           style="
             display: inline-block;
@@ -1127,7 +1127,7 @@ const categoryDisplayName = getCategoryDisplayName(categoryParam)
           if (contextParts.length > 0) {
             subject += ' - ' + contextParts.join(', ')
           }
-          conciergeLink.href = `mailto:tstr.site1@gmail.com?subject=${encodeURIComponent(subject)}`
+          conciergeLink.href = `${MAILTO_LINKS.enterprisePlan}&body=${encodeURIComponent(subject)}`
         } else {
           lowDensityFallback.classList.add('hidden')
         }

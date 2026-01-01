@@ -1,6 +1,7 @@
 ---
 // src/pages/[category]/[region]/index.astro
 import { supabase } from '../../../lib/supabase';
+import { MAILTO_LINKS } from '../../../lib/contacts';
 import Footer from '../../../components/Footer.astro';
 import { getRedirectUrl } from '../../../lib/redirect';
 
@@ -222,7 +223,7 @@ const testingServiceName = getTestingServiceName(titleCat);
                   We'll find the perfect testing partner for your needs—at no cost to you.
                 </p>
                 <a
-                  href={`mailto:tstr.site1@gmail.com?subject=Request Free Concierge Search - ${encodeURIComponent(titleCat)} in ${encodeURIComponent(titleReg)}`}
+                  href={`${MAILTO_LINKS.enterprisePlan}&body=Concierge Search Request for ${encodeURIComponent(titleCat)} in ${encodeURIComponent(titleReg)}`}
                   class="inline-block bg-blue-600 text-white font-bold text-lg py-4 px-8 rounded-lg hover:bg-blue-700 hover:scale-105 transition-all shadow-md hover:shadow-lg"
                 >
                   Request Free Concierge Search →

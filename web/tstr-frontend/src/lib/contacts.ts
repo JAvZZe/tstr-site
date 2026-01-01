@@ -32,7 +32,7 @@
 
 export const CONTACTS = {
   // Sales inquiries (pricing plans, subscriptions)
-  sales: 'tstr.site1@gmail.com',
+  sales: 'sales@tstr.directory',
 
   // General support (account issues, technical help)
   support: 'tstr.site1@gmail.com',

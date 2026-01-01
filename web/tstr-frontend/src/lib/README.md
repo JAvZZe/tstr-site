@@ -44,7 +44,7 @@ import { CONTACTS, MAILTO_LINKS, getMailtoLink } from '../lib/contacts'
 3. ✅ **UPDATE** `contacts.ts` when changing email addresses
 4. ❌ **DON'T** create duplicate contact configs elsewhere
 
-**Current email**: All contacts route to `tstr.site1@gmail.com`
+**Current email**: Sales contacts route to `sales@tstr.directory`, all other contacts route to `tstr.site1@gmail.com`
 
 ---
 
