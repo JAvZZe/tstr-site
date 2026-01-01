@@ -12,6 +12,13 @@ import Footer from '../components/Footer.astro'
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up - TSTR Hub</title>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Sign Up - TSTR Hub",
+    "description": "Create an account on TSTR Hub to access testing services directory",
+    "url": "https://tstr.directory/signup"
+  })} />
   <style>
     * {
       margin: 0;
@@ -351,6 +358,9 @@ import Footer from '../components/Footer.astro'
       linkedinBtn.textContent = 'Connecting...'
 
       try {
+        console.log('[Auth] Initiating LinkedIn signup...');
+        console.log('[Auth] Redirect URL:', `${window.location.origin}/account`);
+
         const { data, error } = await supabaseBrowser.auth.signInWithOAuth({
           provider: 'linkedin_oidc',
           options: {

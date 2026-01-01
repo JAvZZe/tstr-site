@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-01 15:41 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-01-01 16:19 UTC
+> **Updated By**: AI Projects Space
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -207,11 +207,17 @@ Last Scrape:      November 10, 2025 02:31 UTC
   - Updated category/region pages to use sales email for concierge search
   - Updated documentation to reflect new email configuration
 
-### **v2.4.1** - January 1, 2026
+### **v2.4.2** - January 1, 2026
 - 🛠️ **JSON-LD Parsing Error Fixed**: Resolved Google Search Console error for missing '}' or object member name
   - Changed from double curly braces {{ to Astro's set:html directive with JSON.stringify() in index.astro
   - Fixes schema.org markup validation and improves SEO compliance
   - Resolves parsing error that was affecting rich results
+
+### **v2.4.1** - January 1, 2026
+- 🛠️ **JSON-LD Structured Data Added**: Implemented proper JSON-LD markup on authentication pages
+  - Added structured data to login.astro and signup.astro using set:html directive with JSON.stringify()
+  - Ensures consistent SEO compliance across all critical pages
+  - Follows same pattern as index.astro to prevent parsing errors
 
 ### **v2.4.0** - December 29, 2025
 - 💳 **PayPal Integration Complete**: Full subscription system implemented with Professional ($295/mo) and Premium ($795/mo) tiers

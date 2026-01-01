@@ -130,9 +130,9 @@ import { supabaseBrowser } from '../lib/supabase-browser'
       gap: 0.75rem;
     }
 
-    .info-icon {
-      width: 20px;
-      height: 20px;
+    .info-icon, :global(.info-icon) {
+      width: 20px !important;
+      height: 20px !important;
       color: #667eea;
       flex-shrink: 0;
     }
@@ -468,8 +468,22 @@ import { supabaseBrowser } from '../lib/supabase-browser'
 </head>
 <body>
   <header>
-    <h1>Account Dashboard</h1>
-    <p>Manage your TSTR Hub account</p>
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center;">
+        <a href="/" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+          <img src="/TSTR-Logo-60px.png" alt="TSTR Logo" style="height: 50px; width: auto; margin-right: 1.25rem; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 12px;"/>
+          <div style="text-align: left;">
+            <h1 style="font-size: 1.5rem; margin: 0; line-height: 1;">TSTR Hub</h1>
+            <p style="font-size: 0.9rem; margin: 0; opacity: 0.9;">Account Dashboard</p>
+          </div>
+        </a>
+      </div>
+      <div class="breadcrumb" style="margin: 0;">
+        <a href="/">Home</a>
+        <span>›</span>
+        <span>Account</span>
+      </div>
+    </div>
   </header>
 
   <div class="container">
@@ -600,7 +614,7 @@ import { supabaseBrowser } from '../lib/supabase-browser'
               <div class="card-content">
                 <div class="info-row">
                   <div class="info-content">
-                    <svg class="info-icon" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="info-icon" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
                       <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
                     </svg>
@@ -612,7 +626,7 @@ import { supabaseBrowser } from '../lib/supabase-browser'
                 </div>
                 <div class="info-row">
                   <div class="info-content">
-                    <svg class="info-icon" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="info-icon" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                       <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm3 1a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
                     </svg>
                     <div class="info-text">
@@ -623,7 +637,7 @@ import { supabaseBrowser } from '../lib/supabase-browser'
                 </div>
                 <div class="info-row">
                   <div class="info-content">
-                    <svg class="info-icon" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="info-icon" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                       <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
                     </svg>
                     <div class="info-text">
@@ -640,7 +654,7 @@ import { supabaseBrowser } from '../lib/supabase-browser'
               <div class="card-content">
                 <div class="info-row">
                   <div class="info-content">
-                    <svg class="info-icon" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="info-icon" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     <div class="info-text">

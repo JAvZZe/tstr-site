@@ -12,6 +12,13 @@ import Footer from '../components/Footer.astro'
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign In - TSTR Hub</title>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Sign In - TSTR Hub",
+    "description": "Sign in to your TSTR Hub account to access testing services directory",
+    "url": "https://tstr.directory/login"
+  })} />
   <style>
     * {
       margin: 0;
@@ -341,6 +348,9 @@ import Footer from '../components/Footer.astro'
       const redirectUrl = redirectTo ? redirectTo : '/account'
 
       try {
+        console.log('[Auth] Initiating LinkedIn login...');
+        console.log('[Auth] Redirect URL:', `${window.location.origin}${redirectUrl}`);
+        
         const { data, error } = await supabaseBrowser.auth.signInWithOAuth({
           provider: 'linkedin_oidc',
           options: {
