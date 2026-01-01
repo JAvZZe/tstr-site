@@ -25,7 +25,7 @@
 - Only show listings when filtered by geography/category/city
 
 **✅ IMPLEMENTED STATE:**
-- Browse page with country/city/category filters: https://tstr.site/browse
+- Browse page with country/city/category filters: https://tstr.directory/browse
 - URL parameter filtering: `/browse?country=USA`, `/browse?city=New%20York`
 - International coverage countries are now clickable links
 - Homepage shows stats/overview instead of all listings
@@ -271,7 +271,7 @@ When implementing filtered views:
 - ✅ Overview/stats display instead of all listings
 
 **Browse Page:**
-- ✅ Live at: https://tstr.site/browse
+- ✅ Live at: https://tstr.directory/browse
 - ✅ Country/city/category filtering operational
 - ✅ URL parameters: `/browse?country=USA&city=New%20York&category=Environmental`
 - ✅ Intelligent autocomplete on all filter dropdowns

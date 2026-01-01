@@ -1,4 +1,4 @@
-# 📚 TSTR.SITE - REFERENCE STATUS & HISTORY
+# 📚 TSTR.DIRECTORY - REFERENCE STATUS & HISTORY
 
 > **NOTE**: This is a static reference document. For active status, see `PROJECT_STATUS.md`.
 > **Last Archived**: December 3, 2025
@@ -33,7 +33,7 @@
 - ✅ SEO: Internal links preserve PageRank flow
 
 ### **v2.0.0** - November 10, 2025
-- ✅ Live production at https://tstr.site
+- ✅ Live production at https://tstr.directory
 - ✅ 163 verified listings (Pharmaceutical: 108, Materials: 41, Environmental: 14)
 - ✅ OCI scrapers running daily (2 AM GMT cron)
 - ✅ Cloudflare Pages deployment via GitHub Actions

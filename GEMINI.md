@@ -1,4 +1,4 @@
-# GEMINI.md - TSTR.site Project
+# GEMINI.md - TSTR.directory Project
 
 > **CRITICAL**: This project is part of the AI_PROJECTS_SPACE continuity system.
 > **Global System**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/`
@@ -50,14 +50,14 @@ cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 The mandatory global bootstrap step is documented at the top of this file. Always run the global bootstrap first.
 
 ### 2. Project-Specific Context (Optional)
-After global bootstrap, you may run project-specific bootstrap for additional TSTR.site context:
+After global bootstrap, you may run project-specific bootstrap for additional TSTR.directory context:
 
 ```bash
-./bootstrap.sh TSTR.site
+./bootstrap.sh TSTR.directory
 ```
 
 **What this adds:**
-- **TSTR.site-specific learnings** (filtered from global database)
+- **TSTR.directory-specific learnings** (filtered from global database)
 - **Project-focused context** (vs. overwhelming global context)
 - **High-confidence learnings only** (≥4 rating)
 - **Project-specific task filtering**
@@ -79,7 +79,7 @@ add_learning(
     "Your learning here",
     "gotcha",  # or "pattern", "optimization", "security"
     confidence=5,
-    tags=["TSTR.site", "relevant-tech", "specific-issue"]
+    tags=["TSTR.directory", "relevant-tech", "specific-issue"]
 )
 PYEOF
 ```
@@ -88,7 +88,7 @@ PYEOF
 ```bash
 cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state" && python3 << 'PYEOF'
 from db_utils import add_task, update_task
-task_id = add_task("TSTR.site", "Task description", assigned_to="gemini")
+task_id = add_task("TSTR.directory", "Task description", assigned_to="gemini")
 # ... do work ...
 update_task(task_id, "completed", result="Result summary")
 PYEOF
@@ -142,7 +142,7 @@ cd "/home/al/AI_PROJECTS_SPACE" && ./handoff.sh <agent> <reason>
 - Access Token: sbp_e290bc7ea1ba64ae4b0be38134b7b4a67ca24e04
 - Mode: Read-only
 
-**Website**: http://tstr.site (LIVE - 163 listings as of 2025-11-17)
+**Website**: http://tstr.directory (LIVE - 163 listings as of 2025-11-17)
 
 **Git Repo**: https://github.com/JAvZZe/tstr-site.git
 
@@ -205,7 +205,7 @@ See `TSTR.md` for:
 - `src/pages/[category]/[region]/index.astro` - Category+region listings page
 - Both use `export const prerender = true` for static generation
 
-**Deployment:** Live on https://tstr.site with Cloudflare Pages edge caching
+**Deployment:** Live on https://tstr.directory with Cloudflare Pages edge caching
 
 ### Sitemap Optimization ✅ LIVE
 **Change:** Sitemap now filters out categories with 0 active listings

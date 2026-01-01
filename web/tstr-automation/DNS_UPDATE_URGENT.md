@@ -1,28 +1,28 @@
 # DNS UPDATE GUIDE - URGENT ACTION REQUIRED
 
-## CRITICAL: Domain Currently Points to Wrong IP
+## CRITICAL: Domain DNS Configuration Needed
 
 **Current Situation:**
-- Domain: tstr.site
-- Points to: 34.55.31.102 (OLD, non-existent)
-- Should point to: 34.100.223.247 (NEW static IP)
+- Domain: tstr.directory
+- Current setup: Direct IP routing (not using Cloudflare)
+- Should be: Configured with Cloudflare nameservers for CDN and security
 
-**Impact:** Website is NOT accessible via domain name until DNS is updated.
+**Impact:** Website may not be properly routed through Cloudflare's CDN and security until DNS is updated.
 
 ---
 
-## STEP 1: Update DNS A Record (15 minutes)
+## STEP 1: Update DNS Nameservers (15 minutes)
 
 ### Find Your Domain Registrar
 
-Where did you buy tstr.site? Common registrars:
+Where did you buy tstr.directory? Common registrars:
 - GoDaddy
 - Namecheap  
 - Google Domains (now Squarespace)
 - Cloudflare
 - Name.com
 
-**Don't know?** Check your email for "tstr.site" - you'll have a registration confirmation.
+**Don't know?** Check your email for "tstr.directory" - you'll have a registration confirmation.
 
 ### Update DNS Records
 
@@ -32,30 +32,24 @@ Where did you buy tstr.site? Common registrars:
 
 2. **Navigate to DNS Settings**
    - Look for: "DNS", "DNS Management", "DNS Settings", or "Advanced DNS"
-   - Find: "Manage Domains" → Click "tstr.site" → "DNS"
+   - Find: "Manage Domains" → Click "tstr.directory" → "DNS"
 
-3. **Find the A Record**
-   - Look for a record with:
-     - Type: A
-     - Name: @ (or blank, or tstr.site)
-     - Value/Points to: 34.55.31.102 (OLD IP)
-
-4. **Update the A Record**
-   - Change: 34.55.31.102
-   - To: **34.100.223.247**
-   - TTL: 300 (5 minutes) or 3600 (1 hour)
-   - Save changes
+3. **Update Nameservers (Instead of A Record)**
+   - Find the nameserver (NS) records
+   - Replace current nameservers with Cloudflare's nameservers
+   - Cloudflare will provide the correct nameservers to use
+   - This will route traffic through Cloudflare's CDN and security
 
 ### Example Screenshots (Generic)
 
 **GoDaddy:**
-My Products → Domains → tstr.site → DNS → Edit A Record
+My Products → Domains → tstr.directory → Nameservers → Change Nameservers
 
 **Namecheap:**
-Domain List → Manage → Advanced DNS → Host Records → Edit A Record
+Domain List → Manage → Nameservers → Change Nameservers
 
 **Cloudflare:**
-Websites → tstr.site → DNS Records → Edit A Record
+Add Site → Enter tstr.directory → Follow DNS setup wizard
 
 ---
 
@@ -65,18 +59,18 @@ After updating, wait 15-30 minutes, then test:
 
 ### Option A: Online Tool
 Go to: https://www.whatsmydns.net
-- Enter: tstr.site
-- Select: A
+- Enter: tstr.directory
+- Select: NS (Nameserver)
 - Click: Search
 
-**Success = All servers show: 34.100.223.247**
+**Success = All servers show: Cloudflare nameservers (e.g., *.ns.cloudflare.com)**
 
 ### Option B: Command Line (Windows)
 ```bash
-nslookup tstr.site
+nslookup tstr.directory
 ```
 
-**Success = You see: 34.100.223.247**
+**Success = You see: Cloudflare IP addresses (e.g., 104.21.x.x, 172.67.x.x, 173.245.x.x)**
 
 ---
 
@@ -88,14 +82,14 @@ nslookup tstr.site
    - Usually under: "Email", "Email Forwarding", or "Email Settings"
 
 2. **Create New Forward**
-   - Forward from: `listing@tstr.site`
+   - Forward from: `listing@tstr.directory`
    - Forward to: `tstr.site1@gmail.com`
    - Save
 
 3. **Add More Aliases** (Optional but Recommended)
-   - `sales@tstr.site` → `tstr.site1@gmail.com`
-   - `support@tstr.site` → `tstr.site1@gmail.com`
-   - `info@tstr.site` → `tstr.site1@gmail.com`
+   - `sales@tstr.directory` → `tstr.site1@gmail.com`
+   - `support@tstr.directory` → `tstr.site1@gmail.com`
+   - `info@tstr.directory` → `tstr.site1@gmail.com`
 
 ### Example: GoDaddy Email Forwarding
 Products → Email & Office → Forwarding → Add Address → Save
@@ -107,7 +101,7 @@ Domain List → Manage → Mail Settings → Email Forwarding → Add Forwarder
 
 ## STEP 4: Configure Gmail "Send As" (10 minutes)
 
-This lets you SEND emails from listing@tstr.site
+This lets you SEND emails from listing@tstr.directory
 
 1. **Open Gmail** (tstr.site1@gmail.com)
 
@@ -120,8 +114,8 @@ This lets you SEND emails from listing@tstr.site
    - Click: "Add another email address"
 
 4. **Add Email Address**
-   - Name: "TSTR.SITE Listings"
-   - Email: listing@tstr.site
+   - Name: "TSTR.DIRECTORY Listings"
+   - Email: listing@tstr.directory
    - Uncheck: "Treat as an alias"
    - Click: "Next Step"
 
@@ -133,7 +127,7 @@ This lets you SEND emails from listing@tstr.site
    - Click: "Add Account"
 
 6. **Verify**
-   - Gmail sends verification email to listing@tstr.site
+   - Gmail sends verification email to listing@tstr.directory
    - Check tstr.site1@gmail.com inbox (forwarded)
    - Click verification link
    - Done!
@@ -154,52 +148,44 @@ If you have 2-factor authentication:
 While waiting for DNS update and email forwarding:
 
 ### Email: Use Plus Addressing
-**Instead of:** listing@tstr.site
+**Instead of:** listing@tstr.directory
 **Use:** tstr.site1+listing@gmail.com
 
 This works IMMEDIATELY and all emails arrive at tstr.site1@gmail.com
 
-### Website: Use IP Address
-**Instead of:** https://tstr.site
-**Use:** http://34.100.223.247
+### Website: Use Live URL
+**Access the site at:** https://tstr.directory
 
 ---
 
 ## ONCE DNS IS UPDATED (After 30 mins)
 
 ### Test Domain Access
-Open browser: http://tstr.site
-**Should load:** WordPress site
+Open browser: https://tstr.directory
+**Should load:** Astro frontend site
 
-### Then I'll Install SSL Certificate
+### SSL Certificate Status
 
-Once domain resolves to correct IP, message me and I'll run:
-
-```bash
-# This will be automated
-sudo certbot --apache -d tstr.site -d www.tstr.site --agree-tos --email tstr.site1@gmail.com --non-interactive
-```
-
-**Result:** 
-- https://tstr.site will work
-- Free SSL certificate (Let's Encrypt)
-- Auto-renewal every 90 days
+SSL is already configured with Cloudflare Pages:
+- https://tstr.directory works with SSL
 - Browser shows green padlock
+- Certificate managed automatically by Cloudflare
+- No manual SSL installation needed
 
 ---
 
 ## CHECKLIST
 
 - [ ] Login to domain registrar
-- [ ] Update A record: 34.55.31.102 → 34.100.223.247
-- [ ] Set up email forwarding: listing@tstr.site → tstr.site1@gmail.com
+- [ ] Update DNS to point to Cloudflare nameservers (provided by Cloudflare)
+- [ ] Set up email forwarding: listing@tstr.directory → tstr.site1@gmail.com
 - [ ] Wait 30 minutes for DNS propagation
-- [ ] Test: nslookup tstr.site (should show 34.100.223.247)
-- [ ] Test: http://tstr.site (should load WordPress)
-- [ ] Send test email to: listing@tstr.site
+- [ ] Test: nslookup tstr.directory (should show Cloudflare IPs)
+- [ ] Test: https://tstr.directory (should load Astro frontend)
+- [ ] Send test email to: listing@tstr.directory
 - [ ] Check tstr.site1@gmail.com receives it
 - [ ] Configure Gmail "Send As"
-- [ ] Notify Claude: DNS updated (so I can install SSL)
+- [ ] Verify site is working properly with new DNS settings
 
 ---
 

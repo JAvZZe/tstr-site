@@ -20,7 +20,7 @@ Created a **complete URL validation system** to prevent this in the future.
 ## 📦 Files Created (Correct Location)
 
 All files are now in the **correct project folder**:
-`C:\Users\alber\OneDrive\Documents\.WORK\TSTR.site\web\backend`
+`C:\Users\alber\OneDrive\Documents\.WORK\TSTR.directory\web\backend`
 
 ### 1. **url-validator.js**
 - Validates if URLs actually work
@@ -75,7 +75,7 @@ We tested the validator with 10 real testing companies:
 
 ```powershell
 # Navigate to your project backend folder
-cd "C:\Users\alber\OneDrive\Documents\.WORK\TSTR.site\web\backend"
+cd "C:\Users\alber\OneDrive\Documents\.WORK\TSTR.directory\web\backend"
 
 # Install dependencies (first time only)
 npm install axios
@@ -102,7 +102,7 @@ You need to replace the dummy listings with real testing services:
 ### 2. Validate All URLs
 Before adding any listings:
 ```powershell
-cd "C:\Users\alber\OneDrive\Documents\.WORK\TSTR.site\web\backend"
+cd "C:\Users\alber\OneDrive\Documents\.WORK\TSTR.directory\web\backend"
 node validate-csv.js your-listings.csv
 ```
 
@@ -122,7 +122,7 @@ node validate-csv.js your-listings.csv
 - **Don't use this folder**
 
 ### ✅ Correct Location (OneDrive)
-`C:\Users\alber\OneDrive\Documents\.WORK\TSTR.site`
+`C:\Users\alber\OneDrive\Documents\.WORK\TSTR.directory`
 - This is your real project folder
 - Has the URL validation system
 - Has your Supabase data (134 listings)
@@ -133,7 +133,7 @@ node validate-csv.js your-listings.csv
 ## 📁 File Locations Reference
 
 ```
-C:\Users\alber\OneDrive\Documents\.WORK\TSTR.site\
+C:\Users\alber\OneDrive\Documents\.WORK\TSTR.directory\
 ├── URL_VALIDATION_SETUP.md          ✅ Setup guide
 ├── SESSION_SUMMARY_2025-10-16.md    ✅ This file
 ├── handoff_core.md                  ✅ Updated with session log
@@ -197,7 +197,7 @@ C:\Users\alber\OneDrive\Documents\.WORK\TSTR.site\
 
 1. **Test the validator** (5 minutes)
    ```powershell
-   cd "C:\Users\alber\OneDrive\Documents\.WORK\TSTR.site\web\backend"
+   cd "C:\Users\alber\OneDrive\Documents\.WORK\TSTR.directory\web\backend"
    npm install axios
    node validate-csv.js sample-urls-to-validate.csv
    ```

@@ -1,4 +1,4 @@
-# TSTR.site LinkedIn OAuth & Rights Management Implementation - ✅ COMPLETE
+# TSTR.directory LinkedIn OAuth & Rights Management Implementation - ✅ COMPLETE
 
 **Created:** 2025-11-30
 **Agent:** OpenCode AI Assistant
@@ -458,7 +458,7 @@ export async function POST({ request }) {
 ## 🎯 Current Live Features
 
 ### ✅ **Authentication System**
-- **LinkedIn OAuth**: Live on login/signup pages (https://tstr.site/login, https://tstr.site/signup)
+- **LinkedIn OAuth**: Live on login/signup pages (https://tstr.directory/login, https://tstr.directory/signup)
 - **Professional Profiles**: LinkedIn data integration for enhanced user profiles
 - **Email/Password Fallback**: Traditional auth still available
 
@@ -469,7 +469,7 @@ export async function POST({ request }) {
 - **Owner Dashboard**: "My Listings" section in account dashboard
 
 ### ✅ **Account Management**
-- **Account Dashboard**: https://tstr.site/account with full profile management
+- **Account Dashboard**: https://tstr.directory/account with full profile management
 - **Subscription Management**: `/account/subscription` page created
 - **Owner Features**: Full contact info access for verified listing owners
 - **Status Indicators**: Owner badges and verification status on listings

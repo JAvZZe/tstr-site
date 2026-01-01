@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase';
 export const prerender = true;
 
 export const GET: APIRoute = async () => {
-  const baseUrl = 'https://tstr.site';
+  const baseUrl = 'https://tstr.directory';
   const currentDate = new Date().toISOString().split('T')[0];
 
   // Static pages

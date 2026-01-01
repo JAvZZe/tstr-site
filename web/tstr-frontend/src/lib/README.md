@@ -1,6 +1,6 @@
 # Frontend Library Utilities
 
-This directory contains shared utilities and configurations for the TSTR.site frontend.
+This directory contains shared utilities and configurations for the TSTR.directory frontend.
 
 ## Files
 

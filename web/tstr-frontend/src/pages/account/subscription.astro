@@ -522,9 +522,10 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
               <ul class="upgrade-benefits">
                 ${additionalBenefits.map(benefit => `<li>${benefit}</li>`).join('')}
               </ul>
-              <a href="${tier === 'enterprise' ? '${MAILTO_LINKS.enterprisePlan}' : '${MAILTO_LINKS.professionalPlan}'}" class="upgrade-btn">
-                Contact Sales
-              </a>
+              ${tier === 'enterprise' ?
+                `<a href="${MAILTO_LINKS.enterprisePlan}" class="upgrade-btn">Contact Sales</a>` :
+                `<button class="upgrade-btn" onclick="handlePayPalSubscribe('${tier}', this)">Subscribe Now</button>`
+              }
             </div>
           `
         }).join('')
@@ -595,6 +596,38 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
 
     // Load immediately
     loadSubscriptionPage()
+
+    async function handlePayPalSubscribe(tier, button) {
+      const originalText = button.textContent;
+      button.textContent = 'Processing...';
+      button.disabled = true;
+
+      try {
+        // Call Edge Function to create subscription
+        const { data, error } = await supabaseBrowser.functions.invoke('paypal-create-subscription', {
+          body: {
+            tier,
+            return_url: window.location.origin + '/checkout/success',
+            cancel_url: window.location.origin + '/checkout/cancel'
+          }
+        });
+
+        if (error) throw error;
+
+        // Redirect to PayPal
+        if (data.approval_url) {
+          window.location.href = data.approval_url;
+        } else {
+          throw new Error('No approval URL returned');
+        }
+
+      } catch (error) {
+        console.error('Subscription error:', error);
+        alert('Failed to start checkout. Please try again or contact support.');
+        button.textContent = originalText;
+        button.disabled = false;
+      }
+    }
   </script>
 </body>
 </html>

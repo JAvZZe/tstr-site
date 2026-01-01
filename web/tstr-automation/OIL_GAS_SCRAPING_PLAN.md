@@ -334,7 +334,7 @@ Category: Oil & Gas Testing
 ### Short-term (Next 2 Weeks):
 5. Run full scrape (170 labs across 15 pages)
 6. Load data into Supabase
-7. Deploy Oil & Gas category to TSTR.site
+7. Deploy Oil & Gas category to TSTR.directory
 8. Validate on production
 
 ### Long-term (Month 2):

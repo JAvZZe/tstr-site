@@ -1,4 +1,4 @@
-# OPENHANDS.md - TSTR.site Project
+# OPENHANDS.md - TSTR.directory Project
 
 > **CRITICAL**: This project is part of the AI_PROJECTS_SPACE continuity system.
 > **Global System**: `/media/al/AI_PROJECTS_SPACE/`
@@ -36,16 +36,16 @@ cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 
 **After global bootstrap, use project bootstrap**:
 ```bash
-./bootstrap.sh TSTR.site
+./bootstrap.sh TSTR.directory
 ```
 
 **Why bootstrap > resume**:
-- Loads TSTR.site-specific learnings only (manageable vs. overwhelming)
+- Loads TSTR.directory-specific learnings only (manageable vs. overwhelming)
 - Filters by project name in tags AND content
 - High confidence learnings only (≥4)
 - Project-specific context and pending tasks
 
-**Symlinks available**: In this folder, just run `./bootstrap.sh TSTR.site`
+**Symlinks available**: In this folder, just run `./bootstrap.sh TSTR.directory`
 
 ### 2. During Work
 
@@ -62,7 +62,7 @@ add_learning(
     "Your learning here",
     "gotcha",  # or "pattern", "optimization", "security"
     confidence=5,
-    tags=["TSTR.site", "relevant-tech", "specific-issue"]
+    tags=["TSTR.directory", "relevant-tech", "specific-issue"]
 )
 PYEOF
 ```
@@ -71,7 +71,7 @@ PYEOF
 ```bash
 cd "/media/al/AI_PROJECTS_SPACE/SYSTEM/state" && python3 << 'PYEOF'
 from db_utils import add_task, update_task
-task_id = add_task("TSTR.site", "Task description", assigned_to="openhands")
+task_id = add_task("TSTR.directory", "Task description", assigned_to="openhands")
 # ... do work ...
 update_task(task_id, "completed", result="Result summary")
 PYEOF
@@ -113,13 +113,13 @@ cd "/media/al/AI_PROJECTS_SPACE" && ./handoff.sh <agent> <reason>
 
 ---
 
-## TSTR.site Overview
+## TSTR.directory Overview
 
 **Business Model**: B2B directory + lead generation for testing laboratories in specialized, high-margin industries.
 
 **Tech Stack**: Custom site (not WordPress) - Astro + React + Google Cloud Functions + Supabase
 
-**Current Status**: Production - 163 listings deployed, scrapers active on OCI, frontend LIVE at https://tstr.site
+**Current Status**: Production - 163 listings deployed, scrapers active on OCI, frontend LIVE at https://tstr.directory
 
 **Strategic Focus**: Hydrogen Infrastructure Testing + Biotech/Pharma/Life Sciences
 
@@ -199,7 +199,7 @@ cat PROJECT_STATUS.md
 **Scrapers**: `web/tstr-automation/` (Python, OCI deployment)
 **Database**: Supabase (https://haimjeaetrsaauitrhfy.supabase.co)
 
-**Website**: http://tstr.site (LIVE - 163 listings as of 2025-11-17)
+**Website**: http://tstr.directory (LIVE - 163 listings as of 2025-11-17)
 
 **Git Repo**: https://github.com/JAvZZe/tstr-site.git
 
@@ -284,7 +284,7 @@ git push origin main  # Triggers Cloudflare Pages deployment
 
 ## Why This Matters
 
-**Business Impact**: TSTR.site generates leads for testing laboratories. Downtime or bugs = lost revenue.
+**Business Impact**: TSTR.directory generates leads for testing laboratories. Downtime or bugs = lost revenue.
 
 **Free Tier Constraints**: $1.04/month budget. Exceeding limits = project failure.
 

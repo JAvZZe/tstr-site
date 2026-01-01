@@ -95,7 +95,7 @@ Both scrapers now generate:
 ### Run Primary Scraper (Dual Purpose)
 
 ```bash
-cd "C:\Users\alber\OneDrive\Documents\.WORK\TSTR.site\web\tstr-automation"
+cd "C:\Users\alber\OneDrive\Documents\.WORK\TSTR.directory\web\tstr-automation"
 python dual_scraper.py
 ```
 

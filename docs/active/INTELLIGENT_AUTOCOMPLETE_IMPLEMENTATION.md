@@ -6,7 +6,7 @@
 
 ## Summary
 
-Successfully implemented intelligent autocomplete dropdowns with fuzzy search for the TSTR.site browse page, replacing native `<select>` elements with modern, accessible, and performant custom components.
+Successfully implemented intelligent autocomplete dropdowns with fuzzy search for the TSTR.directory browse page, replacing native `<select>` elements with modern, accessible, and performant custom components.
 
 ## Features Implemented
 
@@ -200,7 +200,7 @@ The implementation integrates with existing analytics system:
 
 ## Conclusion
 
-The intelligent autocomplete implementation successfully modernizes the TSTR.site search experience while maintaining backward compatibility and accessibility. The feature is production-ready and provides immediate user value through faster, more intuitive filtering.
+The intelligent autocomplete implementation successfully modernizes the TSTR.directory search experience while maintaining backward compatibility and accessibility. The feature is production-ready and provides immediate user value through faster, more intuitive filtering.
 
 **Status**: ✅ LIVE and SUCCESSFUL
 **Next Steps**: Monitor analytics for usage patterns and user feedback

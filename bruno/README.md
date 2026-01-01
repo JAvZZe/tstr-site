@@ -1,4 +1,4 @@
-# TSTR.site Bruno API Collection
+# TSTR.directory Bruno API Collection
 
 > **Status**: Active - Bruno MCP installed for agent integration
 > **Last Updated**: 2025-11-20
@@ -249,7 +249,7 @@ droid mcp add bruno "npx -y @hungthai1401/bruno-mcp"
 ## Related Documentation
 
 - **Skills Guide**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/skills/bruno-api-management.md`
-- **TSTR.site Main**: `../TSTR.md`
+- **TSTR.directory Main**: `../TSTR.md`
 - **Project Status**: `../PROJECT_STATUS.md`
 - **Bruno Docs**: https://docs.usebruno.com/
 - **Bruno MCP**: https://github.com/hungthai1401/bruno-mcp

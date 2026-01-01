@@ -1,6 +1,6 @@
-# TSTR.md - AI Agent Context for TSTR.site Project
+# TSTR.md - AI Agent Context for TSTR.directory Project
 
-> **Purpose**: Instructions for AI agents (Claude, Gemini, etc.) working on TSTR.site
+> **Purpose**: Instructions for AI agents (Claude, Gemini, etc.) working on TSTR.directory
 > **Last Updated**: 2025-11-09
 > **Read This**: Every new session, before making changes
 
@@ -8,11 +8,11 @@
 
 ## Project Overview
 
-**TSTR.site** - Global niche directory for Testing Services & Products serving specialized, high-margin industries (Oil & Gas, Environmental, Materials Testing, Pharmaceuticals, etc.).
+**TSTR.directory** - Global niche directory for Testing Services & Products serving specialized, high-margin industries (Oil & Gas, Environmental, Materials Testing, Pharmaceuticals, etc.).
 
 **Business Model**: B2B directory + lead generation for testing laboratories seeking clients in specialized sectors.
 
-**Status**: Production - 163 listings deployed, scrapers active on OCI, frontend LIVE at https://tstr.site
+**Status**: Production - 163 listings deployed, scrapers active on OCI, frontend LIVE at https://tstr.directory
 
 **Strategic Focus (Q4 2025 - Q1 2026)**: Hydrogen Infrastructure Testing + Biotech/Pharma/Life Sciences
 - See `ORGANIZATION_UPDATE_2025-11-22.md` for niche directory structure
@@ -40,7 +40,7 @@ cat PROJECT_STATUS.md
    - Infrastructure modifications
    - Content updates
    - Link changes
-   - Any successful change affecting tstr.site
+   - Any successful change affecting tstr.directory
 
 ### **Protocol Requirements**:
 - ✅ **ALWAYS** update PROJECT_STATUS.md after successful changes
@@ -49,7 +49,7 @@ cat PROJECT_STATUS.md
 - ✅ **VERSION BUMP** - Increment version number for each update
 - ✅ **TIMESTAMP** - Include date/time and agent attribution
 
-**This is the SINGLE SOURCE OF TRUTH for tstr.site's current state, structure, and change history.**
+**This is the SINGLE SOURCE OF TRUTH for tstr.directory's current state, structure, and change history.**
 
 ---
 
@@ -403,7 +403,7 @@ When starting a new session:
 ## References
 
 - **GitHub Repo**: https://github.com/JAvZZe/tstr-site.git
-- **Live Site**: https://tstr.site (when deployed)
+- **Live Site**: https://tstr.directory (when deployed)
 - **Supabase Dashboard**: https://supabase.com/dashboard/project/haimjeaetrsaauitrhfy
 - **Cloudflare Pages**: (To be configured)
 - **Technical Docs**: See `docs/` folder

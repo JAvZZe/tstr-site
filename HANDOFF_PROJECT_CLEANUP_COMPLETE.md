@@ -20,7 +20,7 @@
 - ✅ **Monitoring:** Complete scraper ecosystem visibility
 
 **Live Features:**
-- Dashboard: https://tstr.site/admin/dashboard
+- Dashboard: https://tstr.directory/admin/dashboard
 - OCI Scrapers: Daily automated (2 AM GMT)
 - Local Scrapers: Weekly automated (systemd timer)
 - Source Tracking: Every listing shows origin script

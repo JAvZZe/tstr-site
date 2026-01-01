@@ -10,7 +10,7 @@
 
 ### 1. AdSense Application Submitted
 - ✅ Account: tstr.site1@gmail.com (or user's actual account)
-- ✅ Site: https://tstr.site
+- ✅ Site: https://tstr.directory
 - ✅ Verification code deployed: ca-pub-7003918988204966
 - ✅ Privacy Policy live at: /privacy
 
@@ -129,7 +129,7 @@ Check: tstr.site1@gmail.com inbox
    - Minimum payout: $100
 
 4. **Test the Site**
-   - Visit https://tstr.site
+   - Visit https://tstr.directory
    - Should see ads within 1-2 hours of enabling
    - May not show on first visit (cookie-based)
    - Try incognito mode or different browser
@@ -178,9 +178,9 @@ If rejected due to "new domain":
 ## Current Site Status
 
 **Live URLs:**
-- Homepage: https://tstr.site (127 listings)
-- Submit form: https://tstr.site/submit (functional)
-- Privacy policy: https://tstr.site/privacy (GDPR compliant)
+- Homepage: https://tstr.directory (127 listings)
+- Submit form: https://tstr.directory/submit (functional)
+- Privacy policy: https://tstr.directory/privacy (GDPR compliant)
 
 **Backend:**
 - Database: Supabase (127 active listings)

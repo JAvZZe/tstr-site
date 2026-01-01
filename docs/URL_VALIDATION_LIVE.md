@@ -37,7 +37,7 @@ Both production scrapers now automatically validate URLs:
 
 ### Run Primary Scraper (Directory + Leads)
 ```bash
-cd "C:\Users\alber\OneDrive\Documents\.WORK\TSTR.site\web\tstr-automation"
+cd "C:\Users\alber\OneDrive\Documents\.WORK\TSTR.directory\web\tstr-automation"
 python dual_scraper.py
 ```
 

@@ -1,4 +1,4 @@
-# 🤖 AGENT STATE & AUTHORITY - TSTR.site Project
+# 🤖 AGENT STATE & AUTHORITY - TSTR.directory Project
 
 **Last Updated**: October 16, 2025 17:30 UTC  
 **Updated By**: Claude Sonnet 4.5 (via MCP Desktop Commander)
@@ -7,7 +7,7 @@
 
 ## 🎯 PROJECT OVERVIEW
 
-**Project**: TSTR.site - Testing Laboratory Directory  
+**Project**: TSTR.directory - Testing Laboratory Directory
 **Stack**: Astro + React + Tailwind + Supabase + Google Cloud Functions  
 **Status**: PRODUCTION - Automated scrapers live, frontend deployment in progress
 
@@ -17,7 +17,7 @@
 
 ### **Root Directory**
 ```
-C:\Users\alber\OneDrive\Documents\.WORK\TSTR.site
+C:\Users\alber\OneDrive\Documents\.WORK\TSTR.directory
 ```
 
 ### **Environment Files**
@@ -197,7 +197,7 @@ Fresh data live on website
 
 ### **1. Commit Git Changes** (2 mins)
 ```powershell
-cd C:\Users\alber\OneDrive\Documents\.WORK\TSTR.site
+cd C:\Users\alber\OneDrive\Documents\.WORK\TSTR.directory
 git add .
 git commit -m "Complete automation: GCP scrapers, URL validation, Astro frontend"
 git push origin main

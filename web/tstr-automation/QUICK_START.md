@@ -1,4 +1,4 @@
-# 🎯 TSTR.SITE - QUICK START GUIDE
+# 🎯 TSTR.DIRECTORY - QUICK START GUIDE
 ## Your Path to First £100 in 7 Days
 
 ---
@@ -42,7 +42,7 @@ Subject: [Company Name] - Featured in New Testing Labs Directory
 
 Hi [Name],
 
-I'm launching TSTR.site - a specialist directory for high-value testing laboratories (oil & gas, pharma, biotech).
+I'm launching TSTR.directory - a specialist directory for high-value testing laboratories (oil & gas, pharma, biotech).
 
 I noticed [Company Name] specialises in [specific service] and you'd be perfect for our launch Featured section.
 

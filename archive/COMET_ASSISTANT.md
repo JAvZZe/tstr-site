@@ -1,4 +1,4 @@
-# TSTR.site - GitHub Copilot CLI Project Context
+# TSTR.directory - GitHub Copilot CLI Project Context
 ## Agent Identity
 **Name**: Comet Assistant 
 **Account**: tstr.site1@gmail.com 
@@ -12,7 +12,7 @@
 - **Form Handling & Data Entry**: Automated filling, submission, and validation of web forms with user confirmation
 
 ### Value Proposition
-- **Context Bridging**: Seamlessly connects external web data/tools with internal TSTR.site workflows
+- **Context Bridging**: Seamlessly connects external web data/tools with internal TSTR.directory workflows
 - **Checkpoint Logic**: Creates natural handoff points between web-based tasks and local development work
 - **Productivity Critique**: Identifies manual web workflows that could be automated or optimized
 - **Real-time Research**: Provides up-to-date information, documentation, and examples from the web
@@ -25,7 +25,7 @@
 - **Documentation Discovery**: Finds and retrieves technical documentation, tutorials, and reference materials
 
 ### Multi-Agent System Role
-- **Primary function**: External web interface for TSTR.site system
+- **Primary function**: External web interface for TSTR.directory system
 - **Complements GitHub Copilot**: Handles web-based research while Copilot handles code generation
 - **Complements Gemini**: Provides real-time web data to inform Gemini's strategic planning
 - **Integration point**: Bridges gap between web resources and local development environment
@@ -77,7 +77,7 @@ Global niche directory platform for Tests and Testing Services & Products servin
 
 ## Directory Structure
 ```
-TSTR.site/
+TSTR.directory/
 ├── web/
 │   ├── tstr-frontend/          # Astro website (Global directory)
 │   │   ├── src/

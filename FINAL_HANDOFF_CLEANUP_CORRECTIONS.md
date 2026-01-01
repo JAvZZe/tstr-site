@@ -16,7 +16,7 @@
 - **Scraper Updates:** Modified scrapers to populate metadata
 - **Dashboard Integration:** Real-time source statistics and monitoring
 - **Automation:** Local scraper systemd timer configured
-- **Production Status:** Live at https://tstr.site/admin/dashboard
+- **Production Status:** Live at https://tstr.directory/admin/dashboard
 
 #### 2. ✅ Project Structure Cleanup (CORRECTED)
 - **Initial Cleanup:** 110+ files archived, root cleaned from 50+ to 10 files

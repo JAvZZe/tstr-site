@@ -10,7 +10,7 @@
 **Platform**: [e.g., Gemini CLI, Claude Code CLI, Perplexity Browser]  
 **Account**: [e.g., gemini-albert-tstr, claude-avztest8]  
 **User**: alber  
-**Project**: TSTR.site  
+**Project**: TSTR.directory
 **Session Started**: [YYYY-MM-DD HH:MM UTC]
 
 ---

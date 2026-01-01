@@ -1,4 +1,4 @@
-# TSTR.SITE Automation Setup Guide
+# TSTR.DIRECTORY Automation Setup Guide
 
 ## Quick Start (5 minutes)
 

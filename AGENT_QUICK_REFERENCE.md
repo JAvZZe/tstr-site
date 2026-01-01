@@ -19,7 +19,7 @@ cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 ```bash
 # 1. Global bootstrap (above - required)
 # 2. Project bootstrap
-./bootstrap.sh TSTR.site
+./bootstrap.sh TSTR.directory
 
 # 3. Read current state
 PROJECT_STATUS.md
@@ -163,7 +163,7 @@ gcloud scheduler jobs run tstr-primary-scraper --location=us-central1
 ```
 High Priority:
 - [ ] Deploy Astro website to Netlify
-- [ ] Connect domain (tstr.site)
+- [ ] Connect domain (tstr.directory)
 - [ ] Test first automated scrape
 
 Medium Priority:

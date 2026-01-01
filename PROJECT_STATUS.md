@@ -1,15 +1,36 @@
-# 📊 TSTR.SITE - CENTRALIZED PROJECT STATUS
+# 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2025-12-27 13:44 UTC
-> **Updated By**: JAvZZe
-> **Status**: ✅ PRODUCTION - Live at https://tstr.site
+> **Last Updated**: 2026-01-01 12:30 UTC
+> **Updated By**: Gemini (Antigravity)
+> **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
 ---
 
+## 💳 PAYMENT SYSTEM STATUS (CRITICAL PATH TO REVENUE)
+
+### Current State
+- ✅ **PayPal code COMPLETE** (v2.4.0) - Edge Functions, frontend, database migration written
+- ⏳ **NOT YET DEPLOYED** - Pending PayPal Dashboard setup + deployment
+- 📊 **Alternative evaluated**: Upmind.com (decision: use later at scale)
+
+### To Go Live (Estimated: 30 min - 1 hour)
+1. [ ] Create PayPal subscription plans in Dashboard ($295/mo, $795/mo)
+2. [ ] Configure webhook URL: `https://haimjeaetrsaauitrhfy.supabase.co/functions/v1/paypal-webhook`
+3. [ ] Deploy: `supabase db push` + `supabase functions deploy`
+4. [ ] Set secrets with Plan IDs and Webhook ID
+5. [ ] Test end-to-end in sandbox mode
+
+### Reference Documents
+- `HANDOFF_PAYPAL_INTEGRATION_COMPLETE.md` - Full deployment checklist
+- `PAYMENT_PLATFORM_ANALYSIS.md` - PayPal vs Upmind comparison
+- `QWEN3_PAYPAL_INSTRUCTIONS.md` - Complete implementation guide
+
+---
+
 ## 🎯 PROJECT OVERVIEW
-**Name**: TSTR.SITE
+**Name**: TSTR.DIRECTORY
 **Type**: Testers & Testing Services Directory Platform
 **Stack**: Astro 5.14.4 + React 18.3.1 + Supabase + Python Scrapers
 **Deployment**: OCI (Scrapers) + Cloudflare Pages (Frontend)
@@ -87,7 +108,7 @@ Last Scrape:      November 10, 2025 02:31 UTC
 ## 🛠️ DEPLOYED INFRASTRUCTURE
 
 ### **Dashboard Enhancements**
-- **Scraper Monitoring**: https://tstr.site/admin/dashboard (Real-time status)
+- **Scraper Monitoring**: https://tstr.directory/admin/dashboard (Real-time status)
 - **Project Organization**: ✅ CLEAN (Archive cleanup complete)
 
 ### **Oracle Cloud Infrastructure (OCI)**
@@ -103,7 +124,7 @@ Last Scrape:      November 10, 2025 02:31 UTC
 - **Status**: ✅ OPERATIONAL
 
 ### **Frontend (Cloudflare Pages)**
-- **URL**: https://tstr.site
+- **URL**: https://tstr.directory
 - **Stack**: Astro 5.16.6 + React 18.3.1 + Tailwind CSS
 - **Features**: Category filters, Click tracking, Admin dashboard, LinkedIn OAuth
 - **Status**: ✅ LIVE (Upgraded to latest secure versions)
@@ -116,6 +137,7 @@ Last Scrape:      November 10, 2025 02:31 UTC
 - [x] **Claim Button Visibility Enhancement**: Make claim buttons visible to all users on unclaimed listings (Lead Magnet Strategy) ✅ COMPLETED
 - [x] **OCI SSH Access Fix**: Located correct SSH key path and verified scraper functionality ✅ COMPLETED
 - [x] **Environmental Testing Expansion**: ✅ COMPLETED - Expanded to 200+ listings across 5 subcategories (Air Quality, Water Quality, Soil Testing, Noise/Vibration, ESG/Sustainability). Subcategory pages live, scraper operational with API key resolved.
+- [x] **PayPal Integration**: ✅ COMPLETED - Full PayPal subscription system implemented with Professional ($295/mo) and Premium ($795/mo) tiers, including database schema, Edge Functions, and frontend integration
 - [ ] **Oil & Gas Scraper**: Deploy locally (Already local)
 
 ### **Medium Priority**
@@ -149,6 +171,7 @@ Last Scrape:      November 10, 2025 02:31 UTC
 - [x] Domain Verification Logic & Claim API
 - [x] Account Dashboard & Owner Dashboard
 - [x] **Subscription Management**: `/account/subscription` created
+- [x] **Payment Integration**: PayPal subscription system implemented
 
 ---
 
@@ -159,6 +182,7 @@ Last Scrape:      November 10, 2025 02:31 UTC
 2. **Invalid URLs**: 17 URLs failed validation. Action: Manual research.
 3. **Custom Fields**: Missing specialized data. Fix: Enhance extraction logic.
 4. **Submit Page**: ✅ FIXED - Replaced Footer component import with inline HTML. Prerenders successfully now.
+5. **Claim Form Email Functionality**: Save Draft and Verify/Claim features do not send emails as expected. Users see success messages but receive no emails. See `CLAIM_FORM_EMAIL_ISSUES.md` for complete analysis and implementation requirements.
 
 ### **Security & Database Fixes** ✅ COMPLETE
 1. **RLS Policy Fixes**: ✅ Successfully corrected column name issues in Row Level Security policies
@@ -169,7 +193,17 @@ Last Scrape:      November 10, 2025 02:31 UTC
 
 ## 📊 VERSION HISTORY (LATEST)
 
-### **v2.3.20** - December 27, 2025 (CURRENT)
+### **v2.4.0** - December 29, 2025 (CURRENT)
+- 💳 **PayPal Integration Complete**: Full subscription system implemented with Professional ($295/mo) and Premium ($795/mo) tiers
+  - Created database migration for payment tracking fields and history table
+  - Implemented Supabase Edge Functions: paypal-create-subscription, paypal-webhook, paypal-cancel-subscription
+  - Added checkout success and cancel pages with professional UI
+  - Updated pricing page with PayPal subscription buttons
+  - Enhanced account/subscription page with PayPal functionality
+  - Configured PayPal sandbox credentials in environment
+  - Implemented secure payment flow with proper authentication and RLS policies
+
+### **v2.3.20** - December 27, 2025
 - 🎨 **Homepage Logo Updated**: Replaced old SVG with new narrower SVG logo in Header component
   - Updated inline SVG with new viewBox and paths
   - Maintained 90px height and side-by-side layout
@@ -332,7 +366,7 @@ Last Scrape:      November 10, 2025 02:31 UTC
 ---
 
 ## 🔗 IMPORTANT LINKS
-- **Live Site**: https://tstr.site
+- **Live Site**: https://tstr.directory
 - **GitHub**: https://github.com/JAvZZe/tstr-site
 - **AI Agent Guidelines**: See `START_HERE.md` for agent selection guide
 - **Supabase**: https://supabase.com/dashboard/project/haimjeaetrsaauitrhfy

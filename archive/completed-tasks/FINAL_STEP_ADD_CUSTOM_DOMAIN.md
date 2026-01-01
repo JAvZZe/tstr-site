@@ -2,7 +2,7 @@
 
 **Status**: ✅ NEW SITE CONFIRMED WORKING  
 **Deployed at**: https://66e76ed2.tstr-site.pages.dev  
-**Issue**: tstr.site not configured as custom domain  
+**Issue**: tstr.directory not configured as custom domain  
 **Time to Fix**: 5 minutes + DNS propagation (5-30 min)
 
 ---
@@ -29,7 +29,7 @@ Shows: NEW Astro site with categories and modern design
 
 3. **Enter domain name**:
    ```
-   tstr.site
+   tstr.directory
    ```
 
 4. **Click "Continue"** or "Activate domain"
@@ -89,7 +89,7 @@ Proxy: ON (orange cloud)
 ipconfig /flushdns
 
 # Check DNS resolution
-nslookup tstr.site
+nslookup tstr.directory
 
 # Expected result:
 # Address: 104.21.x.x or 172.67.x.x (Cloudflare IPs)
@@ -98,7 +98,7 @@ nslookup tstr.site
 
 ### Check Global Propagation
 
-Visit: https://www.whatsmydns.net/#A/tstr.site
+Visit: https://www.whatsmydns.net/#A/tstr.directory
 
 Should show Cloudflare IPs worldwide (takes 5-60 minutes)
 
@@ -106,7 +106,7 @@ Should show Cloudflare IPs worldwide (takes 5-60 minutes)
 
 ```powershell
 # Clear browser cache or use incognito
-Start-Process "https://tstr.site"
+Start-Process "https://tstr.directory"
 
 # Expected result:
 # NEW Astro site (same as 66e76ed2.tstr-site.pages.dev)
@@ -161,7 +161,7 @@ Start-Process "https://tstr.site"
 1. Clear browser cache (Ctrl+Shift+Del)
 2. Use incognito/private window
 3. Clear DNS cache: `ipconfig /flushdns`
-4. Check DNS: `nslookup tstr.site`
+4. Check DNS: `nslookup tstr.directory`
 5. If still shows 34.100.x.x → Wait longer for propagation
 6. If shows 104.21.x.x → Browser cache issue, clear it
 
@@ -174,7 +174,7 @@ After adding custom domain:
 - [ ] Custom domain shows "Active" status in Cloudflare Pages
 - [ ] SSL certificate shows "Active"
 - [ ] DNS check shows Cloudflare IPs (104.21.x.x or 172.67.x.x)
-- [ ] Visit https://tstr.site shows NEW Astro site
+- [ ] Visit https://tstr.directory shows NEW Astro site
 - [ ] HTTPS works without warnings (padlock icon)
 - [ ] www.tstr.site also works (optional, add as separate custom domain)
 
@@ -242,12 +242,12 @@ After adding the custom domain, please share:
    
 2. **DNS check result**:
    ```powershell
-   nslookup tstr.site
+   nslookup tstr.directory
    ```
    - What IP addresses does it show?
 
 3. **Browser test**:
-   - Visit https://tstr.site (in incognito)
+   - Visit https://tstr.directory (in incognito)
    - Still WordPress or NEW Astro site?
 
 4. **Any errors or issues**?
@@ -268,13 +268,13 @@ After adding the custom domain, please share:
 ipconfig /flushdns
 
 # Check DNS
-nslookup tstr.site
+nslookup tstr.directory
 
 # Check global propagation
-Start-Process "https://www.whatsmydns.net/#A/tstr.site"
+Start-Process "https://www.whatsmydns.net/#A/tstr.directory"
 
 # Test site (incognito)
-Start-Process chrome.exe -ArgumentList "--incognito https://tstr.site"
+Start-Process chrome.exe -ArgumentList "--incognito https://tstr.directory"
 
 # Open Cloudflare Pages dashboard
 Start-Process "https://dash.cloudflare.com/93bc6b669b15a454adcba195b9209296/pages/view/tstr-site"

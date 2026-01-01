@@ -1,7 +1,7 @@
-# TSTR.site - Global Testing Laboratory Directory
+# TSTR.directory - Global Testing Laboratory Directory
 
-**Status**: 🟡 Site Live, API Configuration Needed  
-**URL**: https://tstr.site  
+**Status**: 🟡 Site Live, API Configuration Needed
+**URL**: https://tstr.directory
 **Repository**: https://github.com/JAvZZe/tstr-site.git  
 **Last Updated**: 2025-10-15 17:00 UTC
 
@@ -81,7 +81,7 @@ web/
 
 ## ✅ What's Working
 
-1. **Site Live**: https://tstr.site (DNS, SSL, CDN)
+1. **Site Live**: https://tstr.directory (DNS, SSL, CDN)
 2. **GitHub**: Push/pull working, auto-deploy configured
 3. **Database**: Schema created, 20 listings imported
 4. **Python**: All dependencies installed
@@ -208,7 +208,7 @@ git push origin main            # Push (triggers auto-deploy)
 ## 📁 Folder Structure
 
 ```
-TSTR.site/
+TSTR.directory/
 ├── web/
 │   ├── tstr-frontend/          # Astro frontend
 │   │   ├── src/                # Source code

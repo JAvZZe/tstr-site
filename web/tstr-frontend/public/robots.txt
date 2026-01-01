@@ -2,5 +2,23 @@ User-agent: *
 Allow: /
 Disallow: /account
 Disallow: /api/
+# Disallow WordPress/ListingPro legacy pages that are no longer relevant
+Disallow: /contact-us/
+Disallow: /grid/
+Disallow: /labels/
+Disallow: /carousel/
+Disallow: /the-beginning-of-something-new-welcome-to-my-blog/
+Disallow: /features/
+Disallow: /locations/
+Disallow: /listings/sample-
+Disallow: /listings/jim-rohn
+Disallow: /tags/
+Disallow: /customized-archive/
+Disallow: /category/
+Disallow: /label-shortcode/
+Disallow: /categories/
+Disallow: /all-listings-in-side-by-side-skin-
+Disallow: /2025/
+Disallow: /feed/
 
-Sitemap: https://tstr.site/sitemap.xml
+Sitemap: https://tstr.directory/sitemap.xml

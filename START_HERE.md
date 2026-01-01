@@ -1,7 +1,7 @@
-# START HERE - TSTR.site Project
+# START HERE - TSTR.directory Project
 
 **Project**: Global testing laboratory directory (Oil & Gas, Environmental, Materials Testing, etc.)
-**Status**: Production - scrapers on OCI, frontend LIVE at https://tstr.site
+**Status**: Production - scrapers on OCI, frontend LIVE at https://tstr.directory
 **Location**: `/home/al/tstr-site-working`
 
 ---
@@ -32,11 +32,11 @@ cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 **Run this SECOND** (after global bootstrap):
 
 ```bash
-./bootstrap.sh TSTR.site
+./bootstrap.sh TSTR.directory
 ```
 
 **What this does**:
-- ✅ Loads project-specific learnings from database (filtered for TSTR.site)
+- ✅ Loads project-specific learnings from database (filtered for TSTR.directory)
 - ✅ Shows pending tasks (for this project only)
 - ✅ Displays recent session context
 - ✅ Checks for handoffs
@@ -122,7 +122,7 @@ python3 db_utils.py learning-add \
   "What you learned" \
   "gotcha" \
   5 \
-  "TSTR.site,relevant-tags"
+  "TSTR.directory,relevant-tags"
 ```
 
 ### End of Session
@@ -148,7 +148,7 @@ python3 db_utils.py learning-add \
 ## Tools Available From This Folder
 
 Because of symlinks, you can run:
-- `./bootstrap.sh TSTR.site` - Load project context
+- `./bootstrap.sh TSTR.directory` - Load project context
 - `./checkpoint.sh "msg"` - Save state
 - `./resume.sh` - Load last checkpoint
 - `./handoff.sh agent reason` - Transfer to another agent

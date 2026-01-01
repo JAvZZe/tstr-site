@@ -184,7 +184,7 @@ Currently NO notifications when new submissions arrive. Options:
 ## Testing the Submission Flow
 
 1. **Submit test listing:**
-   - Go to https://tstr.site/submit
+   - Go to https://tstr.directory/submit
    - Fill form with test data
    - Submit
 
@@ -194,7 +194,7 @@ Currently NO notifications when new submissions arrive. Options:
    - Should see new row with status='pending'
 
 3. **Verify NOT visible:**
-   - Go to https://tstr.site
+   - Go to https://tstr.directory
    - Should NOT see test listing (filtered out)
 
 4. **Approve:**
@@ -205,7 +205,7 @@ Currently NO notifications when new submissions arrive. Options:
 
 6. **Verify visible:**
    - Wait 2-3 minutes for build
-   - Go to https://tstr.site
+   - Go to https://tstr.directory
    - Should now see test listing
 
 ---

@@ -3,7 +3,7 @@
 **Active Instance**: CASCADE via Windsurf IDE  
 **Account**: windsurf-albert-tstr  
 **User**: alber  
-**Project**: TSTR.site  
+**Project**: TSTR.directory
 **Session Started**: 2025-10-15 15:00 UTC
 
 ---

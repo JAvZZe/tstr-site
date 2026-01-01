@@ -1,4 +1,4 @@
-# 📚 TSTR.SITE - PROJECT REFERENCE
+# 📚 TSTR.DIRECTORY - PROJECT REFERENCE
 
 **Last Updated**: October 16, 2025  
 **Status**: Production Ready + Cloud Migration Plan
@@ -29,7 +29,7 @@
 ## 📁 PROJECT STRUCTURE
 
 ```
-TSTR.site/
+TSTR.directory/
 ├── web/
 │   ├── tstr-frontend/          # Astro site
 │   │   ├── src/

@@ -1,4 +1,4 @@
-# Environmental Testing Expansion Plan - TSTR.site
+# Environmental Testing Expansion Plan - TSTR.directory
 
 ## 🎯 Objective
 Expand environmental testing from 14 listings to 200+ listings across comprehensive subcategories to capture high-value environmental testing search traffic.

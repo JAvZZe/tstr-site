@@ -170,7 +170,7 @@ Site population & Outreach campaigns
 ## 📊 Monitoring & Dashboard
 
 ### **Scraper Dashboard** ⭐ NEW
-**Location**: https://tstr.site/admin/dashboard
+**Location**: https://tstr.directory/admin/dashboard
 **Purpose**: Real-time monitoring of all scraper operations
 
 **Features**:

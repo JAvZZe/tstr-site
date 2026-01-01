@@ -1,7 +1,7 @@
-# OPENCODE.md - TSTR.site
+# OPENCODE.md - TSTR.directory
 
 > **Role**: Vibe Coding Specialist (Frontend, UI/UX, Tailwind) - Opencode CLI Grok Code Fast 1
-> **Project**: TSTR.site (Testers & Testing Services & Products Directory)
+> **Project**: TSTR.directory (Testers & Testing Services & Products Directory)
 > **Reference**: See `docs/AGENT_REFERENCE.md` for model specs and generic commands.
 
 ---
@@ -42,25 +42,25 @@ cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 **After global bootstrap, run project-specific bootstrap:**
 
 ```bash
-./bootstrap.sh TSTR.site
+./bootstrap.sh TSTR.directory
 ```
 
 **Note**: The bootstrap script file is `Link_to_bootstrap_agent.sh` in the project root. Always run project bootstrap after global bootstrap.
 
 This loads:
 - **Project-specific learnings** (15 relevant from 90 total)
-- **Pending tasks** (filtered to TSTR.site only)
+- **Pending tasks** (filtered to TSTR.directory only)
 - **Recent session context** (what was last done)
 - **Handoff context** from previous agents
 - **Protocol reminders** with absolute paths
 
 **Why bootstrap > resume**:
 - resume.sh: Shows ALL learnings (overwhelming)
-- bootstrap.sh: Shows TSTR.site learnings only (manageable)
+- bootstrap.sh: Shows TSTR.directory learnings only (manageable)
 - Filters by project name in tags AND content
 - High confidence only (≥4)
 
-**Symlinks available**: In this folder, just run `./bootstrap.sh TSTR.site`
+**Symlinks available**: In this folder, just run `./bootstrap.sh TSTR.directory`
 
 ### 3. Project Status Protocol (MANDATORY)
 
@@ -81,7 +81,7 @@ cat PROJECT_STATUS.md
    - Infrastructure modifications
    - Content updates
    - Link changes
-   - Any successful change affecting tstr.site
+   - Any successful change affecting tstr.directory
 
 #### **Protocol Requirements**:
 - ✅ **ALWAYS** update PROJECT_STATUS.md after successful changes
@@ -90,7 +90,7 @@ cat PROJECT_STATUS.md
 - ✅ **VERSION BUMP** - Increment version number for each update
 - ✅ **TIMESTAMP** - Include date/time and agent attribution
 
-**This is the SINGLE SOURCE OF TRUTH for tstr.site's current state, structure, and change history.**
+**This is the SINGLE SOURCE OF TRUTH for tstr.directory's current state, structure, and change history.**
 
 ### 4. During Work
 
@@ -107,7 +107,7 @@ add_learning(
     "Your learning here",
     "gotcha",  # or "pattern", "optimization", "security"
     confidence=5,
-    tags=["TSTR.site", "relevant-tech", "specific-issue"]
+    tags=["TSTR.directory", "relevant-tech", "specific-issue"]
 )
 PYEOF
 ```
@@ -116,7 +116,7 @@ PYEOF
 ```bash
 cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state" && python3 << 'PYEOF'
 from db_utils import add_task, update_task
-task_id = add_task("TSTR.site", "Task description", assigned_to="opencode")
+task_id = add_task("TSTR.directory", "Task description", assigned_to="opencode")
 # ... do work ...
 update_task(task_id, "completed", result="Result summary")
 PYEOF
@@ -132,7 +132,7 @@ cd "/home/al/AI_PROJECTS_SPACE" && ./handoff.sh <agent> <reason>
 
 ## 🚀 PROJECT QUICK START
 1. **Global Bootstrap**: (see above - mandatory)
-2. **Project Bootstrap**: `./bootstrap.sh TSTR.site`
+2. **Project Bootstrap**: `./bootstrap.sh TSTR.directory`
 3. **Dev**: `cd web/tstr-frontend && npm run dev`
 4. **Status**: Read `PROJECT_STATUS.md`
 
@@ -176,7 +176,7 @@ cd "/home/al/AI_PROJECTS_SPACE" && ./handoff.sh <agent> <reason>
 - Access Token: sbp_e290bc7ea1ba64ae4b0be38134b7b4a67ca24e04
 - Mode: Read-only
 
-**Website**: http://tstr.site (LIVE - 163 listings as of 2025-11-17)
+**Website**: http://tstr.directory (LIVE - 163 listings as of 2025-11-17)
 
 **Git Repo**: https://github.com/JAvZZe/tstr-site.git
 
@@ -259,7 +259,7 @@ add_learning(
     "Your learning here",
     "gotcha",  # or "pattern", "optimization", "security"
     confidence=5,
-    tags=["TSTR.site", "relevant-tech", "specific-issue"]
+    tags=["TSTR.directory", "relevant-tech", "specific-issue"]
 )
 PYEOF
 ```
@@ -323,7 +323,7 @@ See `TSTR.md` for:
 - `src/pages/[category]/[region]/index.astro` - Category+region listings page
 - Both use `export const prerender = true` for static generation
 
-**Deployment:** Live on https://tstr.site with Cloudflare Pages edge caching
+**Deployment:** Live on https://tstr.directory with Cloudflare Pages edge caching
 
 ### Sitemap Optimization ✅ LIVE
 **Change:** Sitemap now filters out categories with 0 active listings

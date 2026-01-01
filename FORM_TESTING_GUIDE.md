@@ -1,8 +1,8 @@
 #!/bin/bash
-# Comprehensive Form Testing Plan for TSTR.site
+# Comprehensive Form Testing Plan for TSTR.directory
 # Tests all forms after RLS policy fixes
 
-echo "🧪 TSTR.site Form Testing Plan"
+echo "🧪 TSTR.directory Form Testing Plan"
 echo "=============================="
 echo ""
 
@@ -28,7 +28,7 @@ echo ""
 echo "🛠️  TESTING METHODS:"
 echo ""
 echo "METHOD 1: Manual Browser Testing"
-echo "1. Visit https://tstr.site/submit"
+echo "1. Visit https://tstr.directory/submit"
 echo "2. Fill form with test data:"
 echo "   - Business Name: 'RLS Test Lab'"
 echo "   - Email: 'test@rls-test.com'"
@@ -79,4 +79,4 @@ echo "3. Check Supabase dashboard for policy existence"
 echo "4. Review column mappings in column_mappings.txt"
 echo ""
 
-echo "Ready to test! Start with the submit form at https://tstr.site/submit"
+echo "Ready to test! Start with the submit form at https://tstr.directory/submit"

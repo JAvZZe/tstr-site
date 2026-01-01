@@ -1,7 +1,7 @@
-# TSTR.site - Global Testing Laboratory Directory
+# TSTR.directory - Global Testing Laboratory Directory
 
 **Project Type**: Live production directory site
-**External Path**: `/media/al/AvZ WD White My Passport/PROJECTS/TSTR.site`
+**External Path**: `/media/al/AvZ WD White My Passport/PROJECTS/TSTR.directory`
 **Status**: 🟢 LIVE - Scrapers Deployed
 **Last Updated**: 2025-12-01 12:00 UTC
 
@@ -10,7 +10,7 @@
 ## Current Status
 
 ### ✅ Working
-- **Site Live**: https://tstr.site (deployed via GitHub → Cloudflare Pages)
+- **Site Live**: https://tstr.directory (deployed via GitHub → Cloudflare Pages)
 - **Frontend**: Astro + React + Tailwind, functioning
 - **Database**: Supabase PostgreSQL with schema deployed
 - **19 Listings**: Live and displaying on site (new listings pending upload)
@@ -228,10 +228,10 @@ From `Agents_Guide_to_Scraper_Best_Practise.txt`:
 
 ## Files to Reference
 
-**When working on TSTR.site**:
+**When working on TSTR.directory**:
 1. This file - Project overview
-2. `/media/al/.../TSTR.site/README.md` - Quick start
-3. `/media/al/.../TSTR.site/PROJECT_STATUS.md` - Latest status
+2. `/media/al/.../TSTR.directory/README.md` - Quick start
+3. `/media/al/.../TSTR.directory/PROJECT_STATUS.md` - Latest status
 4. `/media/al/.../web/tstr-automation/dual_scraper.py` - Scraper code
 5. Database learnings with tags: `scraping`, `cloudflare`, `google-cloud`
 

@@ -87,7 +87,7 @@ export const MAILTO_LINKS = {
 export const CONTENT = {
   // Disclaimers and legal text
   // Note: disclaimerLink is rendered as a separate bold link element in components
-  disclaimer: `Disclaimer: Certifications and capabilities listed are extracted from public databases and have not been independently verified by TSTR.site. We recommend verifying all credentials directly with the testing laboratory and relevant accreditation bodies before engaging services.`,
+  disclaimer: `Disclaimer: Certifications and capabilities listed are extracted from public databases and have not been independently verified by TSTR.directory. We recommend verifying all credentials directly with the testing laboratory and relevant accreditation bodies before engaging services.`,
   
   disclaimerLink: {
     text: 'Click here to commission us to verify credentials for you.',

@@ -1,6 +1,6 @@
 # TSTR 2.0: Concept & Implementation Plan
 
-**Goal**: Rebuild TSTR.site from scratch as a premium, AI-native directory for testing services.
+**Goal**: Rebuild TSTR.directory from scratch as a premium, AI-native directory for testing services.
 **Philosophy**: "Premium Aesthetic, AI-Driven, Serverless Scale."
 
 ## Tech Stack (The "Gemini Choice")

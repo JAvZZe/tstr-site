@@ -1,4 +1,4 @@
-# TSTR.site Oracle Cloud Infrastructure Deployment Summary
+# TSTR.directory Oracle Cloud Infrastructure Deployment Summary
 **Date Generated**: 2025-11-08
 **Based On**: Session notes from 2025-10-27 deployment
 
@@ -232,7 +232,7 @@ crontab -e
 - Add to password manager
 
 ### Priority 3: Verify Live Site
-- Visit https://tstr.site
+- Visit https://tstr.directory
 - Confirm 127 listings display
 - Check "Biopharma & Life Sciences Testing" category
 - Test search functionality

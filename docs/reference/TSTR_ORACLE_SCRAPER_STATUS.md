@@ -5,7 +5,7 @@
 
 ## Deployment Summary
 
-The TSTR.site scraper is successfully deployed on **Oracle Cloud** and running on schedule.
+The TSTR.directory scraper is successfully deployed on **Oracle Cloud** and running on schedule.
 
 ### Evidence of Success
 - **Last successful run**: 2025-10-27 18:52:00 UTC

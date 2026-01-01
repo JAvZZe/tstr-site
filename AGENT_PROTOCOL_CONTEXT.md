@@ -1,5 +1,5 @@
 ╔══════════════════════════════════════════════════════════════╗
-║         TSTR.SITE - AGENT PROTOCOL & PROJECT RULES          ║
+║         TSTR.DIRECTORY - AGENT PROTOCOL & PROJECT RULES          ║
 ║              Load This in Every Claude Session               ║
 ╚══════════════════════════════════════════════════════════════╝
 
@@ -200,7 +200,7 @@
 **Pending**:
 - ⏳ Deploy Astro website to Netlify
 - ⏳ Setup auto-rebuild webhook
-- ⏳ Connect custom domain (tstr.site)
+- ⏳ Connect custom domain (tstr.directory)
 
 **Cost**: $1.04/month ✅ (within free tier)
 

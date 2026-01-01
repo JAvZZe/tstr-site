@@ -91,7 +91,7 @@ Should see:
 - `Allow public submissions to pending listings`
 
 Then test the form:
-1. Go to http://tstr.site/submit
+1. Go to http://tstr.directory/submit
 2. Submit a test listing
 3. Should see success message
 4. New listing appears in database with `status='pending'`

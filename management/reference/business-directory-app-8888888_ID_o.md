@@ -1,4 +1,4 @@
-**business-directory-app-8888888 ID on tstr.site@gmail.com Google Cloud**
+**business-directory-app-8888888 ID on tstr.directory@gmail.com Google Cloud**
 
 
 

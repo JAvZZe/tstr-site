@@ -8,9 +8,9 @@
 
 ## Completion Summary
 
-### ✓ What's Now Live on tstr.site:
+### ✓ What's Now Live on tstr.directory:
 
-1. **Privacy Policy Page** - https://tstr.site/privacy
+1. **Privacy Policy Page** - https://tstr.directory/privacy
    - GDPR compliant (European users)
    - CCPA compliant (California users)
    - Discloses all data collection (Supabase, AdSense, Cloudflare)
@@ -42,7 +42,7 @@
 
 ### Requirements Status:
 
-- ✅ **Site is live and publicly accessible** (tstr.site)
+- ✅ **Site is live and publicly accessible** (tstr.directory)
 - ✅ **Has quality, original content** (127 listings)
 - ✅ **Privacy policy exists and is linked** (/privacy page in footer)
 - ✅ **Multiple pages** (home, submit, privacy)
@@ -69,7 +69,7 @@
 
 ### Step 3: Fill Application Form
 
-**Website URL:** https://tstr.site
+**Website URL:** https://tstr.directory
 - Enter WITHOUT www (exactly as shown)
 - Do NOT include trailing slash
 
@@ -251,7 +251,7 @@ Monitor:
 
 ### Immediate (Do Now):
 
-1. ✅ **Privacy Policy created** - Live at https://tstr.site/privacy
+1. ✅ **Privacy Policy created** - Live at https://tstr.directory/privacy
 2. ⏭️ **Apply for AdSense** - https://www.google.com/adsense/start/
 3. ⏭️ **Add verification code** - I'll do this when you receive it
 4. ⏳ **Wait for approval** - 1-14 days
@@ -297,7 +297,7 @@ All guides available in: `/media/al/AI_DATA/AI_PROJECTS_SPACE/`
 
 ## Summary
 
-✅ **Privacy Policy:** Live at https://tstr.site/privacy
+✅ **Privacy Policy:** Live at https://tstr.directory/privacy
 ✅ **Form Backend:** Functional - saves submissions to database
 ✅ **Admin Workflow:** Documented - can review and approve
 ✅ **Site Complete:** 127 listings, multiple pages, mobile-friendly

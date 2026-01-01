@@ -36,7 +36,7 @@ Files created:
 
 ## Step 2: Upload Directory Listings (5 minutes)
 
-1. Go to: https://tstr.site/wp-admin
+1. Go to: https://tstr.directory/wp-admin
 2. Login: `user` / `TstrAdmin2025Secure`
 3. Navigate: **Directorist > Import/Export**
 4. Upload: `tstr_directory_import.csv`
@@ -214,7 +214,7 @@ A: Run scraper again with different locations or categories.
 ## Ready to Execute?
 
 ### Checklist:
-- [ ] WordPress URLs fixed (https://tstr.site working)
+- [ ] WordPress URLs fixed (https://tstr.directory working)
 - [ ] Python installed and dependencies ready
 - [ ] Google Maps API key active
 - [ ] Gmail ready for sending emails

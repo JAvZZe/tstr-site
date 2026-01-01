@@ -1,4 +1,4 @@
-# AGENTS.md - Development Guidelines for TSTR.site
+# AGENTS.md - Development Guidelines for TSTR.directory
 
 ## 🚨 CRITICAL: MANDATORY FIRST STEP FOR ALL AGENTS
 
@@ -85,7 +85,7 @@ cat PROJECT_STATUS.md
    - Infrastructure modifications
    - Content updates
    - Link changes
-   - Any successful change affecting tstr.site
+   - Any successful change affecting tstr.directory
 
 ### **Protocol Requirements**:
 - ✅ **ALWAYS** update PROJECT_STATUS.md after successful changes
@@ -94,7 +94,7 @@ cat PROJECT_STATUS.md
 - ✅ **VERSION BUMP** - Increment version number for each update
 - ✅ **TIMESTAMP** - Include date/time and agent attribution
 
-**This is the SINGLE SOURCE OF TRUTH for tstr.site's current state, structure, and change history.**
+**This is the SINGLE SOURCE OF TRUTH for tstr.directory's current state, structure, and change history.**
 
 ## AI Agent CLI Functions (v2.0 Integration)
 

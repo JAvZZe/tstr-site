@@ -1,5 +1,5 @@
 ---
-// Pricing page for TSTR.site
+// Pricing page for TSTR.directory
 // No Stripe integration yet - manual sales via contact form
 import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../lib/contacts'
 import Footer from '../components/Footer.astro'
@@ -409,7 +409,7 @@ import Footer from '../components/Footer.astro'
           <li>Profile view tracking</li>
           <li>Email support</li>
         </ul>
-        <a href={MAILTO_LINKS.professionalPlan} class="cta-button">Contact Sales</a>
+        <button id="btn-professional" class="cta-button" data-tier="professional">Subscribe Now - $295/mo</button>
       </div>
 
       <!-- Premium Tier -->
@@ -431,7 +431,7 @@ import Footer from '../components/Footer.astro'
           <li>48-hour early access to RFQs</li>
           <li>Priority email support</li>
         </ul>
-        <a href={MAILTO_LINKS.premiumPlan} class="cta-button">Contact Sales</a>
+        <button id="btn-premium" class="cta-button" data-tier="premium">Subscribe Now - $795/mo</button>
       </div>
 
       <!-- Enterprise Tier -->
@@ -585,5 +585,55 @@ import Footer from '../components/Footer.astro'
   </main>
 
   <Footer />
+
+  <script>
+    import { supabaseBrowser } from '../lib/supabase-browser'
+
+    async function handleSubscribe(tier) {
+      const button = document.querySelector(`[data-tier="${tier}"]`)
+      const originalText = button.textContent
+      button.textContent = 'Processing...'
+      button.disabled = true
+
+      try {
+        // Check if user is logged in
+        const { data: { session } } = await supabaseBrowser.auth.getSession()
+
+        if (!session) {
+          // Redirect to login with return URL
+          window.location.href = `/login?redirect=/pricing&tier=${tier}`
+          return
+        }
+
+        // Call Edge Function to create subscription
+        const { data, error } = await supabaseBrowser.functions.invoke('paypal-create-subscription', {
+          body: {
+            tier,
+            return_url: window.location.origin + '/checkout/success',
+            cancel_url: window.location.origin + '/checkout/cancel'
+          }
+        })
+
+        if (error) throw error
+
+        // Redirect to PayPal
+        if (data.approval_url) {
+          window.location.href = data.approval_url
+        } else {
+          throw new Error('No approval URL returned')
+        }
+
+      } catch (error) {
+        console.error('Subscription error:', error)
+        alert('Failed to start checkout. Please try again or contact support.')
+        button.textContent = originalText
+        button.disabled = false
+      }
+    }
+
+    // Attach click handlers
+    document.getElementById('btn-professional')?.addEventListener('click', () => handleSubscribe('professional'))
+    document.getElementById('btn-premium')?.addEventListener('click', () => handleSubscribe('premium'))
+  </script>
 </body>
 </html>

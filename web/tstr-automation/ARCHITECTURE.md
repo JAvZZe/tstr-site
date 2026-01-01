@@ -1,4 +1,4 @@
-# TSTR.site Custom Build Architecture
+# TSTR.directory Custom Build Architecture
 ## Lean MVP for Global Testing Directory
 
 **Decision: Custom build with Cloudflare Pages + Supabase**
@@ -213,7 +213,7 @@ USING (
 
 ### File Structure
 ```
-tstr.site/
+tstr.directory/
 ├── src/
 │   ├── pages/
 │   │   ├── index.astro              # Homepage
@@ -650,7 +650,7 @@ jobs:
 3. **Deploy** (Day 4)
    - Connect GitHub repo
    - Deploy to Cloudflare Pages
-   - Configure custom domain (tstr.site)
+   - Configure custom domain (tstr.directory)
    - Test end-to-end
 
 **Deliverable: Live site with static content**
@@ -763,7 +763,7 @@ jobs:
 1. **Set up Supabase database** (I'll generate SQL script)
 2. **Initialize Astro project locally**
 3. **Create category + location seed data**
-4. **Deploy "Coming Soon" page to tstr.site**
+4. **Deploy "Coming Soon" page to tstr.directory**
 5. **Run first scraping session** (Houston oil & gas labs)
 
 Should I proceed with generating the complete Supabase setup SQL script now?

@@ -126,7 +126,7 @@ FROM listing_custom_fields
 <div class="certification-disclaimer">
   <div class="disclaimer-icon">⚠️</div>
   <div class="disclaimer-content">
-    <p><strong>Disclaimer:</strong> Certifications and capabilities listed are extracted from public databases and have not been independently verified by TSTR.site. We recommend verifying all credentials directly with the testing laboratory and relevant accreditation bodies before engaging services.</p>
+    <p><strong>Disclaimer:</strong> Certifications and capabilities listed are extracted from public databases and have not been independently verified by TSTR.directory. We recommend verifying all credentials directly with the testing laboratory and relevant accreditation bodies before engaging services.</p>
   </div>
 </div>
 ```

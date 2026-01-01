@@ -2,7 +2,7 @@
 
 ## 📊 Current Status
 **Date:** December 3, 2025
-**Issue:** Submit form at https://tstr.site/submit still showing 500 Internal Server Error
+**Issue:** Submit form at https://tstr.directory/submit still showing 500 Internal Server Error
 **Status:** 🔄 TROUBLESHOOTING - Multiple fixes applied, awaiting deployment verification
 
 ## 🔍 Root Cause Analysis
@@ -38,7 +38,7 @@ The submit form was using **service role key** client-side instead of **anon key
 
 ### **Immediate Actions:**
 1. **Verify Deployment**: Check if Cloudflare Pages has deployed latest changes
-2. **Test Form**: Visit https://tstr.site/submit and attempt submission
+2. **Test Form**: Visit https://tstr.directory/submit and attempt submission
 3. **Browser Console**: Run debug script to check database access
 4. **Database Check**: Verify RLS policies are active
 

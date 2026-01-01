@@ -51,7 +51,7 @@ CREATE POLICY "Users can insert own profile" ON user_profiles
 
 ## Testing
 After running the SQL:
-1. Refresh https://tstr.site/account
+1. Refresh https://tstr.directory/account
 2. The dashboard should now show your profile information instead of the error
 
 ## Notes

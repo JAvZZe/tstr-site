@@ -56,12 +56,12 @@ Expanded environmental testing from 14 listings to infrastructure supporting 200
 - **User Experience**: Clear navigation between environmental subcategories
 
 ## 🔗 URLs to Check
-- Main category: `https://tstr.site/environmental-testing`
-- Air Quality: `https://tstr.site/environmental-testing/air-quality`
-- Water Quality: `https://tstr.site/environmental-testing/water-quality`
-- Soil Testing: `https://tstr.site/environmental-testing/soil-testing`
-- Noise & Vibration: `https://tstr.site/environmental-testing/noise-vibration`
-- ESG & Sustainability: `https://tstr.site/environmental-testing/esg-sustainability`
+- Main category: `https://tstr.directory/environmental-testing`
+- Air Quality: `https://tstr.directory/environmental-testing/air-quality`
+- Water Quality: `https://tstr.directory/environmental-testing/water-quality`
+- Soil Testing: `https://tstr.directory/environmental-testing/soil-testing`
+- Noise & Vibration: `https://tstr.directory/environmental-testing/noise-vibration`
+- ESG & Sustainability: `https://tstr.directory/environmental-testing/esg-sustainability`
 
 ## ⚠️ Important Notes
 - **Scrapers NOT Run**: Despite successful testing, scrapers did NOT run in production to populate database

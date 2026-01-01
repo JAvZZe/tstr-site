@@ -2,7 +2,7 @@
 
 **Created:** 2025-10-29
 **Agent:** Claude Code (Sonnet 4.5) - avztest8@gmail.com
-**Purpose:** Apply for and integrate Google AdSense on tstr.site
+**Purpose:** Apply for and integrate Google AdSense on tstr.directory
 
 ---
 
@@ -25,7 +25,7 @@
 ## Prerequisites
 
 Before applying, ensure:
-- ✅ Site is live and publicly accessible (tstr.site ✓)
+- ✅ Site is live and publicly accessible (tstr.directory ✓)
 - ✅ Has original, quality content (127 listings ✓)
 - ✅ Has privacy policy (❌ NEED TO ADD)
 - ✅ Domain is older than 6 months (verify age)
@@ -94,7 +94,7 @@ Users in EU have the right to:
 
 1. Click "Sign Up Now"
 2. Enter:
-   - **Website URL:** https://tstr.site (NOT www.tstr.site)
+   - **Website URL:** https://tstr.directory (NOT www.tstr.directory)
    - **Email:** tstr.site1@gmail.com
    - **Country:** [Your country]
 3. Accept Terms of Service

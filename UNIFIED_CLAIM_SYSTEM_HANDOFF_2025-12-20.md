@@ -2,7 +2,7 @@
 
 **Date:** December 20, 2025
 **Agent:** opencode
-**Project:** TSTR.site Claim Button Visibility Enhancement
+**Project:** TSTR.directory Claim Button Visibility Enhancement
 **Status:** ✅ COMPLETE - Implemented and Deployed
 
 ---

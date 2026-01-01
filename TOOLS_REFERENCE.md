@@ -1,4 +1,4 @@
-# TSTR.site - Tools & Plugins Reference
+# TSTR.directory - Tools & Plugins Reference
 
 **Last Updated**: 2025-10-15 17:00 UTC  
 **Environment**: Windows 11, PowerShell 7, Windsurf IDE
@@ -170,7 +170,7 @@ python-dotenv==1.0.0
 #### 2. Cloudflare Pages
 - **Status**: ✅ Deployed
 - **Project**: tstr-site
-- **Domain**: tstr.site
+- **Domain**: tstr.directory
 - **Auto-Deploy**: Yes (on git push)
 - **Issue**: ⚠️ Environment variables need update
 

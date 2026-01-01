@@ -1,6 +1,6 @@
 # Custom Fields Validation Report
 **Date:** 2025-11-03  
-**System:** TSTR.site Environmental Testing Scraper  
+**System:** TSTR.directory Environmental Testing Scraper  
 **Status:** ✓ WORKING CORRECTLY
 
 ## Executive Summary

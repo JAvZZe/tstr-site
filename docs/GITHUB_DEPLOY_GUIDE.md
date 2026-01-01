@@ -11,7 +11,7 @@
 ### **Step 1: Initialize Git Repository** (2 minutes)
 
 ```bash
-cd C:\Users\alber\OneDrive\Documents\.WORK\TSTR.site
+cd C:\Users\alber\OneDrive\Documents\.WORK\TSTR.directory
 
 # Initialize Git
 git init
@@ -20,7 +20,7 @@ git init
 git add .
 
 # Commit
-git commit -m "Initial commit - TSTR.site with automated scrapers"
+git commit -m "Initial commit - TSTR.directory with automated scrapers"
 ```
 
 ---
@@ -146,7 +146,7 @@ Netlify will:
 ### **Check Your Live Site**:
 1. Visit your Netlify URL
 2. You should see:
-   - ✅ TSTR.site header
+   - ✅ TSTR.directory header
    - ✅ Stats showing 19 verified labs
    - ✅ All 19 testing laboratories listed
    - ✅ Categories section
@@ -186,7 +186,7 @@ After deployment, verify:
 ### **To Deploy Code Changes**:
 
 ```bash
-cd C:\Users\alber\OneDrive\Documents\.WORK\TSTR.site
+cd C:\Users\alber\OneDrive\Documents\.WORK\TSTR.directory
 
 # Make your changes to files
 # Then:
@@ -273,7 +273,7 @@ After following this guide:
 ### **Optional Enhancements**:
 
 1. **Custom Domain** (optional, ~$12/year):
-   - Buy `tstr.site` domain
+   - Buy `tstr.directory` domain
    - Configure in Netlify dashboard
    - Automatic SSL included
 

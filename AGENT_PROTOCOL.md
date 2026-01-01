@@ -1,6 +1,6 @@
 # 🤖 AGENT PROTOCOL - Multi-Agent Best Practices
 
-**Purpose**: Guidelines for multiple AI agents working on TSTR.SITE  
+**Purpose**: Guidelines for multiple AI agents working on TSTR.DIRECTORY
 **Applies To**: CASCADE, CURSOR, and any future agents  
 **Status**: Active Protocol
 

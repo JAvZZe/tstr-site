@@ -199,10 +199,10 @@ After fixing CI/CD:
 
 ## File Locations for Reference
 
-- **Cloudflare API Token**: `/media/al/.../TSTR.site/.env.github-copilot`
-- **Supabase Keys**: `/media/al/.../TSTR.site/web/tstr-frontend/.env`
-- **Scraper Code**: `/media/al/.../TSTR.site/web/tstr-automation/dual_scraper.py`
-- **Frontend Source**: `/media/al/.../TSTR.site/web/tstr-frontend/`
+- **Cloudflare API Token**: `/media/al/.../TSTR.directory/.env.github-copilot`
+- **Supabase Keys**: `/media/al/.../TSTR.directory/web/tstr-frontend/.env`
+- **Scraper Code**: `/media/al/.../TSTR.directory/web/tstr-automation/dual_scraper.py`
+- **Frontend Source**: `/media/al/.../TSTR.directory/web/tstr-frontend/`
 
 ---
 

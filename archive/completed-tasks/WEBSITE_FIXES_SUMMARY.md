@@ -91,7 +91,7 @@ from('listings')
 ### **Option A: Deploy via CLI** (Recommended)
 
 ```bash
-cd C:\Users\alber\OneDrive\Documents\.WORK\TSTR.site\web\tstr-frontend
+cd C:\Users\alber\OneDrive\Documents\.WORK\TSTR.directory\web\tstr-frontend
 
 # Install Netlify CLI (if not installed)
 npm install -g netlify-cli
@@ -149,7 +149,7 @@ Site shows new listing ✅
 ### **Homepage Sections**:
 
 1. **Header**
-   - TSTR.site branding
+   - TSTR.directory branding
    - Global Testing Laboratory Directory
    - Industry categories
 
