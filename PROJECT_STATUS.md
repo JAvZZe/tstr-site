@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-01 14:21 UTC
-> **Updated By**: AI Projects Space
+> **Last Updated**: 2026-01-01 14:50 UTC
+> **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -193,7 +193,14 @@ Last Scrape:      November 10, 2025 02:31 UTC
 
 ## 📊 VERSION HISTORY (LATEST)
 
-### **v2.4.1** - January 1, 2026 (CURRENT)
+### **v2.4.2** - January 1, 2026 (CURRENT)
+- 🛠️ **Sales Email Updated**: Changed sales contact from tstr.site1@gmail.com to sales@tstr.directory across all pages
+  - Updated CONTACTS object in contacts.ts to use new sales email
+  - Updated browse.astro, privacy.astro, terms.astro to use centralized contact system
+  - Updated category/region pages to use sales email for concierge search
+  - Updated documentation to reflect new email configuration
+
+### **v2.4.1** - January 1, 2026
 - 🛠️ **JSON-LD Parsing Error Fixed**: Resolved Google Search Console error for missing '}' or object member name
   - Changed from double curly braces {{ to Astro's set:html directive with JSON.stringify() in index.astro
   - Fixes schema.org markup validation and improves SEO compliance
