@@ -1,7 +1,7 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-01 14:50 UTC
+> **Last Updated**: 2026-01-01 15:41 UTC
 > **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -193,7 +193,14 @@ Last Scrape:      November 10, 2025 02:31 UTC
 
 ## 📊 VERSION HISTORY (LATEST)
 
-### **v2.4.2** - January 1, 2026 (CURRENT)
+### **v2.4.3** - January 1, 2026 (CURRENT)
+- 🛠️ **Domain References Fixed**: Updated OAuth and API test scripts to use correct tstr.directory domain
+  - Fixed test_oauth_apis.js to reference https://tstr.directory instead of https://tstr.site
+  - Fixed test_claim_api.mjs to reference correct production domain
+  - Updated console log messages to use TSTR.directory branding
+  - Ensures LinkedIn OAuth and other auth flows use correct domain
+
+### **v2.4.2** - January 1, 2026
 - 🛠️ **Sales Email Updated**: Changed sales contact from tstr.site1@gmail.com to sales@tstr.directory across all pages
   - Updated CONTACTS object in contacts.ts to use new sales email
   - Updated browse.astro, privacy.astro, terms.astro to use centralized contact system
