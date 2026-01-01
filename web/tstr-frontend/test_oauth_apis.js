@@ -3,7 +3,7 @@
 // Run with: node test_oauth_apis.js
 
 const BASE_URL = process.env.NODE_ENV === 'production'
-  ? 'https://tstr.site'
+  ? 'https://tstr.directory'
   : 'http://localhost:4321';
 
 async function testEndpoint(endpoint, options = {}) {

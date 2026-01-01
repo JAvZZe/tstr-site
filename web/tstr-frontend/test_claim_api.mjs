@@ -11,15 +11,15 @@
 import { createClient } from '@supabase/supabase-js';
 
 const isLive = process.argv.includes('--live');
-const API_URL = isLive 
-  ? 'https://tstr.site/api/claim_submission'
+const API_URL = isLive
+  ? 'https://tstr.directory/api/claim_submission'
   : 'http://localhost:4321/api/claim_submission';
 
 // Supabase credentials (for direct DB verification)
 const SUPABASE_URL = 'https://haimjeaetrsaauitrhfy.supabase.co';
 const SUPABASE_KEY = 'sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2';
 
-console.log('=== TSTR.site Claims API Test ===\n');
+console.log('=== TSTR.directory Claims API Test ===\n');
 console.log(`Testing: ${isLive ? 'PRODUCTION' : 'LOCAL DEV'}`);
 console.log(`Endpoint: ${API_URL}\n`);
 
