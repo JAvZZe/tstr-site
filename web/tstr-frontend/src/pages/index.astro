@@ -122,20 +122,18 @@ if (allCategories && allCategories.length > 0) {
   <meta property="og:description" content={`Directory of ${totalListings} verified testing laboratories and certification bodies. Compare ISO 17025 accredited labs worldwide.`} />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://tstr.directory" />
-  <script type="application/ld+json">
-  {{
+  <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "TSTR Hub",
     "description": "Specialist Testing Services, Products and Solutions Directory",
     "url": "https://tstr.directory",
-    "potentialAction": {{
+    "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://tstr.directory/browse?search={{search_term_string}}",
+      "target": "https://tstr.directory/browse?search={search_term_string}",
       "query-input": "required name=search_term_string"
-    }}
-  }}
-  </script>
+    }
+  })} />
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
