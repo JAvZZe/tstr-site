@@ -597,16 +597,16 @@ import Footer from '../components/Footer.astro'
 
       try {
         // Check if user is logged in
-        const { data: { session } } = await supabaseBrowser.auth.getSession()
+        const { data: { session }, error: sessionError } = await supabaseBrowser.auth.getSession()
 
-        if (!session) {
+        if (sessionError || !session) {
           // Redirect to login with return URL
           window.location.href = `/login?redirect=/pricing&tier=${tier}`
           return
         }
 
         // Call Edge Function to create subscription
-        const { data, error } = await supabaseBrowser.functions.invoke('paypal-create-subscription', {
+        const { data, error: invokeError } = await supabaseBrowser.functions.invoke('paypal-create-subscription', {
           body: {
             tier,
             return_url: window.location.origin + '/checkout/success',
@@ -614,10 +614,10 @@ import Footer from '../components/Footer.astro'
           }
         })
 
-        if (error) throw error
+        if (invokeError) throw invokeError
 
         // Redirect to PayPal
-        if (data.approval_url) {
+        if (data?.approval_url) {
           window.location.href = data.approval_url
         } else {
           throw new Error('No approval URL returned')
@@ -631,9 +631,36 @@ import Footer from '../components/Footer.astro'
       }
     }
 
-    // Attach click handlers
-    document.getElementById('btn-professional')?.addEventListener('click', () => handleSubscribe('professional'))
-    document.getElementById('btn-premium')?.addEventListener('click', () => handleSubscribe('premium'))
+    // Safely attach click handlers with error handling
+    try {
+      document.getElementById('btn-professional')?.addEventListener('click', () => handleSubscribe('professional'))
+      document.getElementById('btn-premium')?.addEventListener('click', () => handleSubscribe('premium'))
+    } catch (error) {
+      console.warn('Failed to initialize PayPal subscription handlers:', error)
+      // If initialization fails, disable the buttons gracefully
+      document.addEventListener('DOMContentLoaded', () => {
+        const professionalBtn = document.getElementById('btn-professional');
+        const premiumBtn = document.getElementById('btn-premium');
+
+        if (professionalBtn) {
+          professionalBtn.disabled = true;
+          professionalBtn.title = 'Subscription system temporarily unavailable';
+          professionalBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Subscription system is temporarily unavailable. Please try again later.');
+          });
+        }
+
+        if (premiumBtn) {
+          premiumBtn.disabled = true;
+          premiumBtn.title = 'Subscription system temporarily unavailable';
+          premiumBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Subscription system is temporarily unavailable. Please try again later.');
+          });
+        }
+      });
+    }
   </script>
 </body>
 </html>
