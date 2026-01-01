@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-01 12:30 UTC
-> **Updated By**: Gemini (Antigravity)
+> **Last Updated**: 2026-01-01 14:21 UTC
+> **Updated By**: AI Projects Space
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -193,7 +193,13 @@ Last Scrape:      November 10, 2025 02:31 UTC
 
 ## 📊 VERSION HISTORY (LATEST)
 
-### **v2.4.0** - December 29, 2025 (CURRENT)
+### **v2.4.1** - January 1, 2026 (CURRENT)
+- 🛠️ **JSON-LD Parsing Error Fixed**: Resolved Google Search Console error for missing '}' or object member name
+  - Changed from double curly braces {{ to Astro's set:html directive with JSON.stringify() in index.astro
+  - Fixes schema.org markup validation and improves SEO compliance
+  - Resolves parsing error that was affecting rich results
+
+### **v2.4.0** - December 29, 2025
 - 💳 **PayPal Integration Complete**: Full subscription system implemented with Professional ($295/mo) and Premium ($795/mo) tiers
   - Created database migration for payment tracking fields and history table
   - Implemented Supabase Edge Functions: paypal-create-subscription, paypal-webhook, paypal-cancel-subscription
