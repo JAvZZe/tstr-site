@@ -27,6 +27,7 @@ The goal is to fix the oversized "icon images" on the account page and standardi
 - Incorporate the site's standard Header/Logo if missing, or fix the scaling of any existing images.
 - **CRITICAL FIX**: Add explicit `width="20" height="20"` to all SVGs within the `innerHTML` dashboard rendering block.
 - **ROBUSTNESS FIX**: Added `:global(.info-icon)` to the `<style>` block in `account.astro` to ensure CSS applies to dynamically injected HTML that bypasses Astro's standard scoping.
+- **UI LAYOUT FIX**: Update all layout classes (`.dashboard-grid`, `.info-row`, `.card`, etc.) to use `:global()` selectors. This is required because the entire dashboard content is injected via `innerHTML`, causing it to lose Astro's scoped styling for `display: flex` and `grid` properties.
 
 ## Verification Plan
 
