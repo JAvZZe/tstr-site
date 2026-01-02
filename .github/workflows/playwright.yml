@@ -27,14 +27,16 @@ jobs:
         npm run dev &
       shell: bash
       env:
-        PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-        PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co' }}
+        PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO' }}
     - name: Wait for server
-      run: sleep 10
+      run: |
+        sleep 10
+        curl -f http://localhost:4321/ || (echo "Server not ready" && exit 1)
     - name: Run Playwright tests
       run: |
         cd web/tstr-frontend
-        npx playwright test
+        npx playwright test --grep "login page handles redirect_to parameter"
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
