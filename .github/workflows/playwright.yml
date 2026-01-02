@@ -14,19 +14,27 @@ jobs:
       with:
         node-version: lts/*
     - name: Install dependencies
-      run: npm ci
+      run: |
+        cd web/tstr-frontend
+        npm ci
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+      run: |
+        cd web/tstr-frontend
+        npx playwright install --with-deps
     - name: Start dev server
-      run: npm run dev &
+      run: |
+        cd web/tstr-frontend
+        npm run dev &
       shell: bash
       env:
-        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-        SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
     - name: Wait for server
       run: sleep 10
     - name: Run Playwright tests
-      run: npx playwright test
+      run: |
+        cd web/tstr-frontend
+        npx playwright test
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
