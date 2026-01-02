@@ -24,15 +24,15 @@ jobs:
     - name: Start dev server
       run: |
         cd web/tstr-frontend
-        npm run dev &
+        npm run dev -- --port 4321 &
       shell: bash
       env:
         PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co' }}
         PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO' }}
     - name: Wait for server
       run: |
-        sleep 10
-        curl -f http://localhost:4321/ || (echo "Server not ready" && exit 1)
+        sleep 15
+        timeout 30 bash -c 'until curl -f http://localhost:4321/ > /dev/null 2>&1; do sleep 2; done' || (echo "Server failed to start" && exit 1)
     - name: Run Playwright tests
       run: |
         cd web/tstr-frontend
