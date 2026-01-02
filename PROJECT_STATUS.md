@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-02 05:13 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-01-02 07:55 UTC
+> **Updated By**: opencode
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -199,7 +199,13 @@ Last Scrape:      November 10, 2025 02:31 UTC
 
 ## 📊 VERSION HISTORY (LATEST)
 
-### **v2.4.4** - January 2, 2026 (CURRENT)
+### **v2.4.5** - January 2, 2026 (CURRENT)
+- 🎨 **UX/UI Professionalization**: Implemented high-impact visual improvements for professional experience
+  - **Brand Gradient Standardization**: Unified all gradients from purple/blue to blue/green theme across account dashboard and checkout pages
+  - **Universal Auth Navigation**: Replaced hardcoded header buttons with dynamic auth-aware navigation showing appropriate links based on login state
+  - **Visual Polish**: Added consistent cursor pointer, hover elevation, font-family, and padding-bottom across all pages and components
+
+### **v2.4.4** - January 2, 2026
 - 🛠️ **Account Dashboard UI Fix**: Resolved broken layout caused by Astro's scoped CSS not applying to runtime-injected HTML
   - Updated all CSS selectors in account.astro to include :global() counterparts
   - Fixed grid, card, info row, button, and listing layouts that were broken

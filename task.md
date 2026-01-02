@@ -6,5 +6,6 @@
 - [x] Add site header/logo to `account.astro` for consistency <!-- id: 9 -->
 - [x] Fix oversized `info-icon` SVGs in `account.astro` (innerHTML scoping issue) <!-- id: 11 -->
 - [ ] Fix broken UI layout (flex/grid) in `account.astro` using `:global()` selectors <!-- id: 12 -->
+- [ ] Execute Pareto UI/UX fixes (Gradient standardization, Auth Nav) - See `OPENCODE_UX_UI_TASKS.md` <!-- id: 13 -->
 - [x] Fix `.site` -> `.directory` references in navigation <!-- id: 10 -->
 - [x] Verify fix with user <!-- id: 4 -->
