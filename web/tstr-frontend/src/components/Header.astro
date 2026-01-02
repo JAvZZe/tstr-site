@@ -1,12 +1,10 @@
 ---
 ---
 
-<header style="background: linear-gradient(135deg, #667eea 0%, #059669 100%); color: white; padding: 3rem 2rem; text-align: center; position: relative;">
-  <nav id="auth-nav" style="position: absolute; top: 2rem; right: 2rem; display: flex; gap: 1rem;">
-    <!-- Navigation will be populated by JavaScript -->
-  </nav>
-  <h1 style="font-size: 0; margin-bottom: 0.5rem; font-weight: 700; display: inline-flex; width: auto; padding: 2rem; min-width: 200px; margin: 0 auto 0.5rem auto; background: rgba(255, 255, 255, 0.1); border-radius: 20px; backdrop-filter: blur(10px); border: 2px solid rgba(255, 255, 255, 0.2);">
-    <div style="display: flex; align-items: center; justify-content: center;">
+<header style="background: linear-gradient(135deg, #2563EB 0%, #059669 100%); color: white; padding: 3rem 2rem; position: relative;">
+  <div class="header-content" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
+    <!-- Logo Section -->
+    <div class="logo">
       <a href="/" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
         <img src="/TSTR-Logo-60px.png" alt="TSTR Logo" style="height: 60px; width: auto; margin-right: 1.5rem;"/>
         <div>
@@ -15,124 +13,172 @@
         </div>
       </a>
     </div>
+
+    <!-- Desktop Navigation -->
+    <nav id="desktop-nav" class="desktop-nav" style="display: flex; gap: 1rem; align-items: center;">
+      <!-- Navigation will be populated by JavaScript -->
+    </nav>
+
+    <!-- Mobile Hamburger Menu -->
+    <button id="hamburger-btn" class="hamburger-btn" style="display: none; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; padding: 0.5rem;">
+      ☰
+    </button>
+  </div>
+
+  <!-- Mobile Menu Overlay -->
+  <div id="mobile-menu" class="mobile-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; padding-top: 5rem;">
+    <div style="background: linear-gradient(135deg, #2563EB 0%, #059669 100%); margin: 2rem; border-radius: 12px; padding: 2rem; text-align: center;">
+      <button id="close-menu-btn" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: white; font-size: 2rem; cursor: pointer;">×</button>
+      <nav id="mobile-nav" style="display: flex; flex-direction: column; gap: 1rem;">
+        <!-- Mobile navigation will be populated by JavaScript -->
+      </nav>
+    </div>
+  </div>
+
+  <h1 style="font-size: 0; margin-bottom: 0.5rem; font-weight: 700; display: block; text-align: center; margin-top: 2rem;">
+    Specialist Testing Services, Products and Solutions Directory
   </h1>
-  <p>Specialist Testing Services, Products and Solutions Directory</p>
-  <p style="font-size: 1rem; margin-top: 0.5rem; opacity: 0.85;">
+  <p style="font-size: 1rem; margin-top: 0.5rem; opacity: 0.85; text-align: center;">
     Oil & Gas • Biopharma & Life Sciences • Environmental • Materials Testing
   </p>
 </header>
 
+<style>
+  @media (max-width: 768px) {
+    .desktop-nav {
+      display: none !important;
+    }
+    .hamburger-btn {
+      display: block !important;
+    }
+  }
+  @media (min-width: 769px) {
+    .hamburger-btn {
+      display: none !important;
+    }
+  }
+</style>
+
 <script>
   import { supabaseBrowser } from '../lib/supabase-browser'
 
-  async function updateAuthNav() {
-    const nav = document.getElementById('auth-nav')
-    if (!nav) return
+  function createNavLink(href, text, isPrimary = false) {
+    const link = document.createElement('a')
+    link.href = href
+    link.textContent = text
+    link.style.cssText = isPrimary ? `
+      background: linear-gradient(135deg, #2563EB 0%, #059669 100%);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      cursor: pointer;
+      display: block;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    ` : `
+      background: white;
+      color: #2563EB;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      cursor: pointer;
+      display: block;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    `
+    link.onmouseover = () => link.style.transform = 'translateY(-1px)'
+    link.onmouseout = () => link.style.transform = 'translateY(0)'
+    return link
+  }
 
+  async function updateNavigation() {
     try {
       const { data: { session } } = await supabaseBrowser.auth.getSession()
       const isLoggedIn = !!session?.user
 
-      nav.innerHTML = ''
+      // Update desktop nav
+      const desktopNav = document.getElementById('desktop-nav')
+      if (desktopNav) {
+        desktopNav.innerHTML = ''
 
-      // Common links
-      const pricingLink = document.createElement('a')
-      pricingLink.href = '/pricing'
-      pricingLink.textContent = 'Pricing'
-      pricingLink.style.cssText = `
-        background: white;
-        color: #667eea;
-        padding: 0.75rem 1.5rem;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        cursor: pointer;
-      `
-      pricingLink.onmouseover = () => pricingLink.style.transform = 'translateY(-1px)'
-      pricingLink.onmouseout = () => pricingLink.style.transform = 'translateY(0)'
+        const pricingLink = createNavLink('/pricing', 'Pricing', false)
+        const browseLink = createNavLink('/browse', 'Browse', false)
 
-      const browseLink = document.createElement('a')
-      browseLink.href = '/browse'
-      browseLink.textContent = 'Browse'
-      browseLink.style.cssText = `
-        background: transparent;
-        color: white;
-        padding: 0.75rem 1.5rem;
-        border: 2px solid white;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        cursor: pointer;
-      `
-      browseLink.onmouseover = () => {
-        browseLink.style.background = 'white'
-        browseLink.style.color = '#667eea'
-      }
-      browseLink.onmouseout = () => {
-        browseLink.style.background = 'transparent'
-        browseLink.style.color = 'white'
+        if (isLoggedIn) {
+          const accountLink = createNavLink('/account', 'My Account', true)
+          desktopNav.appendChild(accountLink)
+        } else {
+          const loginLink = createNavLink('/login', 'Login / Register', true)
+          desktopNav.appendChild(loginLink)
+        }
+
+        desktopNav.appendChild(browseLink)
+        desktopNav.appendChild(pricingLink)
       }
 
-      if (isLoggedIn) {
-        // Logged in: Pricing, Browse, My Account
-        const accountLink = document.createElement('a')
-        accountLink.href = '/account'
-        accountLink.textContent = 'My Account'
-        accountLink.style.cssText = `
-          background: linear-gradient(135deg, #667eea 0%, #059669 100%);
-          color: white;
-          padding: 0.75rem 1.5rem;
-          border-radius: 8px;
-          text-decoration: none;
-          font-weight: 600;
-          transition: all 0.3s ease;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-          cursor: pointer;
-        `
-        accountLink.onmouseover = () => accountLink.style.transform = 'translateY(-1px)'
-        accountLink.onmouseout = () => accountLink.style.transform = 'translateY(0)'
+      // Update mobile nav
+      const mobileNav = document.getElementById('mobile-nav')
+      if (mobileNav) {
+        mobileNav.innerHTML = ''
 
-        nav.appendChild(accountLink)
-        nav.appendChild(browseLink)
-        nav.appendChild(pricingLink)
-      } else {
-        // Not logged in: Pricing, Browse, Login/Register
-        const loginLink = document.createElement('a')
-        loginLink.href = '/login'
-        loginLink.textContent = 'Login / Register'
-        loginLink.style.cssText = `
-          background: linear-gradient(135deg, #667eea 0%, #059669 100%);
-          color: white;
-          padding: 0.75rem 1.5rem;
-          border-radius: 8px;
-          text-decoration: none;
-          font-weight: 600;
-          transition: all 0.3s ease;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-          cursor: pointer;
-        `
-        loginLink.onmouseover = () => loginLink.style.transform = 'translateY(-1px)'
-        loginLink.onmouseout = () => loginLink.style.transform = 'translateY(0)'
+        if (isLoggedIn) {
+          const accountLink = createNavLink('/account', 'My Account', true)
+          mobileNav.appendChild(accountLink)
+        } else {
+          const loginLink = createNavLink('/login', 'Login / Register', true)
+          mobileNav.appendChild(loginLink)
+        }
 
-        nav.appendChild(loginLink)
-        nav.appendChild(browseLink)
-        nav.appendChild(pricingLink)
+        const browseLink = createNavLink('/browse', 'Browse Listings', false)
+        const pricingLink = createNavLink('/pricing', 'Pricing', false)
+
+        mobileNav.appendChild(browseLink)
+        mobileNav.appendChild(pricingLink)
       }
     } catch (error) {
-      console.error('Error updating auth nav:', error)
-      // Fallback to basic nav
-      nav.innerHTML = '<a href="/pricing" style="background: white; color: #667eea; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600;">Pricing</a>'
+      console.error('Error updating navigation:', error)
     }
   }
 
-  // Update nav on load
-  updateAuthNav()
+  // Mobile menu toggle
+  function initMobileMenu() {
+    const hamburgerBtn = document.getElementById('hamburger-btn')
+    const mobileMenu = document.getElementById('mobile-menu')
+    const closeBtn = document.getElementById('close-menu-btn')
+
+    if (hamburgerBtn && mobileMenu) {
+      hamburgerBtn.addEventListener('click', () => {
+        mobileMenu.style.display = 'block'
+      })
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+          mobileMenu.style.display = 'none'
+        })
+      }
+
+      // Close menu when clicking outside
+      mobileMenu.addEventListener('click', (e) => {
+        if (e.target === mobileMenu) {
+          mobileMenu.style.display = 'none'
+        }
+      })
+    }
+  }
+
+  // Initialize
+  updateNavigation()
+  initMobileMenu()
 
   // Listen for auth changes
   supabaseBrowser.auth.onAuthStateChange((event, session) => {
-    updateAuthNav()
+    updateNavigation()
   })
 </script>

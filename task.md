@@ -7,5 +7,6 @@
 - [x] Fix oversized `info-icon` SVGs in `account.astro` (innerHTML scoping issue) <!-- id: 11 -->
 - [ ] Fix broken UI layout (flex/grid) in `account.astro` using `:global()` selectors <!-- id: 12 -->
 - [ ] Execute Pareto UI/UX fixes (Gradient standardization, Auth Nav) - See `OPENCODE_UX_UI_TASKS.md` <!-- id: 13 -->
+- [ ] Phase 2 UI/UX: Royal Blue Gradients & Mobile Hamburger Menu - See `OPENCODE_UX_PHASE2.md` <!-- id: 14 -->
 - [x] Fix `.site` -> `.directory` references in navigation <!-- id: 10 -->
 - [x] Verify fix with user <!-- id: 4 -->
