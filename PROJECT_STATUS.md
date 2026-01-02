@@ -1,7 +1,7 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-02 04:23 UTC
+> **Last Updated**: 2026-01-02 04:24 UTC
 > **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -189,11 +189,23 @@ Last Scrape:      November 10, 2025 02:31 UTC
 2. **Migration Applied**: `20251203000001_fix_rls_policies_column_names.sql` deployed and version-controlled
 3. **Hybrid Fix Approach**: ✅ Supabase agent applied immediate fixes + version-controlled migrations completed
 
+### **Account Dashboard UI Fix** ✅ COMPLETE
+1. **Issue**: Astro's scoped CSS wasn't applying to runtime-injected HTML content via `innerHTML`
+2. **Solution**: Updated all CSS selectors in `account.astro` to include `:global()` counterparts
+3. **Result**: All layout elements (grid, cards, info rows, buttons, listings) now properly styled
+4. **Documentation**: See `HANDOFF_ACCOUNT_DASHBOARD_UI_FIX_COMPLETE.md` for complete implementation details
+
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
 
-### **v2.4.3** - January 1, 2026 (CURRENT)
+### **v2.4.4** - January 2, 2026 (CURRENT)
+- 🛠️ **Account Dashboard UI Fix**: Resolved broken layout caused by Astro's scoped CSS not applying to runtime-injected HTML
+  - Updated all CSS selectors in account.astro to include :global() counterparts
+  - Fixed grid, card, info row, button, and listing layouts that were broken
+  - All dashboard elements now properly styled for both static and dynamic content
+
+### **v2.4.3** - January 1, 2026
 - 🛠️ **Domain References Fixed**: Updated OAuth and API test scripts to use correct tstr.directory domain
   - Fixed test_oauth_apis.js to reference https://tstr.directory instead of https://tstr.site
   - Fixed test_claim_api.mjs to reference correct production domain
