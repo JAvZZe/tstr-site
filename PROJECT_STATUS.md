@@ -1,7 +1,7 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-05 17:50 UTC
+> **Last Updated**: 2026-01-05 18:27 UTC
 > **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -187,6 +187,7 @@ Last Scrape:      November 10, 2025 02:31 UTC
 3. **Custom Fields**: Missing specialized data. Fix: Enhance extraction logic.
 4. **Submit Page**: ✅ FIXED - Replaced Footer component import with inline HTML. Prerenders successfully now.
 5. **Claim Form Email Functionality**: ✅ FIXED - Implemented complete Resend email system with draft save and verification emails. See v2.4.7 release notes.
+6. **PayPal Subscription Flow Issue**: Login redirect works but post-login redirect fails to continue payment process. User lands on account page instead of returning to pricing with tier parameter.
 
 ### **Security & Database Fixes** ✅ COMPLETE
 1. **RLS Policy Fixes**: ✅ Successfully corrected column name issues in Row Level Security policies
@@ -198,6 +199,20 @@ Last Scrape:      November 10, 2025 02:31 UTC
 2. **Solution**: Updated all CSS selectors in `account.astro` to include `:global()` counterparts
 3. **Result**: All layout elements (grid, cards, info rows, buttons, listings) now properly styled
 4. **Documentation**: See `HANDOFF_ACCOUNT_DASHBOARD_UI_FIX_COMPLETE.md` for complete implementation details
+
+### **PayPal Subscription Flow Issue** 🔄 IN PROGRESS
+1. **Issue**: Post-login redirect from LinkedIn OAuth fails to continue PayPal subscription flow
+2. **Symptom**: User clicks "Subscribe" → redirected to login → logs in with LinkedIn → lands on account page instead of returning to pricing page with tier parameter
+3. **Root Cause**: LinkedIn OAuth redirect URL handling not preserving subscription intent parameters
+4. **Impact**: Users cannot complete subscription purchases through the intended flow
+5. **Workaround**: Users can manually navigate back to pricing page after login, but lose subscription tier context
+
+### **PayPal Implementation Learnings**
+1. **API-Created Plans**: Successfully created PayPal subscription plans programmatically via REST API instead of dashboard
+2. **Webhook Setup**: Created webhooks via API with proper event subscriptions (BILLING.SUBSCRIPTION.*, PAYMENT.SALE.*)
+3. **Authentication Flow**: Supabase auth integration works, but OAuth redirect handling needs refinement
+4. **Environment Management**: Secrets properly configured across local, Supabase, and Bruno environments
+5. **Testing Approach**: Manual testing revealed authentication redirect issues not caught in automated tests
 
 ---
 
