@@ -14,6 +14,16 @@ const PLAN_IDS: Record<string, string> = {
   premium: Deno.env.get('PAYPAL_PLAN_PREMIUM') || ''
 }
 
+console.log('Edge Function starting...')
+console.log('Environment variables check:', {
+  PAYPAL_CLIENT_ID: !!PAYPAL_CLIENT_ID,
+  PAYPAL_CLIENT_SECRET: !!PAYPAL_CLIENT_SECRET,
+  PAYPAL_PLAN_PROFESSIONAL: !!PLAN_IDS.professional,
+  PAYPAL_PLAN_PREMIUM: !!PLAN_IDS.premium,
+  SUPABASE_URL: !!Deno.env.get('SUPABASE_URL'),
+  SUPABASE_ANON_KEY: !!Deno.env.get('SUPABASE_ANON_KEY'),
+})
+
 console.log('Edge Function initialized with PLAN_IDS:', PLAN_IDS)
 
 const corsHeaders = {
