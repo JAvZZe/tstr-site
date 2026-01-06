@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro'
 import { supabase } from '../../lib/supabase'
 import { canAutoClaim, generateVerificationToken } from '../../lib/domain-verification'
+import { sendEmail, createDraftSaveEmail, createVerificationEmail } from '../../lib/email'
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -70,15 +71,23 @@ export const POST: APIRoute = async ({ request }) => {
         })
       }
 
-      // TODO: Send email with resume link
-      console.log(`Draft saved. Resume token: ${resumeToken}`)
+      // Send draft save email with resume link
+      const emailTemplate = createDraftSaveEmail(resumeToken, expiresAt.toISOString())
+      const emailResult = await sendEmail(claimData.business_email, emailTemplate)
+
+      if (!emailResult.success) {
+        console.error('Draft email failed:', emailResult.error)
+        // Don't fail the draft save if email fails - log and continue
+      }
 
       return new Response(JSON.stringify({
         success: true,
         mode: 'draft_saved',
         resume_token: resumeToken,
         expires_at: expiresAt.toISOString(),
-        message: 'Draft saved successfully. Check your email for a resume link.'
+        message: emailResult.success
+          ? 'Draft saved successfully. Check your email for a resume link.'
+          : 'Draft saved successfully. Email delivery failed - save your resume token.'
       }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
@@ -231,7 +240,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Handle new claim submissions (anonymous or authenticated)
     // Temporarily simplified until migration applied
-    const verificationToken = null // generateVerificationToken() when migration done
+    const verificationToken = generateVerificationToken() // Using email utility function
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
 
     const newClaim = {
@@ -260,9 +269,35 @@ export const POST: APIRoute = async ({ request }) => {
       })
     }
 
-    // TODO: Send verification email if manual verification required
-    if (!domainVerified) {
-      console.log(`Verification needed for ${claimData.provider_name}. Token: ${verificationToken}`)
+    // Send verification email if manual verification required
+    if (!domainVerified && verificationToken) {
+      const emailTemplate = createVerificationEmail(
+        claimData.provider_name,
+        verificationToken,
+        expiresAt.toISOString()
+      )
+      const emailResult = await sendEmail(claimData.business_email, emailTemplate)
+
+      if (!emailResult.success) {
+        console.error('Verification email failed:', emailResult.error)
+        // Log error but don't fail the claim submission
+      }
+    }
+
+    // Determine if email was sent successfully
+    let emailSent = false
+    if (!domainVerified && verificationToken) {
+      const emailTemplate = createVerificationEmail(
+        claimData.provider_name,
+        verificationToken,
+        expiresAt.toISOString()
+      )
+      const emailResult = await sendEmail(claimData.business_email, emailTemplate)
+      emailSent = emailResult.success
+
+      if (!emailResult.success) {
+        console.error('Verification email failed:', emailResult.error)
+      }
     }
 
     return new Response(JSON.stringify({
@@ -270,7 +305,9 @@ export const POST: APIRoute = async ({ request }) => {
       method: domainVerified ? 'auto' : 'manual',
       message: domainVerified
         ? 'Claim verified automatically! Your listing will be processed shortly.'
-        : 'Claim submitted successfully. A verification email has been sent.',
+        : emailSent
+          ? 'Claim submitted successfully. A verification email has been sent.'
+          : 'Claim submitted successfully. Email delivery failed - please contact support.',
       claim: {
         id: insertedClaim.id,
         status: domainVerified ? 'verified' : 'pending',

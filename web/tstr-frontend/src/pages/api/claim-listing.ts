@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro'
 import { supabase } from '../../lib/supabase'
 import { canAutoClaim, generateVerificationToken } from '../../lib/domain-verification'
+import { sendEmail, createVerificationEmail } from '../../lib/email'
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -151,14 +152,24 @@ export const POST: APIRoute = async ({ request }) => {
         })
       }
 
-      // TODO: Send verification email to listing contact
-      // For now, we'll return the token for development testing
-      console.log(`Verification needed for ${listing.name}. Token: ${verificationToken}`)
+      // Send verification email to listing contact
+      const emailTemplate = createVerificationEmail(
+        listing.name,
+        verificationToken,
+        expiresAt.toISOString()
+      )
+      const emailResult = await sendEmail(listing.contact_email || user.email, emailTemplate)
+
+      if (!emailResult.success) {
+        console.error('Verification email failed:', emailResult.error)
+      }
 
       return new Response(JSON.stringify({
         success: true,
         method: 'manual',
-        message: `Claim initiated for "${listing.name}". A verification email has been sent to the listing contact. Please check your email for the verification code.`,
+        message: emailResult.success
+          ? `Claim initiated for "${listing.name}". A verification email has been sent to the listing contact.`
+          : `Claim initiated for "${listing.name}". Email delivery failed - please contact support.`,
         claim: {
           status: 'pending',
           method: 'email_verification',
