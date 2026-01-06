@@ -672,8 +672,12 @@ import Footer from '../components/Footer.astro'
       const pendingTier = sessionStorage.getItem('pendingSubscriptionTier') || tierFromUrl;
       
       if (pendingTier && (pendingTier === 'professional' || pendingTier === 'premium')) {
-        // Clean up immediately but PRESERVE the hash (Supabase needs it for OAuth)
-        if (tierFromUrl) history.replaceState(null, '', window.location.pathname + window.location.hash);
+        // Clean up tier param but PRESERVE code param (Supabase PKCE needs it for session exchange)
+        if (tierFromUrl) {
+          const url = new URL(window.location.href);
+          url.searchParams.delete('tier');
+          history.replaceState(null, '', url.toString());
+        }
         sessionStorage.removeItem('pendingSubscriptionTier');
         
         console.log('[Auth] Pending subscription detected, tier:', pendingTier);
