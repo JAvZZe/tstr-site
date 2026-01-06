@@ -665,7 +665,6 @@ import Footer from '../components/Footer.astro'
     }
 
     // Auto-trigger subscription if returning from login with tier param
-    // Auto-trigger subscription if returning from login with tier param
     (function() {
       // Check both URL and sessionStorage (sessionStorage is more reliable for OAuth)
       const urlParams = new URLSearchParams(window.location.search);
@@ -673,8 +672,8 @@ import Footer from '../components/Footer.astro'
       const pendingTier = sessionStorage.getItem('pendingSubscriptionTier') || tierFromUrl;
       
       if (pendingTier && (pendingTier === 'professional' || pendingTier === 'premium')) {
-        // Clean up immediately
-        if (tierFromUrl) history.replaceState(null, '', window.location.pathname);
+        // Clean up immediately but PRESERVE the hash (Supabase needs it for OAuth)
+        if (tierFromUrl) history.replaceState(null, '', window.location.pathname + window.location.hash);
         sessionStorage.removeItem('pendingSubscriptionTier');
         
         console.log('[Auth] Pending subscription detected, tier:', pendingTier);
