@@ -68,7 +68,7 @@ const description = "Find laboratories certified for ISO 19880-3 hydrogen valve 
     }
 
     .hero {
-      background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
+      background: linear-gradient(135deg, var(--navy-blue) 0%, var(--navy-blue-dark) 100%);
       color: white;
       padding: 4rem 2rem;
       text-align: center;
@@ -102,7 +102,7 @@ const description = "Find laboratories certified for ISO 19880-3 hydrogen valve 
 
     .btn {
       background: white;
-      color: #0066cc;
+      color: var(--navy-blue);
       padding: 1rem 2rem;
       border-radius: 8px;
       text-decoration: none;
@@ -124,7 +124,7 @@ const description = "Find laboratories certified for ISO 19880-3 hydrogen valve 
 
     .btn.secondary:hover {
       background: white;
-      color: #0066cc;
+      color: var(--navy-blue);
     }
 
     main {
@@ -142,13 +142,13 @@ const description = "Find laboratories certified for ISO 19880-3 hydrogen valve 
     }
 
     .section h2 {
-      color: #0066cc;
+      color: var(--navy-blue);
       font-size: 2rem;
       margin-bottom: 1.5rem;
     }
 
     .section h3 {
-      color: #004d99;
+      color: var(--navy-blue-dark);
       font-size: 1.4rem;
       margin-top: 1.5rem;
       margin-bottom: 1rem;
@@ -165,11 +165,11 @@ const description = "Find laboratories certified for ISO 19880-3 hydrogen valve 
       background: linear-gradient(135deg, #f0f7ff 0%, #e6f2ff 100%);
       padding: 1.5rem;
       border-radius: 8px;
-      border-left: 4px solid #0066cc;
+      border-left: 4px solid var(--navy-blue);
     }
 
     .capability-card h4 {
-      color: #0066cc;
+      color: var(--navy-blue);
       margin-bottom: 0.5rem;
       font-size: 1.1rem;
     }
@@ -189,7 +189,7 @@ const description = "Find laboratories certified for ISO 19880-3 hydrogen valve 
       background: #f8f9fa;
       padding: 1.5rem;
       border-radius: 8px;
-      border-left: 4px solid #0066cc;
+      border-left: 4px solid var(--navy-blue);
       transition: all 0.3s ease;
     }
 
@@ -200,7 +200,7 @@ const description = "Find laboratories certified for ISO 19880-3 hydrogen valve 
 
     .standard-code {
       font-weight: 700;
-      color: #0066cc;
+      color: var(--navy-blue);
       font-size: 1.2rem;
       margin-bottom: 0.5rem;
     }
@@ -237,7 +237,7 @@ const description = "Find laboratories certified for ISO 19880-3 hydrogen valve 
     }
 
     strong {
-      color: #0066cc;
+      color: var(--navy-blue);
     }
 
     @media (max-width: 768px) {
@@ -351,7 +351,7 @@ const description = "Find laboratories certified for ISO 19880-3 hydrogen valve 
             <div class="standard-name">{std.name}</div>
             {std.description && <div class="standard-desc">{std.description}</div>}
             <div style="margin-top: 0.75rem;">
-              <a href={`/search/standards?standard=${encodeURIComponent(std.code)}`} style="color: #0066cc; text-decoration: none; font-weight: 600;">
+              <a href={`/search/standards?standard=${encodeURIComponent(std.code)}`} style="color: var(--navy-blue); text-decoration: none; font-weight: 600;">
                 Find Certified Labs →
               </a>
             </div>
@@ -384,7 +384,7 @@ const description = "Find laboratories certified for ISO 19880-3 hydrogen valve 
         Search by exact standard (ISO 19880-3, SAE J2601) and technical specifications
       </p>
       <a href="/search/standards" class="btn" style="margin-right: 1rem;">Search Laboratories</a>
-      <a href="/submit" class="btn" style="background: #0066cc; color: white;">List Your Lab</a>
+      <a href="/submit" class="btn" style="background: var(--navy-blue); color: white;">List Your Lab</a>
     </section>
   </main>
 

@@ -19,7 +19,7 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
         
         <!-- Header Section -->
         <div class="text-center mb-8">
-            <a href="/" class="inline-block mb-4 text-blue-600 hover:text-blue-700 font-semibold text-sm">
+            <a href="/" class="inline-block mb-4 text-navy-blue hover:text-navy-blue-dark font-semibold text-sm">
                 ← Back to TSTR.directory
             </a>
             <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
@@ -116,7 +116,7 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
                      <button
                          type="submit"
                          id="submit-btn"
-                         class="flex-1 px-6 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-200 transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                         class="flex-1 px-6 py-4 text-lg font-semibold text-white bg-gradient-to-r from-navy-blue to-navy-blue-dark rounded-xl hover:from-navy-blue-dark hover:to-blue-800 focus:ring-4 focus:ring-blue-200 transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                      >
                          <span id="btn-text">Verify & Claim Profile</span>
                          <span id="btn-loading" class="hidden">
@@ -137,19 +137,19 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
                 <h3 class="text-sm font-semibold text-gray-900 mb-4">What happens next?</h3>
                 <ul class="space-y-3 text-sm text-gray-600">
                     <li class="flex items-start">
-                        <svg class="w-5 h-5 mr-3 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="w-5 h-5 mr-3 text-lime-green flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                         </svg>
                         <span><strong>Email Verification:</strong> We'll send a verification link to confirm your email address</span>
                     </li>
                     <li class="flex items-start">
-                        <svg class="w-5 h-5 mr-3 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="w-5 h-5 mr-3 text-lime-green flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                         </svg>
                         <span><strong>Instant Access:</strong> If your email domain matches the listing, you'll get immediate access</span>
                     </li>
                     <li class="flex items-start">
-                        <svg class="w-5 h-5 mr-3 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="w-5 h-5 mr-3 text-lime-green flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                         </svg>
                         <span><strong>Manage Your Listing:</strong> Update information, add services, and respond to leads</span>
@@ -280,12 +280,12 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
                 if (res.ok) {
                     if (data.method === 'auto') {
                         msg.textContent = `✅ ${data.message}`;
-                        msg.className = 'text-center text-sm font-medium text-green-600 bg-green-50 p-4 rounded-lg border border-green-200';
+                        msg.className = 'text-center text-sm font-medium text-lime-green bg-green-50 p-4 rounded-lg border border-green-200';
                         // Redirect to account after successful auto-claim
                         setTimeout(() => window.location.href = '/account', 2000);
                     } else {
                         msg.textContent = `✅ ${data.message}`;
-                        msg.className = 'text-center text-sm font-medium text-blue-600 bg-blue-50 p-4 rounded-lg border border-blue-200';
+                        msg.className = 'text-center text-sm font-medium text-navy-blue bg-blue-50 p-4 rounded-lg border border-blue-200';
                     }
                 } else {
                     msg.textContent = `❌ ${data.error || 'Error submitting claim. Please try again.'}`;
@@ -305,9 +305,9 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
         function showMessage(text: string, type: 'success' | 'error' | 'info') {
             msg.textContent = text;
             msg.className = `text-center text-sm font-medium min-h-[24px] ${
-                type === 'success' ? 'text-green-600 bg-green-50 p-4 rounded-lg border border-green-200' :
+                type === 'success' ? 'text-lime-green bg-green-50 p-4 rounded-lg border border-green-200' :
                 type === 'error' ? 'text-red-600 bg-red-50 p-4 rounded-lg border border-red-200' :
-                'text-blue-600 bg-blue-50 p-4 rounded-lg border border-blue-200'
+                'text-navy-blue bg-blue-50 p-4 rounded-lg border border-blue-200'
             }`;
         }
     </script>
