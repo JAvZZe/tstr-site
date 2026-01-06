@@ -5,14 +5,7 @@ module.exports = {
     './public/**/*.html',
   ],
   theme: {
-    extend: {
-      colors: {
-        'navy-blue': '#000080',
-        'navy-blue-dark': '#000066',
-        'lime-green': '#32CD32',
-        'lime-green-light': '#7FFF00',
-      }
-    },
+    extend: {},
   },
   plugins: [],
 }

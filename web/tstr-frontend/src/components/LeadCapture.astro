@@ -16,7 +16,7 @@
     />
     <button
       type="submit"
-      class="w-full px-4 py-2 text-white bg-navy-blue rounded-md hover:bg-navy-blue-dark transition duration-150"
+      class="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 transition duration-150"
     >
       Join Waitlist (100% Free)
     </button>
@@ -50,7 +50,7 @@
 
       if (response.ok) {
         messageElement.textContent = '✅ Success! We will notify you.';
-        messageElement.className = 'text-center text-sm text-lime-green';
+        messageElement.className = 'text-center text-sm text-green-600';
         form.reset();
       } else {
         messageElement.textContent = `❌ Error: ${result.error || 'Check console.'}`;
