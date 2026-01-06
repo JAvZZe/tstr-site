@@ -663,37 +663,43 @@ import Footer from '../components/Footer.astro'
     }
 
     // Auto-trigger subscription if returning from login with tier param
-    document.addEventListener('DOMContentLoaded', async () => {
+    (function() {
       const urlParams = new URLSearchParams(window.location.search);
       const tierFromUrl = urlParams.get('tier');
+      
       if (tierFromUrl && (tierFromUrl === 'professional' || tierFromUrl === 'premium')) {
-        // Clean URL immediately to prevent re-trigger on refresh
+        // Clean URL immediately to prevent re-trigger
         history.replaceState(null, '', window.location.pathname);
         
-        // Wait for Supabase to process OAuth callback and establish session
-        // OAuth redirects can take time to process the auth tokens
-        let session = null;
-        let attempts = 0;
-        const maxAttempts = 10; // Try for up to 5 seconds (10 * 500ms)
+        console.log('[Auth] Return from login detected, tier:', tierFromUrl);
         
-        while (!session && attempts < maxAttempts) {
-          await new Promise(r => setTimeout(r, 500));
-          const { data } = await supabaseBrowser.auth.getSession();
-          session = data?.session;
-          attempts++;
-        }
+        // Listen for auth state change - this is the correct way to detect OAuth session
+        const { data: { subscription } } = supabaseBrowser.auth.onAuthStateChange((event, session) => {
+          console.log('[Auth] State change event:', event);
+          if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session) {
+            // Unsubscribe to prevent multiple triggers
+            subscription.unsubscribe();
+            // Proceed with subscription
+            console.log('[Auth] Session established, triggering subscription');
+            handleSubscribe(tierFromUrl);
+          }
+        });
         
-        if (session) {
-          // Session established, proceed with subscription
-          handleSubscribe(tierFromUrl);
-        } else {
-          // Session not established after waiting - user may need to log in again
-          console.warn('Auto-subscription cancelled: No session after OAuth redirect');
-          // Show a message instead of auto-redirecting (prevents loop)
-          alert('Please click the Subscribe button again to complete your purchase.');
-        }
+        // Also check if already signed in (session was cached)
+        supabaseBrowser.auth.getSession().then(({ data: { session } }) => {
+          if (session) {
+            subscription.unsubscribe();
+            console.log('[Auth] Already had session, triggering subscription');
+            handleSubscribe(tierFromUrl);
+          }
+        });
+        
+        // Timeout to stop listening if no session found after 10s
+        setTimeout(() => {
+          subscription.unsubscribe();
+        }, 10000);
       }
-    });
+    })();
   </script>
 </body>
 </html>
