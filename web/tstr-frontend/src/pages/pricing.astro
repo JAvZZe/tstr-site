@@ -601,7 +601,7 @@ import Footer from '../components/Footer.astro'
 
         if (sessionError || !session) {
           // Redirect to login with return URL
-          window.location.href = `/login?redirect=/pricing&tier=${tier}`
+          window.location.href = `/login?redirect_to=${encodeURIComponent('/pricing?tier=' + tier)}`
           return
         }
 
@@ -661,6 +661,19 @@ import Footer from '../components/Footer.astro'
         }
       });
     }
+
+    // Auto-trigger subscription if returning from login with tier param
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tierFromUrl = urlParams.get('tier');
+      if (tierFromUrl && (tierFromUrl === 'professional' || tierFromUrl === 'premium')) {
+        // Clean URL to prevent re-trigger on refresh
+        history.replaceState(null, '', window.location.pathname);
+        // Small delay to ensure Supabase client is ready
+        await new Promise(r => setTimeout(r, 500));
+        handleSubscribe(tierFromUrl);
+      }
+    });
   </script>
 </body>
 </html>

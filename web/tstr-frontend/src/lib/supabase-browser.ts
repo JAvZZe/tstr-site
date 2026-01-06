@@ -6,8 +6,7 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co'
 
 // Anon key - safe for client-side use (RLS policies protect data)
-const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ||
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ1NDUzMTMsImV4cCI6MjA1MDEyMTMxM30.a4z9mqyKFiB-GgW_1sF5VcNlqjdMD-1h-RIu5WUwCos'
+const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO'
 
 export const supabaseBrowser = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
