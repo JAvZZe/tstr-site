@@ -627,7 +627,8 @@ import Footer from '../components/Footer.astro'
 
       } catch (error) {
         console.error('Subscription error:', error)
-        alert('Failed to start checkout. Please try again or contact support.')
+        const errorMsg = error?.message || error?.error || JSON.stringify(error)
+        alert(`Failed to start checkout: ${errorMsg}. Please try again or contact support.`)
         button.textContent = originalText
         button.disabled = false
       }
