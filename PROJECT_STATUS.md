@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-06 12:20 UTC
-> **Updated By**: opencode
+> **Last Updated**: 2026-01-06 18:45 UTC
+> **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -200,18 +200,15 @@ Last Scrape:      November 10, 2025 02:31 UTC
 3. **Result**: All layout elements (grid, cards, info rows, buttons, listings) now properly styled
 4. **Documentation**: See `HANDOFF_ACCOUNT_DASHBOARD_UI_FIX_COMPLETE.md` for complete implementation details
 
-### **PayPal Subscription Flow Issue** 🔄 ROOT CAUSE IDENTIFIED (2026-01-06)
-1. **Issue**: Post-login redirect from LinkedIn OAuth fails to continue PayPal subscription flow
-2. **Symptom**: User clicks "Subscribe" → redirected to login → logs in with LinkedIn → lands on account page instead of returning to pricing page with tier parameter
-3. **Root Cause (5 Whys)**:
-   - `pricing.astro` L604 uses `?redirect=/pricing&tier=${tier}` but `login.astro` expects `redirect_to`
-   - Even with correct param name, `tier` is not embedded in the redirect URL value
-   - OAuth `redirectTo` sends user to `/pricing` without the `tier` query param
-   - No auto-trigger logic exists on pricing page to resume subscription on load
-4. **Fix Plan**: See `PAYPAL_SUBSCRIPTION_FIX_INSTRUCTIONS.md` (created 2026-01-06)
-   - Edit 1: Change `redirect` to `redirect_to`, URL-encode the value with tier embedded
-   - Edit 2: Add `DOMContentLoaded` listener to auto-trigger subscription if `tier` in URL
-5. **Agent Assignment**: Gemini Flash or Opencode Grok Fast 1
+### **PayPal Subscription Flow Issue** 🚧 ACTIVE DEBUGGING (2026-01-06)
+1. **Status**: OAuth session flow FIXED. Edge Function call now failing with Non-2xx error.
+2. **Current Blocker**: "Failed to start checkout: Edge Function returned a non-2xx status code."
+3. **Troubleshooting History**: See [PAYPAL_TROUBLESHOOTING.md](file:///media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/docs/PAYPAL_TROUBLESHOOTING.md) for full audit trail.
+4. **Recent Fixes**: 
+   - [x] Fixed PKCE `code` stripping by preserving query params.
+   - [x] Implemented `sessionStorage` for tier preservation.
+   - [x] Improved Edge Function error reporting (awaiting verification of detailed message).
+5. **Next Steps**: Extract detailed PayPal error from Edge Function response; verify `PAYPAL_PLAN_IDs`.
 
 ### **PayPal Implementation Learnings**
 1. **API-Created Plans**: Successfully created PayPal subscription plans programmatically via REST API instead of dashboard

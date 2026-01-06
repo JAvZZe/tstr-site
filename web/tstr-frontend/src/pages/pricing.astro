@@ -627,8 +627,28 @@ import Footer from '../components/Footer.astro'
 
       } catch (error) {
         console.error('Subscription error:', error)
-        const errorMsg = error?.message || error?.error || JSON.stringify(error)
-        alert(`Failed to start checkout: ${errorMsg}. Please try again or contact support.`)
+        
+        let errorDetail = error?.message || 'Unknown error'
+        
+        // Try to extract detailed error from Supabase FunctionsHttpError
+        if (error.context && typeof error.context.json === 'function') {
+          try {
+            const body = await error.context.json()
+            errorDetail = body.error || body.message || JSON.stringify(body)
+            if (body.details) {
+              console.error('Detailed PayPal error:', body.details)
+              errorDetail += ': ' + (body.details.message || JSON.stringify(body.details))
+            }
+          } catch (e) {
+            console.error('Failed to parse error body:', e)
+          }
+        } else if (error.error_description) {
+          errorDetail = error.error_description
+        } else if (typeof error === 'object') {
+          errorDetail = JSON.stringify(error)
+        }
+
+        alert(`Failed to start checkout: ${errorDetail}. Please try again or contact support.`)
         button.textContent = originalText
         button.disabled = false
       }
