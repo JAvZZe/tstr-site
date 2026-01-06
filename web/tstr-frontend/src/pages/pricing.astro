@@ -600,6 +600,8 @@ import Footer from '../components/Footer.astro'
         const { data: { session }, error: sessionError } = await supabaseBrowser.auth.getSession()
 
         if (sessionError || !session) {
+          // Store tier in sessionStorage to survive OAuth redirect
+          sessionStorage.setItem('pendingSubscriptionTier', tier);
           // Redirect to login with return URL
           window.location.href = `/login?redirect_to=${encodeURIComponent('/pricing?tier=' + tier)}`
           return
@@ -663,41 +665,40 @@ import Footer from '../components/Footer.astro'
     }
 
     // Auto-trigger subscription if returning from login with tier param
+    // Auto-trigger subscription if returning from login with tier param
     (function() {
+      // Check both URL and sessionStorage (sessionStorage is more reliable for OAuth)
       const urlParams = new URLSearchParams(window.location.search);
       const tierFromUrl = urlParams.get('tier');
+      const pendingTier = sessionStorage.getItem('pendingSubscriptionTier') || tierFromUrl;
       
-      if (tierFromUrl && (tierFromUrl === 'professional' || tierFromUrl === 'premium')) {
-        // Clean URL immediately to prevent re-trigger
-        history.replaceState(null, '', window.location.pathname);
+      if (pendingTier && (pendingTier === 'professional' || pendingTier === 'premium')) {
+        // Clean up immediately
+        if (tierFromUrl) history.replaceState(null, '', window.location.pathname);
+        sessionStorage.removeItem('pendingSubscriptionTier');
         
-        console.log('[Auth] Return from login detected, tier:', tierFromUrl);
+        console.log('[Auth] Pending subscription detected, tier:', pendingTier);
         
         // Listen for auth state change - this is the correct way to detect OAuth session
         const { data: { subscription } } = supabaseBrowser.auth.onAuthStateChange((event, session) => {
-          console.log('[Auth] State change event:', event);
           if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session) {
-            // Unsubscribe to prevent multiple triggers
             subscription.unsubscribe();
-            // Proceed with subscription
             console.log('[Auth] Session established, triggering subscription');
-            handleSubscribe(tierFromUrl);
+            handleSubscribe(pendingTier);
           }
         });
         
-        // Also check if already signed in (session was cached)
+        // Also check if already signed in
         supabaseBrowser.auth.getSession().then(({ data: { session } }) => {
           if (session) {
             subscription.unsubscribe();
-            console.log('[Auth] Already had session, triggering subscription');
-            handleSubscribe(tierFromUrl);
+            console.log('[Auth] Already authenticated, triggering subscription');
+            handleSubscribe(pendingTier);
           }
         });
         
-        // Timeout to stop listening if no session found after 10s
-        setTimeout(() => {
-          subscription.unsubscribe();
-        }, 10000);
+        // Cleanup after 10s
+        setTimeout(() => subscription.unsubscribe(), 10000);
       }
     })();
   </script>
