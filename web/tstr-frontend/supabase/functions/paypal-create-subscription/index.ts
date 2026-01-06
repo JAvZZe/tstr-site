@@ -14,6 +14,8 @@ const PLAN_IDS: Record<string, string> = {
   premium: Deno.env.get('PAYPAL_PLAN_PREMIUM') || ''
 }
 
+console.log('Edge Function initialized with PLAN_IDS:', PLAN_IDS)
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -40,8 +42,20 @@ serve(async (req) => {
   }
 
   try {
+    console.log('Edge Function called with method:', req.method)
+    console.log('Headers:', Object.fromEntries(req.headers.entries()))
+
     // Get user from Supabase auth
-    const authHeader = req.headers.get('Authorization')!
+    const authHeader = req.headers.get('Authorization')
+    console.log('Auth header present:', !!authHeader)
+
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: 'Missing authorization header' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_ANON_KEY')!,
@@ -49,8 +63,10 @@ serve(async (req) => {
     )
 
     const { data: { user }, error: authError } = await supabase.auth.getUser()
+    console.log('Auth result:', { user: !!user, error: authError?.message })
+
     if (authError || !user) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      return new Response(JSON.stringify({ error: 'Unauthorized', details: authError?.message }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
@@ -59,8 +75,20 @@ serve(async (req) => {
     // Get requested tier from body
     const { tier, return_url, cancel_url } = await req.json()
 
+    console.log('Received request:', { tier, return_url, cancel_url })
+    console.log('PLAN_IDS:', PLAN_IDS)
+    console.log('PLAN_IDS[tier]:', PLAN_IDS[tier])
+
     if (!tier || !PLAN_IDS[tier]) {
-      return new Response(JSON.stringify({ error: 'Invalid tier' }), {
+      console.log('Invalid tier or missing plan ID')
+      return new Response(JSON.stringify({
+        error: 'Invalid tier',
+        debug: {
+          tier,
+          availableTiers: Object.keys(PLAN_IDS),
+          planId: PLAN_IDS[tier]
+        }
+      }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })

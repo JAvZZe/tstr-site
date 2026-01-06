@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-05 18:27 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-01-06 12:20 UTC
+> **Updated By**: opencode
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -200,12 +200,18 @@ Last Scrape:      November 10, 2025 02:31 UTC
 3. **Result**: All layout elements (grid, cards, info rows, buttons, listings) now properly styled
 4. **Documentation**: See `HANDOFF_ACCOUNT_DASHBOARD_UI_FIX_COMPLETE.md` for complete implementation details
 
-### **PayPal Subscription Flow Issue** 🔄 IN PROGRESS
+### **PayPal Subscription Flow Issue** 🔄 ROOT CAUSE IDENTIFIED (2026-01-06)
 1. **Issue**: Post-login redirect from LinkedIn OAuth fails to continue PayPal subscription flow
 2. **Symptom**: User clicks "Subscribe" → redirected to login → logs in with LinkedIn → lands on account page instead of returning to pricing page with tier parameter
-3. **Root Cause**: LinkedIn OAuth redirect URL handling not preserving subscription intent parameters
-4. **Impact**: Users cannot complete subscription purchases through the intended flow
-5. **Workaround**: Users can manually navigate back to pricing page after login, but lose subscription tier context
+3. **Root Cause (5 Whys)**:
+   - `pricing.astro` L604 uses `?redirect=/pricing&tier=${tier}` but `login.astro` expects `redirect_to`
+   - Even with correct param name, `tier` is not embedded in the redirect URL value
+   - OAuth `redirectTo` sends user to `/pricing` without the `tier` query param
+   - No auto-trigger logic exists on pricing page to resume subscription on load
+4. **Fix Plan**: See `PAYPAL_SUBSCRIPTION_FIX_INSTRUCTIONS.md` (created 2026-01-06)
+   - Edit 1: Change `redirect` to `redirect_to`, URL-encode the value with tier embedded
+   - Edit 2: Add `DOMContentLoaded` listener to auto-trigger subscription if `tier` in URL
+5. **Agent Assignment**: Gemini Flash or Opencode Grok Fast 1
 
 ### **PayPal Implementation Learnings**
 1. **API-Created Plans**: Successfully created PayPal subscription plans programmatically via REST API instead of dashboard
@@ -217,6 +223,22 @@ Last Scrape:      November 10, 2025 02:31 UTC
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.4.10** - January 6, 2026
+- 🎨 **Favicon Updated**: Created favicon from site logo (TSTR-Logo-60px.png) for consistent branding
+  - Generated favicon.ico with 16x16 and 32x32 sizes using ImageMagick
+  - Created favicon-32x32.png from logo
+  - Updated favicon.svg to match logo
+  - Added missing favicon links to admin pages (claims, dashboard, failed-urls) for site-wide consistency
+
+### **v2.4.9** - January 6, 2026
+- 🔧 **PayPal Subscription Flow Fixed**: Resolved OAuth redirect losing tier parameter
+  - Fixed query param name mismatch (`redirect` → `redirect_to`)
+  - Added URL-encoding for nested query params in redirect URL
+  - Added `DOMContentLoaded` auto-trigger logic on pricing page
+- 🔐 **Supabase Auth Stabilization**:
+  - Updated hardcoded Supabase Anon Key from outdated JWT format to new `sb_publishable_` format in `supabase-browser.ts`
+  - This likely addresses potential 401 Unauthorized issues during edge function invocation
 
 ### **v2.4.8** - January 5, 2026 (CURRENT)
 - ✅ **Claim Form Email Testing Complete**: Executed comprehensive testing plan for email functionality

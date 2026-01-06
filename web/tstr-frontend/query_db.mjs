@@ -7,6 +7,40 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 console.log('Querying TSTR database...\n');
 
+// Check if payment_history table exists
+console.log('=== CHECKING PAYMENT TABLES ===');
+try {
+  const { data: paymentHistory, error: paymentError } = await supabase
+    .from('payment_history')
+    .select('count', { count: 'exact', head: true });
+
+  if (paymentError) {
+    console.log('❌ payment_history table does not exist');
+  } else {
+    console.log('✅ payment_history table exists');
+  }
+} catch (e) {
+  console.log('❌ Error checking payment_history table:', e.message);
+}
+
+// Check user_profiles payment columns
+try {
+  const { data: profiles, error: profileError } = await supabase
+    .from('user_profiles')
+    .select('paypal_subscription_id, subscription_tier, subscription_status')
+    .limit(1);
+
+  if (profileError) {
+    console.log('❌ Error checking user_profiles payment columns');
+  } else {
+    console.log('✅ user_profiles payment columns exist');
+  }
+} catch (e) {
+  console.log('❌ Error checking user_profiles:', e.message);
+}
+
+console.log('');
+
 // Get all listings with addresses
 const { data: listings, error } = await supabase
   .from('listings')
