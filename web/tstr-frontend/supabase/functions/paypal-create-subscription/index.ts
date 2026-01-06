@@ -126,8 +126,11 @@ serve(async (req) => {
 
     if (!subscriptionResponse.ok) {
       console.error('PayPal error:', subscription)
-      return new Response(JSON.stringify({ error: 'Failed to create subscription' }), {
-        status: 500,
+      return new Response(JSON.stringify({
+        error: 'PayPal subscription creation failed',
+        details: subscription
+      }), {
+        status: subscriptionResponse.status,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
