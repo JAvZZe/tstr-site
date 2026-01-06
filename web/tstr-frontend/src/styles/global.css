@@ -1,12 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-:root {
-    --navy-blue: #000080;
-    --navy-blue-dark: #000066;
-    --lime-green: #32CD32;
-    --lime-green-light: #7FFF00;
-    --primary-gradient: linear-gradient(135deg, var(--navy-blue) 0%, var(--lime-green) 100%);
-    --secondary-gradient: linear-gradient(135deg, var(--navy-blue-dark) 0%, var(--navy-blue) 100%);
-}
