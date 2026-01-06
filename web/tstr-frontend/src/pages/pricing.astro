@@ -667,11 +667,31 @@ import Footer from '../components/Footer.astro'
       const urlParams = new URLSearchParams(window.location.search);
       const tierFromUrl = urlParams.get('tier');
       if (tierFromUrl && (tierFromUrl === 'professional' || tierFromUrl === 'premium')) {
-        // Clean URL to prevent re-trigger on refresh
+        // Clean URL immediately to prevent re-trigger on refresh
         history.replaceState(null, '', window.location.pathname);
-        // Small delay to ensure Supabase client is ready
-        await new Promise(r => setTimeout(r, 500));
-        handleSubscribe(tierFromUrl);
+        
+        // Wait for Supabase to process OAuth callback and establish session
+        // OAuth redirects can take time to process the auth tokens
+        let session = null;
+        let attempts = 0;
+        const maxAttempts = 10; // Try for up to 5 seconds (10 * 500ms)
+        
+        while (!session && attempts < maxAttempts) {
+          await new Promise(r => setTimeout(r, 500));
+          const { data } = await supabaseBrowser.auth.getSession();
+          session = data?.session;
+          attempts++;
+        }
+        
+        if (session) {
+          // Session established, proceed with subscription
+          handleSubscribe(tierFromUrl);
+        } else {
+          // Session not established after waiting - user may need to log in again
+          console.warn('Auto-subscription cancelled: No session after OAuth redirect');
+          // Show a message instead of auto-redirecting (prevents loop)
+          alert('Please click the Subscribe button again to complete your purchase.');
+        }
       }
     });
   </script>
