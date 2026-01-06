@@ -28,7 +28,7 @@ import Footer from '../components/Footer.astro'
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: linear-gradient(135deg, #2563EB 0%, #059669 100%);
+      background: var(--primary-gradient);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -41,7 +41,7 @@ import Footer from '../components/Footer.astro'
     }
 
     header h1 a {
-      color: #2563EB;
+      color: var(--navy-blue);
       text-decoration: none;
       font-size: 1.5rem;
       font-weight: 700;
@@ -98,12 +98,12 @@ import Footer from '../components/Footer.astro'
 
     input:focus {
       outline: none;
-      border-color: #2563EB;
+      border-color: var(--navy-blue);
     }
 
     .btn {
       width: 100%;
-      background: linear-gradient(135deg, #2563EB 0%, #059669 100%);
+      background: var(--primary-gradient);
       color: white;
       padding: 1rem;
       border: none;
@@ -198,7 +198,7 @@ import Footer from '../components/Footer.astro'
     }
 
     .signup-link a {
-      color: #2563EB;
+      color: var(--navy-blue);
       text-decoration: none;
       font-weight: 600;
     }

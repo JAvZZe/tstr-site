@@ -25,7 +25,7 @@ export const prerender = true
     }
 
     header {
-      background: linear-gradient(135deg, #2563EB 0%, #059669 100%);
+      background: var(--primary-gradient);
       color: white;
       padding: 3rem 2rem;
       text-align: center;
@@ -62,7 +62,7 @@ export const prerender = true
     label {
       display: block;
       margin-bottom: 0.5rem;
-      color: #2563EB;
+      color: var(--navy-blue);
       font-weight: 600;
       font-size: 0.95rem;
     }
@@ -79,7 +79,7 @@ export const prerender = true
 
     input:focus, select:focus, textarea:focus {
       outline: none;
-      border-color: #2563EB;
+      border-color: var(--navy-blue);
     }
 
     textarea {
@@ -92,7 +92,7 @@ export const prerender = true
     }
 
     .submit-button {
-      background: #2563EB;
+      background: var(--navy-blue);
       color: white;
       padding: 1rem 2rem;
       border: none;
@@ -106,7 +106,7 @@ export const prerender = true
     }
 
     .submit-button:hover {
-      background: #059669;
+      background: var(--lime-green);
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     }
@@ -114,14 +114,14 @@ export const prerender = true
     .back-link {
       display: inline-block;
       margin-bottom: 2rem;
-      color: #2563EB;
+      color: var(--navy-blue);
       text-decoration: none;
       font-weight: 600;
       transition: color 0.3s ease;
     }
 
     .back-link:hover {
-      color: #059669;
+      color: var(--lime-green);
     }
 
     footer {
@@ -205,7 +205,7 @@ export const prerender = true
     </div>
   </main>
 
-   <footer style="background: linear-gradient(135deg, #2563EB 0%, #059669 100%); color: white; text-align: center; padding: 2rem 1rem; margin-top: auto;">
+   <footer style="background: var(--primary-gradient); color: white; text-align: center; padding: 2rem 1rem; margin-top: auto;">
      <p>&copy; 2025 TSTR Hub - Specialist Testing Services, Products and Solutions Directory</p>
      <p style="margin-top: 0.5rem; opacity: 0.8; font-size: 0.9rem;">
        Connecting industries with certified testers worldwide

@@ -27,7 +27,7 @@ import Footer from '../components/Footer.astro'
     }
 
     header {
-      background: linear-gradient(135deg, #2563EB 0%, #059669 100%);
+      background: var(--primary-gradient);
       color: white;
       padding: 3rem 2rem;
       text-align: center;
@@ -89,7 +89,7 @@ import Footer from '../components/Footer.astro'
     }
 
     .pricing-card.featured {
-      border: 3px solid #2563EB;
+      border: 3px solid var(--navy-blue);
       transform: scale(1.05);
     }
 
@@ -99,7 +99,7 @@ import Footer from '../components/Footer.astro'
       top: -15px;
       left: 50%;
       transform: translateX(-50%);
-      background: #2563EB;
+      background: var(--navy-blue);
       color: white;
       padding: 0.4rem 1.5rem;
       border-radius: 20px;
@@ -110,7 +110,7 @@ import Footer from '../components/Footer.astro'
 
     .pricing-card.premium::before {
       content: "BEST VALUE";
-      background: #059669;
+      background: var(--lime-green);
     }
 
     .tier-name {
@@ -123,7 +123,7 @@ import Footer from '../components/Footer.astro'
     .tier-price {
       font-size: 3rem;
       font-weight: 800;
-      color: #2563EB;
+      color: var(--navy-blue);
       margin: 1rem 0;
     }
 
@@ -180,7 +180,7 @@ import Footer from '../components/Footer.astro'
       display: block;
       width: 100%;
       padding: 1rem 2rem;
-      background: #2563EB;
+      background: var(--navy-blue);
       color: white;
       text-align: center;
       text-decoration: none;
@@ -199,8 +199,8 @@ import Footer from '../components/Footer.astro'
 
     .cta-button.secondary {
       background: white;
-      color: #2563EB;
-      border: 2px solid #2563EB;
+      color: var(--navy-blue);
+      border: 2px solid var(--navy-blue);
     }
 
     .cta-button.secondary:hover {
@@ -229,7 +229,7 @@ import Footer from '../components/Footer.astro'
     }
 
     .comparison-table thead {
-      background: linear-gradient(135deg, #2563EB 0%, #059669 100%);
+      background: var(--primary-gradient);
       color: white;
     }
 
@@ -266,14 +266,14 @@ import Footer from '../components/Footer.astro'
 
     .guarantee-section {
       background: #f0f4ff;
-      border-left: 4px solid #2563EB;
+      border-left: 4px solid var(--navy-blue);
       padding: 2rem;
       margin: 3rem 0;
       border-radius: 8px;
     }
 
     .guarantee-section h3 {
-      color: #2563EB;
+      color: var(--navy-blue);
       margin-bottom: 0.5rem;
     }
 
@@ -303,7 +303,7 @@ import Footer from '../components/Footer.astro'
     }
 
     .faq-item h3 {
-      color: #2563EB;
+      color: var(--navy-blue);
       margin-bottom: 0.75rem;
       font-size: 1.2rem;
     }
@@ -322,7 +322,7 @@ import Footer from '../components/Footer.astro'
     }
 
     footer a {
-      color: #2563EB;
+      color: var(--navy-blue);
       text-decoration: none;
     }
 
