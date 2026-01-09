@@ -636,10 +636,11 @@ import Footer from '../components/Footer.astro'
           // Call Edge Function directly with fetch to avoid any automatic JWT handling
           const functionUrl = `${supabaseBrowser.supabaseUrl}/functions/v1/paypal-create-subscription`
 
-          console.log('[PayPal] About to call Edge Function...')
-          console.log('[PayPal] Supabase URL:', supabaseBrowser.supabaseUrl)
-          console.log('[PayPal] Function URL:', functionUrl)
-          console.log('[PayPal] Supabase key starts with:', supabaseBrowser.supabaseKey.substring(0, 20) + '...')
+          console.log('🎯🎯🎯 FRONTEND: About to call Edge Function...')
+          console.log('🎯 Supabase URL:', supabaseBrowser.supabaseUrl)
+          console.log('🎯 Function URL:', functionUrl)
+          console.log('🎯 Supabase key starts with:', supabaseBrowser.supabaseKey.substring(0, 20) + '...')
+          console.log('🎯 Current timestamp:', new Date().toISOString())
           console.log('[PayPal] Request payload:', {
             tier,
             userId: currentSession.user.id,
@@ -649,6 +650,7 @@ import Footer from '../components/Footer.astro'
             cancel_url: window.location.origin + '/checkout/cancel'
           })
 
+          console.log('🎯 Making fetch request...')
           const response = await fetch(functionUrl, {
             method: 'POST',
             headers: {
@@ -663,10 +665,11 @@ import Footer from '../components/Footer.astro'
             })
           })
 
-          console.log('[PayPal] Response received')
-          console.log('[PayPal] Response status:', response.status)
-          console.log('[PayPal] Response status text:', response.statusText)
-          console.log('[PayPal] Response headers:', Object.fromEntries(response.headers.entries()))
+          console.log('🎯 Fetch completed, response received')
+          console.log('🎯 Raw response status:', response.status)
+          console.log('🎯 Raw response status text:', response.statusText)
+          console.log('🎯 Raw response headers:', Object.fromEntries(response.headers.entries()))
+          console.log('🎯 Response ok:', response.ok)
 
           if (!response.ok) {
             console.error('[PayPal] Response not OK')
