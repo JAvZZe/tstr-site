@@ -650,10 +650,10 @@ import Footer from '../components/Footer.astro'
           try {
             const response = await fetch(functionUrl, {
               method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-                // No Authorization header - testing if Edge Function works without auth
-              },
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${supabaseBrowser.supabaseKey}` // Use anon key for basic auth
+            },
               body: JSON.stringify({
                 tier,
                 userId: currentSession.user.id,
