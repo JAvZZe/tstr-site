@@ -637,6 +637,13 @@ import Footer from '../components/Footer.astro'
           })
 
           // Call Edge Function with user ID instead of relying on JWT validation
+          console.log('[PayPal] Calling Edge Function with:', {
+            tier,
+            userId: currentSession.user.id,
+            return_url: window.location.origin + '/checkout/success',
+            cancel_url: window.location.origin + '/checkout/cancel'
+          })
+
           const { data, error: invokeError } = await supabaseBrowser.functions.invoke('paypal-create-subscription', {
             body: {
               tier,
@@ -646,10 +653,21 @@ import Footer from '../components/Footer.astro'
             }
           })
 
-          if (invokeError) throw invokeError
+          console.log('[PayPal] Edge Function response:', { data, error: invokeError })
+
+          if (invokeError) {
+            console.error('[PayPal] Invoke error details:', invokeError)
+            throw invokeError
+          }
+
+          // Check for version in response to verify we're hitting the new code
+          if (data?.version) {
+            console.log('[PayPal] Response version:', data.version)
+          }
 
           // Redirect to PayPal
           if (data?.approval_url) {
+            console.log('[PayPal] Redirecting to PayPal:', data.approval_url)
             window.location.href = data.approval_url
           } else {
             throw new Error('No approval URL returned')
