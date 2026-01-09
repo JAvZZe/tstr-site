@@ -622,6 +622,14 @@ import Footer from '../components/Footer.astro'
             return
           }
 
+          // Debug: Check current session before calling Edge Function
+          const { data: { session: currentSession }, error: sessionError } = await supabaseBrowser.auth.getSession()
+          console.log('[PayPal] Current session before Edge Function call:', {
+            hasSession: !!currentSession,
+            userId: currentSession?.user?.id,
+            sessionError: sessionError?.message
+          })
+
           // Call Edge Function to create subscription
           const { data, error: invokeError } = await supabaseBrowser.functions.invoke('paypal-create-subscription', {
             body: {
