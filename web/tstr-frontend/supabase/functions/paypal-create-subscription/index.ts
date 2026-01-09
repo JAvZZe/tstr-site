@@ -60,14 +60,16 @@ serve(async (req) => {
     console.log('Edge Function called with method:', req.method)
     console.log('Headers:', Object.fromEntries(req.headers.entries()))
 
-    // Get userId from request body instead of JWT validation
+    // Get userId from request body - no JWT validation
     const { tier, userId, return_url, cancel_url } = await req.json()
 
     console.log('=== RECEIVED REQUEST ===')
     console.log('Parsed body:', { tier, userId, return_url, cancel_url })
     console.log('userId type:', typeof userId, 'value:', userId)
+    console.log('Request headers:', Object.fromEntries(req.headers.entries()))
 
     if (!userId) {
+      console.log('ERROR: Missing userId in request')
       return new Response(JSON.stringify({
         error: 'Missing user ID',
         details: 'User ID must be provided in request body'
