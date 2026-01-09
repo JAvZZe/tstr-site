@@ -390,49 +390,63 @@ import Footer from '../components/Footer.astro'
         <a href="/submit" class="cta-button secondary">Get Listed Free</a>
       </div>
 
-      <!-- Professional Tier -->
-      <div class="pricing-card featured">
-        <div class="tier-name">Professional</div>
-        <div class="tier-price">
-          <sup>$</sup>295<sub>/month</sub>
-        </div>
-        <div class="tier-description">
-          Perfect for testing labs seeking direct customer inquiries and visibility.
-        </div>
-        <ul class="features-list">
-          <li>Everything in Free, plus:</li>
-          <li><strong>Full contact info displayed</strong></li>
-          <li>Detailed capabilities & certifications</li>
-          <li>Equipment list</li>
-          <li>Up to 3 case studies</li>
-          <li>Basic analytics dashboard</li>
-          <li>Profile view tracking</li>
-          <li>Email support</li>
-        </ul>
-        <button id="btn-professional" class="cta-button" data-tier="professional">Subscribe Now - $295/mo</button>
-      </div>
+       <!-- Professional Tier -->
+       <div class="pricing-card featured">
+         <div class="tier-name">Professional</div>
+         <div class="tier-price">
+           <sup>$</sup>295<sub>/month</sub>
+         </div>
+         <div class="tier-description">
+           Perfect for testing labs seeking direct customer inquiries and visibility.
+         </div>
+         <ul class="features-list">
+           <li>Everything in Free, plus:</li>
+           <li><strong>Full contact info displayed</strong></li>
+           <li>Detailed capabilities & certifications</li>
+           <li>Equipment list</li>
+           <li>Up to 3 case studies</li>
+           <li>Basic analytics dashboard</li>
+           <li>Profile view tracking</li>
+           <li>Email support</li>
+         </ul>
+         <div style="margin-top: 2rem;">
+           <button id="btn-professional-paypal" class="cta-button" data-tier="professional" data-method="paypal">PayPal - $295/mo</button>
+           <div style="margin-top: 0.5rem; text-align: center;">
+             <span style="font-size: 0.9rem; color: #666;">or</span>
+           </div>
+           <button id="btn-professional-eft" class="cta-button secondary" data-tier="professional" data-method="eft">Bank Transfer (EFT)</button>
+           <button id="btn-professional-btc" class="cta-button secondary" data-tier="professional" data-method="btc" style="margin-top: 0.5rem;">Bitcoin Payment</button>
+         </div>
+       </div>
 
-      <!-- Premium Tier -->
-      <div class="pricing-card premium">
-        <div class="tier-name">Premium</div>
-        <div class="tier-price">
-          <sup>$</sup>795<sub>/month</sub>
-        </div>
-        <div class="tier-description">
-          Maximize lead flow with priority ranking and real-time notifications.
-        </div>
-        <ul class="features-list">
-          <li>Everything in Professional, plus:</li>
-          <li><strong>Priority ranking in searches</strong></li>
-          <li><strong>Real-time lead notifications</strong></li>
-          <li>Featured case study section</li>
-          <li>Advanced analytics dashboard</li>
-          <li>Monthly performance reports</li>
-          <li>48-hour early access to RFQs</li>
-          <li>Priority email support</li>
-        </ul>
-        <button id="btn-premium" class="cta-button" data-tier="premium">Subscribe Now - $795/mo</button>
-      </div>
+       <!-- Premium Tier -->
+       <div class="pricing-card premium">
+         <div class="tier-name">Premium</div>
+         <div class="tier-price">
+           <sup>$</sup>795<sub>/month</sub>
+         </div>
+         <div class="tier-description">
+           Maximize lead flow with priority ranking and real-time notifications.
+         </div>
+         <ul class="features-list">
+           <li>Everything in Professional, plus:</li>
+           <li><strong>Priority ranking in searches</strong></li>
+           <li><strong>Real-time lead notifications</strong></li>
+           <li>Featured case study section</li>
+           <li>Advanced analytics dashboard</li>
+           <li>Monthly performance reports</li>
+           <li>48-hour early access to RFQs</li>
+           <li>Priority email support</li>
+         </ul>
+         <div style="margin-top: 2rem;">
+           <button id="btn-premium-paypal" class="cta-button" data-tier="premium" data-method="paypal">PayPal - $795/mo</button>
+           <div style="margin-top: 0.5rem; text-align: center;">
+             <span style="font-size: 0.9rem; color: #666;">or</span>
+           </div>
+           <button id="btn-premium-eft" class="cta-button secondary" data-tier="premium" data-method="eft">Bank Transfer (EFT)</button>
+           <button id="btn-premium-btc" class="cta-button secondary" data-tier="premium" data-method="btc" style="margin-top: 0.5rem;">Bitcoin Payment</button>
+         </div>
+       </div>
 
       <!-- Enterprise Tier -->
       <div class="pricing-card">
@@ -551,10 +565,10 @@ import Footer from '../components/Footer.astro'
         <p>Yes! You can upgrade to a higher tier at any time. Contact our sales team at {CONTACTS.sales} to discuss plan changes. Downgrades take effect at the end of your current billing cycle.</p>
       </div>
 
-      <div class="faq-item">
-        <h3>What payment methods do you accept?</h3>
-        <p>We accept bank transfers, company checks, and major credit cards. Contact {CONTACTS.sales} for payment arrangements. Enterprise clients can arrange custom payment terms including annual billing with discounts.</p>
-      </div>
+       <div class="faq-item">
+         <h3>What payment methods do you accept?</h3>
+         <p>We accept PayPal (instant online payments), bank transfers (EFT), Bitcoin cryptocurrency, company checks, and major credit cards. PayPal subscriptions are processed instantly. For EFT and Bitcoin payments, contact {CONTACTS.sales} to arrange payment details and account setup. Enterprise clients can arrange custom payment terms including annual billing with discounts.</p>
+       </div>
 
       <div class="faq-item">
         <h3>Do you offer annual billing?</h3>
@@ -589,47 +603,69 @@ import Footer from '../components/Footer.astro'
   <script>
     import { supabaseBrowser } from '../lib/supabase-browser'
 
-    async function handleSubscribe(tier) {
-      const button = document.querySelector(`[data-tier="${tier}"]`)
+    async function handleSubscribe(tier, method = 'paypal') {
+      const button = document.querySelector(`[data-tier="${tier}"][data-method="${method}"]`)
       const originalText = button.textContent
       button.textContent = 'Processing...'
       button.disabled = true
 
       try {
-        // Check if user is logged in
-        const { data: { session }, error: sessionError } = await supabaseBrowser.auth.getSession()
+        if (method === 'paypal') {
+          // PayPal subscription flow
+          const { data: { session }, error: sessionError } = await supabaseBrowser.auth.getSession()
 
-        if (sessionError || !session) {
-          // Store tier in sessionStorage to survive OAuth redirect
-          sessionStorage.setItem('pendingSubscriptionTier', tier);
-          // Redirect to login with return URL
-          window.location.href = `/login?redirect_to=${encodeURIComponent('/pricing?tier=' + tier)}`
-          return
-        }
-
-        // Call Edge Function to create subscription
-        const { data, error: invokeError } = await supabaseBrowser.functions.invoke('paypal-create-subscription', {
-          body: {
-            tier,
-            return_url: window.location.origin + '/checkout/success',
-            cancel_url: window.location.origin + '/checkout/cancel'
+          if (sessionError || !session) {
+            // Store tier in sessionStorage to survive OAuth redirect
+            sessionStorage.setItem('pendingSubscriptionTier', tier);
+            // Redirect to login with return URL
+            window.location.href = `/login?redirect_to=${encodeURIComponent('/pricing?tier=' + tier)}`
+            return
           }
-        })
 
-        if (invokeError) throw invokeError
+          // Call Edge Function to create subscription
+          const { data, error: invokeError } = await supabaseBrowser.functions.invoke('paypal-create-subscription', {
+            body: {
+              tier,
+              return_url: window.location.origin + '/checkout/success',
+              cancel_url: window.location.origin + '/checkout/cancel'
+            }
+          })
 
-        // Redirect to PayPal
-        if (data?.approval_url) {
-          window.location.href = data.approval_url
-        } else {
-          throw new Error('No approval URL returned')
+          if (invokeError) throw invokeError
+
+          // Redirect to PayPal
+          if (data?.approval_url) {
+            window.location.href = data.approval_url
+          } else {
+            throw new Error('No approval URL returned')
+          }
+        } else if (method === 'eft') {
+          // EFT/Bank Transfer
+          const amount = tier === 'professional' ? 295 : 795
+          const subject = `TSTR ${tier.charAt(0).toUpperCase() + tier.slice(1)} Plan - Bank Transfer`
+          const body = `Please process bank transfer for TSTR ${tier} plan subscription ($${amount}/month).\n\nBank details will be provided upon confirmation.\n\nPlease include your account email in the transfer reference.`
+
+          window.location.href = `mailto:${CONTACTS.sales}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+          button.textContent = originalText
+          button.disabled = false
+          return
+        } else if (method === 'btc') {
+          // Bitcoin payment
+          const amount = tier === 'professional' ? 295 : 795
+          const subject = `TSTR ${tier.charAt(0).toUpperCase() + tier.slice(1)} Plan - Bitcoin Payment`
+          const body = `Please send Bitcoin payment for TSTR ${tier} plan subscription ($${amount}/month).\n\nBTC wallet address: [WALLET_ADDRESS_HERE]\n\nPlease include transaction ID and your account email for verification.`
+
+          window.location.href = `mailto:${CONTACTS.sales}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+          button.textContent = originalText
+          button.disabled = false
+          return
         }
 
       } catch (error) {
         console.error('Subscription error:', error)
-        
+
         let errorDetail = error?.message || 'Unknown error'
-        
+
         // Try to extract detailed error from Supabase FunctionsHttpError
         if (error.context && typeof error.context.json === 'function') {
           try {
@@ -656,32 +692,31 @@ import Footer from '../components/Footer.astro'
 
     // Safely attach click handlers with error handling
     try {
-      document.getElementById('btn-professional')?.addEventListener('click', () => handleSubscribe('professional'))
-      document.getElementById('btn-premium')?.addEventListener('click', () => handleSubscribe('premium'))
+      // PayPal buttons
+      document.getElementById('btn-professional-paypal')?.addEventListener('click', () => handleSubscribe('professional', 'paypal'))
+      document.getElementById('btn-premium-paypal')?.addEventListener('click', () => handleSubscribe('premium', 'paypal'))
+
+      // EFT buttons
+      document.getElementById('btn-professional-eft')?.addEventListener('click', () => handleSubscribe('professional', 'eft'))
+      document.getElementById('btn-premium-eft')?.addEventListener('click', () => handleSubscribe('premium', 'eft'))
+
+      // Bitcoin buttons
+      document.getElementById('btn-professional-btc')?.addEventListener('click', () => handleSubscribe('professional', 'btc'))
+      document.getElementById('btn-premium-btc')?.addEventListener('click', () => handleSubscribe('premium', 'btc'))
     } catch (error) {
-      console.warn('Failed to initialize PayPal subscription handlers:', error)
+      console.warn('Failed to initialize subscription handlers:', error)
       // If initialization fails, disable the buttons gracefully
       document.addEventListener('DOMContentLoaded', () => {
-        const professionalBtn = document.getElementById('btn-professional');
-        const premiumBtn = document.getElementById('btn-premium');
+        const paypalBtns = document.querySelectorAll('[data-method="paypal"]');
 
-        if (professionalBtn) {
-          professionalBtn.disabled = true;
-          professionalBtn.title = 'Subscription system temporarily unavailable';
-          professionalBtn.addEventListener('click', (e) => {
+        paypalBtns.forEach(btn => {
+          btn.disabled = true;
+          btn.title = 'Subscription system temporarily unavailable';
+          btn.addEventListener('click', (e) => {
             e.preventDefault();
             alert('Subscription system is temporarily unavailable. Please try again later.');
           });
-        }
-
-        if (premiumBtn) {
-          premiumBtn.disabled = true;
-          premiumBtn.title = 'Subscription system temporarily unavailable';
-          premiumBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            alert('Subscription system is temporarily unavailable. Please try again later.');
-          });
-        }
+        });
       });
     }
 

@@ -58,6 +58,7 @@ serve(async (req) => {
     // Get user from Supabase auth
     const authHeader = req.headers.get('Authorization')
     console.log('Auth header present:', !!authHeader)
+    console.log('Auth header value:', authHeader ? authHeader.substring(0, 20) + '...' : 'none')
 
     if (!authHeader) {
       return new Response(JSON.stringify({ error: 'Missing authorization header' }), {
@@ -74,9 +75,18 @@ serve(async (req) => {
 
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     console.log('Auth result:', { user: !!user, error: authError?.message })
+    console.log('User details:', user ? { id: user.id, email: user.email } : 'no user')
 
     if (authError || !user) {
-      return new Response(JSON.stringify({ error: 'Unauthorized', details: authError?.message }), {
+      return new Response(JSON.stringify({
+        error: 'Unauthorized',
+        details: authError?.message,
+        debug: {
+          authHeaderPresent: !!authHeader,
+          authError: authError?.message,
+          userExists: !!user
+        }
+      }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
@@ -88,6 +98,10 @@ serve(async (req) => {
     console.log('Received request:', { tier, return_url, cancel_url })
     console.log('PLAN_IDS:', PLAN_IDS)
     console.log('PLAN_IDS[tier]:', PLAN_IDS[tier])
+    console.log('Environment check:', {
+      PAYPAL_PLAN_PROFESSIONAL: Deno.env.get('PAYPAL_PLAN_PROFESSIONAL'),
+      PAYPAL_PLAN_PREMIUM: Deno.env.get('PAYPAL_PLAN_PREMIUM')
+    })
 
     if (!tier || !PLAN_IDS[tier]) {
       console.log('Invalid tier or missing plan ID')
@@ -96,7 +110,11 @@ serve(async (req) => {
         debug: {
           tier,
           availableTiers: Object.keys(PLAN_IDS),
-          planId: PLAN_IDS[tier]
+          planId: PLAN_IDS[tier],
+          envVars: {
+            professional: Deno.env.get('PAYPAL_PLAN_PROFESSIONAL'),
+            premium: Deno.env.get('PAYPAL_PLAN_PREMIUM')
+          }
         }
       }), {
         status: 400,
