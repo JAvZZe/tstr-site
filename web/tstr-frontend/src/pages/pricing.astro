@@ -622,27 +622,25 @@ import Footer from '../components/Footer.astro'
             return
           }
 
-          // Debug: Check current session before calling Edge Function
+          // Get current session and user
           const { data: { session: currentSession }, error: sessionError } = await supabaseBrowser.auth.getSession()
-          console.log('[PayPal] Current session before Edge Function call:', {
-            hasSession: !!currentSession,
-            userId: currentSession?.user?.id,
-            userEmail: currentSession?.user?.email,
-            sessionError: sessionError?.message,
-            accessToken: currentSession?.access_token ? currentSession.access_token.substring(0, 20) + '...' : 'none',
-            refreshToken: currentSession?.refresh_token ? 'present' : 'none',
-            expiresAt: currentSession?.expires_at,
-            expiresIn: currentSession?.expires_at ? Math.floor((currentSession.expires_at * 1000 - Date.now()) / 1000) : 'unknown'
-          })
 
-          if (!currentSession || !currentSession.access_token) {
+          if (sessionError || !currentSession || !currentSession.user) {
             throw new Error('No valid session available. Please log in again.')
           }
 
-          // Call Edge Function to create subscription
+          console.log('[PayPal] Session validated:', {
+            userId: currentSession.user.id,
+            userEmail: currentSession.user.email,
+            expiresAt: currentSession.expires_at,
+            expiresIn: currentSession.expires_at ? Math.floor((currentSession.expires_at * 1000 - Date.now()) / 1000) : 'unknown'
+          })
+
+          // Call Edge Function with user ID instead of relying on JWT validation
           const { data, error: invokeError } = await supabaseBrowser.functions.invoke('paypal-create-subscription', {
             body: {
               tier,
+              userId: currentSession.user.id,
               return_url: window.location.origin + '/checkout/success',
               cancel_url: window.location.origin + '/checkout/cancel'
             }

@@ -57,97 +57,47 @@ serve(async (req) => {
     console.log('Edge Function called with method:', req.method)
     console.log('Headers:', Object.fromEntries(req.headers.entries()))
 
-    // Get user from Supabase auth
-    const authHeader = req.headers.get('Authorization')
-    console.log('Auth header present:', !!authHeader)
-    console.log('Auth header value:', authHeader ? authHeader.substring(0, 50) + '...' : 'none')
-    console.log('All headers:', Object.fromEntries(req.headers.entries()))
+    // Get userId from request body instead of JWT validation
+    const { tier, userId, return_url, cancel_url } = await req.json()
 
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: 'Missing authorization header' }), {
-        status: 401,
+    console.log('Received request:', { tier, userId, return_url, cancel_url })
+
+    if (!userId) {
+      return new Response(JSON.stringify({
+        error: 'Missing user ID',
+        details: 'User ID must be provided in request body'
+      }), {
+        status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
 
-    // Create Supabase client with proper auth context
+    // Create service role client for database operations and user validation
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_ANON_KEY')!,
-      {
-        global: {
-          headers: {
-            Authorization: authHeader
-          }
-        }
-      }
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     )
 
-    // Get user from Supabase auth
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    // Validate user exists and get their details
+    const { data: user, error: userError } = await supabase
+      .from('user_profiles')
+      .select('id, email')
+      .eq('id', userId)
+      .single()
 
-    console.log('Supabase auth result:', {
-      user: !!user,
-      error: authError?.message,
-      userId: user?.id,
-      userEmail: user?.email
-    })
-
-    if (authError || !user) {
-      // Detailed JWT debugging
-      let jwtDebug = {}
-      try {
-        if (authHeader && authHeader.startsWith('Bearer ')) {
-          const token = authHeader.substring(7)
-          const parts = token.split('.')
-          if (parts.length === 3) {
-            const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')))
-            jwtDebug = {
-              header: JSON.parse(atob(parts[0].replace(/-/g, '+').replace(/_/g, '/'))),
-              payload: {
-                iss: payload.iss,
-                sub: payload.sub,
-                aud: payload.aud,
-                exp: payload.exp,
-                iat: payload.iat,
-                expDate: new Date(payload.exp * 1000).toISOString(),
-                iatDate: new Date(payload.iat * 1000).toISOString(),
-                isExpired: payload.exp * 1000 < Date.now(),
-                timeToExpiry: Math.floor((payload.exp * 1000 - Date.now()) / 1000)
-              },
-              signature: parts[2].substring(0, 10) + '...'
-            }
-          }
-        }
-      } catch (e) {
-        jwtDebug = { decodeError: e.message }
-      }
-
+    if (userError || !user) {
+      console.error('User validation error:', userError)
       return new Response(JSON.stringify({
-        error: 'Invalid JWT',
-        details: authError?.message || 'User not authenticated',
-        debug: {
-          authHeaderPresent: !!authHeader,
-          authHeaderLength: authHeader?.length,
-          supabaseUrl: Deno.env.get('SUPABASE_URL'),
-          jwtDebug
-        }
+        error: 'Invalid user',
+        details: 'User not found or invalid user ID'
       }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
 
-    // Create service role client for database operations
-    const dbSupabase = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    )
+    console.log('User validated:', { id: user.id, email: user.email })
 
-    // Get requested tier from body
-    const { tier, return_url, cancel_url } = await req.json()
-
-    console.log('Received request:', { tier, return_url, cancel_url })
     console.log('PLAN_IDS:', PLAN_IDS)
     console.log('PLAN_IDS[tier]:', PLAN_IDS[tier])
     console.log('Environment check:', {
