@@ -2,7 +2,7 @@
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
 > **Last Updated**: 2026-01-09 15:26 UTC
-> **Updated By**: opencode
+> **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 

@@ -48,10 +48,13 @@ async function getPayPalAccessToken(): Promise<string> {
 }
 
 serve(async (req) => {
-  console.log('🚀 PAYPAL EDGE FUNCTION CALLED - VERSION 31 - DEBUG MODE')
+  console.log('🚀🚀🚀 PAYPAL EDGE FUNCTION CALLED - VERSION 32 - ROOT CAUSE DEBUG 🚀🚀🚀')
+  console.log('Timestamp:', new Date().toISOString())
   console.log('Request method:', req.method)
   console.log('Request URL:', req.url)
-  console.log('Request headers:', Object.fromEntries(req.headers.entries()))
+  console.log('Request headers keys:', Array.from(req.headers.keys()))
+  console.log('Authorization header present:', req.headers.has('Authorization'))
+  console.log('Content-Type header:', req.headers.get('Content-Type'))
 
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -60,13 +63,22 @@ serve(async (req) => {
   }
 
   try {
+    console.log('=== ENTERING TRY BLOCK ===')
     console.log('=== PARSING REQUEST BODY ===')
     let requestBody
     try {
+      console.log('About to parse JSON...')
       requestBody = await req.json()
-      console.log('Successfully parsed request body:', requestBody)
+      console.log('✅ Successfully parsed request body:', requestBody)
     } catch (parseError) {
-      console.error('Failed to parse request body as JSON:', parseError)
+      console.error('❌ Failed to parse request body as JSON:', parseError)
+      console.error('Raw request body attempt...')
+      try {
+        const rawBody = await req.text()
+        console.error('Raw body:', rawBody)
+      } catch (textError) {
+        console.error('Could not read raw body either:', textError)
+      }
       return new Response(JSON.stringify({
         error: 'Invalid JSON in request body',
         details: parseError.message
@@ -258,8 +270,16 @@ serve(async (req) => {
     })
 
   } catch (error) {
-    console.error('Error:', error)
-    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+    console.error('💥💥💥 UNHANDLED ERROR IN EDGE FUNCTION 💥💥💥')
+    console.error('Error type:', typeof error)
+    console.error('Error message:', error?.message)
+    console.error('Error stack:', error?.stack)
+    console.error('Error object:', error)
+    return new Response(JSON.stringify({
+      error: 'Internal server error',
+      details: error?.message || 'Unknown error',
+      timestamp: new Date().toISOString()
+    }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
