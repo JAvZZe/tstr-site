@@ -48,24 +48,41 @@ async function getPayPalAccessToken(): Promise<string> {
 }
 
 serve(async (req) => {
-  console.log('🚀 PAYPAL EDGE FUNCTION CALLED - VERSION 29 - NO JWT')
+  console.log('🚀 PAYPAL EDGE FUNCTION CALLED - VERSION 31 - DEBUG MODE')
+  console.log('Request method:', req.method)
+  console.log('Request URL:', req.url)
+  console.log('Request headers:', Object.fromEntries(req.headers.entries()))
 
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
+    console.log('Handling CORS preflight')
     return new Response('ok', { headers: corsHeaders })
   }
 
   try {
-    console.log('=== EDGE FUNCTION START ===')
-    console.log('Edge Function called with method:', req.method)
-    console.log('Headers:', Object.fromEntries(req.headers.entries()))
+    console.log('=== PARSING REQUEST BODY ===')
+    let requestBody
+    try {
+      requestBody = await req.json()
+      console.log('Successfully parsed request body:', requestBody)
+    } catch (parseError) {
+      console.error('Failed to parse request body as JSON:', parseError)
+      return new Response(JSON.stringify({
+        error: 'Invalid JSON in request body',
+        details: parseError.message
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
 
-    // Get userId from request body - no JWT validation
-    const { tier, userId, return_url, cancel_url } = await req.json()
+    const { tier, userId, return_url, cancel_url } = requestBody
 
-    console.log('=== RECEIVED REQUEST ===')
-    console.log('Parsed body:', { tier, userId, return_url, cancel_url })
-    console.log('userId type:', typeof userId, 'value:', userId)
+    console.log('=== EXTRACTED PARAMETERS ===')
+    console.log('tier:', tier, 'type:', typeof tier)
+    console.log('userId:', userId, 'type:', typeof userId)
+    console.log('return_url:', return_url)
+    console.log('cancel_url:', cancel_url)
     console.log('Request headers:', Object.fromEntries(req.headers.entries()))
 
     if (!userId) {
