@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-09 12:45 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-01-09 14:50 UTC
+> **Updated By**: opencode
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -222,6 +222,13 @@ Last Scrape:      November 10, 2025 02:31 UTC
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.4.15** - 2026-01-09 - **Payment Methods Expansion**: Added EFT and Bitcoin payment options, enhanced PayPal debugging (opencode)
+- Added bank transfer (EFT) and Bitcoin cryptocurrency payment options for Professional and Premium tiers
+- Enhanced PayPal Edge Function with detailed authentication and Plan ID debugging
+- Updated pricing page UI to support multiple payment methods per tier
+- Improved error handling and user feedback for subscription flows
+- Updated FAQ section to reflect new payment method availability
 
 ### **v2.4.14** - 2026-01-09 - **Brand Colors Update**: Changed gradient from royal blue/green to navy blue/lime green across entire site (opencode)
 - Updated all gradient backgrounds from #2563EB (royal blue) to #000080 (navy blue)
