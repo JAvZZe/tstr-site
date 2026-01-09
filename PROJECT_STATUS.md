@@ -1,7 +1,7 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-09 14:15 UTC
+> **Last Updated**: 2026-01-09 14:45 UTC
 > **Updated By**: opencode
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -222,6 +222,12 @@ Last Scrape:      November 10, 2025 02:31 UTC
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.4.14** - 2026-01-09 - **Brand Colors Update**: Changed gradient from royal blue/green to navy blue/lime green across entire site (opencode)
+- Updated all gradient backgrounds from #2563EB (royal blue) to #000080 (navy blue)
+- Updated all gradient backgrounds from #059669 (green) to #32CD32 (lime green)
+- Applied consistently across homepage, templates, buttons, blocks, headers, footers, and all pages
+- Maintained visual hierarchy and accessibility while refreshing brand appearance
 
 ### **v2.4.13** - 2026-01-09 - **SEO Enhancement**: Added comprehensive sitemap page and footer link (opencode)
 - Created `/sitemap` page with organized sections for all main pages, categories, standards, and account features

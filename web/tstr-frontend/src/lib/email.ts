@@ -50,7 +50,7 @@ export const createDraftSaveEmail = (resumeToken: string, expiresAt: string): Em
   html: `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #2563EB; margin: 0;">TSTR.directory</h1>
+        <h1 style="color: #000080; margin: 0;">TSTR.directory</h1>
         <p style="color: #6B7280; margin: 5px 0;">Testing Services Directory</p>
       </div>
 
@@ -62,12 +62,12 @@ export const createDraftSaveEmail = (resumeToken: string, expiresAt: string): Em
 
         <div style="text-align: center; margin: 30px 0;">
           <a href="https://tstr.directory/claim?resume=${resumeToken}"
-             style="background-color: #2563EB; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
+             style="background-color: #000080; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
             Resume Your Claim
           </a>
         </div>
 
-        <div style="background-color: white; padding: 20px; border-radius: 6px; border-left: 4px solid #2563EB;">
+        <div style="background-color: white; padding: 20px; border-radius: 6px; border-left: 4px solid #000080;">
           <p style="margin: 0; color: #374151; font-size: 14px;">
             <strong>Expires:</strong> ${new Date(expiresAt).toLocaleDateString('en-US', {
               weekday: 'long',
@@ -103,7 +103,7 @@ export const createVerificationEmail = (
   html: `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #2563EB; margin: 0;">TSTR.directory</h1>
+        <h1 style="color: #000080; margin: 0;">TSTR.directory</h1>
         <p style="color: #6B7280; margin: 5px 0;">Testing Services Directory</p>
       </div>
 
@@ -115,8 +115,8 @@ export const createVerificationEmail = (
         </p>
 
         <div style="text-align: center; margin: 30px 0;">
-          <div style="background-color: white; border: 2px solid #2563EB; border-radius: 8px; padding: 20px; display: inline-block;">
-            <div style="font-family: monospace; font-size: 24px; font-weight: bold; color: #2563EB; letter-spacing: 2px;">
+          <div style="background-color: white; border: 2px solid #000080; border-radius: 8px; padding: 20px; display: inline-block;">
+            <div style="font-family: monospace; font-size: 24px; font-weight: bold; color: #000080; letter-spacing: 2px;">
               ${verificationToken}
             </div>
           </div>
