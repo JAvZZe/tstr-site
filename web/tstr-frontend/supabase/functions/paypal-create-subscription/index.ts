@@ -96,11 +96,17 @@ serve(async (req) => {
       })
     }
 
+    console.log('=== DATABASE VALIDATION ===')
+    console.log('SUPABASE_URL:', Deno.env.get('SUPABASE_URL'))
+    console.log('SUPABASE_SERVICE_ROLE_KEY present:', !!Deno.env.get('SUPABASE_SERVICE_ROLE_KEY'))
+
     // Create service role client for database operations and user validation
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     )
+
+    console.log('Created Supabase client, validating user...')
 
     // Validate user exists and get their details
     const { data: user, error: userError } = await supabase
@@ -109,18 +115,32 @@ serve(async (req) => {
       .eq('id', userId)
       .single()
 
-    if (userError || !user) {
-      console.error('User validation error:', userError)
+    console.log('User lookup result:', { user: !!user, error: userError })
+
+    if (userError) {
+      console.error('User lookup error details:', userError)
       return new Response(JSON.stringify({
-        error: 'Invalid user',
-        details: 'User not found or invalid user ID'
+        error: 'Database error during user validation',
+        details: userError.message,
+        code: userError.code
       }), {
-        status: 401,
+        status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
 
-    console.log('User validated:', { id: user.id, email: user.email })
+    if (!user) {
+      console.error('User not found for ID:', userId)
+      return new Response(JSON.stringify({
+        error: 'User not found',
+        details: `No user found with ID: ${userId}`
+      }), {
+        status: 404,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
+    console.log('✅ User validated successfully:', { id: user.id, email: user.email })
 
     console.log('PLAN_IDS:', PLAN_IDS)
     console.log('PLAN_IDS[tier]:', PLAN_IDS[tier])
