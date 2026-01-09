@@ -726,7 +726,7 @@ import Footer from '../components/Footer.astro'
       const urlParams = new URLSearchParams(window.location.search);
       const tierFromUrl = urlParams.get('tier');
       const pendingTier = sessionStorage.getItem('pendingSubscriptionTier') || tierFromUrl;
-      
+
       if (pendingTier && (pendingTier === 'professional' || pendingTier === 'premium')) {
         // Clean up tier param but PRESERVE code param (Supabase PKCE needs it for session exchange)
         if (tierFromUrl) {
@@ -735,29 +735,59 @@ import Footer from '../components/Footer.astro'
           history.replaceState(null, '', url.toString());
         }
         sessionStorage.removeItem('pendingSubscriptionTier');
-        
+
         console.log('[Auth] Pending subscription detected, tier:', pendingTier);
-        
+
+        // Function to attempt subscription
+        const attemptSubscription = async () => {
+          try {
+            const { data: { session }, error } = await supabaseBrowser.auth.getSession();
+            if (session && !error) {
+              console.log('[Auth] Session available, triggering subscription');
+              await handleSubscribe(pendingTier);
+              return true;
+            }
+            return false;
+          } catch (e) {
+            console.error('[Auth] Error checking session:', e);
+            return false;
+          }
+        };
+
         // Listen for auth state change - this is the correct way to detect OAuth session
-        const { data: { subscription } } = supabaseBrowser.auth.onAuthStateChange((event, session) => {
+        const { data: { subscription } } = supabaseBrowser.auth.onAuthStateChange(async (event, session) => {
+          console.log('[Auth] Auth state change:', event, !!session);
           if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session) {
             subscription.unsubscribe();
-            console.log('[Auth] Session established, triggering subscription');
-            handleSubscribe(pendingTier);
+            console.log('[Auth] Session established via event, triggering subscription');
+            await handleSubscribe(pendingTier);
           }
         });
-        
-        // Also check if already signed in
-        supabaseBrowser.auth.getSession().then(({ data: { session } }) => {
-          if (session) {
-            subscription.unsubscribe();
-            console.log('[Auth] Already authenticated, triggering subscription');
-            handleSubscribe(pendingTier);
+
+        // Try immediately, then retry a few times with delays
+        (async () => {
+          // First attempt
+          if (!(await attemptSubscription())) {
+            // Wait 1 second and try again
+            setTimeout(async () => {
+              if (!(await attemptSubscription())) {
+                // Wait another 2 seconds and try again
+                setTimeout(async () => {
+                  if (!(await attemptSubscription())) {
+                    console.log('[Auth] Failed to establish session after multiple attempts');
+                    alert('Session not established. Please refresh the page and try again.');
+                  }
+                }, 2000);
+              }
+            }, 1000);
           }
-        });
-        
-        // Cleanup after 10s
-        setTimeout(() => subscription.unsubscribe(), 10000);
+        })();
+
+        // Cleanup after 15s
+        setTimeout(() => {
+          subscription.unsubscribe();
+          console.log('[Auth] Auth listener cleaned up');
+        }, 15000);
       }
     })();
   </script>

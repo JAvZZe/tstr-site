@@ -23,6 +23,8 @@ console.log('Environment variables check:', {
   SUPABASE_URL: !!Deno.env.get('SUPABASE_URL'),
   SUPABASE_ANON_KEY: !!Deno.env.get('SUPABASE_ANON_KEY'),
 })
+console.log('Actual SUPABASE_URL:', Deno.env.get('SUPABASE_URL'))
+console.log('Actual SUPABASE_ANON_KEY starts with:', Deno.env.get('SUPABASE_ANON_KEY')?.substring(0, 20) + '...')
 
 console.log('Edge Function initialized with PLAN_IDS:', PLAN_IDS)
 
@@ -58,7 +60,8 @@ serve(async (req) => {
     // Get user from Supabase auth
     const authHeader = req.headers.get('Authorization')
     console.log('Auth header present:', !!authHeader)
-    console.log('Auth header value:', authHeader ? authHeader.substring(0, 20) + '...' : 'none')
+    console.log('Auth header value:', authHeader ? authHeader.substring(0, 50) + '...' : 'none')
+    console.log('All headers:', Object.fromEntries(req.headers.entries()))
 
     if (!authHeader) {
       return new Response(JSON.stringify({ error: 'Missing authorization header' }), {
@@ -76,15 +79,37 @@ serve(async (req) => {
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     console.log('Auth result:', { user: !!user, error: authError?.message })
     console.log('User details:', user ? { id: user.id, email: user.email } : 'no user')
+    console.log('Full auth error:', authError)
 
     if (authError || !user) {
+      // Try to get more details about the JWT
+      let jwtDetails = 'No JWT details available'
+      try {
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+          const token = authHeader.substring(7)
+          // Decode JWT payload (not verifying signature, just for debugging)
+          const payload = JSON.parse(atob(token.split('.')[1]))
+          jwtDetails = {
+            iss: payload.iss,
+            sub: payload.sub,
+            aud: payload.aud,
+            exp: new Date(payload.exp * 1000).toISOString(),
+            iat: new Date(payload.iat * 1000).toISOString(),
+            isExpired: payload.exp * 1000 < Date.now()
+          }
+        }
+      } catch (e) {
+        jwtDetails = 'Failed to decode JWT: ' + e.message
+      }
+
       return new Response(JSON.stringify({
-        error: 'Unauthorized',
+        error: 'Invalid JWT',
         details: authError?.message,
         debug: {
           authHeaderPresent: !!authHeader,
           authError: authError?.message,
-          userExists: !!user
+          userExists: !!user,
+          jwtDetails
         }
       }), {
         status: 401,
