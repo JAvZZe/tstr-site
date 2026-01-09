@@ -1,0 +1,135 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { supabase } from '../lib/supabase';
+
+export const prerender = true;
+
+const title = 'Sitemap - TSTR.directory';
+const description = 'Complete sitemap of TSTR.directory - find all pages and sections of our testing services directory.';
+
+// Fetch categories for dynamic pages
+const { data: categories } = await supabase
+  .from('categories')
+  .select('slug, name')
+  .eq('is_active', true)
+  .order('name');
+
+// Fetch active standards
+const { data: standards } = await supabase
+  .from('standards')
+  .select('code, name')
+  .eq('is_active', true)
+  .order('code');
+---
+
+<BaseLayout {title} {description}>
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8">TSTR.directory Sitemap</h1>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Main Pages -->
+      <div>
+        <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">Main Pages</h2>
+        <ul class="space-y-2">
+          <li><a href="/" class="text-blue-600 hover:text-blue-800">Home</a></li>
+          <li><a href="/browse" class="text-blue-600 hover:text-blue-800">Browse All Listings</a></li>
+          <li><a href="/hydrogen-testing" class="text-blue-600 hover:text-blue-800">Hydrogen Testing</a></li>
+          <li><a href="/standards" class="text-blue-600 hover:text-blue-800">Standards</a></li>
+          <li><a href="/search/standards" class="text-blue-600 hover:text-blue-800">Search by Standards</a></li>
+        </ul>
+      </div>
+
+      <!-- Business Pages -->
+      <div>
+        <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">Business</h2>
+        <ul class="space-y-2">
+          <li><a href="/submit" class="text-blue-600 hover:text-blue-800">List Your Company</a></li>
+          <li><a href="/pricing" class="text-blue-600 hover:text-blue-800">Pricing</a></li>
+          <li><a href="/claim" class="text-blue-600 hover:text-blue-800">Claim Your Listing</a></li>
+        </ul>
+      </div>
+
+      <!-- Account Pages -->
+      <div>
+        <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">Account</h2>
+        <ul class="space-y-2">
+          <li><a href="/login" class="text-blue-600 hover:text-blue-800">Login</a></li>
+          <li><a href="/signup" class="text-blue-600 hover:text-blue-800">Sign Up</a></li>
+          <li><a href="/account" class="text-blue-600 hover:text-blue-800">My Account</a></li>
+          <li><a href="/account/analytics" class="text-blue-600 hover:text-blue-800">Analytics</a></li>
+          <li><a href="/account/leads" class="text-blue-600 hover:text-blue-800">Leads</a></li>
+          <li><a href="/account/subscription" class="text-blue-600 hover:text-blue-800">Subscription</a></li>
+        </ul>
+      </div>
+
+      <!-- Testing Categories -->
+      <div>
+        <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">Testing Categories</h2>
+        <ul class="space-y-2">
+          {categories?.map(category => (
+            <li>
+              <a href={`/${category.slug}`} class="text-blue-600 hover:text-blue-800">
+                {category.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Environmental Testing -->
+      <div>
+        <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">Environmental Testing</h2>
+        <ul class="space-y-2">
+          <li><a href="/environmental-testing/air-quality" class="text-blue-600 hover:text-blue-800">Air Quality Testing</a></li>
+          <li><a href="/environmental-testing/water-quality" class="text-blue-600 hover:text-blue-800">Water Quality Testing</a></li>
+          <li><a href="/environmental-testing/soil-testing" class="text-blue-600 hover:text-blue-800">Soil Testing</a></li>
+          <li><a href="/environmental-testing/noise-vibration" class="text-blue-600 hover:text-blue-800">Noise & Vibration</a></li>
+          <li><a href="/environmental-testing/esg-sustainability" class="text-blue-600 hover:text-blue-800">ESG & Sustainability</a></li>
+        </ul>
+      </div>
+
+      <!-- Standards -->
+      <div>
+        <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">Standards</h2>
+        <ul class="space-y-2">
+          {standards?.map(standard => (
+            <li>
+              <a href={`/standards/${standard.code.toLowerCase().replace(/\s+/g, '-')}`} class="text-blue-600 hover:text-blue-800">
+                {standard.code} - {standard.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Legal & Support -->
+      <div>
+        <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">Legal & Support</h2>
+        <ul class="space-y-2">
+          <li><a href="/terms" class="text-blue-600 hover:text-blue-800">Terms of Service</a></li>
+          <li><a href="/privacy" class="text-blue-600 hover:text-blue-800">Privacy Policy</a></li>
+          <li><a href="/waitlist" class="text-blue-600 hover:text-blue-800">Waitlist</a></li>
+        </ul>
+      </div>
+
+      <!-- XML Sitemap -->
+      <div>
+        <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">Technical</h2>
+        <ul class="space-y-2">
+          <li><a href="/sitemap.xml" class="text-blue-600 hover:text-blue-800">XML Sitemap</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-12 p-6 bg-gray-50 rounded-lg">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">About This Sitemap</h3>
+      <p class="text-gray-600 mb-4">
+        This sitemap provides an overview of all main pages and sections on TSTR.directory.
+        Our directory helps industries find certified testing laboratories and services worldwide.
+      </p>
+      <p class="text-gray-600">
+        Can't find what you're looking for? <a href="/submit" class="text-blue-600 hover:text-blue-800">List your testing laboratory</a> or <a href="/browse" class="text-blue-600 hover:text-blue-800">browse our current listings</a>.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

@@ -116,11 +116,12 @@ export const CONTENT = {
   
   footerTagline: 'Connecting industries with certified testers worldwide',
   
-   footerLinks: [
-     { href: '/terms', label: 'Terms of Service' },
-     { href: '/privacy', label: 'Privacy Policy' },
-     { href: '/pricing', label: 'Pricing' },
-     { href: '/submit', label: 'List Your Company' },
-     { href: 'https://linkedin.com/company/tstr-hub', label: 'LinkedIn', icon: 'linkedin' },
-   ],
+    footerLinks: [
+      { href: '/terms', label: 'Terms of Service' },
+      { href: '/privacy', label: 'Privacy Policy' },
+      { href: '/pricing', label: 'Pricing' },
+      { href: '/sitemap', label: 'Sitemap' },
+      { href: '/submit', label: 'List Your Company' },
+      { href: 'https://linkedin.com/company/tstr-hub', label: 'LinkedIn', icon: 'linkedin' },
+    ],
 } as const

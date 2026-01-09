@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-06 18:45 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-01-09 14:15 UTC
+> **Updated By**: opencode
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -143,6 +143,8 @@ Last Scrape:      November 10, 2025 02:31 UTC
 - [x] **Claim Form Email Functionality**: ✅ COMPLETED - Implemented complete Resend email system with draft save and verification emails. Requires user acceptance testing.
 - [x] **Claim Form Email Testing**: Execute comprehensive testing plan in `docs/active/CLAIM_FORM_EMAIL_TESTING_PLAN.md` to verify end-to-end email functionality ✅ COMPLETED
 - [ ] **Oil & Gas Scraper**: Deploy locally (Already local)
+- [x] **Agent File Standardization**: Fixed incorrect paths and removed stale implementation notes from all major agent docs ✅ COMPLETED
+- [x] **System Improvement Advisory**: Analyzed system and created execution plan for bootstrap/DB enhancements ✅ COMPLETED
 
 ### **Medium Priority**
 - [ ] Add more geographic regions (Asia, Europe, Middle East)
@@ -220,6 +222,20 @@ Last Scrape:      November 10, 2025 02:31 UTC
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.4.13** - 2026-01-09 - **SEO Enhancement**: Added comprehensive sitemap page and footer link (opencode)
+- Created `/sitemap` page with organized sections for all main pages, categories, standards, and account features
+- Added sitemap link to footer navigation among other links
+- Enhanced site navigation and SEO with user-friendly sitemap structure
+- XML sitemap already existed at `/sitemap.xml` for search engines
+
+### **v2.4.12** - 2026-01-07 - **Infrastructure**: System-wide bootstrap refactor & tool access fixes (Gemini Pro)
+### **v2.4.11** - 2026-01-07 - **Cleanup**: Standardized agent files, enforced status protocol (Gemini Pro)
+- 🛠️ **Agent File Standardization**:
+  - Fixed incorrect `/home/al/AI_PROJECTS_SPACE` paths to `/media/al/AI_DATA/AI_PROJECTS_SPACE` in all agent docs.
+  - Removed stale "Recent Implementation Notes" from 5 agent files to enforce `PROJECT_STATUS.md` as single source of truth.
+  - Standardized bootstrap protocol requirements.
+- 💡 **System Advisory**: Created `HANDOFF_TO_GEMINI_3_FLASH.md` with a plan for bootstrap centralization and `db_utils.py` enhancements.
 
 ### **v2.4.10** - January 6, 2026
 - 🎨 **Favicon Updated**: Created favicon from site logo (TSTR-Logo-60px.png) for consistent branding
