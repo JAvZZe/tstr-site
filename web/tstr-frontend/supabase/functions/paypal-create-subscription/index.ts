@@ -48,13 +48,26 @@ async function getPayPalAccessToken(): Promise<string> {
 }
 
 serve(async (req) => {
-  console.log('🚀🚀🚀 PAYPAL EDGE FUNCTION CALLED - VERSION 32 - ROOT CAUSE DEBUG 🚀🚀🚀')
+  console.log('🚀🚀🚀 PAYPAL EDGE FUNCTION CALLED - VERSION 33 - FINAL DEBUG 🚀🚀🚀')
   console.log('Timestamp:', new Date().toISOString())
   console.log('Request method:', req.method)
   console.log('Request URL:', req.url)
   console.log('Request headers keys:', Array.from(req.headers.keys()))
   console.log('Authorization header present:', req.headers.has('Authorization'))
   console.log('Content-Type header:', req.headers.get('Content-Type'))
+
+  // Immediate test response to verify function is being called
+  if (req.method === 'GET') {
+    console.log('GET request received - returning test response')
+    return new Response(JSON.stringify({
+      status: 'ok',
+      message: 'Edge Function is responding',
+      version: '33',
+      timestamp: new Date().toISOString()
+    }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    })
+  }
 
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
