@@ -638,9 +638,18 @@ import Footer from '../components/Footer.astro'
 
           console.log('🎯🎯🎯 FRONTEND: About to call Edge Function...')
           console.log('🎯 Supabase URL:', supabaseBrowser.supabaseUrl)
+          console.log('🎯 Supabase client details:', {
+            url: supabaseBrowser.supabaseUrl,
+            keyLength: supabaseBrowser.supabaseKey.length,
+            keyPrefix: supabaseBrowser.supabaseKey.substring(0, 20)
+          })
           console.log('🎯 Function URL:', functionUrl)
-          console.log('🎯 Supabase key starts with:', supabaseBrowser.supabaseKey.substring(0, 20) + '...')
           console.log('🎯 Current timestamp:', new Date().toISOString())
+          console.log('🎯 User session details:', {
+            userId: currentSession.user.id,
+            userEmail: currentSession.user.email,
+            sessionExpiry: currentSession.expires_at
+          })
           console.log('[PayPal] Request payload:', {
             tier,
             userId: currentSession.user.id,
@@ -651,11 +660,12 @@ import Footer from '../components/Footer.astro'
           })
 
           console.log('🎯 Making fetch request...')
-          const response = await fetch(functionUrl, {
+          console.log('🎯 Full request details:', {
+            url: functionUrl,
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${supabaseBrowser.supabaseKey}`
+              'Authorization': `Bearer ${supabaseBrowser.supabaseKey.substring(0, 20)}...`
             },
             body: JSON.stringify({
               tier,
@@ -664,6 +674,27 @@ import Footer from '../components/Footer.astro'
               cancel_url: window.location.origin + '/checkout/cancel'
             })
           })
+
+          let response
+          try {
+            response = await fetch(functionUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${supabaseBrowser.supabaseKey}`
+              },
+              body: JSON.stringify({
+                tier,
+                userId: currentSession.user.id,
+                return_url: window.location.origin + '/checkout/success',
+                cancel_url: window.location.origin + '/checkout/cancel'
+              })
+            })
+            console.log('🎯 Fetch promise resolved')
+          } catch (fetchError) {
+            console.error('🎯 Fetch threw an error:', fetchError)
+            throw new Error(`Network error: ${fetchError.message}`)
+          }
 
           console.log('🎯 Fetch completed, response received')
           console.log('🎯 Raw response status:', response.status)
