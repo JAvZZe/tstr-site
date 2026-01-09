@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-09 13:26 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-01-09 15:00 UTC
+> **Updated By**: opencode
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -222,6 +222,12 @@ Last Scrape:      November 10, 2025 02:31 UTC
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.4.17** - 2026-01-09 - **PayPal JWT Fix**: Corrected Supabase client configuration and session validation (opencode)
+- Fixed Edge Function to use proper Supabase client with Authorization header
+- Added comprehensive JWT debugging with expiration, claims, and timing info
+- Enhanced frontend session validation before Edge Function calls
+- Separated auth client from database operations client for security
 
 ### **v2.4.16** - 2026-01-09 - **PayPal JWT Debugging**: Implemented direct JWT validation and enhanced session handling (opencode)
 - Added direct Supabase Auth API calls for JWT validation in Edge Function
