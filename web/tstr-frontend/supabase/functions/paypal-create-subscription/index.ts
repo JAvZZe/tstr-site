@@ -48,19 +48,24 @@ async function getPayPalAccessToken(): Promise<string> {
 }
 
 serve(async (req) => {
+  console.log('🚀 PAYPAL EDGE FUNCTION CALLED - VERSION 27')
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
 
   try {
+    console.log('=== EDGE FUNCTION START ===')
     console.log('Edge Function called with method:', req.method)
     console.log('Headers:', Object.fromEntries(req.headers.entries()))
 
     // Get userId from request body instead of JWT validation
     const { tier, userId, return_url, cancel_url } = await req.json()
 
-    console.log('Received request:', { tier, userId, return_url, cancel_url })
+    console.log('=== RECEIVED REQUEST ===')
+    console.log('Parsed body:', { tier, userId, return_url, cancel_url })
+    console.log('userId type:', typeof userId, 'value:', userId)
 
     if (!userId) {
       return new Response(JSON.stringify({
@@ -168,10 +173,12 @@ serve(async (req) => {
     // Find approval URL
     const approvalUrl = subscription.links.find((link: any) => link.rel === 'approve')?.href
 
+    console.log('✅ SUCCESS: Returning approval URL')
     return new Response(JSON.stringify({
       subscription_id: subscription.id,
       approval_url: approvalUrl,
-      status: subscription.status
+      status: subscription.status,
+      version: '27-userId-validation'
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
