@@ -648,8 +648,41 @@ import Footer from '../components/Footer.astro'
           console.log('🎯 User session details:', {
             userId: currentSession.user.id,
             userEmail: currentSession.user.email,
-            sessionExpiry: currentSession.expires_at
+            sessionExpiry: currentSession.expires_at,
+            tokenExpiry: new Date(currentSession.expires_at * 1000).toISOString(),
+            currentTime: new Date().toISOString(),
+            tokenExpired: currentSession.expires_at * 1000 < Date.now(),
+            tokenValidFor: Math.floor((currentSession.expires_at * 1000 - Date.now()) / 1000 / 60) + ' minutes'
           })
+
+          // Check if token is expired
+          if (currentSession.expires_at * 1000 < Date.now()) {
+            console.error('🎯 JWT token is expired!')
+            throw new Error('Session expired. Please log in again.')
+          }
+
+          // Force refresh token if it's close to expiry
+          const timeToExpiry = (currentSession.expires_at * 1000 - Date.now()) / 1000 / 60 // minutes
+          if (timeToExpiry < 5) { // Less than 5 minutes
+            console.log('🎯 Token expires soon, refreshing...')
+            const { data: refreshData, error: refreshError } = await supabaseBrowser.auth.refreshSession()
+            if (refreshError) {
+              console.error('🎯 Token refresh failed:', refreshError)
+              throw new Error('Session refresh failed: ' + refreshError.message)
+            }
+            if (refreshData.session) {
+              console.log('🎯 Session refreshed successfully')
+              // Use the refreshed session
+              currentSession.access_token = refreshData.session.access_token
+              currentSession.expires_at = refreshData.session.expires_at
+            }
+          }
+
+          // Check if token is expired
+          if (currentSession.expires_at * 1000 < Date.now()) {
+            console.error('🎯 JWT token is expired!')
+            throw new Error('Session expired. Please log in again.')
+          }
           console.log('[PayPal] Request payload:', {
             tier,
             userId: currentSession.user.id,
