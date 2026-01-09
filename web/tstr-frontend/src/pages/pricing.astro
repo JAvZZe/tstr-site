@@ -627,8 +627,17 @@ import Footer from '../components/Footer.astro'
           console.log('[PayPal] Current session before Edge Function call:', {
             hasSession: !!currentSession,
             userId: currentSession?.user?.id,
-            sessionError: sessionError?.message
+            userEmail: currentSession?.user?.email,
+            sessionError: sessionError?.message,
+            accessToken: currentSession?.access_token ? currentSession.access_token.substring(0, 20) + '...' : 'none',
+            refreshToken: currentSession?.refresh_token ? 'present' : 'none',
+            expiresAt: currentSession?.expires_at,
+            expiresIn: currentSession?.expires_at ? Math.floor((currentSession.expires_at * 1000 - Date.now()) / 1000) : 'unknown'
           })
+
+          if (!currentSession || !currentSession.access_token) {
+            throw new Error('No valid session available. Please log in again.')
+          }
 
           // Call Edge Function to create subscription
           const { data, error: invokeError } = await supabaseBrowser.functions.invoke('paypal-create-subscription', {

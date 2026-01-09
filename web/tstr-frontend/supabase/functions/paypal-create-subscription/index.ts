@@ -70,37 +70,67 @@ serve(async (req) => {
       })
     }
 
-    // Try to validate the JWT by making a direct API call to Supabase
-    const jwt = authHeader.replace('Bearer ', '')
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-
-    let user
-    try {
-      // Make a direct API call to validate the JWT
-      const response = await fetch(`${supabaseUrl}/auth/v1/user`, {
-        headers: {
-          'Authorization': `Bearer ${jwt}`,
-          'apikey': Deno.env.get('SUPABASE_ANON_KEY')!
+    // Create Supabase client with proper auth context
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_ANON_KEY')!,
+      {
+        global: {
+          headers: {
+            Authorization: authHeader
+          }
         }
-      })
+      }
+    )
 
-      if (!response.ok) {
-        const errorText = await response.text()
-        console.error('Auth API error:', response.status, errorText)
-        throw new Error(`Auth API returned ${response.status}: ${errorText}`)
+    // Get user from Supabase auth
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+    console.log('Supabase auth result:', {
+      user: !!user,
+      error: authError?.message,
+      userId: user?.id,
+      userEmail: user?.email
+    })
+
+    if (authError || !user) {
+      // Detailed JWT debugging
+      let jwtDebug = {}
+      try {
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+          const token = authHeader.substring(7)
+          const parts = token.split('.')
+          if (parts.length === 3) {
+            const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')))
+            jwtDebug = {
+              header: JSON.parse(atob(parts[0].replace(/-/g, '+').replace(/_/g, '/'))),
+              payload: {
+                iss: payload.iss,
+                sub: payload.sub,
+                aud: payload.aud,
+                exp: payload.exp,
+                iat: payload.iat,
+                expDate: new Date(payload.exp * 1000).toISOString(),
+                iatDate: new Date(payload.iat * 1000).toISOString(),
+                isExpired: payload.exp * 1000 < Date.now(),
+                timeToExpiry: Math.floor((payload.exp * 1000 - Date.now()) / 1000)
+              },
+              signature: parts[2].substring(0, 10) + '...'
+            }
+          }
+        }
+      } catch (e) {
+        jwtDebug = { decodeError: e.message }
       }
 
-      user = await response.json()
-      console.log('User validated via direct API call:', { id: user.id, email: user.email })
-    } catch (apiError) {
-      console.error('Direct API validation failed:', apiError)
       return new Response(JSON.stringify({
-        error: 'JWT validation failed',
-        details: apiError.message,
+        error: 'Invalid JWT',
+        details: authError?.message || 'User not authenticated',
         debug: {
           authHeaderPresent: !!authHeader,
-          jwtLength: jwt.length,
-          supabaseUrl
+          authHeaderLength: authHeader?.length,
+          supabaseUrl: Deno.env.get('SUPABASE_URL'),
+          jwtDebug
         }
       }), {
         status: 401,
@@ -108,9 +138,9 @@ serve(async (req) => {
       })
     }
 
-    // Now create supabase client for database operations using service role
-    const supabase = createClient(
-      supabaseUrl,
+    // Create service role client for database operations
+    const dbSupabase = createClient(
+      Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     )
 
