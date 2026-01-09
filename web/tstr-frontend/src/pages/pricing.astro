@@ -644,6 +644,15 @@ import Footer from '../components/Footer.astro'
             cancel_url: window.location.origin + '/checkout/cancel'
           })
 
+          console.log('[PayPal] About to call Edge Function...')
+          console.log('[PayPal] Function URL:', functionUrl)
+          console.log('[PayPal] Request payload:', {
+            tier,
+            userId: currentSession.user.id,
+            return_url: window.location.origin + '/checkout/success',
+            cancel_url: window.location.origin + '/checkout/cancel'
+          })
+
           const response = await fetch(functionUrl, {
             method: 'POST',
             headers: {
@@ -658,16 +667,48 @@ import Footer from '../components/Footer.astro'
             })
           })
 
+          console.log('[PayPal] Response received')
           console.log('[PayPal] Response status:', response.status)
+          console.log('[PayPal] Response status text:', response.statusText)
+          console.log('[PayPal] Response headers:', Object.fromEntries(response.headers.entries()))
 
           if (!response.ok) {
-            const errorText = await response.text()
-            console.error('[PayPal] Error response:', errorText)
-            throw new Error(`HTTP ${response.status}: ${errorText}`)
+            console.error('[PayPal] Response not OK')
+            let errorText
+            try {
+              errorText = await response.text()
+              console.error('[PayPal] Error response text:', errorText)
+            } catch (textError) {
+              console.error('[PayPal] Failed to read error response:', textError)
+              errorText = 'Unable to read error response'
+            }
+
+            // Try to parse as JSON
+            let errorData
+            try {
+              if (errorText) {
+                errorData = JSON.parse(errorText)
+                console.error('[PayPal] Parsed error data:', errorData)
+              }
+            } catch (parseError) {
+              console.error('[PayPal] Error response not valid JSON:', parseError)
+            }
+
+            const errorMessage = errorData?.error || errorData?.message || errorText || `HTTP ${response.status}`
+            console.error('[PayPal] Final error message:', errorMessage)
+            throw new Error(errorMessage)
           }
 
-          const responseData = await response.json()
-          console.log('[PayPal] Response data:', responseData)
+          let responseData
+          try {
+            responseData = await response.json()
+            console.log('[PayPal] Successfully parsed response JSON:', responseData)
+          } catch (jsonError) {
+            console.error('[PayPal] Failed to parse success response as JSON:', jsonError)
+            const textResponse = await response.text()
+            console.error('[PayPal] Raw success response:', textResponse)
+            throw new Error('Invalid response format from server')
+          }
 
           // Check for version in response to verify we're hitting the new code
           if (responseData?.version) {
