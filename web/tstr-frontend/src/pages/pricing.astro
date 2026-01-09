@@ -643,6 +643,8 @@ import Footer from '../components/Footer.astro'
           console.log('[PayPal] Request payload:', {
             tier,
             userId: currentSession.user.id,
+            userIdType: typeof currentSession.user.id,
+            userIdLength: currentSession.user.id.length,
             return_url: window.location.origin + '/checkout/success',
             cancel_url: window.location.origin + '/checkout/cancel'
           })

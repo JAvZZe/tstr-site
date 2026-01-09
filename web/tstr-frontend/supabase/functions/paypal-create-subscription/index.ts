@@ -130,17 +130,52 @@ serve(async (req) => {
     }
 
     if (!user) {
-      console.error('User not found for ID:', userId)
-      return new Response(JSON.stringify({
-        error: 'User not found',
-        details: `No user found with ID: ${userId}`
-      }), {
-        status: 404,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      })
-    }
+      console.error('User not found in user_profiles for ID:', userId)
+      console.log('Checking if user exists in auth.users...')
 
-    console.log('✅ User validated successfully:', { id: user.id, email: user.email })
+      // Check if user exists in auth.users
+      const { data: authUser, error: authError } = await supabase.auth.admin.getUserById(userId)
+
+      if (authError || !authUser) {
+        console.error('User not found in auth.users either:', authError)
+        return new Response(JSON.stringify({
+          error: 'User not found',
+          details: `User ${userId} does not exist in the system`
+        }), {
+          status: 404,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
+
+      console.log('User exists in auth but not user_profiles, creating profile...')
+      // User exists in auth but not in user_profiles, create the profile
+      const { data: newProfile, error: createError } = await supabase
+        .from('user_profiles')
+        .insert({
+          id: userId,
+          email: authUser.user.email,
+          billing_email: authUser.user.email
+        })
+        .select('id, email')
+        .single()
+
+      if (createError) {
+        console.error('Failed to create user profile:', createError)
+        return new Response(JSON.stringify({
+          error: 'Failed to create user profile',
+          details: createError.message
+        }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
+
+      console.log('✅ Created and validated user profile:', { id: newProfile.id, email: newProfile.email })
+      // Use the newly created profile
+      user = newProfile
+    } else {
+      console.log('✅ User validated successfully:', { id: user.id, email: user.email })
+    }
 
     console.log('PLAN_IDS:', PLAN_IDS)
     console.log('PLAN_IDS[tier]:', PLAN_IDS[tier])
