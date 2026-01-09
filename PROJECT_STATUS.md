@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-09 13:24 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-01-09 14:55 UTC
+> **Updated By**: opencode
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -222,6 +222,12 @@ Last Scrape:      November 10, 2025 02:31 UTC
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.4.16** - 2026-01-09 - **PayPal JWT Debugging**: Implemented direct JWT validation and enhanced session handling (opencode)
+- Added direct Supabase Auth API calls for JWT validation in Edge Function
+- Enhanced frontend session debugging before PayPal calls
+- Improved error messages with detailed JWT and session information
+- Multiple retry attempts for session establishment after OAuth redirect
 
 ### **v2.4.15** - 2026-01-09 - **Payment Methods Expansion**: Added EFT and Bitcoin payment options, enhanced PayPal debugging (opencode)
 - Added bank transfer (EFT) and Bitcoin cryptocurrency payment options for Professional and Premium tiers
