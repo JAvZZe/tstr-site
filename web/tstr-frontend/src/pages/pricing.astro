@@ -659,13 +659,29 @@ import Footer from '../components/Footer.astro'
             cancel_url: window.location.origin + '/checkout/cancel'
           })
 
-          console.log('🎯 Making fetch request...')
+          // First test if Edge Function is reachable with GET request
+          console.log('🧪 Testing Edge Function connectivity...')
+          try {
+            const testResponse = await fetch(functionUrl, {
+              method: 'GET',
+              headers: {
+                'Authorization': `Bearer ${currentSession.access_token}`
+              }
+            })
+            console.log('🧪 Test GET response status:', testResponse.status)
+            const testData = await testResponse.json()
+            console.log('🧪 Test GET response data:', testData)
+          } catch (testError) {
+            console.error('🧪 Test GET failed:', testError)
+          }
+
+          console.log('🎯 Making actual POST request...')
           console.log('🎯 Full request details:', {
             url: functionUrl,
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${supabaseBrowser.supabaseKey.substring(0, 20)}...`
+              'Authorization': `Bearer ${currentSession.access_token.substring(0, 20)}...`
             },
             body: JSON.stringify({
               tier,
