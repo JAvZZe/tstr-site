@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-09 15:13 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-01-09 15:15 UTC
+> **Updated By**: opencode
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -223,7 +223,11 @@ Last Scrape:      November 10, 2025 02:31 UTC
 
 ## 📊 VERSION HISTORY (LATEST)
 
-### **v2.4.19** - 2026-01-09 - **PayPal Root Cause Fix**: Identified supabase.functions.invoke() JWT auto-injection issue, switched to direct fetch (opencode)
+### **v2.4.20** - 2026-01-09 - **PayPal Deep Debugging**: Comprehensive logging added, testing anon key authentication (opencode)
+- Added detailed request/response logging in both frontend and Edge Function
+- Removed JWT entirely, using anon key for Edge Function authentication
+- Version tracking implemented to verify code deployment
+- Testing Supabase Edge Function authentication requirements
 - **Root Cause**: supabase.functions.invoke() automatically injects JWT in Authorization header, causing validation conflicts despite Edge Function changes
 - **Solution**: Use direct fetch() with explicit Authorization header control to bypass automatic JWT injection
 - **Security**: Maintained by validating userId via database lookup in Edge Function
