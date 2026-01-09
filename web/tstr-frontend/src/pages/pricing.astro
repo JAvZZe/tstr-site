@@ -650,8 +650,8 @@ import Footer from '../components/Footer.astro'
           const response = await fetch(functionUrl, {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${currentSession.access_token}`
+              'Content-Type': 'application/json'
+              // Removed Authorization header to avoid any JWT processing
             },
             body: JSON.stringify({
               tier,
