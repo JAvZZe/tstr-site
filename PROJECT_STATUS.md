@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-09 15:24 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-01-09 15:26 UTC
+> **Updated By**: opencode
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -223,7 +223,11 @@ Last Scrape:      November 10, 2025 02:31 UTC
 
 ## 📊 VERSION HISTORY (LATEST)
 
-### **v2.4.21** - 2026-01-09 - **Build Issues Resolved**: Fixed JavaScript syntax errors preventing deployment (opencode)
+### **v2.4.22** - 2026-01-09 - **PayPal User Profile Fix**: Handle missing user_profiles by auto-creating them (opencode)
+- **Root Cause**: Users exist in auth.users but not user_profiles table
+- **Solution**: Edge Function now auto-creates user_profiles when missing
+- **Security**: Validates user exists in auth before creating profile
+- **Fallback**: Comprehensive error handling for all user validation scenarios
 - **Root Cause**: Syntax errors in pricing.astro (duplicate variables, malformed try-catch, duplicate error handling)
 - **Resolution**: Cleaned up JavaScript code, build now passes successfully
 - **Impact**: GitHub workflows will now deploy successfully with PayPal JWT bypass fixes
