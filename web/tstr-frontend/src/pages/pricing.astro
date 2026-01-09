@@ -679,10 +679,10 @@ import Footer from '../components/Footer.astro'
           try {
             response = await fetch(functionUrl, {
               method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${supabaseBrowser.supabaseKey}`
-              },
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${currentSession.access_token}`
+            },
               body: JSON.stringify({
                 tier,
                 userId: currentSession.user.id,
