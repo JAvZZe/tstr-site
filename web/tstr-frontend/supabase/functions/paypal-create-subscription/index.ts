@@ -48,7 +48,7 @@ async function getPayPalAccessToken(): Promise<string> {
 }
 
 serve(async (req) => {
-  console.log('🚀 PAYPAL EDGE FUNCTION CALLED - VERSION 27')
+  console.log('🚀 PAYPAL EDGE FUNCTION CALLED - VERSION 29 - NO JWT')
 
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -178,7 +178,7 @@ serve(async (req) => {
       subscription_id: subscription.id,
       approval_url: approvalUrl,
       status: subscription.status,
-      version: '27-userId-validation'
+      version: '29-no-jwt'
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
