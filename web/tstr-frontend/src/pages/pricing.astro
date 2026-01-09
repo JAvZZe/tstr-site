@@ -647,25 +647,40 @@ import Footer from '../components/Footer.astro'
             cancel_url: window.location.origin + '/checkout/cancel'
           })
 
-          const response = await fetch(functionUrl, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-              // Removed Authorization header to avoid any JWT processing
-            },
-            body: JSON.stringify({
-              tier,
-              userId: currentSession.user.id,
-              return_url: window.location.origin + '/checkout/success',
-              cancel_url: window.location.origin + '/checkout/cancel'
+          try {
+            const response = await fetch(functionUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+                // No Authorization header - testing if Edge Function works without auth
+              },
+              body: JSON.stringify({
+                tier,
+                userId: currentSession.user.id,
+                return_url: window.location.origin + '/checkout/success',
+                cancel_url: window.location.origin + '/checkout/cancel'
+              })
             })
-          })
 
-          console.log('[PayPal] Raw response status:', response.status)
-          console.log('[PayPal] Raw response headers:', Object.fromEntries(response.headers.entries()))
+            console.log('[PayPal] Raw response status:', response.status)
+            console.log('[PayPal] Raw response status text:', response.statusText)
+            console.log('[PayPal] Raw response headers:', Object.fromEntries(response.headers.entries()))
 
-          const responseData = await response.json()
-          console.log('[PayPal] Raw response data:', responseData)
+            let responseData
+            try {
+              responseData = await response.json()
+              console.log('[PayPal] Raw response data:', responseData)
+            } catch (parseError) {
+              console.error('[PayPal] Failed to parse response as JSON:', parseError)
+              const textResponse = await response.text()
+              console.log('[PayPal] Raw response text:', textResponse)
+              throw new Error(`Invalid response format: ${textResponse}`)
+            }
+
+            if (!response.ok) {
+              console.error('[PayPal] Response not OK, throwing error')
+              throw new Error(responseData.error || responseData.message || `HTTP ${response.status}: ${response.statusText}`)
+            }
 
           if (!response.ok) {
             throw new Error(responseData.error || responseData.message || 'Edge Function error')
