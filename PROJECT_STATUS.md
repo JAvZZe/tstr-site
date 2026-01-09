@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-09 15:33 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-01-09 15:38 UTC
+> **Updated By**: opencode
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -223,7 +223,11 @@ Last Scrape:      November 10, 2025 02:31 UTC
 
 ## 📊 VERSION HISTORY (LATEST)
 
-### **v2.4.22** - 2026-01-09 - **PayPal User Profile Fix**: Handle missing user_profiles by auto-creating them (opencode)
+### **v2.4.23** - 2026-01-09 - **PayPal JWT Validation Fix**: Add token expiry checks and auto-refresh (opencode)
+- **Root Cause**: Supabase Edge Functions require valid, non-expired JWT tokens at infrastructure level
+- **Solution**: Validate token expiry and auto-refresh sessions before Edge Function calls
+- **Security**: Ensures only authenticated users with valid sessions can access Edge Functions
+- **Error Prevention**: Clear error messages for expired sessions with automatic refresh
 - **Root Cause**: Users exist in auth.users but not user_profiles table
 - **Solution**: Edge Function now auto-creates user_profiles when missing
 - **Security**: Validates user exists in auth before creating profile
