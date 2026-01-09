@@ -636,39 +636,50 @@ import Footer from '../components/Footer.astro'
             expiresIn: currentSession.expires_at ? Math.floor((currentSession.expires_at * 1000 - Date.now()) / 1000) : 'unknown'
           })
 
-          // Call Edge Function with user ID instead of relying on JWT validation
-          console.log('[PayPal] Calling Edge Function with:', {
+          // Call Edge Function directly with fetch to avoid any automatic JWT handling
+          const functionUrl = `${supabaseBrowser.supabaseUrl}/functions/v1/paypal-create-subscription`
+
+          console.log('[PayPal] Calling Edge Function directly at:', functionUrl)
+          console.log('[PayPal] Request body:', {
             tier,
             userId: currentSession.user.id,
             return_url: window.location.origin + '/checkout/success',
             cancel_url: window.location.origin + '/checkout/cancel'
           })
 
-          const { data, error: invokeError } = await supabaseBrowser.functions.invoke('paypal-create-subscription', {
-            body: {
+          const response = await fetch(functionUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${currentSession.access_token}`
+            },
+            body: JSON.stringify({
               tier,
               userId: currentSession.user.id,
               return_url: window.location.origin + '/checkout/success',
               cancel_url: window.location.origin + '/checkout/cancel'
-            }
+            })
           })
 
-          console.log('[PayPal] Edge Function response:', { data, error: invokeError })
+          console.log('[PayPal] Raw response status:', response.status)
+          console.log('[PayPal] Raw response headers:', Object.fromEntries(response.headers.entries()))
 
-          if (invokeError) {
-            console.error('[PayPal] Invoke error details:', invokeError)
-            throw invokeError
+          const responseData = await response.json()
+          console.log('[PayPal] Raw response data:', responseData)
+
+          if (!response.ok) {
+            throw new Error(responseData.error || responseData.message || 'Edge Function error')
           }
 
           // Check for version in response to verify we're hitting the new code
-          if (data?.version) {
-            console.log('[PayPal] Response version:', data.version)
+          if (responseData?.version) {
+            console.log('[PayPal] Response version:', responseData.version)
           }
 
           // Redirect to PayPal
-          if (data?.approval_url) {
-            console.log('[PayPal] Redirecting to PayPal:', data.approval_url)
-            window.location.href = data.approval_url
+          if (responseData?.approval_url) {
+            console.log('[PayPal] Redirecting to PayPal:', responseData.approval_url)
+            window.location.href = responseData.approval_url
           } else {
             throw new Error('No approval URL returned')
           }
