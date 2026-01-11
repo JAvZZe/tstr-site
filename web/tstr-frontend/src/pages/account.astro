@@ -497,6 +497,16 @@ import { supabaseBrowser } from '../lib/supabase-browser'
     import { supabaseBrowser } from '../lib/supabase-browser'
 
     async function loadDashboard() {
+      // Safety Net: Check for pending subscription and redirect if needed
+      if (typeof sessionStorage !== 'undefined') {
+        const pendingTier = sessionStorage.getItem('pendingSubscriptionTier')
+        if (pendingTier && (pendingTier === 'professional' || pendingTier === 'premium') && window.location.pathname !== '/pricing') {
+            console.log('[Account] Pending subscription found, redirecting to pricing...')
+            window.location.href = `/pricing?tier=${pendingTier}`
+            return
+        }
+      }
+
       const contentDiv = document.getElementById('content')
 
       try {
