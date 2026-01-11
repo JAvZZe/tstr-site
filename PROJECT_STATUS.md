@@ -1,7 +1,7 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-09 16:38 UTC
+> **Last Updated**: 2026-01-11 16:49 UTC
 > **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -14,7 +14,7 @@
 - ✅ **PayPal code COMPLETE** (v2.4.0) - Edge Functions, frontend, database migration written
 - ✅ **Configuration COMPLETE** - All secrets (Client, Secret, Webhook, Plans) configured in Supabase & Local
 - ✅ **DEPLOYMENT COMPLETE** - Database migration applied, Functions deployed.
-- ⏳ **VERIFICATION PENDING** - Ready for sandbox purchase testing
+- ✅ **VERIFIED** - Sandbox subscription flow activated successfully (2026-01-11)
 - 📊 **Alternative evaluated**: Upmind.com (decision: use later at scale)
 
 ### To Go Live (Next Session)
@@ -22,7 +22,7 @@
 2. [x] Configure webhook URL: `https://haimjeaetrsaauitrhfy.supabase.co/functions/v1/paypal-webhook`- Done
 3. [x] Set secrets with Plan IDs and Webhook ID
 4. [x] Deploy: `supabase db push` (Applied manually) + `supabase functions deploy`
-5. [ ] Test end-to-end in sandbox mode - Issues
+5. [x] Test end-to-end in sandbox mode - ✅ VERIFIED (Fixed JWT & Database errors)
 
 ### Reference Documents
 - `HANDOFF_PAYPAL_INTEGRATION_COMPLETE.md` - Full deployment checklist
@@ -223,7 +223,13 @@ Last Scrape:      November 10, 2025 02:31 UTC
 
 ## 📊 VERSION HISTORY (LATEST)
 
-### **v2.4.24** - 2026-01-11 - **PayPal Fixes**: Resolved "Invalid JWT" and added Redirect Safety Net (gemini)
+### **v2.4.25** - 2026-01-11 - **PayPal Integration Success**: Final Auth & Schema Fixes (gemini)
+- **JWT Resolution**: Identified and fixed Gateway rejection by switching from public Publishable Key to valid Anon JWT via Supabase CLI.
+- **Schema Alignment**: Resolved `column user_profiles.email does not exist` by mapping to correct `billing_email` column in Edge Function.
+- **Resilient Logic**: Changed database lookup to `.maybeSingle()` to handle first-time subscribers without crashing the function.
+- **Sandbox Verified**: Confirmed redirect to PayPal Sandbox works with "Pay with Card" and Guest Checkout flows.
+
+### **v2.4.24** - 2026-01-11 - **PayPal Fixes**: Resolved "Invalid JWT" (Init) and added Redirect Safety Net (gemini)
 - **Jwt Fix**: Updated `pricing.astro` to use Supabase Anon Key for Edge Function calls.
   - **Why**: Bypasses Supabase Gateway's strict JWT validation (which was failing with "Invalid JWT") while preserving signature verification.
   - **Security**: Edge Function internally validates users via `userId` lookup using Service Role key.
