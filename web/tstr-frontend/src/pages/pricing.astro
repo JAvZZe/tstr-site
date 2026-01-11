@@ -842,7 +842,7 @@ import Footer from '../components/Footer.astro'
           }
         } else if (error.error_description) {
           errorDetail = error.error_description
-        } else if (typeof error === 'object') {
+        } else if (typeof error === 'object' && error !== null && !(error instanceof Error)) {
           errorDetail = JSON.stringify(error)
         }
 
