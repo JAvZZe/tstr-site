@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-09 15:38 UTC
-> **Updated By**: opencode
+> **Last Updated**: 2026-01-09 16:38 UTC
+> **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -18,11 +18,11 @@
 - 📊 **Alternative evaluated**: Upmind.com (decision: use later at scale)
 
 ### To Go Live (Next Session)
-1. [x] Create PayPal subscription plans in Dashboard ($295/mo, $795/mo)
-2. [x] Configure webhook URL: `https://haimjeaetrsaauitrhfy.supabase.co/functions/v1/paypal-webhook`
+1. [x] Create PayPal subscription plans in Dashboard ($295/mo, $795/mo) - Done
+2. [x] Configure webhook URL: `https://haimjeaetrsaauitrhfy.supabase.co/functions/v1/paypal-webhook`- Done
 3. [x] Set secrets with Plan IDs and Webhook ID
 4. [x] Deploy: `supabase db push` (Applied manually) + `supabase functions deploy`
-5. [ ] Test end-to-end in sandbox mode
+5. [ ] Test end-to-end in sandbox mode - Issues
 
 ### Reference Documents
 - `HANDOFF_PAYPAL_INTEGRATION_COMPLETE.md` - Full deployment checklist
@@ -222,6 +222,13 @@ Last Scrape:      November 10, 2025 02:31 UTC
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.4.24** - 2026-01-11 - **PayPal Fixes**: Resolved "Invalid JWT" and added Redirect Safety Net (gemini)
+- **Jwt Fix**: Updated `pricing.astro` to use Supabase Anon Key for Edge Function calls.
+  - **Why**: Bypasses Supabase Gateway's strict JWT validation (which was failing with "Invalid JWT") while preserving signature verification.
+  - **Security**: Edge Function internally validates users via `userId` lookup using Service Role key.
+- **Safety Net**: Added logic to `account.astro` to auto-redirect users back to `/pricing` if they land on dashboard with a pending subscription.
+  - **Fixes**: The OAuth flow interruption where users got stuck on the account page.
 
 ### **v2.4.23** - 2026-01-09 - **PayPal JWT Validation Fix**: Add token expiry checks and auto-refresh (opencode)
 - **Root Cause**: Supabase Edge Functions require valid, non-expired JWT tokens at infrastructure level

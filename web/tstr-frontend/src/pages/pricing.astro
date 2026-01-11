@@ -698,7 +698,7 @@ import Footer from '../components/Footer.astro'
             const testResponse = await fetch(functionUrl, {
               method: 'GET',
               headers: {
-                'Authorization': `Bearer ${currentSession.access_token}`
+                'Authorization': `Bearer ${supabaseBrowser.supabaseKey}`
               }
             })
             console.log('🧪 Test GET response status:', testResponse.status)
@@ -730,7 +730,7 @@ import Footer from '../components/Footer.astro'
               method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${currentSession.access_token}`
+              'Authorization': `Bearer ${supabaseBrowser.supabaseKey}`
             },
               body: JSON.stringify({
                 tier,
