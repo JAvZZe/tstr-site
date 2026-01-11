@@ -6,7 +6,10 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co'
 
 // Anon key - safe for client-side use (RLS policies protect data)
-export const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO'
+// Safe key selection: Prefer env var ONLY if it matches new format (starts with sb_), otherwise use known good fallback
+const envKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+const fallbackKey = 'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO'
+export const supabaseAnonKey = (envKey && envKey.startsWith('sb_')) ? envKey : fallbackKey
 
 export const supabaseBrowser = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
