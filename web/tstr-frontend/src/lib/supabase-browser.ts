@@ -11,6 +11,9 @@ const envKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY
 const fallbackKey = 'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO'
 export const supabaseAnonKey = (envKey && envKey.startsWith('sb_')) ? envKey : fallbackKey
 
+// Legacy JWT Anon Key - Required for Edge Function "Authorization: Bearer" header (Supabase Gateway requirement)
+export const supabaseAnonJwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MzY1ODUsImV4cCI6MjA3NjAxMjU4NX0.BIOfni1c1JPrVw-CbGsPWeqjvl94g4GuGAILHwNfVJ4'
+
 export const supabaseBrowser = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
