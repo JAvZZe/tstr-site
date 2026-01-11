@@ -601,7 +601,7 @@ import Footer from '../components/Footer.astro'
   <Footer />
 
   <script>
-    import { supabaseBrowser } from '../lib/supabase-browser'
+    import { supabaseBrowser, supabaseAnonKey } from '../lib/supabase-browser'
 
     async function handleSubscribe(tier, method = 'paypal') {
       const button = document.querySelector(`[data-tier="${tier}"][data-method="${method}"]`)
@@ -698,7 +698,7 @@ import Footer from '../components/Footer.astro'
             const testResponse = await fetch(functionUrl, {
               method: 'GET',
               headers: {
-                'Authorization': `Bearer ${supabaseBrowser.supabaseKey}`
+                'Authorization': `Bearer ${supabaseAnonKey}`
               }
             })
             console.log('🧪 Test GET response status:', testResponse.status)
@@ -728,10 +728,10 @@ import Footer from '../components/Footer.astro'
           try {
             response = await fetch(functionUrl, {
               method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${supabaseBrowser.supabaseKey}`
-            },
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${supabaseAnonKey}`
+              },
               body: JSON.stringify({
                 tier,
                 userId: currentSession.user.id,
