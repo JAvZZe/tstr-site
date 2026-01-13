@@ -101,13 +101,14 @@ serve(async (req) => {
       })
     }
 
-    const { tier, userId, return_url, cancel_url } = requestBody
+    const { tier, userId, return_url, cancel_url, pendingToken } = requestBody
 
     console.log('=== EXTRACTED PARAMETERS ===')
     console.log('tier:', tier, 'type:', typeof tier)
     console.log('userId:', userId, 'type:', typeof userId)
     console.log('return_url:', return_url)
     console.log('cancel_url:', cancel_url)
+    console.log('pendingToken:', pendingToken, 'type:', typeof pendingToken)
     console.log('Request headers:', Object.fromEntries(req.headers.entries()))
 
     if (!userId) {
@@ -201,6 +202,34 @@ serve(async (req) => {
       console.log('✅ User validated successfully:', { id: user.id, email: user.billing_email })
     }
 
+    // Handle pending subscription recovery
+    let finalTier = tier
+    if (pendingToken) {
+      console.log('=== PENDING TOKEN VALIDATION ===')
+      const { data: profile, error: pendingError } = await supabase
+        .from('user_profiles')
+        .select('pending_subscription_data, pending_subscription_expires_at')
+        .eq('id', userId)
+        .eq('pending_subscription_token', pendingToken)
+        .gt('pending_subscription_expires_at', new Date().toISOString())
+        .single()
+
+      if (pendingError || !profile) {
+        console.error('Invalid or expired pending token:', pendingError)
+        return new Response(JSON.stringify({
+          error: 'Invalid or expired pending token',
+          details: 'The subscription recovery link has expired or is invalid'
+        }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
+
+      console.log('✅ Valid pending token found, using stored data')
+      finalTier = profile.pending_subscription_data.tier
+      console.log('Using tier from pending data:', finalTier)
+    }
+
     console.log('PLAN_IDS:', PLAN_IDS)
     console.log('PLAN_IDS[tier]:', PLAN_IDS[tier])
     console.log('Environment check:', {
@@ -208,14 +237,15 @@ serve(async (req) => {
       PAYPAL_PLAN_PREMIUM: Deno.env.get('PAYPAL_PLAN_PREMIUM')
     })
 
-    if (!tier || !PLAN_IDS[tier]) {
+    if (!finalTier || !PLAN_IDS[finalTier]) {
       console.log('Invalid tier or missing plan ID')
       return new Response(JSON.stringify({
         error: 'Invalid tier',
         debug: {
-          tier,
+          requestedTier: tier,
+          finalTier,
           availableTiers: Object.keys(PLAN_IDS),
-          planId: PLAN_IDS[tier],
+          planId: PLAN_IDS[finalTier],
           envVars: {
             professional: Deno.env.get('PAYPAL_PLAN_PROFESSIONAL'),
             premium: Deno.env.get('PAYPAL_PLAN_PREMIUM')
@@ -238,8 +268,8 @@ serve(async (req) => {
         'Content-Type': 'application/json',
         'Prefer': 'return=representation'
       },
-      body: JSON.stringify({
-        plan_id: PLAN_IDS[tier],
+       body: JSON.stringify({
+         plan_id: PLAN_IDS[finalTier],
         subscriber: {
           email_address: user.billing_email,
         },
@@ -271,12 +301,32 @@ serve(async (req) => {
     // Find approval URL
     const approvalUrl = subscription.links.find((link: any) => link.rel === 'approve')?.href
 
+    // Clear pending subscription state on successful creation
+    if (pendingToken) {
+      console.log('Clearing pending subscription state...')
+      const { error: clearError } = await supabase
+        .from('user_profiles')
+        .update({
+          pending_subscription_data: null,
+          pending_subscription_token: null,
+          pending_subscription_expires_at: null
+        })
+        .eq('id', userId)
+
+      if (clearError) {
+        console.error('Failed to clear pending subscription state:', clearError)
+        // Don't fail the subscription creation for this
+      } else {
+        console.log('✅ Cleared pending subscription state')
+      }
+    }
+
     console.log('✅ SUCCESS: Returning approval URL')
     return new Response(JSON.stringify({
       subscription_id: subscription.id,
       approval_url: approvalUrl,
       status: subscription.status,
-      version: '29-no-jwt'
+      version: '30-pending-state'
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
