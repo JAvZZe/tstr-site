@@ -615,10 +615,35 @@ import Footer from '../components/Footer.astro'
           const { data: { session: currentSession }, error: sessionError } = await supabaseBrowser.auth.getSession()
 
           if (sessionError || !currentSession) {
-            // Store tier in sessionStorage to survive OAuth redirect
-            sessionStorage.setItem('pendingSubscriptionTier', tier);
-            // Redirect to login with return URL
-            window.location.href = `/login?redirect_to=${encodeURIComponent('/pricing?tier=' + tier)}`
+            // Store pending subscription server-side
+            try {
+              const saveResponse = await fetch('/api/subscription/pending/save', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${supabaseAnonJwt}`
+                },
+                body: JSON.stringify({
+                  tier,
+                  checkoutData: { timestamp: Date.now() }
+                })
+              })
+
+              if (!saveResponse.ok) {
+                throw new Error('Failed to save pending subscription')
+              }
+
+              const saveData = await saveResponse.json()
+              console.log('[PayPal] Pending subscription saved:', saveData.pending_token)
+
+              // Redirect to login with pending token
+              window.location.href = `/login?redirect_to=${encodeURIComponent('/pricing?pending=' + saveData.pending_token)}`
+            } catch (saveError) {
+              console.error('[PayPal] Failed to save pending subscription:', saveError)
+              alert('Failed to prepare subscription. Please try again.')
+              button.textContent = originalText
+              button.disabled = false
+            }
             return
           }
 
@@ -882,74 +907,88 @@ import Footer from '../components/Footer.astro'
       });
     }
 
-    // Auto-trigger subscription if returning from login with tier param
+    // Auto-resume pending subscription if returning from login with pending token
     (function() {
-      // Check both URL and sessionStorage (sessionStorage is more reliable for OAuth)
       const urlParams = new URLSearchParams(window.location.search);
-      const tierFromUrl = urlParams.get('tier');
-      const pendingTier = sessionStorage.getItem('pendingSubscriptionTier') || tierFromUrl;
+      const pendingToken = urlParams.get('pending');
 
-      if (pendingTier && (pendingTier === 'professional' || pendingTier === 'premium')) {
-        // Clean up tier param but PRESERVE code param (Supabase PKCE needs it for session exchange)
-        if (tierFromUrl) {
-          const url = new URL(window.location.href);
-          url.searchParams.delete('tier');
-          history.replaceState(null, '', url.toString());
-        }
-        sessionStorage.removeItem('pendingSubscriptionTier');
+      if (pendingToken) {
+        console.log('[Pricing] Pending token detected, attempting to resume subscription');
 
-        console.log('[Auth] Pending subscription detected, tier:', pendingTier);
+        // Clean up URL param
+        const url = new URL(window.location.href);
+        url.searchParams.delete('pending');
+        history.replaceState(null, '', url.toString());
 
-        // Function to attempt subscription
-        const attemptSubscription = async () => {
+        // Function to resume and trigger subscription
+        const resumeSubscription = async () => {
           try {
-            const { data: { session }, error } = await supabaseBrowser.auth.getSession();
-            if (session && !error) {
-              console.log('[Auth] Session available, triggering subscription');
-              await handleSubscribe(pendingTier);
-              return true;
+            // Resume pending subscription from server
+            const resumeResponse = await fetch('/api/subscription/pending/resume', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${supabaseAnonJwt}`
+              },
+              body: JSON.stringify({ pendingToken })
+            })
+
+            if (!resumeResponse.ok) {
+              const errorData = await resumeResponse.json()
+              throw new Error(errorData.error || 'Failed to resume subscription')
             }
-            return false;
+
+            const resumeData = await resumeResponse.json()
+            console.log('[Pricing] Subscription resumed:', resumeData.pending_data.tier)
+
+            // Now trigger the PayPal subscription with the resumed tier
+            await handleSubscribe(resumeData.pending_data.tier)
+            return true
+
+          } catch (error) {
+            console.error('[Pricing] Failed to resume subscription:', error)
+            alert(`Failed to resume subscription: ${error.message}`)
+            return false
+          }
+        }
+
+        // Try immediately, then retry with delays
+        const attemptResume = async () => {
+          try {
+            const { data: { session }, error } = await supabaseBrowser.auth.getSession()
+            if (session && !error) {
+              console.log('[Pricing] Session available, resuming subscription')
+              await resumeSubscription()
+              return true
+            }
+            return false
           } catch (e) {
-            console.error('[Auth] Error checking session:', e);
-            return false;
+            console.error('[Pricing] Error checking session for resume:', e)
+            return false
           }
-        };
+        }
 
-        // Listen for auth state change - this is the correct way to detect OAuth session
-        const { data: { subscription } } = supabaseBrowser.auth.onAuthStateChange(async (event, session) => {
-          console.log('[Auth] Auth state change:', event, !!session);
-          if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session) {
-            subscription.unsubscribe();
-            console.log('[Auth] Session established via event, triggering subscription');
-            await handleSubscribe(pendingTier);
+        // Polling approach for session establishment
+        const pollForSession = async () => {
+          let attempts = 0
+          const maxAttempts = 20 // 10 seconds at 500ms intervals
+
+          const checkSession = async () => {
+            attempts++
+            if (await attemptResume()) {
+              return // Success
+            } else if (attempts >= maxAttempts) {
+              console.error('[Pricing] Failed to establish session for resume after 10 seconds')
+              alert('Session not established. Please refresh the page and try again.')
+            } else {
+              setTimeout(checkSession, 500)
+            }
           }
-        });
 
-        // Try immediately, then retry a few times with delays
-        (async () => {
-          // First attempt
-          if (!(await attemptSubscription())) {
-            // Wait 1 second and try again
-            setTimeout(async () => {
-              if (!(await attemptSubscription())) {
-                // Wait another 2 seconds and try again
-                setTimeout(async () => {
-                  if (!(await attemptSubscription())) {
-                    console.log('[Auth] Failed to establish session after multiple attempts');
-                    alert('Session not established. Please refresh the page and try again.');
-                  }
-                }, 2000);
-              }
-            }, 1000);
-          }
-        })();
+          checkSession()
+        }
 
-        // Cleanup after 15s
-        setTimeout(() => {
-          subscription.unsubscribe();
-          console.log('[Auth] Auth listener cleaned up');
-        }, 15000);
+        pollForSession()
       }
     })();
   </script>

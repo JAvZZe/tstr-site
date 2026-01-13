@@ -497,14 +497,19 @@ import { supabaseBrowser } from '../lib/supabase-browser'
     import { supabaseBrowser } from '../lib/supabase-browser'
 
     async function loadDashboard() {
-      // Safety Net: Check for pending subscription and redirect if needed
-      if (typeof sessionStorage !== 'undefined') {
-        const pendingTier = sessionStorage.getItem('pendingSubscriptionTier')
-        if (pendingTier && (pendingTier === 'professional' || pendingTier === 'premium') && window.location.pathname !== '/pricing') {
-            console.log('[Account] Pending subscription found, redirecting to pricing...')
-            window.location.href = `/pricing?tier=${pendingTier}`
-            return
-        }
+      // Safety Net: Check for pending subscription token in URL and redirect if needed
+      const urlParams = new URLSearchParams(window.location.search)
+      const pendingToken = urlParams.get('pending')
+
+      if (pendingToken) {
+        console.log('[Account] Pending token detected, redirecting to pricing for resume...')
+        // Clean up the URL param and redirect to pricing for resume
+        const url = new URL(window.location.href)
+        url.searchParams.delete('pending')
+        url.pathname = '/pricing'
+        url.searchParams.set('pending', pendingToken)
+        window.location.href = url.toString()
+        return
       }
 
       const contentDiv = document.getElementById('content')
