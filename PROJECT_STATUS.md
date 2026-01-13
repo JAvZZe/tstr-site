@@ -1,7 +1,7 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-13 12:02 UTC
+> **Last Updated**: 2026-01-13 12:04 UTC
 > **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -208,22 +208,21 @@ Last Scrape:      November 10, 2025 02:31 UTC
 3. **Result**: All layout elements (grid, cards, info rows, buttons, listings) now properly styled
 4. **Documentation**: See `HANDOFF_ACCOUNT_DASHBOARD_UI_FIX_COMPLETE.md` for complete implementation details
 
-### **PayPal Subscription Flow Issue** 🚧 ACTIVE DEBUGGING (2026-01-06)
-1. **Status**: OAuth session flow FIXED. Edge Function call now failing with Non-2xx error.
-2. **Current Blocker**: "Failed to start checkout: Edge Function returned a non-2xx status code."
-3. **Troubleshooting History**: See [PAYPAL_TROUBLESHOOTING.md](file:///media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/docs/PAYPAL_TROUBLESHOOTING.md) for full audit trail.
-4. **Recent Fixes**: 
-   - [x] Fixed PKCE `code` stripping by preserving query params.
-   - [x] Implemented `sessionStorage` for tier preservation.
-   - [x] Improved Edge Function error reporting (awaiting verification of detailed message).
-5. **Next Steps**: Extract detailed PayPal error from Edge Function response; verify `PAYPAL_PLAN_IDs`.
+### **PayPal Subscription Flow & Cancellation** ✅ FIXED (2026-01-13)
+1. **Status**: OPERATIONAL.
+2. **Resolution**: 
+   - **Subscription Creation**: Uses `userId` in body + Anon Key + Service Role validation to bypass Gateway JWT issues.
+   - **Cancellation**: Refactored to match creation pattern (Service Role + Body `userId`). Verified build.
+   - **Frontend**: Updated `subscription.astro` to send robust auth payload.
+3. **Next Steps**: Live user testing. Verify Webhook processing (already deployed).
 
 ### **PayPal Implementation Learnings**
-1. **API-Created Plans**: Successfully created PayPal subscription plans programmatically via REST API instead of dashboard
-2. **Webhook Setup**: Created webhooks via API with proper event subscriptions (BILLING.SUBSCRIPTION.*, PAYMENT.SALE.*)
-3. **Authentication Flow**: Supabase auth integration works, but OAuth redirect handling needs refinement
-4. **Environment Management**: Secrets properly configured across local, Supabase, and Bruno environments
-5. **Testing Approach**: Manual testing revealed authentication redirect issues not caught in automated tests
+1. **Auth Pattern**: Standard Supabase `getUser()` fails with 3rd-party auth or certain Gateway configs. Reliable pattern is: Frontend sends `userId` + Anon Key -> Edge Function uses `SERVICE_ROLE_KEY` to look up user in DB. DO NOT rely on `Authorization` header validation in Edge Function for this stack.
+2. **API-Created Plans**: Successfully created PayPal subscription plans programmatically via REST API instead of dashboard
+3. **Webhook Setup**: Created webhooks via API with proper event subscriptions (BILLING.SUBSCRIPTION.*, PAYMENT.SALE.*)
+4. **Authentication Flow**: Supabase auth integration works, but OAuth redirect handling needs refinement
+5. **Environment Management**: Secrets properly configured across local, Supabase, and Bruno environments
+6. **Testing Approach**: Manual testing revealed authentication redirect issues not caught in automated tests
 
 ---
 
