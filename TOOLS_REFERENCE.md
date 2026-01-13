@@ -1,7 +1,9 @@
 # TSTR.directory - Tools & Plugins Reference
 
-**Last Updated**: 2025-10-15 17:00 UTC  
-**Environment**: Windows 11, PowerShell 7, Windsurf IDE
+> **Note**: See the comprehensive system tools list in [SYSTEM_TOOLS_REFERENCE.md](../../SYSTEM_TOOLS_REFERENCE.md).
+
+**Last Updated**: 2025-10-15 17:00 UTC
+**Environment**: Ubuntu 24 Server & Minimal desktop Xorg.
 
 ---
 
@@ -15,15 +17,13 @@
 - **Best For**: Complex integrations, debugging, platform setup
 
 ### CLI Tools Installed
-1. **Node.js** - v18+ (frontend development)
-2. **npm** - Package manager for JavaScript
-3. **Python** - v3.14 (backend automation)
-4. **pip** - Package manager for Python
-5. **Git** - Version control
-6. **Wrangler** - Cloudflare Pages CLI (via npx)
-7. **Playwright** - v1.40.0 (end-to-end testing framework)
-8. **Claude CLI** - Available but not yet configured (currently not in use due to low funds)
-9. **Gemini CLI** - Available but not yet configured
+### Project‑Specific Tools
+
+- **Playwright** – End‑to‑end testing framework (v1.40.0)
+- **Claude CLI** – Available for complex reasoning (not currently used)
+- **Gemini CLI** – Fast token‑efficient tasks
+
+> **Note**: For a full list of system‑wide tools see [SYSTEM_TOOLS_REFERENCE.md](../../SYSTEM_TOOLS_REFERENCE.md).
 
 ---
 
@@ -98,12 +98,11 @@
 
 #### 2. GitHub CLI (gh)
 - **Purpose**: GitHub operations from terminal
-- **Install**: https://cli.github.com/
 - **Use Cases**:
   - Create/manage issues
   - PR operations
   - Repository management
-- **Why Later**: Nice to have, not critical
+  - Push to Cloudflare, etc.
 
 ### Medium Priority
 
@@ -186,6 +185,7 @@ python-dotenv==1.0.0
 #### 1. Analytics (Optional)
 - Google Analytics
 - Cloudflare Web Analytics
+- Bing Analytics - useful for AI SEO
 - Plausible Analytics
 
 #### 2. Monitoring (Optional)
@@ -226,8 +226,8 @@ claude "Hello world"
 
 ### Gemini CLI
 
-**Status**: Installed but not configured  
-**Purpose**: Fast, token-efficient simple tasks
+**Status**: Installed. Also used via Antigravity IDE.
+**Purpose**: Fast, token-efficient simple tasks (depends on model)
 
 **Setup** (when needed):
 ```powershell
@@ -248,7 +248,8 @@ gemini "Write hello world in Python"
 - CSV processing scripts
 - Need to conserve CASCADE tokens
 
-**Last Issue**: API overload (503) during pip install - service was temporarily unavailable
+**Last Issue**: 
+
 
 ---
 
@@ -277,11 +278,6 @@ gemini "Write hello world in Python"
 ✅ Data processing scripts  
 ✅ Quick utility functions  
 
-### When to Use Comet Assistant
-✅ Web dashboard navigation  
-✅ Research/documentation lookup  
-✅ Retrieving API keys from UIs  
-✅ Web form submissions  
 
 ---
 
