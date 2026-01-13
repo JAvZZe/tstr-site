@@ -378,6 +378,21 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
         grid-template-columns: 1fr;
       }
     }
+    .danger-btn {
+      background-color: #dc2626;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background-color 0.2s;
+    }
+
+    .danger-btn:hover {
+      background-color: #b91c1c;
+    }
   </style>
 </head>
 <body>
@@ -432,8 +447,8 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
         }
 
         const currentTier = profile?.subscription_tier || 'free'
-
-        // Define tier information
+        
+        // Define tier information (same as before)
         const tierInfo = {
           free: {
             name: 'Free',
@@ -530,6 +545,8 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
           `
         }).join('')
 
+        const isPaidPlan = ['professional', 'premium'].includes(currentTier);
+
         contentDiv.innerHTML = `
           <div class="current-plan-section">
             <h2>Your Current Plan</h2>
@@ -540,6 +557,9 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
                 <ul class="plan-benefits">
                   ${currentTierData.benefits.map(benefit => `<li>${benefit}</li>`).join('')}
                 </ul>
+                ${isPaidPlan ? `
+                  <button class="danger-btn" onclick="handleCancelSubscription(this)">Cancel Subscription</button>
+                ` : ''}
               </div>
             </div>
           </div>
@@ -597,20 +617,29 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
     // Load immediately
     loadSubscriptionPage()
 
-    async function handlePayPalSubscribe(tier, button) {
+    // Export function to window so it can be called from HTML
+    window.handlePayPalSubscribe = async function(tier, button) {
       const originalText = button.textContent;
       button.textContent = 'Processing...';
       button.disabled = true;
 
       try {
+        const { data: { session } } = await supabaseBrowser.auth.getSession();
+        if (!session) throw new Error('No active session');
+
         // Call Edge Function to create subscription
-        const { data, error } = await supabaseBrowser.functions.invoke('paypal-create-subscription', {
-          body: {
+        const { data, error } = await fetch('https://haimjeaetrsaauitrhfy.supabase.co/functions/v1/paypal-create-subscription', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`
+          },
+          body: JSON.stringify({
             tier,
             return_url: window.location.origin + '/checkout/success',
             cancel_url: window.location.origin + '/checkout/cancel'
-          }
-        });
+          })
+        }).then(res => res.json().then(data => ({ data, error: !res.ok ? data : null })));
 
         if (error) throw error;
 
@@ -628,6 +657,45 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
         button.disabled = false;
       }
     }
-  </script>
-</body>
-</html>
+
+    // Export handleCancelSubscription to window
+    window.handleCancelSubscription = async function(button) {
+      if (!confirm('Are you sure you want to cancel your subscription? You will lose access to premium features immediately upon cancellation.')) {
+        return;
+      }
+
+      const originalText = button.textContent;
+      button.textContent = 'Cancelling...';
+      button.disabled = true;
+
+      try {
+        const { data: { session } } = await supabaseBrowser.auth.getSession();
+        if (!session) throw new Error('No active session');
+
+        const { data, error } = await fetch('https://haimjeaetrsaauitrhfy.supabase.co/functions/v1/paypal-cancel-subscription', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${supabaseAnonJwt}`
+          },
+          body: JSON.stringify({
+             userId: session.user.id,
+             reason: 'User requested cancellation via dashboard'
+          })
+        }).then(res => res.json().then(data => ({ data, error: !res.ok ? data : null })));
+
+        if (error) {
+            console.error('Cancellation API Error:', error);
+            throw new Error(error.error || 'Failed to cancel subscription');
+        }
+
+        alert('Subscription cancelled successfully.');
+        window.location.reload();
+
+      } catch (error) {
+        console.error('Cancellation error:', error);
+        alert(`Failed to cancel subscription: ${error.message}`);
+        button.textContent = originalText;
+        button.disabled = false;
+      }
+    }

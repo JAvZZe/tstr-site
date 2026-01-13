@@ -54,20 +54,41 @@ async function verifyWebhookSignature(req: Request, body: string): Promise<boole
 }
 
 serve(async (req) => {
+  // CORS headers for all responses
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  }
+
+  // Handle OPTIONS preflight
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
+  }
+
   try {
     const body = await req.text()
+
+    // Handle empty body (e.g., health check)
+    if (!body) {
+      return new Response(JSON.stringify({ status: 'ok', message: 'Webhook endpoint ready' }), {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
 
     // Verify webhook signature in production
     if (PAYPAL_MODE === 'live') {
       const isValid = await verifyWebhookSignature(req, body)
       if (!isValid) {
         console.error('Invalid webhook signature')
-        return new Response('Invalid signature', { status: 401 })
+        return new Response('Invalid signature', { status: 401, headers: corsHeaders })
       }
     }
 
     const event = JSON.parse(body)
     console.log('Webhook event:', event.event_type)
+
 
     // Use service role for database updates
     const supabase = createClient(

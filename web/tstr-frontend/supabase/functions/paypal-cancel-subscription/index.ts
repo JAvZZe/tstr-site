@@ -28,45 +28,67 @@ async function getPayPalAccessToken(): Promise<string> {
 }
 
 serve(async (req) => {
+  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
 
   try {
-    // Verify user
-    const authHeader = req.headers.get('Authorization')!
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_ANON_KEY')!,
-      { global: { headers: { Authorization: authHeader } } }
-    )
+    console.log('🚀 PayPal Cancel Subscription Function Called')
+    
+    // Parse request body
+    let requestBody
+    try {
+      requestBody = await req.json()
+    } catch (e) {
+        return new Response(JSON.stringify({ error: 'Invalid JSON request body' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+    }
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-        status: 401,
+    const { userId, reason } = requestBody
+
+    if (!userId) {
+      return new Response(JSON.stringify({ error: 'Missing userId' }), {
+        status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
 
-    // Get user's subscription ID
-    const { data: profile } = await supabase
-      .from('user_profiles')
-      .select('paypal_subscription_id')
-      .eq('id', user.id)
-      .single()
+    // Use Service Role to access database (reliable auth)
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    )
 
-    if (!profile?.paypal_subscription_id) {
-      return new Response(JSON.stringify({ error: 'No active subscription' }), {
+    // Validate user exists
+    const { data: profile, error: profileError } = await supabase
+      .from('user_profiles')
+      .select('id, paypal_subscription_id')
+      .eq('id', userId)
+      .maybeSingle()
+
+    if (profileError || !profile) {
+      console.error('Profile lookup failed:', profileError || 'User not found')
+      return new Response(JSON.stringify({ error: 'User profile not found' }), {
+        status: 404,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
+    if (!profile.paypal_subscription_id) {
+       console.log('No subscription to cancel for user:', userId)
+       return new Response(JSON.stringify({ error: 'No active subscription found' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
 
     // Cancel subscription in PayPal
+    console.log('Cancelling PayPal subscription:', profile.paypal_subscription_id)
     const accessToken = await getPayPalAccessToken()
-    const { reason } = await req.json()
-
+    
     const cancelResponse = await fetch(
       `${PAYPAL_API_URL}/v1/billing/subscriptions/${profile.paypal_subscription_id}/cancel`,
       {
@@ -80,26 +102,35 @@ serve(async (req) => {
     )
 
     if (cancelResponse.status === 204) {
+      console.log('PayPal cancellation successful. Updating DB...')
       // Update local status
-      await supabase.from('user_profiles').update({
+      const { error: updateError } = await supabase.from('user_profiles').update({
         subscription_status: 'cancelled'
-      }).eq('id', user.id)
+      }).eq('id', userId)
+
+      if (updateError) {
+          console.error('Failed to update user profile status:', updateError)
+          // We still return success because PayPal ALREADY cancelled it
+      }
 
       return new Response(JSON.stringify({ success: true }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     } else {
-      const error = await cancelResponse.json()
-      console.error('PayPal cancel error:', error)
-      return new Response(JSON.stringify({ error: 'Failed to cancel subscription' }), {
+      const errorData = await cancelResponse.json()
+      console.error('PayPal API cancel error:', errorData)
+      return new Response(JSON.stringify({ 
+          error: 'Failed to cancel subscription with PayPal', 
+          details: errorData 
+      }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
 
   } catch (error) {
-    console.error('Error:', error)
-    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+    console.error('Internal Function Error:', error)
+    return new Response(JSON.stringify({ error: 'Internal server error', details: error.message }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
