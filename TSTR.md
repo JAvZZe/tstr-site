@@ -12,7 +12,7 @@
 
 **Business Model**: B2B directory + lead generation for testing laboratories seeking clients in specialized sectors.
 
-**Status**: Production - 163 listings deployed, scrapers active on OCI, frontend LIVE at https://tstr.directory
+**Status**: Production - 163 listings deployed, scrapers active on OCI and locally, frontend LIVE at https://tstr.directory
 
 **Strategic Focus (Q4 2025 - Q1 2026)**: Hydrogen Infrastructure Testing + Biotech/Pharma/Life Sciences
 - See `ORGANIZATION_UPDATE_2025-11-22.md` for niche directory structure
@@ -95,12 +95,13 @@ Frontend queries Supabase (when deployed)
 ## Key File Locations
 
 ### Project Root
+- tstr-site-working - this is the project root folder with the files and subfolders. Always save files here and clean up afterwards by moving redundant files to /archive.
 - `TSTR.md` - This file (agent instructions)
 - `PROJECT_STATUS.md` - Deployment status, infrastructure details
 - `README.md` - User-facing project overview
 - `.ai-session.md` - Session notes and learnings
 - `GEMINI.md` - Gemini CLI agent context
-- `HANDOFF_TO_CLAUDE.md` - Latest handoff (from Gemini)
+- `HANDOFF_FROM_GEMINI.md` - Latest handoff (from Gemini)
 
 ### Frontend
 ```
@@ -154,7 +155,7 @@ web/tstr-automation/
 2. **Test systematically**: One feature at a time with checkpoints
 3. **Git discipline**: Commit every working checkpoint for easy rollback
 4. **Pareto focus**: 80/20 rule - focus on high-impact features first
-5. **Cost optimization**: Use cheapest effective tool (Oracle Free Tier, Supabase Free Tier, Cloudflare Free Tier)
+5. **Cost optimization**: Use cheapest effective tool (Oracle Free Tier, Supabase Free Tier, Cloudflare Free Tier), Opencode CLI Grok Code Fast 1 Free Tier
 
 ### Common Patterns
 
@@ -174,7 +175,7 @@ web/tstr-automation/
 **Frontend Development**:
 - Use `npm run dev` for local testing
 - Build with `npm run build` (requires `.env` with Supabase keys)
-- Deploy via Cloudflare Pages (connected to GitHub `main` branch)
+- Deploy via Github to Cloudflare Pages (connected to GitHub `main` branch)
 
 ---
 
@@ -314,7 +315,7 @@ gh run view <run-id>
 
 ---
 
-## Key Learnings (Add to .ai-session.md)
+## Key Learnings (Add to .ai-session.md and to the Database in the AI System folder /media/al/AI_DATA/AI_PROJECTS_SPACE)
 
 ### Scrapers
 - **A2LA authentication**: Complex Touchstone SAML2, requires session cookies

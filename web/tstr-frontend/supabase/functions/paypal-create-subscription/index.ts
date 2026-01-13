@@ -136,17 +136,17 @@ serve(async (req) => {
     // Validate user exists and get their details
     const { data: user, error: userError } = await supabase
       .from('user_profiles')
-      .select('id, email')
+      .select('id, billing_email')
       .eq('id', userId)
-      .single()
+      .maybeSingle()
 
     console.log('User lookup result:', { user: !!user, error: userError })
 
     if (userError) {
       console.error('User lookup error details:', userError)
       return new Response(JSON.stringify({
-        error: 'Database error during user validation',
-        details: userError.message,
+        error: `Database error: ${userError.message || JSON.stringify(userError)}`,
+        details: userError,
         code: userError.code
       }), {
         status: 500,
@@ -178,10 +178,9 @@ serve(async (req) => {
         .from('user_profiles')
         .insert({
           id: userId,
-          email: authUser.user.email,
           billing_email: authUser.user.email
         })
-        .select('id, email')
+        .select('id, billing_email')
         .single()
 
       if (createError) {
@@ -195,11 +194,11 @@ serve(async (req) => {
         })
       }
 
-      console.log('✅ Created and validated user profile:', { id: newProfile.id, email: newProfile.email })
+      console.log('✅ Created and validated user profile:', { id: newProfile.id, email: newProfile.billing_email })
       // Use the newly created profile
       user = newProfile
     } else {
-      console.log('✅ User validated successfully:', { id: user.id, email: user.email })
+      console.log('✅ User validated successfully:', { id: user.id, email: user.billing_email })
     }
 
     console.log('PLAN_IDS:', PLAN_IDS)
@@ -242,7 +241,7 @@ serve(async (req) => {
       body: JSON.stringify({
         plan_id: PLAN_IDS[tier],
         subscriber: {
-          email_address: user.email,
+          email_address: user.billing_email,
         },
         custom_id: user.id, // Store Supabase user ID for webhook
         application_context: {

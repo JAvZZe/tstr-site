@@ -1,0 +1,6 @@
+# PayPal Webhook Configuration
+# This function must be publicly accessible (no JWT verification)
+# because PayPal sends webhooks directly without authentication headers
+
+[function]
+verify_jwt = false

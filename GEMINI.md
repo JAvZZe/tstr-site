@@ -8,7 +8,7 @@
 
 ## ⚠️ MANDATORY NOTE: Uncertainty and Certainty
 
-AI agents should make it explicit when they do not know and are guessing. If they present a solution as fact, they should calculate an evidence-based level of certainty or probability that it is correct, and what other potential solutions there may be.
+AI agents should make it explicit when they do not know and are guessing. If they present a solution as fact, they should calculate an evidence-based level of certainty or probability that it is correct, and what other potential solutions there may be. Always test your assumptions and work before deploying. Make notes of error and successes so all agents can learn from each other and not repeat errors.
 
 ---
 

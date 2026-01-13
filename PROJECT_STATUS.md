@@ -1,7 +1,7 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-11 16:49 UTC
+> **Last Updated**: 2026-01-13 09:01 UTC
 > **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -11,18 +11,24 @@
 ## 💳 PAYMENT SYSTEM STATUS (CRITICAL PATH TO REVENUE)
 
 ### Current State
-- ✅ **PayPal code COMPLETE** (v2.4.0) - Edge Functions, frontend, database migration written
+- ✅ **PayPal code COMPLETE** (v2.5.0) - Edge Functions, frontend, database migration written
+  - Features: Subscription, Webhook, Cancellation
 - ✅ **Configuration COMPLETE** - All secrets (Client, Secret, Webhook, Plans) configured in Supabase & Local
 - ✅ **DEPLOYMENT COMPLETE** - Database migration applied, Functions deployed.
-- ✅ **VERIFIED** - Sandbox subscription flow activated successfully (2026-01-11)
+- ✅ **SANDBOX VERIFIED** (2026-01-12):
+  - Subscription Flow: Login → Subscribe → Payment → Database Update (Verified)
+  - Webhook: Public access enabled, processes activations correctly (Verified)
+  - Cancellation UI: Implemented "Cancel Subscription" button for paid users (Code Complete, Needs User Verification)
 - 📊 **Alternative evaluated**: Upmind.com (decision: use later at scale)
 
 ### To Go Live (Next Session)
-1. [x] Create PayPal subscription plans in Dashboard ($295/mo, $795/mo) - Done
-2. [x] Configure webhook URL: `https://haimjeaetrsaauitrhfy.supabase.co/functions/v1/paypal-webhook`- Done
+1. [x] Create PayPal subscription plans in Dashboard ($295/mo, $795/mo)
+2. [x] Configure webhook URL: `https://haimjeaetrsaauitrhfy.supabase.co/functions/v1/paypal-webhook`
 3. [x] Set secrets with Plan IDs and Webhook ID
-4. [x] Deploy: `supabase db push` (Applied manually) + `supabase functions deploy`
-5. [x] Test end-to-end in sandbox mode - ✅ VERIFIED (Fixed JWT & Database errors)
+4. [x] Deploy (`supabase functions deploy`)
+5. [x] Test end-to-end in sandbox mode
+6. [ ] **LIVE MODE**: Switch `PAYPAL_MODE` to `live` and update to production Plan IDs
+
 
 ### Reference Documents
 - `HANDOFF_PAYPAL_INTEGRATION_COMPLETE.md` - Full deployment checklist
