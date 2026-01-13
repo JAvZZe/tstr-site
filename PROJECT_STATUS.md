@@ -1,7 +1,7 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-13 14:48 UTC
+> **Last Updated**: 2026-01-13 19:03 UTC
 > **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -195,7 +195,7 @@ Last Scrape:      November 10, 2025 02:31 UTC
 3. **Custom Fields**: Missing specialized data. Fix: Enhance extraction logic.
 4. **Submit Page**: ✅ FIXED - Replaced Footer component import with inline HTML. Prerenders successfully now.
 5. **Claim Form Email Functionality**: ✅ FIXED - Implemented complete Resend email system with draft save and verification emails. See v2.4.7 release notes.
-6. **PayPal Subscription Flow Issue**: Login redirect works but post-login redirect fails to continue payment process. User lands on account page instead of returning to pricing with tier parameter.
+6. **PayPal Subscription Flow Issue**: ✅ FIXED - Implemented server-side subscription state management to resolve Chrome bounce tracking and OAuth redirect issues. Users now reliably return to pricing page and auto-trigger PayPal payments.
 
 ### **Security & Database Fixes** ✅ COMPLETE
 1. **RLS Policy Fixes**: ✅ Successfully corrected column name issues in Row Level Security policies
@@ -213,12 +213,14 @@ Last Scrape:      November 10, 2025 02:31 UTC
 2. **Resolution**: 
    - **Subscription Creation**: Uses `userId` in body + Anon Key + Service Role validation to bypass Gateway JWT issues.
    - **Cancellation**: Refactored to match creation pattern (Service Role + Body `userId`). Verified build.
-   - **Frontend**: Updated `subscription.astro` to send robust auth payload.
+   - **Frontend**: Updated `subscription.astro` to send robust auth payload. Fixed import ReferenceErrors for `supabaseAnonJwt` and `MAILTO_LINKS`.
+   - **Details**: See [PAYPAL_CANCELLATION_FIXES.md](file:///media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/docs/PAYPAL_CANCELLATION_FIXES.md).
 3. **Next Steps**: Live user testing. Verify Webhook processing (already deployed).
 
 ### **PayPal Implementation Learnings**
 1. **Auth Pattern**: Standard Supabase `getUser()` fails with 3rd-party auth or certain Gateway configs. Reliable pattern is: Frontend sends `userId` + Anon Key -> Edge Function uses `SERVICE_ROLE_KEY` to look up user in DB. DO NOT rely on `Authorization` header validation in Edge Function for this stack.
-2. **API-Created Plans**: Successfully created PayPal subscription plans programmatically via REST API instead of dashboard
+2. **Astro Imports**: Variables imported in Frontmatter are NOT available in `<script>` tags. Must be re-imported.
+3. **API-Created Plans**: Successfully created PayPal subscription plans programmatically via REST API instead of dashboard
 3. **Webhook Setup**: Created webhooks via API with proper event subscriptions (BILLING.SUBSCRIPTION.*, PAYMENT.SALE.*)
 4. **Authentication Flow**: Supabase auth integration works, but OAuth redirect handling needs refinement
 5. **Environment Management**: Secrets properly configured across local, Supabase, and Bruno environments
@@ -227,6 +229,16 @@ Last Scrape:      November 10, 2025 02:31 UTC
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.4.26** - 2026-01-13 - **Server-Side Subscription State Management**: Chrome Bounce Tracking Fix (opencode)
+- **Root Cause**: Chrome bounce tracking deletes client-side state during OAuth redirects
+- **Solution**: Implemented server-side storage for pending subscriptions with secure token system
+- **Database Changes**: Added pending_subscription_data, pending_subscription_token, pending_subscription_expires_at columns
+- **API Endpoints**: Created save/resume/clear endpoints for pending subscription management
+- **Edge Function**: Updated paypal-create-subscription to handle pending tokens
+- **Frontend**: Modified pricing/account pages to use server-side state instead of sessionStorage
+- **Security**: Token-based access with 30-minute expiration and automatic cleanup
+- **Result**: Subscription flow now survives OAuth interruptions and bounce tracking
 
 ### **v2.4.25** - 2026-01-11 - **PayPal Integration Success**: Final Auth & Schema Fixes (gemini)
 - **JWT Resolution**: Identified and fixed Gateway rejection by switching from public Publishable Key to valid Anon JWT via Supabase CLI.
