@@ -413,7 +413,7 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
   </div>
 
   <script>
-    import { supabaseBrowser } from '../../lib/supabase-browser'
+    import { supabaseBrowser, supabaseAnonJwt } from '../../lib/supabase-browser'
 
     async function loadSubscriptionPage() {
       const contentDiv = document.getElementById('content')
@@ -446,7 +446,9 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
           return
         }
 
-        const currentTier = profile?.subscription_tier || 'free'
+        console.log('Subscription Profile Loaded:', profile)
+        
+        let currentTier = profile?.subscription_tier || 'free'
         
         // Define tier information (same as before)
         const tierInfo = {
@@ -511,6 +513,12 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
               'Custom contract terms'
             ]
           }
+        }
+
+        // Validate tier existence
+        if (!tierInfo[currentTier]) {
+          console.error(`Invalid tier found: "${currentTier}". Falling back to free.`)
+          currentTier = 'free'
         }
 
         const currentTierData = tierInfo[currentTier]
@@ -599,7 +607,7 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
         console.error('Subscription page error:', error)
         contentDiv.innerHTML = `
           <div class="error-message">
-            An unexpected error occurred. Please refresh the page.
+            An unexpected error occurred. Please refresh the page. Details: ${error.message}
           </div>
         `
       }
