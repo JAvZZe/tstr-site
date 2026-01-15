@@ -99,11 +99,15 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      font-weight: 600;
     }
 
     .current-plan-section h2::before {
-      content: '💎';
-      font-size: 1.2rem;
+      content: '';
+      width: 4px;
+      height: 20px;
+      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
+      border-radius: 2px;
     }
 
     .plan-details {
@@ -150,9 +154,14 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
 
     .plan-benefits li::before {
       content: '✓';
-      color: #10b981;
-      font-weight: 700;
+      color: #000080;
+      font-weight: bold;
+      font-size: 1.1rem;
       flex-shrink: 0;
+      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .upgrade-section {
@@ -173,8 +182,11 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
     }
 
     .upgrade-section h2::before {
-      content: '🚀';
-      font-size: 1.2rem;
+      content: '';
+      width: 4px;
+      height: 20px;
+      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
+      border-radius: 2px;
     }
 
     .upgrade-grid {
@@ -243,23 +255,26 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
       display: block;
       width: 100%;
       padding: 0.875rem;
-      background: #000080;
+      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
       color: white;
       text-align: center;
       text-decoration: none;
       border-radius: 6px;
       font-weight: 600;
-      transition: background 0.3s;
+      transition: all 0.2s ease;
       border: none;
       cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .upgrade-btn:hover {
-      background: #5568d3;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
     }
 
     .upgrade-card.recommended .upgrade-btn {
       background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
     }
 
     .support-section {
@@ -280,8 +295,11 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
     }
 
     .support-section h2::before {
-      content: '💬';
-      font-size: 1.2rem;
+      content: '';
+      width: 4px;
+      height: 20px;
+      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
+      border-radius: 2px;
     }
 
     .support-grid {
@@ -312,17 +330,19 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
     .support-link {
       display: inline-block;
       padding: 0.5rem 1rem;
-      background: #000080;
+      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
       color: white;
       text-decoration: none;
-      border-radius: 4px;
+      border-radius: 6px;
       font-size: 0.9rem;
-      font-weight: 500;
-      transition: background 0.3s;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .support-link:hover {
-      background: #5568d3;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     }
 
     .back-link {
@@ -379,28 +399,44 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
       }
     }
     .danger-btn {
-      background-color: #dc2626;
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
       color: white;
       border: none;
       padding: 0.5rem 1rem;
-      border-radius: 4px;
-      font-weight: 500;
+      border-radius: 6px;
+      font-weight: 600;
       cursor: pointer;
       margin-top: 1rem;
-      transition: background-color 0.2s;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(255, 107, 107, 0.2);
     }
 
     .danger-btn:hover {
-      background-color: #b91c1c;
+      background: linear-gradient(135deg, #ee5a52 0%, #dc4545 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Manage Your Subscription</h1>
-    <p>View your current plan and explore upgrade options</p>
-    <div class="breadcrumb">
-      <a href="/">Home</a> / <a href="/account">Account</a> / <span>Subscription</span>
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center;">
+        <a href="/" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+          <img src="/TSTR-Logo-60px.png" alt="TSTR Logo" style="height: 50px; width: auto; margin-right: 1.25rem; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 12px;"/>
+          <div style="text-align: left;">
+            <h1 style="font-size: 1.5rem; margin: 0; line-height: 1;">TSTR Hub</h1>
+            <p style="font-size: 0.9rem; margin: 0; opacity: 0.9;">Subscription Management</p>
+          </div>
+        </a>
+      </div>
+      <div class="breadcrumb" style="margin: 0;">
+        <a href="/">Home</a>
+        <span>›</span>
+        <a href="/account">Account</a>
+        <span>›</span>
+        <span>Subscription</span>
+      </div>
     </div>
   </header>
 
@@ -546,10 +582,21 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
               <ul class="upgrade-benefits">
                 ${additionalBenefits.map(benefit => `<li>${benefit}</li>`).join('')}
               </ul>
-              ${tier === 'enterprise' ?
-                `<a href="${MAILTO_LINKS.enterprisePlan}" class="upgrade-btn">Contact Sales</a>` :
-                `<button class="upgrade-btn" onclick="handlePayPalSubscribe('${tier}', this)">Subscribe Now</button>`
-              }
+               ${tier === 'enterprise' ?
+                 `<a href="${MAILTO_LINKS.enterprisePlan}" class="upgrade-btn">
+                   <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20" style="margin-right: 0.5rem;">
+                     <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                     <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                   </svg>
+                   Contact Sales
+                 </a>` :
+                 `<button class="upgrade-btn" onclick="handlePayPalSubscribe('${tier}', this)">
+                   <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20" style="margin-right: 0.5rem;">
+                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"/>
+                   </svg>
+                   Subscribe Now
+                 </button>`
+               }
             </div>
           `
         }).join('')
@@ -560,16 +607,21 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
           <div class="current-plan-section">
             <h2>Your Current Plan</h2>
             <div class="plan-details">
-              <div class="plan-card">
-                <div class="plan-name">${currentTierData.name}</div>
-                <div class="plan-price">${currentTierData.price}</div>
-                <ul class="plan-benefits">
-                  ${currentTierData.benefits.map(benefit => `<li>${benefit}</li>`).join('')}
-                </ul>
-                ${isPaidPlan ? `
-                  <button class="danger-btn" onclick="handleCancelSubscription(this)">Cancel Subscription</button>
-                ` : ''}
-              </div>
+               <div class="plan-card">
+                 <div class="plan-name">${currentTierData.name}</div>
+                 <div class="plan-price">${currentTierData.price}</div>
+                 <ul class="plan-benefits">
+                   ${currentTierData.benefits.map(benefit => `<li>${benefit}</li>`).join('')}
+                 </ul>
+                 ${isPaidPlan ? `
+                   <button class="danger-btn" onclick="handleCancelSubscription(this)">
+                     <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20" style="margin-right: 0.5rem;">
+                       <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                     </svg>
+                     Cancel Subscription
+                   </button>
+                 ` : ''}
+               </div>
             </div>
           </div>
 
@@ -585,21 +637,37 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
           <div class="support-section">
             <h2>Need Help?</h2>
             <div class="support-grid">
-              <div class="support-item">
-                <h3>💰 Billing Questions</h3>
-                <p>Questions about pricing, payments, or invoices</p>
-                <a href="${MAILTO_LINKS.professionalPlan}" class="support-link">Contact Billing</a>
-              </div>
-              <div class="support-item">
-                <h3>🔧 Technical Support</h3>
-                <p>Help with your account or platform features</p>
-                <a href="mailto:${CONTACTS.support}" class="support-link">Get Support</a>
-              </div>
-              <div class="support-item">
-                <h3>📈 Sales Team</h3>
-                <p>Discuss custom plans or enterprise solutions</p>
-                <a href="${MAILTO_LINKS.enterprisePlan}" class="support-link">Talk to Sales</a>
-              </div>
+               <div class="support-item">
+                 <h3>💰 Billing Questions</h3>
+                 <p>Questions about pricing, payments, or invoices</p>
+                 <a href="${MAILTO_LINKS.professionalPlan}" class="support-link">
+                   <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20" style="margin-right: 0.5rem;">
+                     <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                     <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                   </svg>
+                   Contact Billing
+                 </a>
+               </div>
+               <div class="support-item">
+                 <h3>🔧 Technical Support</h3>
+                 <p>Help with your account or platform features</p>
+                 <a href="mailto:${CONTACTS.support}" class="support-link">
+                   <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20" style="margin-right: 0.5rem;">
+                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 000 16zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                   </svg>
+                   Get Support
+                 </a>
+               </div>
+               <div class="support-item">
+                 <h3>📈 Sales Team</h3>
+                 <p>Discuss custom plans or enterprise solutions</p>
+                 <a href="${MAILTO_LINKS.enterprisePlan}" class="support-link">
+                   <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20" style="margin-right: 0.5rem;">
+                     <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                   </svg>
+                   Talk to Sales
+                 </a>
+               </div>
             </div>
           </div>
         `
