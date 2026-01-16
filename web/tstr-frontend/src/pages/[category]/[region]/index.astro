@@ -16,8 +16,8 @@ export async function getStaticPaths() {
     .select(`
       region,
       category:category_id (slug)
-    `)
-    .eq('status', 'active');
+    `);
+    // Removed .eq('status', 'active') to ensure pages exist even if listings correspond to inactive items
 
   if (error || !listings) {
     console.error('Error fetching listings for static paths:', error);
