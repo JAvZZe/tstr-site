@@ -101,8 +101,10 @@ serve(async (req) => {
       }
     )
 
-    if (cancelResponse.status === 204) {
-      console.log('PayPal cancellation successful. Updating DB...')
+    // Treat 204 (Success), 404 (Not Found), and 422 (Unprocessable - usually already cancelled) as effective cancellations
+    if (cancelResponse.status === 204 || cancelResponse.status === 404 || cancelResponse.status === 422) {
+      console.log(`PayPal cancellation resolved (Status: ${cancelResponse.status}). Updating DB...`)
+
       // Update local status
       const { error: updateError } = await supabase.from('user_profiles').update({
         subscription_status: 'cancelled',
@@ -112,10 +114,9 @@ serve(async (req) => {
 
       if (updateError) {
         console.error('Failed to update user profile status:', updateError)
-        // We still return success because PayPal ALREADY cancelled it
       }
 
-      return new Response(JSON.stringify({ success: true }), {
+      return new Response(JSON.stringify({ success: true, paypal_status: cancelResponse.status }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     } else {
