@@ -35,16 +35,16 @@ serve(async (req) => {
 
   try {
     console.log('🚀 PayPal Cancel Subscription Function Called')
-    
+
     // Parse request body
     let requestBody
     try {
       requestBody = await req.json()
     } catch (e) {
-        return new Response(JSON.stringify({ error: 'Invalid JSON request body' }), {
-            status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        })
+      return new Response(JSON.stringify({ error: 'Invalid JSON request body' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
     }
 
     const { userId, reason } = requestBody
@@ -78,8 +78,8 @@ serve(async (req) => {
     }
 
     if (!profile.paypal_subscription_id) {
-       console.log('No subscription to cancel for user:', userId)
-       return new Response(JSON.stringify({ error: 'No active subscription found' }), {
+      console.log('No subscription to cancel for user:', userId)
+      return new Response(JSON.stringify({ error: 'No active subscription found' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
@@ -88,7 +88,7 @@ serve(async (req) => {
     // Cancel subscription in PayPal
     console.log('Cancelling PayPal subscription:', profile.paypal_subscription_id)
     const accessToken = await getPayPalAccessToken()
-    
+
     const cancelResponse = await fetch(
       `${PAYPAL_API_URL}/v1/billing/subscriptions/${profile.paypal_subscription_id}/cancel`,
       {
@@ -105,12 +105,14 @@ serve(async (req) => {
       console.log('PayPal cancellation successful. Updating DB...')
       // Update local status
       const { error: updateError } = await supabase.from('user_profiles').update({
-        subscription_status: 'cancelled'
+        subscription_status: 'cancelled',
+        subscription_tier: 'free',
+        paypal_subscription_id: null
       }).eq('id', userId)
 
       if (updateError) {
-          console.error('Failed to update user profile status:', updateError)
-          // We still return success because PayPal ALREADY cancelled it
+        console.error('Failed to update user profile status:', updateError)
+        // We still return success because PayPal ALREADY cancelled it
       }
 
       return new Response(JSON.stringify({ success: true }), {
@@ -119,9 +121,9 @@ serve(async (req) => {
     } else {
       const errorData = await cancelResponse.json()
       console.error('PayPal API cancel error:', errorData)
-      return new Response(JSON.stringify({ 
-          error: 'Failed to cancel subscription with PayPal', 
-          details: errorData 
+      return new Response(JSON.stringify({
+        error: 'Failed to cancel subscription with PayPal',
+        details: errorData
       }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
