@@ -39,9 +39,9 @@ export const sendEmail = async (
     }
 
     return { success: true }
-  } catch (err) {
+  } catch (err: any) {
     console.error('Email service error:', err)
-    return { success: false, error: 'Email service unavailable' }
+    return { success: false, error: `Email service unavailable: ${err.message || err}` }
   }
 }
 
