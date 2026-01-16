@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-16 12:49 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-01-16 14:25 UTC
+> **Updated By**: JAvZZe (via gemini-pro-2.0)
 > **Status**: ✅ PRODUCTION - Live at https://tstr.directory
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -19,6 +19,10 @@
   - Subscription Flow: Login → Subscribe → Payment → Database Update (Verified)
   - Webhook: Public access enabled, processes activations correctly (Verified)
   - ✅ **CANCELLATION VERIFIED** (2026-01-16): Robust handling for environment mismatches (404/422). Reset to 'free' tier functional.
+- ✅ **MANUAL PAYMENTS VERIFIED** (2026-01-16):
+  - **EFT Flow**: Modal instructions + Email instructions (Verified)
+  - **Bitcoin Flow**: Modal QR Code + Email instructions (Verified)
+  - **Auth**: Redirect to login for unauthenticated users (Verified)
 - 📊 **Alternative evaluated**: Upmind.com (decision: use later at scale)
 
 ### To Go Live (Next Session)
@@ -228,6 +232,14 @@ Last Scrape:      November 10, 2025 02:31 UTC
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.5.2** - 2026-01-16 - **Manual Payment Flows & Debugging** (gemini)
+- **Feature**: Implemented Bank Transfer (EFT) and Bitcoin manual payment flows.
+- **UI**: Added instructions modals and QR codes for offline payments.
+- **Backend**: Added API endpoints and email templates for payment instructions via Resend.
+- **Bug Fix**: Resolved `CONTACTS is not defined` ReferenceError in pricing script by hardcoding sales email for reliability.
+- **Bug Fix**: Restored `createEFTPaymentEmail` function in email library after accidental deletion.
+- **Bug Fix**: Corrected EFT flow to target the proper `/api/subscription/eft` endpoint.
 
 ### **v2.5.1** - 2026-01-16 - **Robust Subscription Cancellation Fix** (gemini)
 - **Bug Fix**: Resolved issue where subscription tier failed to reset to 'free' after cancellation.
