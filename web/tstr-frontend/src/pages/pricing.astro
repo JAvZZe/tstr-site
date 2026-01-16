@@ -1111,7 +1111,14 @@ import Footer from '../components/Footer.astro'
         })
 
         if (!response.ok) {
-          throw new Error('Failed to initiate EFT payment')
+          let errorMsg = 'Failed to initiate EFT payment'
+          try {
+            const errorData = await response.json()
+            if (errorData.error) errorMsg = errorData.error
+          } catch (e) {
+            // Use default message if JSON parsing fails
+          }
+          throw new Error(errorMsg)
         }
 
         const data = await response.json()
@@ -1133,7 +1140,7 @@ import Footer from '../components/Footer.astro'
 
       } catch (err) {
         console.error('EFT Flow Error:', err)
-        alert('Failed to load bank details. Please try again or contact support.')
+        alert(`Failed to load bank details: ${err.message || 'Unknown error'}. Please try again or contact support.`)
         button.textContent = originalText
         button.disabled = false
       }
