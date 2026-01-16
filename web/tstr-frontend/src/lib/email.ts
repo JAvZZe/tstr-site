@@ -4,7 +4,9 @@ let resend: Resend | null = null
 
 function getResendClient(): Resend {
   if (!resend) {
-    const apiKey = import.meta.env.RESEND_API_KEY
+    const apiKey = import.meta.env.RESEND_API_KEY ||
+      import.meta.env.PUBLIC_RESEND_API_KEY ||
+      're_eYDmQ352_2mH5o58xtSEBRA6YSbt1od9s'
     if (!apiKey) {
       throw new Error('RESEND_API_KEY environment variable is not set')
     }
@@ -25,8 +27,9 @@ export const sendEmail = async (
 ): Promise<{ success: boolean; error?: string }> => {
   try {
     const resendClient = getResendClient()
+    const fromEmail = import.meta.env.RESEND_FROM_EMAIL || 'noreply@tstr.directory'
     const { data, error } = await resendClient.emails.send({
-      from: import.meta.env.RESEND_FROM_EMAIL || 'noreply@tstr.directory',
+      from: fromEmail,
       to: [to],
       subject: template.subject,
       html: template.html,
