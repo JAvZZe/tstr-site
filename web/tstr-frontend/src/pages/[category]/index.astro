@@ -73,12 +73,20 @@ const sortedRegions = Array.from(listingsByRegion.entries())
 
 const totalListings = listings?.length || 0;
 
+import { formatTitle, formatDescription } from '../../lib/seo';
+
 // Helper: Convert "Testers" to "Testing" for SEO hybrid hook
 const getTestingServiceName = (categoryName: string) => {
   return categoryName.replace('Testers', 'Testing');
 };
 
 const testingServiceName = getTestingServiceName(categoryData.name);
+
+// Optimized SEO parts
+const pageTitle = formatTitle([categoryData.name, testingServiceName]);
+const pageDescription = formatDescription(
+  `Find ${totalListings} verified ${categoryData.name.toLowerCase()} and ${testingServiceName.toLowerCase()}. Compare ISO 17025 accredited labs and certification bodies worldwide. Get quotes from certified providers.`
+);
 ---
 
 <!DOCTYPE html>
@@ -86,13 +94,10 @@ const testingServiceName = getTestingServiceName(categoryData.name);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{categoryData.name} & {testingServiceName} | TSTR.directory</title>
-    <meta
-      name="description"
-      content={`Directory of ${totalListings} verified ${categoryData.name.toLowerCase()} and ${testingServiceName.toLowerCase()}. Compare ISO 17025 accredited labs and certification bodies worldwide. Get quotes from certified providers.`}
-    />
-    <meta property="og:title" content={`${categoryData.name} & ${testingServiceName}`} />
-    <meta property="og:description" content={`Find and compare verified ${categoryData.name.toLowerCase()}. ${categoryData.description || `${testingServiceName} from ISO 17025 certified laboratories.`}`} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
   </head>
 
   <body class="bg-gray-50 min-h-screen font-sans text-gray-900">

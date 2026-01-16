@@ -108,6 +108,14 @@ if (allCategories && allCategories.length > 0) {
       });
     });
 }
+
+import { formatTitle, formatDescription } from '../lib/seo';
+
+// Optimized SEO parts
+const pageTitle = formatTitle(['Specialist Testing Services Directory'], true);
+const pageDescription = formatDescription(
+  `Find and compare ${totalListings} verified testing laboratories and certification bodies worldwide. ISO 17025 accredited labs for materials, environmental, and biotech testing.`
+);
 ---
 
 <!DOCTYPE html>
@@ -115,11 +123,11 @@ if (allCategories && allCategories.length > 0) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TSTR Hub - Specialist Testing Services, Products and Solutions Directory</title>
-  <meta name="description" content={`Find and compare ${totalListings} verified testing laboratories and certification bodies worldwide. ISO 17025 accredited labs for materials testing, environmental analysis, biotech, hydrogen infrastructure, and more. Get quotes from certified providers.`} />
+  <title>{pageTitle}</title>
+  <meta name="description" content={pageDescription} />
   <meta name="keywords" content="testing laboratory, ISO 17025, certification body, materials testing, environmental testing, biotech testing, hydrogen testing, accredited labs, testing services" />
-  <meta property="og:title" content="TSTR Hub - Specialist Testing Services Directory" />
-  <meta property="og:description" content={`Directory of ${totalListings} verified testing laboratories and certification bodies. Compare ISO 17025 accredited labs worldwide.`} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={pageDescription} />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://tstr.directory" />
   <script type="application/ld+json" set:html={JSON.stringify({
