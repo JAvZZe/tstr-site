@@ -933,7 +933,6 @@ import Footer from '../components/Footer.astro'
 
   <script>
     import { supabaseBrowser, supabaseAnonKey, supabaseAnonJwt } from '../lib/supabase-browser'
-    import { CONTACTS } from '../lib/contacts'
 
     async function handleSubscribe(tier, method = 'paypal') {
       const button = document.querySelector(`[data-tier="${tier}"][data-method="${method}"]`)
