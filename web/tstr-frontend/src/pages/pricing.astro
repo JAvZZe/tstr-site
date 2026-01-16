@@ -1239,7 +1239,7 @@ import Footer from '../components/Footer.astro'
         const amount = amounts[tier]
 
         // Call API to generate reference and send email
-        const response = await fetch('/api/subscription/crypto', {
+        const response = await fetch('/api/subscription/eft', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
