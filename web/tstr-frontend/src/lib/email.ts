@@ -178,79 +178,57 @@ export const generateVerificationToken = (): string => {
   return token
 }
 
-export const createEFTPaymentEmail = (
+export const createCryptoPaymentEmail = (
   reference: string,
   amount: string,
-  planName: string
+  planName: string,
+  walletAddress: string
 ): EmailTemplate => ({
-  subject: `Payment Instructions: ${planName} Plan - Ref: ${reference}`,
+  subject: `Bitcoin Payment Instructions: ${planName} Plan - Ref: ${reference}`,
   html: `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="text-align: center; margin-bottom: 30px;">
         <h1 style="color: #000080; margin: 0;">TSTR.directory</h1>
         <p style="color: #6B7280; margin: 5px 0;">Testing Services Directory</p>
       </div>
-
       <div style="background-color: #F9FAFB; padding: 30px; border-radius: 8px; margin-bottom: 30px;">
-        <h2 style="color: #1F2937; margin-top: 0;">Bank Transfer Instructions</h2>
+        <h2 style="color: #1F2937; margin-top: 0;">Bitcoin Payment Instructions</h2>
         <p style="color: #4B5563; line-height: 1.6;">
           Thank you for choosing the <strong>${planName}</strong> plan.
-          Please use the details below to complete your payment of <strong>${amount}</strong>.
+          Please send <strong>${amount}</strong> equivalent in Bitcoin to the address below.
         </p>
-
-        <div style="background-color: white; border: 1px solid #E5E7EB; border-radius: 8px; padding: 20px; margin: 20px 0;">
-          <table style="width: 100%; border-collapse: collapse;">
-            <tr>
-              <td style="padding: 8px 0; color: #6B7280;">Bank Name:</td>
-              <td style="padding: 8px 0; color: #1F2937; font-weight: 600; text-align: right;">First Business Zero</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; color: #6B7280;">Account Type:</td>
-              <td style="padding: 8px 0; color: #1F2937; font-weight: 600; text-align: right;">Current Account</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; color: #6B7280;">Account Number:</td>
-              <td style="padding: 8px 0; color: #1F2937; font-weight: 600; text-align: right;">63190154070</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; color: #6B7280;">Bank Code (FNB):</td>
-              <td style="padding: 8px 0; color: #1F2937; font-weight: 600; text-align: right;">250655</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; color: #6B7280;">SWIFT Code:</td>
-              <td style="padding: 8px 0; color: #1F2937; font-weight: 600; text-align: right;">FIRNZAJJ</td>
-            </tr>
-            <tr style="border-top: 1px dashed #E5E7EB;">
-              <td style="padding: 12px 0 0 0; color: #000080; font-weight: bold;">Reference:</td>
-              <td style="padding: 12px 0 0 0; color: #000080; font-weight: bold; font-size: 1.1em; text-align: right;">${reference}</td>
-            </tr>
-          </table>
+        <div style="background-color: white; border: 1px solid #E5E7EB; border-radius: 8px; padding: 20px; margin: 20px 0; word-break: break-all;">
+          <p style="color: #6B7280; margin-bottom: 8px; font-size: 14px;">Bitcoin Wallet Address:</p>
+          <p style="color: #1F2937; font-weight: 600; font-family: monospace; font-size: 16px; margin: 0;">${walletAddress}</p>
+          
+          <div style="border-top: 1px dashed #E5E7EB; margin-top: 20px; padding-top: 12px;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 8px 0; color: #000080; font-weight: bold;">Reference:</td>
+                <td style="padding: 8px 0; color: #000080; font-weight: bold; font-size: 1.1em; text-align: right;">${reference}</td>
+              </tr>
+            </table>
+          </div>
         </div>
-
         <p style="color: #4B5563; font-size: 14px; margin-top: 20px;">
           <strong>Next Steps:</strong><br>
-          1. Make the transfer using the reference above.<br>
-          2. Email proof of payment to sales@tstr.directory.<br>
-          3. Your account will be upgraded once funds clear (usually 24-48 hours).
+          1. Send the Bitcoin payment to the address above.<br>
+          2. Email proof of payment or transaction hash to <a href="mailto:sales@tstr.directory">sales@tstr.directory</a>.<br>
+          3. Your account will be upgraded within 24 hours of 3 network confirmations.
         </p>
       </div>
-
       <div style="text-align: center; color: #9CA3AF; font-size: 12px;">
         <p>This is an automated message from TSTR.directory. Please do not reply to this email.</p>
       </div>
     </div>
   `,
-  text: `Payment Instructions for TSTR.directory ${planName} Plan
+  text: `Bitcoin Payment Instructions for TSTR.directory ${planName} Plan
 
-Amount: ${amount}
-
-Bank Details:
-Bank: First Business Zero
-Account Type: Current Account
-Account Number: 63190154070
-Branch Code: 250655
-SWIFT: FIRNZAJJ
+Amount (USD): ${amount}
 Reference: ${reference}
 
-Please email proof of payment to sales@tstr.directory. Your account will be upgraded once funds clear.`
+Bitcoin Wallet Address:
+${walletAddress}
+
+Please email proof of payment or transaction hash to sales@tstr.directory. Your account will be upgraded once the transaction has 3 confirmations.`
 })
