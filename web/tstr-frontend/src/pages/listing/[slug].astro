@@ -158,8 +158,19 @@ const canViewCertifications = true // Always show (critical for SEO keywords)
 // Show full description for SEO (critical for keyword ranking)
 const descriptionPreview = listing.description || null
 
-// Count all certifications (custom fields + standards)
-const certificationCount = allCertifications.length
+import { formatTitle, formatDescription } from '../../lib/seo'
+
+// Optimized SEO parts
+const locationParts = [
+  listing.location?.name,
+  listing.location?.parent?.name,
+  listing.location?.parent?.parent?.name
+].filter(Boolean);
+
+const pageTitle = formatTitle([listing.business_name, ...locationParts]);
+const pageDescription = formatDescription(
+  listing.description || `${listing.business_name} is a verified testing laboratory and certification body. Access ISO 17025 accredited labs and testing services.`
+);
 ---
 
 <!DOCTYPE html>
@@ -167,8 +178,8 @@ const certificationCount = allCertifications.length
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{listing.business_name} | TSTR Hub</title>
-  <meta name="description" content={listing.description}>
+  <title>{pageTitle}</title>
+  <meta name="description" content={pageDescription}>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
      crossorigin="anonymous"></script>
   <style>

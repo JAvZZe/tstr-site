@@ -80,6 +80,8 @@ const { data: pageListings, error: listingsError } = await supabase
   .order('priority_rank', { ascending: false })
   .order('created_at', { ascending: false });
 
+import { formatTitle, formatDescription } from '../../../lib/seo';
+
 // SEO-friendly titles
 const titleCat = categoryData?.name || category.charAt(0).toUpperCase() + category.slice(1);
 const titleReg = region.toUpperCase();
@@ -91,6 +93,12 @@ const getTestingServiceName = (categoryName: string) => {
 };
 
 const testingServiceName = getTestingServiceName(titleCat);
+
+// Optimized SEO parts
+const pageTitle = formatTitle([titleCat, titleReg]);
+const pageDescription = formatDescription(
+  `Find ${listingCount} verified ${titleCat.toLowerCase()} and ${testingServiceName.toLowerCase()} in ${titleReg}. Compare ISO 17025 labs and certification bodies. Get quotes from certified providers.`
+);
 ---
 
 <!DOCTYPE html>
@@ -98,13 +106,10 @@ const testingServiceName = getTestingServiceName(titleCat);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{titleCat} & {testingServiceName} in {titleReg} | TSTR.directory</title>
-    <meta
-      name="description"
-      content={`Directory of ${listingCount} verified ${titleCat.toLowerCase()} and ${testingServiceName.toLowerCase()} in ${titleReg}. Compare ISO 17025 labs and certification bodies. Get quotes from certified providers.`}
-    />
-    <meta property="og:title" content={`${titleCat} & ${testingServiceName} in ${titleReg}`} />
-    <meta property="og:description" content={`Find and compare ${listingCount} verified ${titleCat.toLowerCase()} in ${titleReg}. ${categoryData?.description || testingServiceName + ' from ISO 17025 laboratories.'}`} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
   </head>
 
   <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
