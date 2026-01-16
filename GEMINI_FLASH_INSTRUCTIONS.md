@@ -1,55 +1,73 @@
-# GEMINI FLASH INSTRUCTIONS: Subscription Page UI Polish
+# GEMINI FLASH INSTRUCTIONS: Fix PayPal Subscription Logic
 
-**Objective**: Finalize the UX/UI alignment between the Subscription page and the Account Dashboard.
+**Objective**: Fix the "Failed to start checkout" error on the subscription page by aligning the PayPal logic with the working implementation from the Pricing page.
 
 **Target File**: `web/tstr-frontend/src/pages/account/subscription.astro`
 
 ## Context
-The subscription page has been structurally updated, but lacks the specific "delight" elements (emojis, consistent headers) found on the main account dashboard.
+The current implementation of `handlePayPalSubscribe` in `subscription.astro` incorrectly uses the user's session token for the Edge Function call and fails to pass the required `userId` in the body. The working implementation in `pricing.astro` uses the anonymous JWT and explicitly passes the user ID.
 
-## Task 1: Update Section Headers with Emojis
-Locate the `loadSubscriptionPage` function's template literal (around line 600+) and update the section headers to include consistent emojis.
+## Task 1: Update PayPal Logic
+Locate the `handlePayPalSubscribe` function (around line 708) and replace it with the robust version below. This version:
+1.  Imports `supabaseAnonJwt` (already present).
+2.  Uses `supabaseAnonJwt` for the `Authorization` header.
+3.  Includes `userId` in the request body.
+4.  Adds proper error handling and logging.
 
-1.  **Current Plan Section**: Ensure the header is `<h3>💎 Your Current Plan</h3>`.
-2.  **Upgrade Section**: Change `<h2>Upgrade Your Plan</h2>` to `<h2>🚀 Upgrade Your Plan</h2>`.
-3.  **Help Section**: Change `<h2>Need Help?</h2>` to `<h2>🤝 Need Help?</h2>`.
+```javascript
+    window.handlePayPalSubscribe = async function(tier, button) {
+      const originalText = button.textContent;
+      button.textContent = 'Processing...';
+      button.disabled = true;
 
-## Task 2: Verify Button & Card Styles
-Ensure the `style` block contains the following specific classes to match the dashboard (if not already present):
+      try {
+        const { data: { session } } = await supabaseBrowser.auth.getSession();
+        if (!session) throw new Error('No active session. Please log in again.');
 
-```css
-/* Dashboard-style Grid */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
+        console.log('[PayPal] Starting checkout for tier:', tier);
 
-/* Card Styling */
-.card {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
+        // Call Edge Function
+        // Uses supabaseAnonJwt to avoid RLS issues, passing userId explicitly in body
+        const { data, error } = await fetch('https://haimjeaetrsaauitrhfy.supabase.co/functions/v1/paypal-create-subscription', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${supabaseAnonJwt}` 
+          },
+          body: JSON.stringify({
+            tier,
+            userId: session.user.id,
+            return_url: window.location.origin + '/checkout/success',
+            cancel_url: window.location.origin + '/checkout/cancel'
+          })
+        }).then(res => res.json().then(data => ({ data, error: !res.ok ? data : null })));
 
-/* Header with Gradient Bar */
-.card h3::before {
-  content: '';
-  width: 4px;
-  height: 20px;
-  background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
-  border-radius: 2px;
-}
+        if (error) {
+          console.error('[PayPal] Edge Function Error:', error);
+          throw new Error(error.error || error.message || 'Failed to create subscription');
+        }
+
+        console.log('[PayPal] Subscription created:', data);
+
+        // Redirect to PayPal
+        if (data.approval_url) {
+          window.location.href = data.approval_url;
+        } else {
+          throw new Error('No approval URL returned from server');
+        }
+
+      } catch (error) {
+        console.error('[PayPal] Subscription error:', error);
+        alert(`Failed to start checkout. ${error.message}`);
+        button.textContent = originalText;
+        button.disabled = false;
+      }
+    }
 ```
 
-## Task 3: Execution Steps
+## Task 2: Execution Steps
 
-1.  **Pull Latest**: `git pull origin main --rebase` (Resolve any stashed/local conflicts if needed).
-2.  **Apply Edits**: Use `replace_file_content` to inject the emojis and styles.
-3.  **Verify**: Ensure the page builds locally (`npm run build` or `astro check`).
-4.  **Push**: `git commit -m "UI: Polish subscription page with consistent emojis and spacing" && git push origin main`.
+1.  **Pull Latest**: `git pull origin main --rebase`.
+2.  **Apply Logic Fix**: specific replace of `window.handlePayPalSubscribe`.
+3.  **Verify**: Ensure the file compiles.
+4.  **Push**: `git commit -m "FIX: Align PayPal subscription logic with pricing page implementation" && git push origin main`.
