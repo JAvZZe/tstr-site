@@ -10,38 +10,42 @@ export const prerender = true;
 
 // 1. getStaticPaths: Generate pages for each category/region combination
 export async function getStaticPaths() {
-  // Fetch all listings with category and region
-  const { data: listings, error } = await supabase
-    .from('listings')
-    .select(`
-      region,
-      category:category_id (slug)
-    `);
-    // Removed .eq('status', 'active') to ensure pages exist even if listings correspond to inactive items
+  // Fetch all categories
+  const { data: categories } = await supabase
+    .from('categories')
+    .select('slug');
 
-  if (error || !listings) {
-    console.error('Error fetching listings for static paths:', error);
+  // Fetch all regions currently in use in listings (regardless of status)
+  const { data: listingRegions } = await supabase
+    .from('listings')
+    .select('region');
+
+  if (!categories || !listingRegions) {
     return [];
   }
 
-  // Create unique category/region combinations
-  const uniquePaths = new Set<string>();
-  listings.forEach(listing => {
-    if (listing.category?.slug && listing.region) {
-      uniquePaths.add(JSON.stringify({
-        category: listing.category.slug,
-        region: listing.region.toLowerCase()
-      }));
-    }
+  // Define core regions to ensure they always exist
+  const uniqueRegions = new Set(['global', 'europe', 'north-america', 'asia', 'oceania', 'africa', 'south-america']);
+  
+  // Add any regions found in listings
+  listingRegions.forEach(l => {
+    if (l.region) uniqueRegions.add(l.region.toLowerCase());
   });
 
-  // Return path objects
-  return Array.from(uniquePaths).map(pathStr => {
-    const { category, region } = JSON.parse(pathStr);
-    return {
-      params: { category, region }
-    };
+  // Create cross-join of all categories and all regions
+  const paths = [];
+  categories.forEach(cat => {
+    uniqueRegions.forEach(region => {
+      paths.push({
+        params: { 
+          category: cat.slug, 
+          region: region 
+        }
+      });
+    });
   });
+
+  return paths;
 }
 
 // 2. Page rendering: Fetch data for this specific page
