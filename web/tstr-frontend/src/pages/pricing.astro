@@ -357,6 +357,141 @@ import Footer from '../components/Footer.astro'
         padding: 0.75rem 0.5rem;
       }
     }
+    /* Modal Styles */
+    .modal {
+      border: none;
+      padding: 0;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      max-width: 500px;
+      width: 90%;
+      background: white;
+    }
+
+    .modal::backdrop {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+      padding: 0;
+    }
+
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      font-size: 1.25rem;
+      color: #000080;
+      margin: 0;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+    }
+    
+    .modal-body {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .success-icon {
+      font-size: 3rem;
+      color: #32CD32;
+      margin-bottom: 1rem;
+    }
+
+    .instruction-text {
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .email-note {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    .bank-details-card {
+      background: #f5f7ff;
+      border: 1px solid #e0e7ff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      font-size: 0.95rem;
+    }
+
+    .detail-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .detail-row .label {
+      color: #666;
+    }
+
+    .detail-row .value {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .reference-row {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px dashed #cbd5e1;
+    }
+
+    .reference-row .label {
+      color: #000080;
+      font-weight: 700;
+    }
+
+    .reference-row .value {
+      color: #000080;
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+
+    .next-steps {
+      text-align: left;
+      background: #f9fafb;
+      padding: 1.5rem;
+      border-radius: 8px;
+    }
+
+    .next-steps h4 {
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    .next-steps ol {
+      padding-left: 1.5rem;
+      color: #4b5563;
+      font-size: 0.9rem;
+    }
+
+    .next-steps li {
+      margin-bottom: 0.5rem;
+    }
+
+    .next-steps a {
+      color: #000080;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -600,6 +735,62 @@ import Footer from '../components/Footer.astro'
 
   <Footer />
 
+  <!-- EFT Payment Modal -->
+  <dialog id="eft-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Bank Transfer Details</h2>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="success-icon">✓</div>
+        <p class="instruction-text">
+          Thank you for choosing the <strong id="eft-plan-name">Professional</strong> plan.
+          Please use the details below to complete your payment.
+        </p>
+        <p class="email-note">
+          We've also sent these details to your email address.
+        </p>
+
+        <div class="bank-details-card">
+          <div class="detail-row">
+            <span class="label">Bank Name:</span>
+            <span class="value">First Business Zero</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Account Type:</span>
+            <span class="value">Current Account</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Account Number:</span>
+            <span class="value">63190154070</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Branch Code:</span>
+            <span class="value">250655</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">SWIFT Code:</span>
+            <span class="value">FIRNZAJJ</span>
+          </div>
+          <div class="detail-row reference-row">
+            <span class="label">Reference:</span>
+            <span class="value" id="eft-reference">LOADING...</span>
+          </div>
+        </div>
+
+        <div class="next-steps">
+          <h4>Next Steps:</h4>
+          <ol>
+            <li>Make the transfer using the reference above.</li>
+            <li>Email proof of payment to <a href="mailto:sales@tstr.directory">sales@tstr.directory</a>.</li>
+            <li>Your account will be upgraded within 24-48 hours.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
   <script>
     import { supabaseBrowser, supabaseAnonKey, supabaseAnonJwt } from '../lib/supabase-browser'
 
@@ -610,8 +801,13 @@ import Footer from '../components/Footer.astro'
       button.disabled = true
 
       try {
-        if (method === 'paypal') {
-          // PayPal subscription flow
+          if (method === 'eft') {
+            await handleEFTFlow(tier)
+            return
+          }
+
+          if (method === 'paypal') {
+            // PayPal subscription flow
           const { data: { session: currentSession }, error: sessionError } = await supabaseBrowser.auth.getSession()
 
           if (sessionError || !currentSession) {
@@ -875,6 +1071,94 @@ import Footer from '../components/Footer.astro'
         button.textContent = originalText
         button.disabled = false
       }
+    }
+
+    // EFT Payment Flow Handler
+    async function handleEFTFlow(tier) {
+      const button = document.querySelector(`[data-tier="${tier}"][data-method="eft"]`)
+      const originalText = button.textContent
+      button.textContent = 'Loading...'
+      button.disabled = true
+
+      try {
+        const { data: { session }, error } = await supabaseBrowser.auth.getSession()
+        
+        if (error || !session) {
+          // Redirect to login if not authenticated
+           window.location.href = `/login?redirect_to=${encodeURIComponent('/pricing')}`
+           return
+        }
+
+        // Tier details
+        const amounts = {
+          'professional': '$295.00',
+          'premium': '$795.00'
+        }
+        const planName = tier.charAt(0).toUpperCase() + tier.slice(1)
+        const amount = amounts[tier]
+
+        // Call API to generate reference and send email
+        const response = await fetch('/api/subscription/eft', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`
+          },
+          body: JSON.stringify({
+            plan: planName,
+            amount: amount
+          })
+        })
+
+        if (!response.ok) {
+          throw new Error('Failed to initiate EFT payment')
+        }
+
+        const data = await response.json()
+        
+        // Show Modal
+        const modal = document.getElementById('eft-modal')
+        const planNameEl = document.getElementById('eft-plan-name')
+        const refEl = document.getElementById('eft-reference')
+        
+        if (planNameEl) planNameEl.textContent = planName
+        if (refEl) refEl.textContent = data.reference
+        
+        if (modal) {
+           modal.showModal()
+           // Reset button state immediately since modal is open
+           button.textContent = originalText
+           button.disabled = false
+        }
+
+      } catch (err) {
+        console.error('EFT Flow Error:', err)
+        alert('Failed to load bank details. Please try again or contact support.')
+        button.textContent = originalText
+        button.disabled = false
+      }
+    }
+
+    // Modal Close Logic
+    const modal = document.getElementById('eft-modal')
+    const closeBtn = document.querySelector('.close-modal')
+    
+    if (modal && closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        modal.close()
+      })
+
+      modal.addEventListener('click', (e) => {
+        const dialogDimensions = modal.getBoundingClientRect()
+        if (
+          e.clientX < dialogDimensions.left ||
+          e.clientX > dialogDimensions.right ||
+          e.clientY < dialogDimensions.top ||
+          e.clientY > dialogDimensions.bottom
+        ) {
+          modal.close()
+        }
+      })
     }
 
     // Safely attach click handlers with error handling
