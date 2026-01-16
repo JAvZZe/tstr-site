@@ -1,7 +1,7 @@
 # TSTR.md - AI Agent Context for TSTR.directory Project
 
 > **Purpose**: Instructions for AI agents (Claude, Gemini, etc.) working on TSTR.directory
-> **Last Updated**: 2025-11-09
+> **Last Updated**: 2026-01-16
 > **Read This**: Every new session, before making changes
 
 ---
@@ -165,6 +165,11 @@ web/tstr-automation/
 - Parse locations with `location_parser.py` (handles "City, State" and "City, Country")
 - Validate before inserting (check duplicates, validate required fields)
 - Log everything for debugging
+
+**Manual Payment Implementation Pattern**:
+- Use modals for sensitive payment info (EFT details, Crypto addresses).
+- Send instructions via email immediately upon user request to provide a "paper trail".
+- Avoid importing complex shared objects (like `CONTACTS`) in client-side `<script>` tags if they are only needed for a few strings; hardcoding or using explicit constants is more robust against bundler errors.
 
 **Database Operations**:
 - Use Supabase CLI: `~/.local/bin/supabase`
