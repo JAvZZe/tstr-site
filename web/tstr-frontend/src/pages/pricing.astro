@@ -1168,7 +1168,7 @@ import Footer from '../components/Footer.astro'
           const subject = `TSTR ${tier.charAt(0).toUpperCase() + tier.slice(1)} Plan - Bank Transfer`
           const body = `Please process bank transfer for TSTR ${tier} plan subscription ($${amount}/month).\n\nBank details will be provided upon confirmation.\n\nPlease include your account email in the transfer reference.`
 
-          window.location.href = `mailto:${CONTACTS.sales}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+          window.location.href = `mailto:sales@tstr.directory?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
           button.textContent = originalText
           button.disabled = false
           return
@@ -1178,7 +1178,7 @@ import Footer from '../components/Footer.astro'
           const subject = `TSTR ${tier.charAt(0).toUpperCase() + tier.slice(1)} Plan - Bitcoin Payment`
           const body = `Please send Bitcoin payment for TSTR ${tier} plan subscription ($${amount}/month).\n\nBTC wallet address: [WALLET_ADDRESS_HERE]\n\nPlease include transaction ID and your account email for verification.`
 
-          window.location.href = `mailto:${CONTACTS.sales}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+          window.location.href = `mailto:sales@tstr.directory?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
           button.textContent = originalText
           button.disabled = false
           return
@@ -1308,7 +1308,7 @@ import Footer from '../components/Footer.astro'
         const planName = tier.charAt(0).toUpperCase() + tier.slice(1)
         const amount = amounts[tier]
 
-        const response = await fetch('/api/subscription/crypto', {
+        const response = await fetch('/api/subscription/eft', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
