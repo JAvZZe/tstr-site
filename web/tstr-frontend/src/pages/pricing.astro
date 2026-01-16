@@ -329,8 +329,106 @@ import Footer from '../components/Footer.astro'
     footer a:hover {
       text-decoration: underline;
     }
+   /* Bitcoin Modal Styles */
+  .btc-icon {
+    color: #F7931A;
+    background: #FFF5E6;
+  }
+  .btc-qr-container {
+    text-align: center;
+    margin: 20px 0;
+    padding: 15px;
+    background: white;
+    border-radius: 12px;
+    display: inline-block;
+    width: 100%;
+  }
+  .btc-qr-code {
+    max-width: 180px;
+    height: auto;
+    margin: 0 auto;
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  .btc-card {
+    border-color: #F7931A44;
+  }
+  .wallet-value {
+    font-size: 0.85em;
+    word-break: break-all;
+    font-family: monospace;
+    flex: 1;
+    margin-right: 10px;
+    text-align: left !important;
+  }
+  .copy-btn {
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover {
+    background: #e5e7eb;
+  }
+  .btc-row {
+    flex-wrap: wrap;
+  }
 
-    @media (max-width: 768px) {
+  /* Bitcoin Modal Styles */
+  .btc-icon {
+    color: #F7931A;
+    background: #FFF5E6;
+  }
+  .btc-qr-container {
+    text-align: center;
+    margin: 20px 0;
+    padding: 15px;
+    background: white;
+    border-radius: 12px;
+    display: inline-block;
+    width: 100%;
+  }
+  .btc-qr-code {
+    max-width: 180px;
+    height: auto;
+    margin: 0 auto;
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  .btc-card {
+    border-color: #F7931A44;
+  }
+  .wallet-value {
+    font-size: 0.85em;
+    word-break: break-all;
+    font-family: monospace;
+    flex: 1;
+    margin-right: 10px;
+    text-align: left !important;
+  }
+  .copy-btn {
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover {
+    background: #e5e7eb;
+  }
+  .btc-row {
+    flex-wrap: wrap;
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 640px) {
       header h1 {
         font-size: 2rem;
       }
@@ -791,6 +889,48 @@ import Footer from '../components/Footer.astro'
     </div>
   </dialog>
 
+  <!-- Bitcoin Payment Modal -->
+  <dialog id="btc-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Bitcoin Payment Details</h2>
+        <button class="close-modal-btc">&times;</button>
+      </div>
+      <div class="modal-body btc-body">
+        <div class="success-icon btc-icon">₿</div>
+        <p class="instruction-text">
+          Thank you for choosing the <strong id="btc-plan-name">Professional</strong> plan.
+          Please use the details below to complete your payment.
+        </p>
+
+        <div class="btc-qr-container">
+          <img src="/bitcoin-qr.png" alt="Bitcoin QR Code" class="btc-qr-code" />
+        </div>
+
+        <div class="bank-details-card btc-card">
+          <div class="detail-row btc-row">
+            <span class="label">Wallet Address:</span>
+            <span class="value wallet-value">17B2BCJfDyNeMoFZ2mbAVHnmL8CwogQFeB</span>
+            <button class="copy-btn" onclick="navigator.clipboard.writeText('17B2BCJfDyNeMoFZ2mbAVHnmL8CwogQFeB').then(() => {this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy', 2000)})">Copy</button>
+          </div>
+          <div class="detail-row reference-row">
+            <span class="label">Reference:</span>
+            <span class="value" id="btc-reference">LOADING...</span>
+          </div>
+        </div>
+
+        <div class="next-steps">
+          <h4>Next Steps:</h4>
+          <ol>
+            <li>Send the payment to the address above.</li>
+            <li>Email your transaction hash to <a href="mailto:sales@tstr.directory">sales@tstr.directory</a>.</li>
+            <li>Your account will be upgraded within 24 hours of confirmation.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
   <script>
     import { supabaseBrowser, supabaseAnonKey, supabaseAnonJwt } from '../lib/supabase-browser'
 
@@ -1098,7 +1238,7 @@ import Footer from '../components/Footer.astro'
         const amount = amounts[tier]
 
         // Call API to generate reference and send email
-        const response = await fetch('/api/subscription/eft', {
+        const response = await fetch('/api/subscription/crypto', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1146,6 +1286,72 @@ import Footer from '../components/Footer.astro'
       }
     }
 
+    // Bitcoin Payment Flow Handler
+    async function handleBTCFlow(tier) {
+      const button = document.querySelector(`[data-tier="${tier}"][data-method="btc"]`)
+      const originalText = button.textContent
+      button.textContent = 'Loading...'
+      button.disabled = true
+
+      try {
+        const { data: { session }, error } = await supabaseBrowser.auth.getSession()
+        
+        if (error || !session) {
+           window.location.href = `/login?redirect_to=${encodeURIComponent('/pricing')}`
+           return
+        }
+
+        const amounts = {
+          'professional': '$295.00',
+          'premium': '$795.00'
+        }
+        const planName = tier.charAt(0).toUpperCase() + tier.slice(1)
+        const amount = amounts[tier]
+
+        const response = await fetch('/api/subscription/crypto', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`
+          },
+          body: JSON.stringify({
+            plan: planName,
+            amount: amount
+          })
+        })
+
+        if (!response.ok) {
+          let errorMsg = 'Failed to initiate Bitcoin payment'
+          try {
+            const errorData = await response.json()
+            if (errorData.error) errorMsg = errorData.error
+          } catch (e) {}
+          throw new Error(errorMsg)
+        }
+
+        const data = await response.json()
+        
+        const modal = document.getElementById('btc-modal')
+        const planNameEl = document.getElementById('btc-plan-name')
+        const refEl = document.getElementById('btc-reference')
+        
+        if (planNameEl) planNameEl.textContent = planName
+        if (refEl) refEl.textContent = data.reference
+        
+        if (modal) {
+           modal.showModal()
+           button.textContent = originalText
+           button.disabled = false
+        }
+
+      } catch (err) {
+        console.error('BTC Flow Error:', err)
+        alert(`Failed to load Bitcoin details: ${err.message || 'Unknown error'}. Please try again or contact support.`)
+        button.textContent = originalText
+        button.disabled = false
+      }
+    }
+
     // Modal Close Logic
     const modal = document.getElementById('eft-modal')
     const closeBtn = document.querySelector('.close-modal')
@@ -1168,6 +1374,28 @@ import Footer from '../components/Footer.astro'
       })
     }
 
+    // Bitcoin Modal Close Logic
+    const btcModal = document.getElementById('btc-modal')
+    const btcCloseBtn = document.querySelector('.close-modal-btc')
+    
+    if (btcModal && btcCloseBtn) {
+      btcCloseBtn.addEventListener('click', () => {
+        btcModal.close()
+      })
+
+      btcModal.addEventListener('click', (e) => {
+        const dialogDimensions = btcModal.getBoundingClientRect()
+        if (
+          e.clientX < dialogDimensions.left ||
+          e.clientX > dialogDimensions.right ||
+          e.clientY < dialogDimensions.top ||
+          e.clientY > dialogDimensions.bottom
+        ) {
+          btcModal.close()
+        }
+      })
+    }
+
     // Safely attach click handlers with error handling
     try {
       // PayPal buttons
@@ -1175,12 +1403,12 @@ import Footer from '../components/Footer.astro'
       document.getElementById('btn-premium-paypal')?.addEventListener('click', () => handleSubscribe('premium', 'paypal'))
 
       // EFT buttons
-      document.getElementById('btn-professional-eft')?.addEventListener('click', () => handleSubscribe('professional', 'eft'))
-      document.getElementById('btn-premium-eft')?.addEventListener('click', () => handleSubscribe('premium', 'eft'))
+      document.getElementById('btn-professional-eft')?.addEventListener('click', () => handleEFTFlow('professional'))
+      document.getElementById('btn-premium-eft')?.addEventListener('click', () => handleEFTFlow('premium'))
 
       // Bitcoin buttons
-      document.getElementById('btn-professional-btc')?.addEventListener('click', () => handleSubscribe('professional', 'btc'))
-      document.getElementById('btn-premium-btc')?.addEventListener('click', () => handleSubscribe('premium', 'btc'))
+      document.getElementById('btn-professional-btc')?.addEventListener('click', () => handleBTCFlow('professional'))
+      document.getElementById('btn-premium-btc')?.addEventListener('click', () => handleBTCFlow('premium'))
     } catch (error) {
       console.warn('Failed to initialize subscription handlers:', error)
       // If initialization fails, disable the buttons gracefully
