@@ -26,7 +26,7 @@
  * ❌ DON'T: Create duplicate content configs elsewhere
  *
  * CURRENT CONFIGURATION:
- * - All emails route to: tstr.site1@gmail.com
+ * - All emails route to: support@tstr.directory
  * - Updated: 2025-11-19 - Added CONTENT section for disclaimers
  */
 
@@ -35,16 +35,16 @@ export const CONTACTS = {
   sales: 'sales@tstr.directory',
 
   // General support (account issues, technical help)
-  support: 'tstr.site1@gmail.com',
+  support: 'support@tstr.directory',
 
   // Partnership opportunities (integrations, co-marketing)
-  partnerships: 'tstr.site1@gmail.com',
+  partnerships: 'support@tstr.directory',
 
   // General enquiries (questions, feedback)
-  enquiries: 'tstr.site1@gmail.com',
+  enquiries: 'support@tstr.directory',
 
   // Legal/compliance matters
-  legal: 'tstr.site1@gmail.com',
+  legal: 'support@tstr.directory',
 } as const
 
 /**
@@ -88,7 +88,7 @@ export const CONTENT = {
   // Disclaimers and legal text
   // Note: disclaimerLink is rendered as a separate bold link element in components
   disclaimer: `Disclaimer: Certifications and capabilities listed are extracted from public databases and have not been independently verified by TSTR.directory. We recommend verifying all credentials directly with the testing laboratory and relevant accreditation bodies before engaging services.`,
-  
+
   disclaimerLink: {
     text: 'Click here to commission us to verify credentials for you.',
     href: '/pricing#verification', // Links to verification pricing section
@@ -113,15 +113,15 @@ export const CONTENT = {
 
   // Footer text
   copyright: `© ${new Date().getFullYear()} TSTR Hub. All rights reserved.`,
-  
+
   footerTagline: 'Connecting industries with certified testers worldwide',
-  
-    footerLinks: [
-      { href: '/terms', label: 'Terms of Service' },
-      { href: '/privacy', label: 'Privacy Policy' },
-      { href: '/pricing', label: 'Pricing' },
-      { href: '/sitemap', label: 'Sitemap' },
-      { href: '/submit', label: 'List Your Company' },
-      { href: 'https://linkedin.com/company/tstr-hub', label: 'LinkedIn', icon: 'linkedin' },
-    ],
+
+  footerLinks: [
+    { href: '/terms', label: 'Terms of Service' },
+    { href: '/privacy', label: 'Privacy Policy' },
+    { href: '/pricing', label: 'Pricing' },
+    { href: '/sitemap', label: 'Sitemap' },
+    { href: '/submit', label: 'List Your Company' },
+    { href: 'https://linkedin.com/company/tstr-hub', label: 'LinkedIn', icon: 'linkedin' },
+  ],
 } as const
