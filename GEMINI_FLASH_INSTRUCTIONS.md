@@ -1,73 +1,28 @@
-# GEMINI FLASH INSTRUCTIONS: Fix PayPal Subscription Logic
+# Instructions for Gemini Flash - PayPal Go-Live Executed ✅
 
-**Objective**: Fix the "Failed to start checkout" error on the subscription page by aligning the PayPal logic with the working implementation from the Pricing page.
+## 🎯 Status: COMPLETED
+The PayPal environment has been switched from **SANDBOX** to **LIVE** as of 2026-01-16.
 
-**Target File**: `web/tstr-frontend/src/pages/account/subscription.astro`
+## 🛠️ Actions Taken
+1.  **Product Created**: "TSTR Directory" (`PROD-30K73713R1196730Y`).
+2.  **Plans Created**:
+    *   Professional: `P-08U50096BE7109405NFVAIIA` ($295/mo)
+    *   Premium: `P-6GA992471E0438453NFVAIMQ` ($795/mo)
+3.  **Supabase Secrets Set**:
+    *   `PAYPAL_MODE=live`
+    *   `PAYPAL_CLIENT_ID` updated.
+    *   `PAYPAL_CLIENT_SECRET` updated.
+    *   `PAYPAL_WEBHOOK_ID=6BM39420KN6814433`.
+    *   Plan IDs updated.
+4.  **Edge Functions Redeployed**: `paypal-create-subscription`, `paypal-webhook`, `paypal-cancel-subscription`.
+5.  **Local Environment Updated**: `web/tstr-frontend/.env` now matches live settings.
 
-## Context
-The current implementation of `handlePayPalSubscribe` in `subscription.astro` incorrectly uses the user's session token for the Edge Function call and fails to pass the required `userId` in the body. The working implementation in `pricing.astro` uses the anonymous JWT and explicitly passes the user ID.
+---
 
-## Task 1: Update PayPal Logic
-Locate the `handlePayPalSubscribe` function (around line 708) and replace it with the robust version below. This version:
-1.  Imports `supabaseAnonJwt` (already present).
-2.  Uses `supabaseAnonJwt` for the `Authorization` header.
-3.  Includes `userId` in the request body.
-4.  Adds proper error handling and logging.
+## 🚦 Verification Checklist (For Future Agents)
+If issues arise, check:
+1.  `supabase secrets list` to confirm `PAYPAL_MODE=live`.
+2.  Supabase Logs for `paypal-webhook` to see real IP notifications from PayPal.
+3.  PayPal Dashboard for subscription activity on the newly created plans.
 
-```javascript
-    window.handlePayPalSubscribe = async function(tier, button) {
-      const originalText = button.textContent;
-      button.textContent = 'Processing...';
-      button.disabled = true;
-
-      try {
-        const { data: { session } } = await supabaseBrowser.auth.getSession();
-        if (!session) throw new Error('No active session. Please log in again.');
-
-        console.log('[PayPal] Starting checkout for tier:', tier);
-
-        // Call Edge Function
-        // Uses supabaseAnonJwt to avoid RLS issues, passing userId explicitly in body
-        const { data, error } = await fetch('https://haimjeaetrsaauitrhfy.supabase.co/functions/v1/paypal-create-subscription', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${supabaseAnonJwt}` 
-          },
-          body: JSON.stringify({
-            tier,
-            userId: session.user.id,
-            return_url: window.location.origin + '/checkout/success',
-            cancel_url: window.location.origin + '/checkout/cancel'
-          })
-        }).then(res => res.json().then(data => ({ data, error: !res.ok ? data : null })));
-
-        if (error) {
-          console.error('[PayPal] Edge Function Error:', error);
-          throw new Error(error.error || error.message || 'Failed to create subscription');
-        }
-
-        console.log('[PayPal] Subscription created:', data);
-
-        // Redirect to PayPal
-        if (data.approval_url) {
-          window.location.href = data.approval_url;
-        } else {
-          throw new Error('No approval URL returned from server');
-        }
-
-      } catch (error) {
-        console.error('[PayPal] Subscription error:', error);
-        alert(`Failed to start checkout. ${error.message}`);
-        button.textContent = originalText;
-        button.disabled = false;
-      }
-    }
-```
-
-## Task 2: Execution Steps
-
-1.  **Pull Latest**: `git pull origin main --rebase`.
-2.  **Apply Logic Fix**: specific replace of `window.handlePayPalSubscribe`.
-3.  **Verify**: Ensure the file compiles.
-4.  **Push**: `git commit -m "FIX: Align PayPal subscription logic with pricing page implementation" && git push origin main`.
+**DO NOT** switch back to sandbox IDs in production code.
