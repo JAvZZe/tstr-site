@@ -712,34 +712,43 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
 
       try {
         const { data: { session } } = await supabaseBrowser.auth.getSession();
-        if (!session) throw new Error('No active session');
+        if (!session) throw new Error('No active session. Please log in again.');
 
-        // Call Edge Function to create subscription
+        console.log('[PayPal] Starting checkout for tier:', tier);
+
+        // Call Edge Function
+        // Uses supabaseAnonJwt to avoid RLS issues, passing userId explicitly in body
         const { data, error } = await fetch('https://haimjeaetrsaauitrhfy.supabase.co/functions/v1/paypal-create-subscription', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.access_token}`
+            'Authorization': `Bearer ${supabaseAnonJwt}` 
           },
           body: JSON.stringify({
             tier,
+            userId: session.user.id,
             return_url: window.location.origin + '/checkout/success',
             cancel_url: window.location.origin + '/checkout/cancel'
           })
         }).then(res => res.json().then(data => ({ data, error: !res.ok ? data : null })));
 
-        if (error) throw error;
+        if (error) {
+          console.error('[PayPal] Edge Function Error:', error);
+          throw new Error(error.error || error.message || 'Failed to create subscription');
+        }
+
+        console.log('[PayPal] Subscription created:', data);
 
         // Redirect to PayPal
         if (data.approval_url) {
           window.location.href = data.approval_url;
         } else {
-          throw new Error('No approval URL returned');
+          throw new Error('No approval URL returned from server');
         }
 
       } catch (error) {
-        console.error('Subscription error:', error);
-        alert('Failed to start checkout. Please try again or contact support.');
+        console.error('[PayPal] Subscription error:', error);
+        alert(`Failed to start checkout. ${error.message}`);
         button.textContent = originalText;
         button.disabled = false;
       }
