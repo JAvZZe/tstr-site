@@ -39,7 +39,9 @@ export const POST: APIRoute = async ({ request }) => {
 
         if (!emailResult.success) {
             console.error('EFT Email failed:', emailResult.error)
-            return new Response(JSON.stringify({ error: 'Failed to send payment instructions email. Please try again.' }), { status: 500 })
+            return new Response(JSON.stringify({
+                error: `Email failed: ${emailResult.error || 'Unknown error'}. Please verify your account email is correct.`
+            }), { status: 500 })
         }
 
         return new Response(JSON.stringify({
