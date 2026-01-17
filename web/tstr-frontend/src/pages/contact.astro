@@ -1,0 +1,303 @@
+---
+import { CONTACTS } from '../lib/contacts';
+import Footer from '../components/Footer.astro';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - Get in Touch | TSTR Hub</title>
+  <meta name="description" content="Have questions? Contact TSTR for sales, technical support, or partnership opportunities. We're here to help you connect with the testing industry.">
+  <style>
+    :root {
+      --primary: #000080;
+      --secondary: #32CD32;
+      --text: #333;
+      --light: #f5f5f5;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--light);
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .breadcrumb {
+      margin-top: 1.5rem;
+      opacity: 0.9;
+      font-size: 0.9rem;
+    }
+
+    .breadcrumb a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      max-width: 800px;
+      margin: -2rem auto 4rem;
+      padding: 0 1.5rem;
+    }
+
+    .contact-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 0, 128, 0.1);
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .submit-btn {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      background: var(--primary);
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: background 0.3s, transform 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background: #0000a0;
+      transform: translateY(-2px);
+    }
+
+    .submit-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .message {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      display: none;
+    }
+
+    .message.success {
+      display: block;
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .message.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .contact-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+      text-align: center;
+    }
+
+    .info-item h3 {
+      font-size: 1rem;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .info-item p {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    @media (max-width: 640px) {
+      header h1 {
+        font-size: 2rem;
+      }
+      .contact-card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Contact Us</h1>
+    <p>Have questions or need assistance? Fill out the form below and our team will get back to you within 24 hours.</p>
+    <div class="breadcrumb">
+      <a href="/">Home</a> / <span>Contact</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="contact-card">
+      <form id="contactForm">
+        <div class="form-group">
+          <label for="name">Full Name *</label>
+          <input type="text" id="name" name="name" required placeholder="John Doe">
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" name="email" required placeholder="john@example.com">
+        </div>
+
+        <div class="form-group">
+          <label for="company">Company</label>
+          <input type="text" id="company" name="company" placeholder="Your Company Name">
+        </div>
+
+        <div class="form-group">
+          <label for="inquiryType">Inquiry Type *</label>
+          <select id="inquiryType" name="inquiryType" required>
+            <option value="" disabled selected>Select an inquiry type</option>
+            <option value="quotation">Request Quotation</option>
+            <option value="sales">Sales Inquiry</option>
+            <option value="support">Technical Support</option>
+            <option value="partnership">Partnership Opportunity</option>
+            <option value="general">General Inquiry</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="message">Message *</label>
+          <textarea id="message" name="message" required placeholder="How can we help you today?"></textarea>
+        </div>
+
+        <button type="submit" id="submitBtn" class="submit-btn">Send Message</button>
+
+        <div id="responseMessage" class="message"></div>
+      </form>
+    </div>
+
+    <div class="contact-info">
+      <div class="info-item">
+        <h3>Sales</h3>
+        <p>{CONTACTS.sales}</p>
+      </div>
+      <div class="info-item">
+        <h3>Support</h3>
+        <p>{CONTACTS.support}</p>
+      </div>
+      <div class="info-item">
+        <h3>Admin</h3>
+        <p>{CONTACTS.admin}</p>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+
+  <script>
+    const form = document.getElementById('contactForm') as HTMLFormElement;
+    const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;
+    const responseMsg = document.getElementById('responseMessage') as HTMLDivElement;
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Reset state
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      responseMsg.className = 'message';
+      responseMsg.textContent = '';
+      responseMsg.style.display = 'none';
+
+      try {
+        const formData = new FormData(form);
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          responseMsg.className = 'message success';
+          responseMsg.textContent = 'Thank you! Your message has been sent successfully. We will get back to you soon.';
+          responseMsg.style.display = 'block';
+          form.reset();
+        } else {
+          throw new Error(result.error || 'Failed to send message');
+        }
+      } catch (err: any) {
+        responseMsg.className = 'message error';
+        responseMsg.textContent = `Error: ${err.message || 'Something went wrong. Please try again later.'}`;
+        responseMsg.style.display = 'block';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
+      }
+    });
+  </script>
+</body>
+</html>

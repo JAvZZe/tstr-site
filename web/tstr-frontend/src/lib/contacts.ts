@@ -37,6 +37,9 @@ export const CONTACTS = {
   // General support (account issues, technical help)
   support: 'support@tstr.directory',
 
+  // Administrative inquiries
+  admin: 'admin@tstr.directory',
+
   // Partnership opportunities (integrations, co-marketing)
   partnerships: 'support@tstr.directory',
 
@@ -122,6 +125,7 @@ export const CONTENT = {
     { href: '/pricing', label: 'Pricing' },
     { href: '/sitemap', label: 'Sitemap' },
     { href: '/submit', label: 'List Your Company' },
+    { href: '/contact', label: 'Contact Us' },
     { href: 'https://linkedin.com/company/tstr-hub', label: 'LinkedIn', icon: 'linkedin' },
   ],
 } as const
