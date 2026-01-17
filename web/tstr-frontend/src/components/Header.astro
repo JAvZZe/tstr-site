@@ -112,6 +112,7 @@
         desktopNav.innerHTML = ''
 
         const pricingLink = createNavLink('/pricing', 'Pricing', false)
+        const contactLink = createNavLink('/contact', 'Contact', false)
         const browseLink = createNavLink('/browse', 'Browse', false)
 
         if (isLoggedIn) {
@@ -124,6 +125,7 @@
 
         desktopNav.appendChild(browseLink)
         desktopNav.appendChild(pricingLink)
+        desktopNav.appendChild(contactLink)
       }
 
       // Update mobile nav
@@ -141,9 +143,11 @@
 
         const browseLink = createNavLink('/browse', 'Browse Listings', false)
         const pricingLink = createNavLink('/pricing', 'Pricing', false)
+        const contactLink = createNavLink('/contact', 'Contact Us', false)
 
         mobileNav.appendChild(browseLink)
         mobileNav.appendChild(pricingLink)
+        mobileNav.appendChild(contactLink)
       }
     } catch (error) {
       console.error('Error updating navigation:', error)
