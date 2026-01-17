@@ -15,6 +15,18 @@ const EMAIL_ROUTING: Record<string, string> = {
 
 export const POST: APIRoute = async ({ request }) => {
     try {
+        // Check if Resend API key is configured
+        const resendApiKey = import.meta.env.RESEND_API_KEY;
+        if (!resendApiKey) {
+            console.error('RESEND_API_KEY is not configured');
+            return new Response(JSON.stringify({ error: 'Email service not configured. Please contact support.' }), {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+
+        const resend = new Resend(resendApiKey);
+
         const formData = await request.formData();
         const name = formData.get('name')?.toString() || '';
         const email = formData.get('email')?.toString() || '';
@@ -44,7 +56,7 @@ export const POST: APIRoute = async ({ request }) => {
         };
 
         // Send email via Resend
-        const { error } = await resend.emails.send({
+        const { data, error } = await resend.emails.send({
             from: 'TSTR.directory <noreply@tstr.directory>',
             to: toEmail,
             replyTo: email,
@@ -69,19 +81,20 @@ export const POST: APIRoute = async ({ request }) => {
 
         if (error) {
             console.error('Resend error:', error);
-            return new Response(JSON.stringify({ error: 'Failed to send message' }), {
+            return new Response(JSON.stringify({ error: 'Failed to send message. Please try again.' }), {
                 status: 500,
                 headers: { 'Content-Type': 'application/json' }
             });
         }
 
+        console.log('Email sent successfully:', data);
         return new Response(JSON.stringify({ success: true }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }
         });
-    } catch (err) {
+    } catch (err: any) {
         console.error('Contact form error:', err);
-        return new Response(JSON.stringify({ error: 'Server error' }), {
+        return new Response(JSON.stringify({ error: err?.message || 'Server error' }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' }
         });
