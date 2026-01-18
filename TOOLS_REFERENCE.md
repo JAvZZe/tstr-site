@@ -19,9 +19,10 @@
 ### CLI Tools Installed
 ### Project‑Specific Tools
 
-- **Playwright** – End‑to‑end testing framework (v1.40.0)
+- **Playwright** – End‑to-end testing framework (v1.40.0)
 - **Claude CLI** – Available for complex reasoning (not currently used)
 - **Gemini CLI** – Fast token‑efficient tasks
+- **Jules CLI** – Google Jules CLI for AI-powered code checking and automated fixes via GitHub integration
 
 > **Note**: For a full list of system‑wide tools see [SYSTEM_TOOLS_REFERENCE.md](../../SYSTEM_TOOLS_REFERENCE.md).
 
