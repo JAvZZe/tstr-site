@@ -1,0 +1,32 @@
+# Security Policy for tstr.directory
+
+# Our security contact information
+Contact: mailto:security@tstr.directory
+Contact: https://tstr.directory/contact
+
+# Our security acknowledgments page (if we had one)
+# Acknowledgments: https://tstr.directory/security/hall-of-fame
+
+# Our security policy page (if we had one)
+Policy: https://tstr.directory/security-policy
+
+# Preferred languages for security communications
+Preferred-Languages: en
+
+# Canonical URL for this security.txt file
+Canonical: https://tstr.directory/security.txt
+
+# Expires: How often security researchers should refresh this file
+Expires: 2026-12-31T23:59:59.000Z
+
+# Encryption: PGP key for secure communication (placeholder - would need actual key)
+# Encryption: https://tstr.directory/pgp-key.txt
+
+# Hiring: Link to security-related job openings (if applicable)
+# Hiring: https://tstr.directory/jobs-security
+
+# Process for reporting security vulnerabilities:
+# 1. Send detailed report to security@tstr.directory
+# 2. Include steps to reproduce the vulnerability
+# 3. Allow reasonable time for response before disclosure
+# 4. We commit to acknowledging reports within 72 hours
