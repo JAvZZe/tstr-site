@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# TSTR.SITE - Cloud Scheduler Setup Script
+# tstr.directory - Cloud Scheduler Setup Script
 # Creates automated schedules for scrapers
 
 set -e
 
 echo "=================================="
-echo "TSTR.SITE Scheduler Setup"
+echo "tstr.directory Scheduler Setup"
 echo "=================================="
 
 PROJECT_ID="tstr-automation"

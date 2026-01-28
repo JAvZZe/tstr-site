@@ -293,6 +293,6 @@ fields have good coverage (68.4%), and the data quality is suitable for public
 display.
 
 Next step: Frontend integration to display the environmental testing category on
-the TSTR.site website.
+the tstr.directory website.
 
 =====================================================================================

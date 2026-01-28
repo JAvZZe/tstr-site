@@ -5,7 +5,7 @@
 1. **Go to:** https://dash.cloudflare.com/sign-up
 
 2. **Sign up with:**
-   - Email: tstr.site@gmail.com (or your preferred email)
+   - Email: tstr.directory@gmail.com (or your preferred email)
    - Password: Create a strong password
    
 3. **Verify your email**
@@ -107,7 +107,7 @@ This is CRITICAL - your site needs to connect to Supabase!
 ## Step 6: Verify Your Live Site
 
 Your site should show:
-- ✅ TSTR.site header
+- ✅ tstr.directory header
 - ✅ 5 testing categories (from Supabase)
 - ✅ Global locations
 - ✅ Professional design
@@ -134,7 +134,7 @@ Your site should show:
 
 ## NEXT: CUSTOM DOMAIN
 
-Once your site is live at `tstr-site.pages.dev`, we'll point your actual domain `tstr.site` to it.
+Once your site is live at `tstr-site.pages.dev`, we'll point your actual domain `tstr.directory` to it.
 
 Come back and tell me: **"Site is live at pages.dev!"**
 

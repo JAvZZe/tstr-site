@@ -1,4 +1,4 @@
-# TSTR.SITE - Cloud Scheduler Setup
+# tstr.directory - Cloud Scheduler Setup
 
 Write-Host "Setting Up Automated Schedules..." -ForegroundColor Yellow
 

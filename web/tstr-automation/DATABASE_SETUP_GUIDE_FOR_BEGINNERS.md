@@ -228,7 +228,7 @@ Once you've completed all 6 steps above, you'll be ready to:
 
 1. **Build the frontend** (the actual website visitors will see)
 2. **Import your first listings** (testing laboratories)
-3. **Deploy to tstr.site** (make it live on the internet)
+3. **Deploy to tstr.directory** (make it live on the internet)
 4. **Start accepting payments** (featured listings)
 
 I'll guide you through each of these, one at a time, just as simply as this guide.

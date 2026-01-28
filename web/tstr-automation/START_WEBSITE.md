@@ -53,7 +53,7 @@ You should see:
 
 ## WHAT YOU SHOULD SEE:
 
-✅ **TSTR.site** heading in purple gradient
+✅ **tstr.directory** heading in purple gradient
 ✅ **3 stat cards** showing:
    - 5 Testing Categories
    - 5+ Global Locations  
@@ -114,7 +114,7 @@ You should see:
 3. **Deploy to internet:**
    - Push to GitHub
    - Connect to Cloudflare Pages
-   - Go live at tstr.site
+   - Go live at tstr.directory
 
 4. **Start monetization:**
    - Add payment forms

@@ -1,5 +1,5 @@
 // Test RLS Policy Functionality
-// Run this in browser console on https://tstr.site/submit page
+// Run this in browser console on https://tstr.directory/submit page
 // Tests if the RLS policies allow anonymous form submissions
 
 function testRLSPolicies() {

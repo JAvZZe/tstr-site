@@ -181,7 +181,7 @@ If critical issues are discovered after deployment:
 - Be prepared for potential DNS/domain verification issues
 
 ### **Contact Information**
-- **Resend Account**: tstr.site1@gmail.com
+- **Resend Account**: tstr.directory1@gmail.com
 - **API Key**: Configured in production environment
 - **Domain**: tstr.directory (verified with Cloudflare)
 

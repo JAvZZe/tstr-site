@@ -170,7 +170,7 @@ cat PROJECT_STATUS.md
 **Deployment**: Cloudflare Pages (FREE tier)
 - Edge network for global performance
 - Automatic builds from GitHub commits
-- Custom domain: tstr.site
+- Custom domain: tstr.directory
 
 ---
 

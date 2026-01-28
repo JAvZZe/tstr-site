@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Backfill location_id for existing TSTR.site listings using libpostal
+Backfill location_id for existing tstr.directory listings using libpostal
 Parses formatted_address to extract city, country, then links to locations table
 """
 
@@ -269,7 +269,7 @@ class LocationBackfiller:
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description='Backfill location_id for TSTR.site listings')
+    parser = argparse.ArgumentParser(description='Backfill location_id for tstr.directory listings')
     parser.add_argument('--limit', type=int, help='Process only N listings (for testing)')
     parser.add_argument('--dry-run', action='store_true', help='Parse addresses but don\'t update database')
 

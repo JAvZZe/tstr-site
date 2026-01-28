@@ -18,7 +18,7 @@ with open(migration_file, 'r') as f:
     sql = f.read()
 
 print("=" * 70)
-print("TSTR.site - Execute RLS Policy for Public Form Submissions")
+print("tstr.directory - Execute RLS Policy for Public Form Submissions")
 print("=" * 70)
 print("\nSQL to execute:")
 print("-" * 70)
@@ -63,7 +63,7 @@ print("-" * 70)
 if result.returncode == 0:
     print("\n✓ SUCCESS: RLS policy for public submissions applied!")
     print("\nNext steps:")
-    print("1. Test the form at http://tstr.site/submit")
+    print("1. Test the form at https://tstr.directory/submit")
     print("2. Verify listing appears in database with status='pending'")
     print("3. Check admin dashboard for pending approvals")
 else:

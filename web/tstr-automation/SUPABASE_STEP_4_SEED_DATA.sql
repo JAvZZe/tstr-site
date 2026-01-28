@@ -1,5 +1,5 @@
 -- ============================================
--- TSTR.site Database Setup - STEP 4: SEED DATA
+-- tstr.directory Database Setup - STEP 4: SEED DATA
 -- ============================================
 -- This adds your initial categories and locations
 -- Run this AFTER Step 3 completes successfully

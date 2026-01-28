@@ -1,5 +1,5 @@
 -- ============================================
--- TSTR.site Database Setup - STEP 2: CREATE TABLES
+-- tstr.directory Database Setup - STEP 2: CREATE TABLES
 -- ============================================
 -- Run this AFTER Step 1 completes successfully
 

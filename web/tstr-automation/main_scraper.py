@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """
-TSTR.site Main Scraper Orchestrator
+tstr.directory Main Scraper Orchestrator
 Combines Google Maps API scraping with niche-specific scrapers
 """
 
 import os
 import sys
 import logging
+from utils.logging_utils import json_info, json_error
+from utils.retry_utils import retry_with_backoff
 import time
 from datetime import datetime
 from typing import Dict, List
@@ -17,18 +19,15 @@ from scrapers.oil_gas_playwright import scrape_contract_laboratory
 from scrapers.a2la_materials import scrape_a2la_materials
 from scrapers.tni_environmental import scrape_tni_environmental
 
-# Setup logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[logging.FileHandler("scraper.log"), logging.StreamHandler()],
-)
+# Setup structured logging
+from utils.logging_utils import json_info, json_error
 logger = logging.getLogger(__name__)
+# Use json_info/json_error for structured logs
 
 
 class MainScraper:
     """
-    Orchestrates all scraping operations for TSTR.site
+    Orchestrates all scraping operations for tstr.directory
     """
 
     def __init__(self):
@@ -52,19 +51,19 @@ class MainScraper:
 
         try:
             scraper = DualPurposeScraper()
-            results = scraper.run_all_searches()
-
+            results = retry_with_backoff(scraper.run_all_searches)
+        
             self.results["google_maps"] = {
                 "listings": len(results.get("listings", [])),
                 "contacts": len(results.get("contacts", [])),
                 "invalid_urls": len(results.get("invalid_urls", [])),
             }
-
-            logger.info(f"Google Maps scraper completed: {self.results['google_maps']}")
+        
+            json_info(f"Google Maps scraper completed: {self.results['google_maps']}")
             return results
-
+        
         except Exception as e:
-            logger.error(f"Google Maps scraper failed: {e}")
+            json_error(f"Google Maps scraper failed: {e}")
             return {}
 
     def run_oil_gas_scraper(self, dry_run: bool = False, limit: int = None) -> int:
@@ -125,7 +124,7 @@ class MainScraper:
         """
         self.results["start_time"] = datetime.now()
 
-        logger.info("🚀 STARTING TSTR.SITE MAIN SCRAPER")
+        logger.info("🚀 STARTING tstr.directory MAIN SCRAPER")
         logger.info("=" * 80)
 
         # Run Google Maps scraper (pharma, etc.)
@@ -165,7 +164,7 @@ def main():
     """
     import argparse
 
-    parser = argparse.ArgumentParser(description="TSTR.site Main Scraper")
+    parser = argparse.ArgumentParser(description="tstr.directory Main Scraper")
     parser.add_argument(
         "--dry-run",
         action="store_true",

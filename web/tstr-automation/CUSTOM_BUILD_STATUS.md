@@ -1,4 +1,4 @@
-# TSTR.SITE CUSTOM BUILD - STATUS & ACTION PLAN
+# tstr.directory CUSTOM BUILD - STATUS & ACTION PLAN
 **Updated: 10 October 2025**
 
 ---
@@ -20,7 +20,7 @@
 
 ### Existing Assets
 - ✅ Google Maps API key ready
-- ✅ Domain: tstr.site (currently pointing to WordPress VM)
+- ✅ Domain: tstr.directory (currently pointing to WordPress VM)
 - ✅ Python scraping scripts completed
 - ✅ Sample data (8 listings CSV)
 
@@ -248,7 +248,7 @@ python scraper_v2.py
 ```
 
 **Task 6.4: DNS Configuration**
-- Point tstr.site A record to Cloudflare Pages IP
+- Point tstr.directory A record to Cloudflare Pages IP
 - Wait for DNS propagation (10-60 minutes)
 - Verify HTTPS works
 
@@ -261,7 +261,7 @@ python scraper_v2.py
 **Verification:**
 - [ ] 200+ listings live
 - [ ] SEO properly configured
-- [ ] Site live on tstr.site
+- [ ] Site live on tstr.directory
 - [ ] HTTPS working
 - [ ] All features tested
 - [ ] Ready for public launch
@@ -278,7 +278,7 @@ python scraper_v2.py
 
 ### Week 2 Targets
 - 200+ seed listings imported
-- Site live on tstr.site
+- Site live on tstr.directory
 - First 5 featured listing sales (£250 revenue)
 
 ### Month 1 Targets
@@ -294,7 +294,7 @@ python scraper_v2.py
 ### Current Monthly Costs
 - Supabase: **£0** (free tier)
 - Cloudflare Pages: **£0** (free tier)
-- Domain (tstr.site): **£10/year** = £0.83/month
+- Domain (tstr.directory): **£10/year** = £0.83/month
 - Google Maps API: **£0** (£200 credit/month)
 - GitHub: **£0** (free tier)
 

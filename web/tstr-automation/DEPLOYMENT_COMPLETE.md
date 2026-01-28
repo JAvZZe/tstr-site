@@ -1,4 +1,4 @@
-# 🚀 TSTR.SITE - COMPLETE DEPLOYMENT SUMMARY
+# 🚀 tstr.directory - COMPLETE DEPLOYMENT SUMMARY
 
 **Deployment Date:** October 9, 2025  
 **Status:** ✅ READY FOR LAUNCH
@@ -21,11 +21,11 @@
 - URL: http://34.100.223.247/wp-admin
 - Username: `user`
 - Password: `TstrAdmin2025Secure`
-- Email: tstr.site1@gmail.com
+- Email: tstr.directory1@gmail.com
 
 **Google Cloud Project:**
 - Project ID: business-directory-app-8888888
-- Email: tstr.site@gmail.com
+- Email: tstr.directory@gmail.com
 - Google Maps API Key: AIzaSyAJfCW_X3fJerYy6fXwUR7T11QkKTLFUzM
 
 ---
@@ -36,7 +36,7 @@
 - WordPress Version: 6.8.3
 - Theme: GeneratePress (Fast, SEO-optimised)
 - Permalink Structure: /%postname%/ (SEO-friendly)
-- Site Title: TSTR.SITE
+- Site Title: tstr.directory
 - Tagline: "Global Directory of Specialised Testing Laboratories - Oil & Gas, Pharmaceutical, Biotech, Environmental & Materials Testing"
 
 ### Active Plugins (9 total)
@@ -286,7 +286,7 @@ python scraper.py
 | Google Maps API | £0 | $200 credit/month |
 | WordPress | £0 | Open source |
 | All Plugins | £0 | Free versions |
-| Domain (tstr.site) | ~£10/year | Only paid item |
+| Domain (tstr.directory) | ~£10/year | Only paid item |
 | **TOTAL** | **£0/month** | **100% Free** |
 
 ### First Upgrade Trigger:

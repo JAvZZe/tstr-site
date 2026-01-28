@@ -3,13 +3,13 @@
 # Run this ONLY after DNS points to 34.100.223.247
 
 echo "============================================"
-echo "TSTR.SITE - SSL Certificate Installation"
+echo "tstr.directory - SSL Certificate Installation"
 echo "============================================"
 echo ""
 
 # Check if domain resolves correctly
 echo "Step 1: Verifying DNS resolution..."
-RESOLVED_IP=$(dig +short tstr.site @8.8.8.8 | head -n 1)
+RESOLVED_IP=$(dig +short tstr.directory @8.8.8.8 | head -n 1)
 EXPECTED_IP="34.100.223.247"
 
 if [ "$RESOLVED_IP" != "$EXPECTED_IP" ]; then
@@ -18,7 +18,7 @@ if [ "$RESOLVED_IP" != "$EXPECTED_IP" ]; then
     echo "Expected IP: $EXPECTED_IP"
     echo ""
     echo "Please wait for DNS propagation and try again."
-    echo "Check status: nslookup tstr.site"
+    echo "Check status: nslookup tstr.directory"
     exit 1
 fi
 
@@ -44,10 +44,10 @@ echo ""
 # Obtain SSL certificate
 echo "Step 4: Obtaining SSL certificate from Let's Encrypt..."
 sudo certbot certonly --standalone \
-    -d tstr.site \
-    -d www.tstr.site \
+    -d tstr.directory \
+    -d www.tstr.directory \
     --agree-tos \
-    --email tstr.site1@gmail.com \
+    --email tstr.directory1@gmail.com \
     --non-interactive \
     --preferred-challenges http
 
@@ -71,14 +71,14 @@ sudo a2enmod headers
 # Create HTTPS virtual host
 cat > /tmp/tstr-ssl.conf << 'EOF'
 <VirtualHost *:443>
-    ServerName tstr.site
-    ServerAlias www.tstr.site
+    ServerName tstr.directory
+    ServerAlias www.tstr.directory
     
     DocumentRoot /var/www/html
     
     SSLEngine on
-    SSLCertificateFile /etc/letsencrypt/live/tstr.site/fullchain.pem
-    SSLCertificateKeyFile /etc/letsencrypt/live/tstr.site/privkey.pem
+    SSLCertificateFile /etc/letsencrypt/live/tstr.directory/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/tstr.directory/privkey.pem
     
     # Security headers
     Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
@@ -96,8 +96,8 @@ cat > /tmp/tstr-ssl.conf << 'EOF'
 
 # Redirect HTTP to HTTPS
 <VirtualHost *:80>
-    ServerName tstr.site
-    ServerAlias www.tstr.site
+    ServerName tstr.directory
+    ServerAlias www.tstr.directory
     
     RewriteEngine On
     RewriteRule ^(.*)$ https://%{HTTP_HOST}$1 [R=301,L]
@@ -111,8 +111,8 @@ echo ""
 
 # Update WordPress URLs
 echo "Step 6: Updating WordPress URLs..."
-sudo wp option update siteurl 'https://tstr.site' --allow-root --path=/var/www/html
-sudo wp option update home 'https://tstr.site' --allow-root --path=/var/www/html
+sudo wp option update siteurl 'https://tstr.directory' --allow-root --path=/var/www/html
+sudo wp option update home 'https://tstr.directory' --allow-root --path=/var/www/html
 echo "✅ WordPress URLs updated"
 echo ""
 
@@ -134,8 +134,8 @@ echo "✅ SSL INSTALLATION COMPLETE!"
 echo "============================================"
 echo ""
 echo "Your site is now available at:"
-echo "  🔒 https://tstr.site"
-echo "  🔒 https://www.tstr.site"
+echo "  🔒 https://tstr.directory"
+echo "  🔒 https://www.tstr.directory"
 echo ""
 echo "Certificate details:"
 echo "  Issuer: Let's Encrypt"
@@ -143,7 +143,7 @@ echo "  Valid for: 90 days"
 echo "  Auto-renewal: Enabled"
 echo ""
 echo "Next steps:"
-echo "  1. Test: Open https://tstr.site in browser"
+echo "  1. Test: Open https://tstr.directory in browser"
 echo "  2. Verify: Green padlock should appear"
 echo "  3. Update: All marketing materials to use https://"
 echo ""

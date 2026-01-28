@@ -1,5 +1,5 @@
 -- ============================================
--- TSTR.site Database Setup - STEP 3: CREATE INDEXES
+-- tstr.directory Database Setup - STEP 3: CREATE INDEXES
 -- ============================================
 -- Run this AFTER Step 2 completes successfully
 -- Indexes make searches MUCH faster

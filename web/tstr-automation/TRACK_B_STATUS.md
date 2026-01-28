@@ -16,7 +16,7 @@ Row Level Security (RLS) on `locations` table blocked anonymous API access. Fron
 3. Triggered rebuild to regenerate static pages with accessible data
 
 ### Live Result
-https://tstr.site/ now displays:
+https://tstr.directory/ now displays:
 - United Kingdom: 108 listings
 - Singapore: 19 listings
 
@@ -275,7 +275,7 @@ Start with Option 1, checkpoint, then proceed to Option 2.
 
 **If issues arise**:
 - Supabase Dashboard: https://supabase.com/dashboard/project/haimjeaetrsaauitrhfy
-- Live Site: https://tstr.site/
+- Live Site: https://tstr.directory/
 - GitHub Repo: https://github.com/JAvZZe/tstr-site
 - Cloudflare Pages: Auto-deploys on push to main
 

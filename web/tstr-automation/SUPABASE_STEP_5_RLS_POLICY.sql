@@ -1,5 +1,5 @@
 -- ============================================
--- TSTR.site Database Setup - STEP 5: RLS POLICIES
+-- tstr.directory Database Setup - STEP 5: RLS POLICIES
 -- ============================================
 -- This policy allows public, anonymous access to view active listings.
 

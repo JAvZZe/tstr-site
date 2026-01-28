@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Base Scraper for TSTR.site Niche-Specific Intelligence Collection
+Base Scraper for tstr.directory Niche-Specific Intelligence Collection
 Abstract base class providing common functionality for all niche scrapers
 """
 
