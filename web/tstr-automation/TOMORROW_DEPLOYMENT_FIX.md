@@ -1,4 +1,4 @@
-# TSTR.SITE - TOMORROW'S DEPLOYMENT FIX
+# tstr.directory - TOMORROW'S DEPLOYMENT FIX
 
 ## 🎯 THE PROBLEM
 
@@ -82,7 +82,7 @@ You should see:
 When selecting repository, look for:
 - Repository name: **tstr-site** or **tstrsite**
 - Owner: **JAvZZe** (NOT "Tstr-site")
-- Should show your recent commit: "Initial commit - TSTR.site MVP"
+- Should show your recent commit: "Initial commit - tstr.directory MVP"
 
 ---
 
@@ -103,10 +103,10 @@ After following these steps, you'll have:
 1. Your site live at: `https://tstr-site-live.pages.dev`
 2. Categories showing from Supabase database
 3. Professional design visible
-4. Ready to point tstr.site domain to it
+4. Ready to point tstr.directory domain to it
 
 Then we can:
-1. Add your custom domain (tstr.site)
+1. Add your custom domain (tstr.directory)
 2. Import first listings via scraper
 3. Start revenue generation (featured listings @ £50/month)
 

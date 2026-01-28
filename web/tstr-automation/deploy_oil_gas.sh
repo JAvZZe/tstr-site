@@ -1,7 +1,7 @@
 #!/bin/bash
 # Deploy updated scraper to OCI
 
-echo "🚀 Deploying TSTR.site scraper updates to OCI"
+echo "🚀 Deploying tstr.directory scraper updates to OCI"
 
 # OCI connection details
 OCI_HOST="84.8.139.90"

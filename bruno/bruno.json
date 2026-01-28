@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "TSTR.site API Collection",
+  "name": "tstr.directory API Collection",
   "type": "collection",
   "ignore": [
     "node_modules",

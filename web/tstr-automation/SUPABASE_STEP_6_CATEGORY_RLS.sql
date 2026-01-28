@@ -1,5 +1,5 @@
 -- ============================================
--- TSTR.site Database Setup - STEP 6: CATEGORY RLS POLICY
+-- tstr.directory Database Setup - STEP 6: CATEGORY RLS POLICY
 -- ============================================
 -- This policy allows public, anonymous access to view all categories.
 

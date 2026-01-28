@@ -38,7 +38,7 @@ git add .
 
 **Command 3: Create first commit**
 ```bash
-git commit -m "Initial commit - TSTR.site MVP"
+git commit -m "Initial commit - tstr.directory MVP"
 ```
 
 **Command 4: Rename branch to main**

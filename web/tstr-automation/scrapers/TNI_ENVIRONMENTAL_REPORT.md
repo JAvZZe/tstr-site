@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-Successfully implemented a web scraper for the TNI LAMS (Laboratory Accreditation Management System) database, which contains NELAP accredited environmental testing laboratories across the United States. The scraper extracts 7 custom fields specific to environmental testing services and integrates with the existing TSTR.site architecture.
+Successfully implemented a web scraper for the TNI LAMS (Laboratory Accreditation Management System) database, which contains NELAP accredited environmental testing laboratories across the United States. The scraper extracts 7 custom fields specific to environmental testing services and integrates with the existing tstr.directory architecture.
 
 ---
 
@@ -225,4 +225,4 @@ The TNI Environmental Testing scraper is **functional and ready for production u
 
 **Report Generated:** 2025-11-02
 **Author:** Claude (AI Assistant)
-**Project:** TSTR.site Automation
+**Project:** tstr.directory Automation

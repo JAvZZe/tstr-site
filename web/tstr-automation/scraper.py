@@ -1,5 +1,5 @@
 """
-TSTR.SITE - Listings-Only Scraper (SECONDARY)
+tstr.directory - Listings-Only Scraper (SECONDARY)
 Scrapes testing laboratory directory listings with duplicate detection
 Checks Google Maps API availability, falls back to alternative sources
 Only scrapes new listings and detects changes
@@ -477,7 +477,7 @@ def main():
         return
 
     print("="*70)
-    print("TSTR.SITE - LISTINGS SCRAPER (SECONDARY)")
+    print("tstr.directory - LISTINGS SCRAPER (SECONDARY)")
     print("Directory population with duplicate detection")
     print("="*70)
 

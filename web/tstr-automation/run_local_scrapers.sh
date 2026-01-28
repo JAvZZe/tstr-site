@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# TSTR.site Local Scraper Automation Script
+# tstr.directory Local Scraper Automation Script
 # Runs heavy-duty scrapers locally with 40GB RAM available
 
 set -e

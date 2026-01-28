@@ -2,7 +2,7 @@
 
 ## IMMEDIATE ACTION NEEDED (Before Anything Else)
 
-Your domain **tstr.site** currently points to the wrong IP address. This must be fixed before the site can go live.
+Your domain **tstr.directory** currently points to the wrong IP address. This must be fixed before the site can go live.
 
 ---
 
@@ -11,7 +11,7 @@ Your domain **tstr.site** currently points to the wrong IP address. This must be
 **Full instructions in:** `DNS_UPDATE_URGENT.md`
 
 ### Quick Summary:
-1. Login to your domain registrar (where you bought tstr.site)
+1. Login to your domain registrar (where you bought tstr.directory)
 2. Find DNS settings
 3. Update A record from `34.55.31.102` → `34.100.223.247`
 4. Save changes
@@ -19,7 +19,7 @@ Your domain **tstr.site** currently points to the wrong IP address. This must be
 
 ### Test DNS Updated:
 ```bash
-nslookup tstr.site
+nslookup tstr.directory
 ```
 **Should show:** 34.100.223.247
 
@@ -29,12 +29,12 @@ nslookup tstr.site
 
 While in your registrar DNS settings:
 
-1. Add email forwarding: `listing@tstr.site` → `tstr.site1@gmail.com`
+1. Add email forwarding: `listing@tstr.directory` → `tstr.directory1@gmail.com`
 2. (Optional) Add more: `sales@`, `support@`, `info@`
 
 ### Temporary Solution (Works Immediately):
-Use: `tstr.site1+listing@gmail.com`
-- All emails arrive at tstr.site1@gmail.com
+Use: `tstr.directory1+listing@gmail.com`
+- All emails arrive at tstr.directory1@gmail.com
 - You can filter by "+listing" in Gmail
 - No setup required
 
@@ -46,8 +46,8 @@ Use: `tstr.site1+listing@gmail.com`
 
 ```bash
 # I'll execute this via gcloud SSH
-sudo certbot --apache -d tstr.site -d www.tstr.site \
-  --agree-tos --email tstr.site1@gmail.com --non-interactive
+sudo certbot --apache -d tstr.directory -d www.tstr.directory \
+  --agree-tos --email tstr.directory1@gmail.com --non-interactive
 ```
 
 **This will:**
@@ -61,13 +61,13 @@ sudo certbot --apache -d tstr.site -d www.tstr.site \
 ## CURRENT STATUS
 
 ### ❌ NOT WORKING:
-- https://tstr.site (DNS points to wrong IP)
-- listing@tstr.site (email forwarding not set up)
+- https://tstr.directory (DNS points to wrong IP)
+- listing@tstr.directory (email forwarding not set up)
 
 ### ✅ WORKING NOW:
 - http://34.100.223.247 (WordPress accessible via IP)
-- tstr.site1@gmail.com (main email)
-- tstr.site1+listing@gmail.com (temporary listing email)
+- tstr.directory1@gmail.com (main email)
+- tstr.directory1+listing@gmail.com (temporary listing email)
 
 ---
 
@@ -77,7 +77,7 @@ sudo certbot --apache -d tstr.site -d www.tstr.site \
 2. Set up email forwarding (5 mins)
 3. Wait for DNS propagation (15-30 mins)
 4. Install SSL certificate (I'll do this - 5 mins)
-5. Test https://tstr.site works (1 min)
+5. Test https://tstr.directory works (1 min)
 6. THEN proceed with business launch
 
 ---
@@ -136,4 +136,4 @@ Then proceed with launch checklist:
 **DO: Update DNS immediately**
 **REPLY: "DNS UPDATED" when complete**
 
-Then I'll install SSL and you'll be live with https://tstr.site ✅
+Then I'll install SSL and you'll be live with https://tstr.directory ✅

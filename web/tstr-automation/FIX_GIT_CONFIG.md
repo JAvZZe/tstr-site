@@ -7,7 +7,7 @@ You need to tell Git your name and email. Run these commands:
 **Replace with YOUR actual information:**
 
 ```bash
-git config --global user.email "tstr.site@gmail.com"
+git config --global user.email "tstr.directory@gmail.com"
 ```
 
 ```bash
@@ -19,7 +19,7 @@ These commands tell Git who is making the commits.
 ## Then Retry the Commit
 
 ```bash
-git commit -m "Initial commit - TSTR.site MVP"
+git commit -m "Initial commit - tstr.directory MVP"
 ```
 
 ## Then Continue with Remaining Commands

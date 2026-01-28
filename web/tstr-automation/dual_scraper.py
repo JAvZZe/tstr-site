@@ -1,5 +1,5 @@
 """
-TSTR.SITE - Dual-Purpose Scraper
+tstr.directory - Dual-Purpose Scraper
 1. Scrape testing labs for directory listings (company info)
 2. Scrape decision-maker contacts for sales outreach (names, emails, LinkedIn)
 """
@@ -501,7 +501,7 @@ def main():
         return
 
     print("="*70)
-    print("TSTR.SITE - DUAL-PURPOSE SCRAPER")
+    print("tstr.directory - DUAL-PURPOSE SCRAPER")
     print("="*70)
     
     # Check if Google Maps API is available and configured

@@ -1,4 +1,4 @@
-# TSTR.SITE FRONTEND BUILD - COMPLETE BEGINNER'S GUIDE
+# tstr.directory FRONTEND BUILD - COMPLETE BEGINNER'S GUIDE
 **Building Your Actual Website (Non-Technical Version)**
 
 ---
@@ -275,11 +275,11 @@ This stores your Supabase credentials securely.
    <head>
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>TSTR.site - Global Testing Laboratory Directory</title>
+     <title>tstr.directory - Global Testing Laboratory Directory</title>
    </head>
    <body>
      <header>
-       <h1>TSTR.site</h1>
+       <h1>tstr.directory</h1>
        <p>Global Testing Laboratory Directory</p>
      </header>
 
@@ -296,7 +296,7 @@ This stores your Supabase credentials securely.
      </main>
 
      <footer>
-       <p>© 2025 TSTR.site</p>
+       <p>© 2025 tstr.directory</p>
      </footer>
    </body>
    </html>
@@ -332,7 +332,7 @@ This stores your Supabase credentials securely.
 7. **Go to:** `http://localhost:4321`
 
 8. **You should see:**
-   - "TSTR.site" heading
+   - "tstr.directory" heading
    - "Global Testing Laboratory Directory"
    - Your 5 testing categories listed:
      - Oil & Gas Testing
@@ -369,7 +369,7 @@ Once your website is showing locally, come back and tell me:
 Then I'll show you how to:
 1. Make it look much better (add styling)
 2. Add more pages (listing details, search, submit form)
-3. Deploy it to the internet (make it live at tstr.site)
+3. Deploy it to the internet (make it live at tstr.directory)
 
 ---
 

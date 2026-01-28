@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Export TSTR.site listings to Google Sheets or CSV
+Export tstr.directory listings to Google Sheets or CSV
 Supports both Google Sheets API and local CSV export
 """
 
@@ -174,7 +174,7 @@ if __name__ == '__main__':
         output = sys.argv[2]
 
     print("=" * 70)
-    print("TSTR.site Listings Export to CSV/Spreadsheet")
+    print("tstr.directory Listings Export to CSV/Spreadsheet")
     print("=" * 70)
 
     export_to_csv(category_slug=category, output_file=output)

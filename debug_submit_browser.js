@@ -1,5 +1,5 @@
 // Debug script for submit form 500 error
-// Run this in browser console on https://tstr.site/submit
+// Run this in browser console on https://tstr.directory/submit
 
 async function debugSubmitForm() {
   console.log('🔍 Submit Form Debug - Testing Database Queries');

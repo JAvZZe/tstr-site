@@ -1,5 +1,5 @@
 -- ============================================
--- TSTR.site Database Setup - STEP 1: EXTENSIONS
+-- tstr.directory Database Setup - STEP 1: EXTENSIONS
 -- ============================================
 -- Copy and paste this FIRST, click RUN, wait for success
 

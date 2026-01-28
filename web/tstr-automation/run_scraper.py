@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-TSTR.site OCI Scraper Runner
+tstr.directory OCI Scraper Runner
 Daily cron job that runs all scrapers
 """
 
@@ -28,7 +28,7 @@ def main():
     Main entry point for OCI cron job
     """
     logger.info("=" * 80)
-    logger.info("STARTING TSTR.SITE OCI SCRAPER (CRON JOB)")
+    logger.info("STARTING tstr.directory OCI SCRAPER (CRON JOB)")
     logger.info(f"Time: {datetime.now()}")
     logger.info("=" * 80)
 

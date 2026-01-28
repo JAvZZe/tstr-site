@@ -1,5 +1,5 @@
 """
-TSTR.site Niche Scrapers Package
+tstr.directory Niche Scrapers Package
 """
 
 __all__ = ['rigzone_oil_gas']

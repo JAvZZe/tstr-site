@@ -1,4 +1,4 @@
-# TSTR.site Custom Fields Migration
+# tstr.directory Custom Fields Migration
 
 **Created:** 2025-11-01
 **Purpose:** Add niche-specific custom fields for 4 testing industry categories

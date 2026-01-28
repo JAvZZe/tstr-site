@@ -36,7 +36,7 @@ def generate_personalized_email(contact):
 
 {greeting}
 
-I'm launching TSTR.site, a specialist directory exclusively for high-value testing laboratories serving {value_prop}.
+I'm launching TSTR.directory, a specialist directory exclusively for high-value testing laboratories serving {value_prop}.
 
 I came across {company} and was impressed by your expertise in {category.lower()}. You'd be perfect for our Featured section at launch.
 
@@ -54,8 +54,8 @@ Reply "YES" and I'll set it up today.
 
 Best regards,
 Your name
-TSTR.site
-https://tstr.site"""
+TSTR.directory
+https://tstr.directory"""
 
     return email_body
 
@@ -68,7 +68,7 @@ def generate_linkedin_message(contact):
     
     message = f"""Hi {name},
 
-I'm building TSTR.site - a specialist directory for testing laboratories.
+I'm building TSTR.directory - a specialist directory for testing laboratories.
 
 {company} would be perfect for our featured launch section. Would love to offer you a complimentary 3-month premium listing.
 
@@ -106,7 +106,7 @@ def main():
     # Generate emails
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write("="*70 + "\n")
-        f.write("TSTR.SITE - OUTREACH EMAILS\n")
+        f.write("TSTR.DIRECTORY - OUTREACH EMAILS\n")
         f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
         f.write("="*70 + "\n\n")
         

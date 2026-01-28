@@ -159,7 +159,7 @@ Investigated 7 potential sources for Oil & Gas testing laboratory data. Found **
 **Why:**
 - We need testing labs, not training providers
 - Different business model and services
-- Not relevant to TSTR.site's target audience
+- Not relevant to tstr.directory's target audience
 
 ---
 
@@ -356,7 +356,7 @@ Investigated 7 potential sources for Oil & Gas testing laboratory data. Found **
 **Rate Limiting:**
 - 1-2 second delay between requests
 - Respect robots.txt
-- User-agent: "TSTR.site scraper (contact@tstr.site)"
+- User-agent: "tstr.directory scraper (contact@tstr.directory)"
 
 **Error Handling:**
 - Retry on network failures (3 attempts)
@@ -455,7 +455,7 @@ If Contract Laboratory proves insufficient, consider:
 ### Short-term (Next 2 Weeks):
 6. Run full scrape (170 labs)
 7. Load into Supabase
-8. Deploy to TSTR.site
+8. Deploy to tstr.directory
 9. Validate on production
 
 ### Long-term (Month 2):
@@ -486,7 +486,7 @@ If Contract Laboratory proves insufficient, consider:
 
 **Investigation reveals ONE high-value scrapable source:** Contract Laboratory directory with 170 petroleum testing labs.
 
-**Recommendation:** Proceed with Contract Laboratory scraper development immediately. This single source provides sufficient data for a strong Oil & Gas testing launch on TSTR.site.
+**Recommendation:** Proceed with Contract Laboratory scraper development immediately. This single source provides sufficient data for a strong Oil & Gas testing launch on tstr.directory.
 
 **ROI:** High - 170 labs for ~6 hours development time ($550), vs. 42.5 hours manual entry ($1,275). Saves $725 and 36.5 hours.
 

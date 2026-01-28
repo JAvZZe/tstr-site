@@ -8,10 +8,10 @@
 ## 🎉 WHAT'S WORKING NOW
 
 ### Infrastructure (100%)
-- ✅ **Domain**: https://tstr.site (SECURE with SSL)
+- ✅ **Domain**: https://tstr.directory (SECURE with SSL)
 - ✅ **DNS**: Correctly configured and propagated
 - ✅ **Server**: VM running in asia-south1-a
-- ✅ **WordPress**: Accessible at https://tstr.site/wp-admin
+- ✅ **WordPress**: Accessible at https://tstr.directory/wp-admin
 - ✅ **HTTPS**: Green padlock, Let's Encrypt certificate
 - ✅ **Cost**: £0/month (100% free tier)
 
@@ -32,7 +32,7 @@
 
 ### Payment System (100%)
 - ✅ **Method**: Free bank transfer configured
-- ✅ **Email**: tstr.site1+listing@gmail.com (works now)
+- ✅ **Email**: tstr.directory1+listing@gmail.com (works now)
 - ✅ **Instructions**: Payment page created
 - ✅ **Future**: Upgrade path to PayPal documented
 
@@ -81,7 +81,7 @@ python dual_scraper.py
 - `tstr_sales_leads.csv` (20-50 decision-maker contacts)
 
 ### Step 3: Upload to WordPress (5 mins)
-1. Go to: https://tstr.site/wp-admin
+1. Go to: https://tstr.directory/wp-admin
 2. Login: `user` / `TstrAdmin2025Secure`
 3. Navigate: **Directorist > Import/Export**
 4. Upload: `tstr_directory_import.csv`
@@ -215,8 +215,8 @@ python generate_outreach.py
 ## 📞 ACCESS DETAILS
 
 ### Website:
-- **URL**: https://tstr.site
-- **Admin**: https://tstr.site/wp-admin
+- **URL**: https://tstr.directory
+- **Admin**: https://tstr.directory/wp-admin
 - **User**: `user`
 - **Pass**: `TstrAdmin2025Secure`
 
@@ -227,8 +227,8 @@ python generate_outreach.py
 - **Project**: business-directory-app-8888888
 
 ### Email:
-- **Main**: tstr.site1@gmail.com
-- **Listings**: tstr.site1+listing@gmail.com
+- **Main**: tstr.directory1@gmail.com
+- **Listings**: tstr.directory1+listing@gmail.com
 
 ### API:
 - **Google Maps**: AIzaSyAJfCW_X3fJerYy6fXwUR7T11QkKTLFUzM

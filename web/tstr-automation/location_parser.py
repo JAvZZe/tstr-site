@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Location Parser for TSTR.site Scrapers
+Location Parser for tstr.directory Scrapers
 Parses addresses using libpostal and links to hierarchical locations table
 """
 

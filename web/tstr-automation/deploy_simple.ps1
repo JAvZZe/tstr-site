@@ -1,7 +1,7 @@
-# TSTR.SITE - Simple Cloud Function Deployment
+# tstr.directory - Simple Cloud Function Deployment
 
 Write-Host "=================================="
-Write-Host "TSTR.SITE Cloud Deployment"
+Write-Host "tstr.directory Cloud Deployment"
 Write-Host "=================================="
 
 # Configuration

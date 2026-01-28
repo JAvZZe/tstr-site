@@ -1,5 +1,5 @@
 -- ============================================
--- TSTR.site Database Setup Script
+-- tstr.directory Database Setup Script
 -- Supabase PostgreSQL Schema
 -- ============================================
 -- Execute this in: Supabase Dashboard → SQL Editor → New Query
@@ -592,7 +592,7 @@ END $$;
 
 DO $$
 BEGIN
-  RAISE NOTICE '✅ TSTR.site database setup complete!';
+  RAISE NOTICE '✅ tstr.directory database setup complete!';
   RAISE NOTICE '';
   RAISE NOTICE 'Created:';
   RAISE NOTICE '  - 12 tables with RLS policies';

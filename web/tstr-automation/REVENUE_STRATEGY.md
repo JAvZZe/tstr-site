@@ -1,4 +1,4 @@
-# TSTR.SITE - Revenue Generation Strategy
+# tstr.directory - Revenue Generation Strategy
 
 ## Phase 1: MVP Launch (Week 1-2) - TARGET: First £500
 
@@ -109,10 +109,10 @@ Instead of just listing fees, **sell qualified leads**:
 ### Subdomain Strategy
 
 As you grow, split into focused sites:
-- **oilgas.tstr.site** → Oil & Gas testing only
-- **pharma.tstr.site** → Pharmaceutical testing
-- **biotech.tstr.site** → Biotech testing
-- **enviro.tstr.site** → Environmental testing
+- **oilgas.tstr.directory** → Oil & Gas testing only
+- **pharma.tstr.directory** → Pharmaceutical testing
+- **biotech.tstr.directory** → Biotech testing
+- **enviro.tstr.directory** → Environmental testing
 
 **Benefits:**
 - Better SEO (niche authority)
@@ -150,7 +150,7 @@ As you grow, split into focused sites:
 
 ### Google Search Console Setup
 
-1. Add property: tstr.site
+1. Add property: tstr.directory
 2. Submit sitemap: http://34.100.223.247/sitemap.xml
 3. Request indexing for key pages
 4. Monitor: Clicks, Impressions, CTR
@@ -169,7 +169,7 @@ As you grow, split into focused sites:
 ```
 Hi [Name],
 
-I'm building TSTR.site, a global directory specifically for testing laboratories in high-value sectors (oil & gas, pharma, biotech, environmental).
+I'm building tstr.directory, a global directory specifically for testing laboratories in high-value sectors (oil & gas, pharma, biotech, environmental).
 
 I noticed [Company Name] provides [specific service] and thought you'd be perfect for our Featured section.
 
@@ -185,7 +185,7 @@ Only 20 spots available as we launch. Interested?
 
 Best,
 [Your name]
-TSTR.site
+tstr.directory
 ```
 
 **Target:** 50 emails/day → 10% response = 5 interested → 2 convert = £100/day
@@ -257,7 +257,7 @@ Target: 20 connections/day
 - Directorist core: Free
 - GeneratePress theme: Free
 - Google Maps API: $200 credit/month (£150) = Free
-- Domain (tstr.site): ~£10/year only
+- Domain (tstr.directory): ~£10/year only
 
 **First Upgrade Trigger:** 1,000+ listings or 10k visitors/month
 - Then: Upgrade VM to e2-small (~£15/month)

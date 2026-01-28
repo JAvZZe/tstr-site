@@ -1,5 +1,5 @@
 -- ============================================
--- TSTR.site Custom Fields Migration
+-- tstr.directory Custom Fields Migration
 -- Add niche-specific custom fields for 4 testing categories
 -- Created: 2025-11-01
 -- Track B: Custom Fields SQL for Testing Niches

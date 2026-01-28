@@ -1,10 +1,10 @@
-# TSTR.SITE - Cloud Function Deployment Script (PowerShell)
+# tstr.directory - Cloud Function Deployment Script (PowerShell)
 # Deploys scrapers to Google Cloud Functions
 
 $ErrorActionPreference = "Stop"
 
 Write-Host "=================================="
-Write-Host "TSTR.SITE Cloud Deployment"
+Write-Host "tstr.directory Cloud Deployment"
 Write-Host "=================================="
 
 # Configuration

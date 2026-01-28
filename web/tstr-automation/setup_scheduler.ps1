@@ -1,4 +1,4 @@
-# TSTR.SITE - Cloud Scheduler Setup (Option A: Conservative)
+# tstr.directory - Cloud Scheduler Setup (Option A: Conservative)
 
 Write-Host "=================================="
 Write-Host "Setting Up Automated Schedules"

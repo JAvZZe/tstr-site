@@ -83,13 +83,13 @@ nslookup tstr.directory
 
 2. **Create New Forward**
    - Forward from: `listing@tstr.directory`
-   - Forward to: `tstr.site1@gmail.com`
+   - Forward to: `tstr.directory1@gmail.com`
    - Save
 
 3. **Add More Aliases** (Optional but Recommended)
-   - `sales@tstr.directory` → `tstr.site1@gmail.com`
-   - `support@tstr.directory` → `tstr.site1@gmail.com`
-   - `info@tstr.directory` → `tstr.site1@gmail.com`
+   - `sales@tstr.directory` → `tstr.directory1@gmail.com`
+   - `support@tstr.directory` → `tstr.directory1@gmail.com`
+   - `info@tstr.directory` → `tstr.directory1@gmail.com`
 
 ### Example: GoDaddy Email Forwarding
 Products → Email & Office → Forwarding → Add Address → Save
@@ -103,7 +103,7 @@ Domain List → Manage → Mail Settings → Email Forwarding → Add Forwarder
 
 This lets you SEND emails from listing@tstr.directory
 
-1. **Open Gmail** (tstr.site1@gmail.com)
+1. **Open Gmail** (tstr.directory1@gmail.com)
 
 2. **Go to Settings**
    - Click gear icon (top right)
@@ -122,13 +122,13 @@ This lets you SEND emails from listing@tstr.directory
 5. **SMTP Settings**
    - SMTP Server: smtp.gmail.com
    - Port: 587
-   - Username: tstr.site1@gmail.com
+   - Username: tstr.directory1@gmail.com
    - Password: (your Gmail password or App Password)
    - Click: "Add Account"
 
 6. **Verify**
    - Gmail sends verification email to listing@tstr.directory
-   - Check tstr.site1@gmail.com inbox (forwarded)
+   - Check tstr.directory1@gmail.com inbox (forwarded)
    - Click verification link
    - Done!
 
@@ -149,9 +149,9 @@ While waiting for DNS update and email forwarding:
 
 ### Email: Use Plus Addressing
 **Instead of:** listing@tstr.directory
-**Use:** tstr.site1+listing@gmail.com
+**Use:** tstr.directory1+listing@gmail.com
 
-This works IMMEDIATELY and all emails arrive at tstr.site1@gmail.com
+This works IMMEDIATELY and all emails arrive at tstr.directory1@gmail.com
 
 ### Website: Use Live URL
 **Access the site at:** https://tstr.directory
@@ -178,12 +178,12 @@ SSL is already configured with Cloudflare Pages:
 
 - [ ] Login to domain registrar
 - [ ] Update DNS to point to Cloudflare nameservers (provided by Cloudflare)
-- [ ] Set up email forwarding: listing@tstr.directory → tstr.site1@gmail.com
+- [ ] Set up email forwarding: listing@tstr.directory → tstr.directory1@gmail.com
 - [ ] Wait 30 minutes for DNS propagation
 - [ ] Test: nslookup tstr.directory (should show Cloudflare IPs)
 - [ ] Test: https://tstr.directory (should load Astro frontend)
 - [ ] Send test email to: listing@tstr.directory
-- [ ] Check tstr.site1@gmail.com receives it
+- [ ] Check tstr.directory1@gmail.com receives it
 - [ ] Configure Gmail "Send As"
 - [ ] Verify site is working properly with new DNS settings
 
@@ -201,7 +201,7 @@ A: NO - only update the A record value
 A: Update A record in Cloudflare dashboard, orange cloud can stay ON
 
 **Q: Email forwarding not available?**
-A: Use tstr.site1+listing@gmail.com temporarily (works immediately)
+A: Use tstr.directory1+listing@gmail.com temporarily (works immediately)
 
 **Q: How long does DNS take?**
 A: Usually 15-30 minutes, maximum 48 hours (rare)
@@ -211,9 +211,9 @@ A: Usually 15-30 minutes, maximum 48 hours (rare)
 ## URGENT: Do This NOW
 
 The DNS update is the ONLY thing blocking:
-1. Domain access (https://tstr.site)
+1. Domain access (https://tstr.directory)
 2. SSL certificate installation
-3. Professional email (listing@tstr.site)
+3. Professional email (listing@tstr.directory)
 4. Going live to customers
 
 **Time required:** 15 minutes

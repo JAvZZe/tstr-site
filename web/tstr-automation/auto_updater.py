@@ -1,5 +1,5 @@
 """
-Automated Content Updater for TSTR.SITE
+Automated Content Updater for tstr.directory
 Runs continuously to scrape new listings and check for updates
 """
 
@@ -108,7 +108,7 @@ schedule.every().day.at("14:00").do(check_competitor_sites)  # Daily monitoring
 
 if __name__ == "__main__":
     print("="*70)
-    print("TSTR.SITE AUTOMATION ENGINE")
+    print("tstr.directory AUTOMATION ENGINE")
     print("="*70)
     print("\nScheduled Jobs:")
     print("  → Weekly scraping: Every Sunday 2:00 AM")

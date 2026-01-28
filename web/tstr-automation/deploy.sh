@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# TSTR.SITE - Cloud Function Deployment Script
+# tstr.directory - Cloud Function Deployment Script
 # Deploys scrapers to Google Cloud Functions
 
 set -e  # Exit on error
 
 echo "=================================="
-echo "TSTR.SITE Cloud Deployment"
+echo "tstr.directory Cloud Deployment"
 echo "=================================="
 
 # Configuration

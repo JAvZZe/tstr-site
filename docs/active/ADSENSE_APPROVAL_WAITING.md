@@ -9,7 +9,7 @@
 ## ✓ What's Complete
 
 ### 1. AdSense Application Submitted
-- ✅ Account: tstr.site1@gmail.com (or user's actual account)
+- ✅ Account: tstr.directory1@gmail.com (or user's actual account)
 - ✅ Site: https://tstr.directory
 - ✅ Verification code deployed: ca-pub-7003918988204966
 - ✅ Privacy Policy live at: /privacy
@@ -46,7 +46,7 @@
 6. ⚠️ Domain age (may check if domain is 6+ months old)
 
 ### You Will Receive Email
-Google will send notification to: tstr.site1@gmail.com
+Google will send notification to: tstr.directory1@gmail.com
 
 **Approved:**
 - Subject: "Your AdSense application has been approved"
@@ -107,7 +107,7 @@ Google will send notification to: tstr.site1@gmail.com
 ## What Happens When Approved
 
 ### You'll Receive Email
-Check: tstr.site1@gmail.com inbox
+Check: tstr.directory1@gmail.com inbox
 
 ### Immediate Actions (I'll Help With These):
 
@@ -249,7 +249,7 @@ All guides in: `/media/al/AI_DATA/AI_PROJECTS_SPACE/`
 ## Contact/Support
 
 **Questions about:**
-- AdSense approval status → Check email (tstr.site1@gmail.com)
+- AdSense approval status → Check email (tstr.directory1@gmail.com)
 - Post-approval setup → See ADSENSE_READY_CHECKLIST.md
 - Revenue optimization → See TSTR_ADSENSE_SETUP_GUIDE.md
 - Form submissions → See TSTR_ADMIN_APPROVAL_WORKFLOW.md
