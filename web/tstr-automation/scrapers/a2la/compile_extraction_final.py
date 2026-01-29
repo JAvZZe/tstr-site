@@ -6,7 +6,6 @@ Updates with Claude web search findings
 
 import json
 from pathlib import Path
-from typing import Dict
 
 # Updated extraction data from comprehensive web searches
 EXTRACTED_DATA = {

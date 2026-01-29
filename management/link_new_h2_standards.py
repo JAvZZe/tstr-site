@@ -135,7 +135,7 @@ def main():
         
         print()
     
-    print(f"\n📊 Summary:")
+    print("\n📊 Summary:")
     print(f"  • New capabilities added: {total_added}")
     print(f"  • Labs enhanced: {min(len(h2_lab_ids), 10)}")
     print("\n✅ Hydrogen standards linked!\n")

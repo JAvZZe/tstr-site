@@ -324,7 +324,7 @@ def cmd_next_actions():
     """Show providers that need follow-up soon"""
     actions = get_next_actions(days_ahead=7)
     
-    print(f"\n=== NEXT ACTIONS (Next 7 Days) ===\n")
+    print("\n=== NEXT ACTIONS (Next 7 Days) ===\n")
     
     if not actions:
         print("No pending actions. Good job!")
@@ -366,7 +366,7 @@ def cmd_log_email(provider_id: int, sequence: int = 1):
     update_provider_status(provider_id, 'contacted')
     
     print(f"✅ Logged email #{sequence} to provider {provider_id}")
-    print(f"   Next follow-up scheduled in 3 days")
+    print("   Next follow-up scheduled in 3 days")
     print(f"   Log ID: {log_id}")
 
 def cmd_history(provider_id: int):

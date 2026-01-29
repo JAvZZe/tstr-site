@@ -3,7 +3,6 @@
 Apply standards and capabilities migration directly to Supabase PostgreSQL
 """
 
-import os
 import sys
 
 def apply_migration():

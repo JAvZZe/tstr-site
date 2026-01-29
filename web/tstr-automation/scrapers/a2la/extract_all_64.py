@@ -5,7 +5,6 @@ Uses web search with multiple strategies to extract complete lab data
 """
 
 import json
-import re
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -236,8 +235,8 @@ def main():
     print("\n" + "=" * 80)
     print("READY FOR CLAUDE EXTRACTION")
     print("=" * 80)
-    print(f"\nNext step: Run web searches for each PID using the queries above")
-    print(f"Output file: a2la_claude_complete.jsonl")
+    print("\nNext step: Run web searches for each PID using the queries above")
+    print("Output file: a2la_claude_complete.jsonl")
 
 if __name__ == "__main__":
     main()

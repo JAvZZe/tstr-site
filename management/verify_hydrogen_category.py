@@ -56,4 +56,4 @@ if __name__ == "__main__":
     else:
         print(f"❌ Error getting listings: {listings}")
     
-    print(f"\n✅ Verification complete!")
+    print("\n✅ Verification complete!")

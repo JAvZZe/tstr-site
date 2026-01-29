@@ -7,16 +7,14 @@ Abstract base class providing common functionality for all niche scrapers
 import os
 import time
 import logging
-import hashlib
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 from urllib.parse import urlparse
 from urllib.robotparser import RobotFileParser
-from datetime import datetime
 
 import requests
 from bs4 import BeautifulSoup
-from supabase import create_client, Client
+from supabase import create_client
 from dotenv import load_dotenv
 
 from location_parser import LocationParser

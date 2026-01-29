@@ -36,8 +36,6 @@ def run_migration():
     # Execute the SQL via RPC or direct query
     # Note: Supabase Python client doesn't have direct SQL execution
     # We'll need to use psycopg2 for this
-    import psycopg2
-    from urllib.parse import urlparse
 
     # Parse the Supabase URL to get connection details
     # Supabase uses PostgreSQL, so we can connect directly

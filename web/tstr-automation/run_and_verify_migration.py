@@ -154,7 +154,7 @@ def verify_migration():
 
         print(f"\nTotal custom fields in database: {total_result.count}")
         print(f"Custom fields for 4 testing niches: {niche_count}")
-        print(f"Expected for 4 niches: 28 (7 fields × 4 categories)")
+        print("Expected for 4 niches: 28 (7 fields × 4 categories)")
 
         if niche_count == 28:
             print("\n✅ Migration successful! All custom fields added correctly.")
@@ -167,7 +167,7 @@ def verify_migration():
 
     print("\n" + "="*80)
     print("\nFor detailed verification, run the SQL queries in:")
-    print(f"/home/al/tstr-site-working/web/tstr-automation/migrations/verify_custom_fields.sql")
+    print("/home/al/tstr-site-working/web/tstr-automation/migrations/verify_custom_fields.sql")
     print("="*80 + "\n")
 
 if __name__ == "__main__":

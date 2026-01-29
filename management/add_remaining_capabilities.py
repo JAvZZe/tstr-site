@@ -4,7 +4,6 @@ Add remaining capabilities for Oil & Gas and Biotech categories
 """
 
 import requests
-from datetime import datetime
 
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
 SERVICE_ROLE_KEY = "sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2"
@@ -88,7 +87,7 @@ def main():
         if general_standards:
             specs = {"accredited": True, "scope": "Testing and Calibration"}
             if insert_capability(listing['id'], general_standards[0]['id'], specs):
-                print(f"  ✅ ISO 17025 (general)")
+                print("  ✅ ISO 17025 (general)")
                 total_added += 1
     
     # Get Biotech listings
@@ -121,10 +120,10 @@ def main():
             if general_standards:
                 specs = {"accredited": True, "scope": "Biological Testing"}
                 if insert_capability(listing['id'], general_standards[0]['id'], specs):
-                    print(f"  ✅ ISO 17025 (general)")
+                    print("  ✅ ISO 17025 (general)")
                     total_added += 1
     
-    print(f"\n\n📊 Summary:")
+    print("\n\n📊 Summary:")
     print(f"  • Capabilities added: {total_added}")
     print("\n✅ Complete!\n")
 

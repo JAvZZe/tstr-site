@@ -21,7 +21,7 @@ import sys
 import json
 import hashlib
 import re
-from typing import Dict, List, Any, Optional
+from typing import Dict, Any, Optional
 from pathlib import Path
 from datetime import datetime, timezone
 

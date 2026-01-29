@@ -3,9 +3,7 @@
 Execute SQL migration using Supabase postgrest RPC
 """
 
-import os
 import sys
-import requests
 import logging
 
 # Setup logging
@@ -70,7 +68,7 @@ def execute_migration():
     print("1. Get your database password from Supabase Dashboard > Settings > Database")
     print("2. Run:")
     print(
-        f"   psql 'postgresql://postgres.[PASSWORD]@db.haimjeaetrsaauitrhfy.supabase.co:5432/postgres' \\"
+        "   psql 'postgresql://postgres.[PASSWORD]@db.haimjeaetrsaauitrhfy.supabase.co:5432/postgres' \\"
     )
     print(f"        -f {migration_file}")
     print("\n" + "=" * 80)

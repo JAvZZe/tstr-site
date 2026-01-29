@@ -3,7 +3,6 @@ Setup pending_research table in Supabase via REST API
 """
 
 import os
-import requests
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -64,8 +63,8 @@ def create_pending_research_table():
             print("✅ Table 'pending_research' already exists!")
             print(f"   Found {len(result.data)} existing records")
             return True
-        except Exception as e:
-            print(f"📝 Table doesn't exist yet. Creating...")
+        except Exception:
+            print("📝 Table doesn't exist yet. Creating...")
             
             # Since direct SQL execution isn't available via Python client,
             # we'll use psycopg2 if available
@@ -102,7 +101,7 @@ def create_pending_research_table():
                 else:
                     raise ImportError("No DB password")
                     
-            except (ImportError, Exception) as e2:
+            except (ImportError, Exception):
                 print("\n⚠️  Cannot create table programmatically")
                 print("Please run this SQL in Supabase SQL Editor:")
                 print("URL: https://app.supabase.com/project/" + supabase_url.split('//')[1].split('.')[0] + "/sql")

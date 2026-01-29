@@ -85,7 +85,7 @@ def load_a2la_labs(jsonl_file, limit=None):
             address = ', '.join(address_parts)
 
             if not address:
-                logger.warning(f"  ⚠ No address data, skipping")
+                logger.warning("  ⚠ No address data, skipping")
                 stats['skipped'] += 1
                 continue
 
@@ -109,7 +109,7 @@ def load_a2la_labs(jsonl_file, limit=None):
 
             # Build description
             desc_parts = [
-                f"ISO/IEC 17025 accredited materials testing laboratory",
+                "ISO/IEC 17025 accredited materials testing laboratory",
                 f"(A2LA Cert: {lab.get('cert', 'N/A')})"
             ]
             if lab.get('scope'):
@@ -144,7 +144,7 @@ def load_a2la_labs(jsonl_file, limit=None):
             insert_result = supabase.from_('listings').insert(listing_data).execute()
 
             if not insert_result.data:
-                logger.error(f"  ✗ Failed to insert listing")
+                logger.error("  ✗ Failed to insert listing")
                 stats['failed'] += 1
                 continue
 

@@ -4,7 +4,6 @@ Assign standards to their appropriate categories
 """
 
 import requests
-import json
 
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
 SERVICE_ROLE_KEY = "sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2"
@@ -127,7 +126,7 @@ def main():
         else:
             print(f"  ❌ {code}: Update failed")
 
-    print(f"\n📊 Summary:")
+    print("\n📊 Summary:")
     print(f"  • Updated: {updated}")
     print(f"  • Skipped (general): {skipped}")
     print(f"  • Total: {len(standards)}")

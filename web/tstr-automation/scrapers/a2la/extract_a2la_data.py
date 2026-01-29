@@ -5,7 +5,6 @@ Extracts lab information from first 10 A2LA accreditation PIDs
 """
 
 import json
-import sys
 from pathlib import Path
 
 # First 10 PIDs to process

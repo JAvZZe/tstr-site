@@ -7,7 +7,7 @@ Source: https://www.contractlaboratory.com/directory/laboratories/by-industry.cf
 
 import re
 import logging
-from typing import Dict, List, Optional
+from typing import Dict, List
 from bs4 import BeautifulSoup
 
 import sys

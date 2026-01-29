@@ -14,7 +14,6 @@ Usage:
     sync.sync_all_systems()
 """
 
-import os
 import sys
 import json
 import subprocess

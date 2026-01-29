@@ -9,7 +9,6 @@ from bs4 import BeautifulSoup
 import csv
 import time
 import json
-from urllib.parse import urljoin, urlparse
 import re
 
 import os
@@ -569,7 +568,7 @@ def main():
     print("="*70)
     print(f"Directory Listings: {len(scraper.directory_listings)} (verified URLs only)")
     print(f"Sales Leads Found: {len(scraper.sales_contacts)}")
-    print(f"\nURL Validation Statistics:")
+    print("\nURL Validation Statistics:")
     print(f"  • Total URLs Validated: {validation_stats['total_validated']}")
     print(f"  • Valid URLs: {validation_stats['valid']}")
     print(f"  • Invalid URLs: {validation_stats['invalid']}")

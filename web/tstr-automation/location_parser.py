@@ -6,7 +6,7 @@ Parses addresses using libpostal and links to hierarchical locations table
 
 import os
 import logging
-from typing import Optional, Dict, Tuple
+from typing import Optional, Dict
 
 # from postal.parser import parse_address  # Commented out due to dependency issues
 from supabase import create_client, Client
@@ -582,7 +582,7 @@ if __name__ == "__main__":
             valid = parser.validate_location_hierarchy(location_id)
             print(f"  Hierarchy valid: {valid}")
         else:
-            print(f"  ✗ Failed to parse")
+            print("  ✗ Failed to parse")
 
     # Show stats
     print("\n" + "=" * 70)

@@ -9,7 +9,7 @@ import re
 import logging
 import requests
 from bs4 import BeautifulSoup
-from typing import Dict, List, Optional
+from typing import Dict, List
 from urllib.parse import urljoin
 
 logging.basicConfig(level=logging.INFO)

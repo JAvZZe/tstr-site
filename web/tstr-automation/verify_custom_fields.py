@@ -2,7 +2,6 @@
 """Verify custom fields are properly populated and displaying correctly"""
 
 from supabase import create_client
-import json
 
 # Direct credentials
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"

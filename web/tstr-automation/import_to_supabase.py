@@ -1,4 +1,3 @@
-import os
 import csv
 from supabase import create_client, Client
 from dotenv import load_dotenv

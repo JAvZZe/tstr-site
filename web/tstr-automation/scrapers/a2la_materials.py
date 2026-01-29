@@ -5,11 +5,10 @@ Extracts ISO/IEC 17025 accredited materials testing laboratories from A2LA direc
 """
 
 import re
-import json
 import logging
-from typing import Dict, List, Optional
+from typing import Dict, List
 from bs4 import BeautifulSoup
-from urllib.parse import urlencode, quote
+from urllib.parse import urlencode
 
 import sys
 import os

@@ -3,7 +3,6 @@
 Check current RLS policies on the listings table
 """
 
-import os
 from supabase import create_client, Client
 
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
@@ -18,7 +17,7 @@ def check_rls_policies():
     try:
         # Check if RLS is enabled
         result = supabase.table("listings").select("*").limit(1).execute()
-        print(f"✅ RLS query successful - data accessible")
+        print("✅ RLS query successful - data accessible")
 
         # Try to check policies (this might not work with service role)
         print("\n📋 Attempting to list RLS policies...")
