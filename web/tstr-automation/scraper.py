@@ -47,7 +47,7 @@ class ListingsScraperSecondary:
     def _initialize_supabase(self):
         """Initialize Supabase client for duplicate detection"""
         try:
-            from supabase import create_client, Client
+            from supabase import create_client
             supabase_url = os.getenv("SUPABASE_URL")
             supabase_key = os.getenv("SUPABASE_KEY")
             

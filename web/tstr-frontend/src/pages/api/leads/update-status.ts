@@ -39,7 +39,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Update the lead status using the database function
-    const { data: success, error } = await supabase.rpc('update_lead_status', {
+    const { error } = await supabase.rpc('update_lead_status', {
       p_lead_id: leadId,
       p_status: status,
       p_owner_notes: notes || null
@@ -63,10 +63,12 @@ export const POST: APIRoute = async ({ request }) => {
       headers: { 'Content-Type': 'application/json' }
     })
 
-  } catch (error) {
+  } catch (error: unknown) {
+    const errorMsg = error instanceof Error ? error.message : String(error)
     console.error('Update lead status API error:', error)
     return new Response(JSON.stringify({
-      error: 'Internal server error'
+      error: 'Internal server error',
+      details: errorMsg
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }

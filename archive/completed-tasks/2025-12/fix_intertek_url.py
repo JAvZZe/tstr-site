@@ -41,7 +41,7 @@ def fix_intertek_url():
                 )
 
                 # Update to correct URL
-                update_result = (
+                (
                     supabase.table("pending_research")
                     .update({"website": "https://www.intertek.com/"})
                     .eq("id", entry["id"])

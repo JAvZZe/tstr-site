@@ -246,7 +246,7 @@ class StatusBridge:
                 results["status_file_readable"] = True
             else:
                 results["status_file_readable"] = False
-        except:
+        except Exception:
             results["status_file_readable"] = False
             results["issues"].append("PROJECT_STATUS.md not readable")
 
@@ -256,7 +256,7 @@ class StatusBridge:
                 results["session_file_readable"] = True
             else:
                 results["session_file_readable"] = False
-        except:
+        except Exception:
             results["session_file_readable"] = False
             results["issues"].append(".ai-session.md not readable")
 

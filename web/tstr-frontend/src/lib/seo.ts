@@ -11,7 +11,7 @@ const SHORT_BRAND = 'TSTR';
  * @param parts Array of strings to join (e.g. [Listing Name, Region])
  * @param includeBrand Whether to append the brand name
  */
-export function formatTitle(parts: string[], includeBrand: boolean = true): string {
+export function formatTitle(parts: string[]): string {
     // Filter out empty parts and remove redundancies
     let uniqueParts = parts
         .filter(Boolean)
@@ -20,7 +20,7 @@ export function formatTitle(parts: string[], includeBrand: boolean = true): stri
     // Deduplicate: if part A contains part B, or vice versa, keep only the more descriptive one
     uniqueParts = uniqueRegionsAndCategories(uniqueParts);
 
-    let title = uniqueParts.join(' in ');
+    const title = uniqueParts.join(' in ');
 
     const brandSuffix = ` | ${SHORT_BRAND}`;
 

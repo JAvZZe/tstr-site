@@ -47,7 +47,6 @@ def main():
     # Get categories
     categories = get_data("categories")
     cat_map = {cat['id']: cat for cat in categories}
-    cat_slug_to_id = {cat['slug']: cat['id'] for cat in categories}
     
     # Get all standards by category
     standards = get_data("standards", {"is_active": "eq.true"})

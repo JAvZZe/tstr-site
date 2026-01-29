@@ -28,7 +28,7 @@ export const sendEmail = async (
   try {
     const resendClient = getResendClient()
     const fromEmail = import.meta.env.RESEND_FROM_EMAIL || 'noreply@tstr.directory'
-    const { data, error } = await resendClient.emails.send({
+    const { error } = await resendClient.emails.send({
       from: fromEmail,
       to: [to],
       subject: template.subject,
@@ -42,9 +42,10 @@ export const sendEmail = async (
     }
 
     return { success: true }
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : String(err)
     console.error('Email service error:', err)
-    return { success: false, error: `Email service unavailable: ${err.message || err}` }
+    return { success: false, error: `Email service unavailable: ${errorMsg}` }
   }
 }
 

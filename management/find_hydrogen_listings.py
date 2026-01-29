@@ -106,9 +106,9 @@ if __name__ == "__main__":
     # Combine and deduplicate
     all_ids = set()
     if isinstance(name_listings, list):
-        all_ids.update([l['id'] for l in name_listings if isinstance(l, dict) and 'id' in l])
+        all_ids.update([listing['id'] for listing in name_listings if isinstance(listing, dict) and 'id' in listing])
     if isinstance(standards_listings, list):
-        all_ids.update([l['id'] for l in standards_listings if isinstance(l, dict) and 'id' in l])
+        all_ids.update([listing['id'] for listing in standards_listings if isinstance(listing, dict) and 'id' in listing])
     
     print(f"\n✅ Total unique listings to update: {len(all_ids)}")
     

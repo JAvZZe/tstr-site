@@ -4,16 +4,16 @@ import { createClient } from '@supabase/supabase-js';
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
     // Access environment variables from Cloudflare runtime
-    const env = (locals as any).runtime?.env;
-    
+    const env = (locals as { runtime?: { env?: Record<string, string> } }).runtime?.env;
+
     // Fallback to hardcoded values if env vars not available (matches lib/supabase.ts pattern)
-    const supabaseUrl = env?.PUBLIC_SUPABASE_URL || 
-                        import.meta.env.PUBLIC_SUPABASE_URL || 
-                        'https://haimjeaetrsaauitrhfy.supabase.co';
-    
-    const supabaseKey = env?.SUPABASE_SERVICE_ROLE_KEY || 
-                        import.meta.env.SUPABASE_SERVICE_ROLE_KEY ||
-                        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyOTQ0ODQzNywiZXhwIjoyMDQ1MDI0NDM3fQ.sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2';
+    const supabaseUrl = env?.PUBLIC_SUPABASE_URL ||
+      import.meta.env.PUBLIC_SUPABASE_URL ||
+      'https://haimjeaetrsaauitrhfy.supabase.co';
+
+    const supabaseKey = env?.SUPABASE_SERVICE_ROLE_KEY ||
+      import.meta.env.SUPABASE_SERVICE_ROLE_KEY ||
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyOTQ0ODQzNywiZXhwIjoyMDQ1MDI0NDM3fQ.sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2';
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -50,9 +50,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
         });
       }
       console.error('Supabase error:', error);
-      return new Response(JSON.stringify({ 
+      return new Response(JSON.stringify({
         error: 'Database error occurred.',
-        details: error.message 
+        details: error.message
       }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
@@ -66,7 +66,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   } catch (e) {
     console.error('Request error:', e);
-    return new Response(JSON.stringify({ 
+    return new Response(JSON.stringify({
       error: 'Invalid request format.',
       details: e instanceof Error ? e.message : String(e)
     }), {

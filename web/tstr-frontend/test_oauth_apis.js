@@ -76,7 +76,7 @@ async function runTests() {
       body: { token: 'test-token', code: '123456' }
     });
 
-  } catch (error) {
+  } catch (_error) {
     console.log('\n❌ Tests failed - Dev server not running?');
     console.log('To test manually:');
     console.log('1. Start dev server: cd web/tstr-frontend && npm run dev');

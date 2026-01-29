@@ -4,16 +4,16 @@ import { createClient } from '@supabase/supabase-js';
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
     // Access environment variables from Cloudflare runtime
-    const env = (locals as any).runtime?.env;
+    const env = (locals as { runtime?: { env?: Record<string, string> } }).runtime?.env;
 
     // Fallback to hardcoded values if env vars not available (matches lib/supabase.ts pattern)
     const supabaseUrl = env?.PUBLIC_SUPABASE_URL ||
-                        import.meta.env.PUBLIC_SUPABASE_URL ||
-                        'https://haimjeaetrsaauitrhfy.supabase.co';
+      import.meta.env.PUBLIC_SUPABASE_URL ||
+      'https://haimjeaetrsaauitrhfy.supabase.co';
 
     const supabaseKey = env?.SUPABASE_SERVICE_ROLE_KEY ||
-                        import.meta.env.SUPABASE_SERVICE_ROLE_KEY ||
-                        'sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2';
+      import.meta.env.SUPABASE_SERVICE_ROLE_KEY ||
+      'sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2';
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 

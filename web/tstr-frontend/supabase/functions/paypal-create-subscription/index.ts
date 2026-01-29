@@ -268,8 +268,8 @@ serve(async (req) => {
         'Content-Type': 'application/json',
         'Prefer': 'return=representation'
       },
-       body: JSON.stringify({
-         plan_id: PLAN_IDS[finalTier],
+      body: JSON.stringify({
+        plan_id: PLAN_IDS[finalTier],
         subscriber: {
           email_address: user.billing_email,
         },
@@ -299,7 +299,7 @@ serve(async (req) => {
     }
 
     // Find approval URL
-    const approvalUrl = subscription.links.find((link: any) => link.rel === 'approve')?.href
+    const approvalUrl = subscription.links.find((link: { rel: string; href: string }) => link.rel === 'approve')?.href
 
     // Clear pending subscription state on successful creation
     if (pendingToken) {

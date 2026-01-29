@@ -64,7 +64,7 @@ CREATE INDEX IF NOT EXISTS idx_pending_research_status ON pending_research(statu
     
     # Verify table exists
     try:
-        result = client.table("pending_research").select("id").limit(1).execute()
+        client.table("pending_research").select("id").limit(1).execute()
         print("✅ Table created successfully!")
         return True
     except Exception as e:

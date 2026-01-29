@@ -48,8 +48,9 @@ def main():
     
     # Test Python client (if available)
     try:
-        import supabase
-        print("✅ Supabase Python client: Available")
+        from importlib.util import find_spec
+        if find_spec("supabase"):
+            print("✅ Supabase Python client: Available")
     except ImportError:
         print("❌ Supabase Python client: Not installed")
     

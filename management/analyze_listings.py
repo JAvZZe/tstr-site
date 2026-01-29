@@ -108,7 +108,7 @@ def main():
         'categories': cat_map,
         'listings': listings,
         'standards': standards,
-        'by_category': {k: [l['id'] for l in v] for k, v in by_category.items()}
+        'by_category': {k: [listing['id'] for listing in v] for k, v in by_category.items()}
     }
     
     with open('/tmp/listings_data.json', 'w') as f:

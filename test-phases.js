@@ -3,7 +3,8 @@
 // Simple test script to verify Phase 1 and Phase 2 functionality
 // This tests the API endpoints without requiring authentication
 
-const http = require('http');
+/* eslint-disable @typescript-eslint/no-require-imports */
+const { test } = require('@playwright/test');
 
 const BASE_URL = 'http://localhost:4321';
 

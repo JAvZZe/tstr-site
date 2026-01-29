@@ -246,7 +246,7 @@ class StatusSync:
 
             match = re.search(r"\*\*Last Updated\*\*: (.*)", content)
             return match.group(1) if match else "not found"
-        except:
+        except Exception:
             return "error"
 
     def _get_last_session_timestamp(self) -> str:

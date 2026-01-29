@@ -28,7 +28,7 @@ def load_gemini_results() -> Dict[str, Dict]:
                     try:
                         record = json.loads(line)
                         gemini_data[record['pid']] = record
-                    except:
+                    except Exception:
                         pass
 
     return gemini_data

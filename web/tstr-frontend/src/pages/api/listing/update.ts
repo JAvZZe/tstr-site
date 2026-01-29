@@ -60,7 +60,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Prepare update data with sanitization
-    const updateData: any = {
+    const updateData: Record<string, unknown> = {
       business_name: business_name.trim(),
       updated_at: new Date().toISOString()
     }

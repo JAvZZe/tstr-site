@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 import { supabase } from '../../../lib/supabase';
 
-export const GET: APIRoute = async ({ request }) => {
+export const GET: APIRoute = async ({ request: _request }) => {
   // TODO: Add authentication when auth system is implemented
   // For now, export is publicly accessible (internal use only)
 

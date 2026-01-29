@@ -143,7 +143,7 @@ class StatusValidator:
             with open(file_path, "a"):
                 pass
             results["writable"] = True
-        except:
+        except Exception:
             results["issues"].append("File is not writable")
 
         # Get modification time
@@ -152,7 +152,7 @@ class StatusValidator:
             results["modified"] = datetime.fromtimestamp(
                 mtime, tz=timezone.utc
             ).strftime("%Y-%m-%d %H:%M UTC")
-        except:
+        except Exception:
             results["issues"].append("Cannot determine modification time")
 
         return results
@@ -326,7 +326,7 @@ class StatusValidator:
                     # Test write permission
                     with open(file_path, "a") as f:
                         f.write("")
-                except:
+                except Exception:
                     issues.append(f"No write permission: {file_path.name}")
 
         return {

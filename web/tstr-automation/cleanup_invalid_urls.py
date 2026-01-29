@@ -29,7 +29,7 @@ class URLCleanup:
     def _initialize_supabase(self):
         """Initialize Supabase client"""
         try:
-            from supabase import create_client, Client
+            from supabase import create_client
             supabase_url = os.getenv("SUPABASE_URL")
             supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
             
@@ -65,7 +65,6 @@ class URLCleanup:
         for idx, listing in enumerate(listings, 1):
             business_name = listing.get('business_name', 'Unknown')
             website = listing.get('website', '')
-            listing_id = listing.get('id')
             
             if not website:
                 logging.info(f"[{idx}/{total}] {business_name} - No website URL")

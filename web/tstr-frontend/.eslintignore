@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.astro/
+.wrangler/
+test-results/
+*.cjs
+*.mjs
+*.js
+!src/**/*.js
+!src/**/*.ts
+!src/**/*.tsx
+!supabase/**/*.ts
