@@ -1,7 +1,7 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-28 18:53 UTC
+> **Last Updated**: 2026-01-28 19:20 UTC
 > **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -271,6 +271,13 @@ Last Scrape:      November 10, 2025 02:31 UTC
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.5.5** - 2026-01-28 - **Apollo Tracking Site-Wide** (antigravity)
+
+- **Feature**: Implemented Apollo.io visitor tracking site-wide.
+- **Implementation**: Automated injection into 40+ Astro pages with custom `<head>` sections.
+- **Verification**: Verified script presence in built HTML output (minified).
+- **Optimization**: Used async/defer for zero performance impact.
 
 ### **v2.5.4** - 2026-01-28 - **Domain Reference Migration** (antigravity)
 
