@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-28 19:20 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-01-29 07:22 UTC
+> **Updated By**: Antigravity
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 
@@ -53,6 +53,17 @@
 
 ---
 
+## 📊 ANALYTICS & TRACKING STATUS
+
+- ✅ **Apollo Website Tracker Deployed** (v2.5.5) - Deployed site-wide across 40+ pages.
+- ✅ **Apollo Form Enrichment Deployed** (v2.5.6) - Deployed on `/submit` page.
+- ✅ **Script Placement**: In `<head>` section, async/defer/defer loading for zero performance impact.
+- ✅ **Enrichment App ID**: `697aec66d25c8100195c344a`
+- ✅ **Features**: Auto-enrichment of company data for listing submissions, loading spinner overlay during processing.
+- ✅ **Verification**: Build confirmed successful; script presence verified in built HTML files.
+
+---
+
 ## 🎯 PROJECT OVERVIEW
 
 **Name**: TSTR.DIRECTORY
@@ -75,6 +86,7 @@
 │  ✅ OCI Scrapers               DEPLOYED     │
 │  ✅ Local Heavy Scrapers       ACTIVE       │
 │  ✅ Frontend (Cloudflare)      LIVE         │
+│  ✅ Analytics (Apollo)         ACTIVE 🎯    │
 └─────────────────────────────────────────────┘
 
 Listings:         191 verified
