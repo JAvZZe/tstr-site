@@ -160,11 +160,6 @@ class LocationParser:
                     if len(state_zip) >= 2:
                         components["postcode"] = state_zip[1]
                     components["country"] = "United States"
-                # If duplicate labels (e.g., multiple 'road' entries), concatenate
-                if label in components:
-                    components[label] = f"{components[label]} {value}"
-                else:
-                    components[label] = value
 
             return components
 

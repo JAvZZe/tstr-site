@@ -61,7 +61,7 @@ def export_to_csv(category_slug=None, output_file=None):
     print(f"Found {len(listings.data)} listings")
 
     # Get custom fields for all listings
-    listing_ids = [l['id'] for l in listings.data]
+    listing_ids = [listing['id'] for listing in listings.data]
     custom_fields_query = supabase.from_('listing_custom_fields').select('''
         listing_id,
         custom_field_id,

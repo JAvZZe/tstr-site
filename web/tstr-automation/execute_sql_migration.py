@@ -15,7 +15,6 @@ logging.basicConfig(
 def execute_migration():
     """Execute the custom fields migration SQL"""
 
-    project_id = "haimjeaetrsaauitrhfy"
     migration_file = "/media/al/AI_SSD/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/supabase/migrations/20251202000001_add_source_tracking_to_listings.sql"
 
     # Read the SQL

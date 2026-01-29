@@ -54,7 +54,6 @@ def create_pending_research_table():
     
     try:
         from supabase import create_client
-        
         client = create_client(supabase_url, supabase_key)
         
         # Try to check if table exists by attempting to select
@@ -70,11 +69,6 @@ def create_pending_research_table():
             # we'll use psycopg2 if available
             try:
                 import psycopg2
-                from urllib.parse import urlparse
-                
-                # Parse connection string from Supabase URL
-                # Format: postgresql://user:pass@host:port/dbname
-                # Supabase format: https://project-ref.supabase.co
                 
                 # Extract project ref from URL
                 project_ref = supabase_url.replace('https://', '').replace('.supabase.co', '')

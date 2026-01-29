@@ -70,7 +70,7 @@ def apply_rls_policy():
         # Use rpc call to execute raw SQL
         # This requires a SQL function in Supabase - check if it exists
         try:
-            result = supabase.rpc('exec_sql', {'sql': RLS_POLICY_SQL}).execute()
+            supabase.rpc('exec_sql', {'sql': RLS_POLICY_SQL}).execute()
             print("   ✓ RLS policy applied successfully")
         except Exception as e:
             print(f"   ✗ RPC exec_sql not available: {e}")

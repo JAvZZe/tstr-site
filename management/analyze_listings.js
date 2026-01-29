@@ -14,13 +14,13 @@ async function main() {
   console.log('🔍 Analyzing TSTR.site listings...\n');
 
   // Get categories
-  const { data: categories, error: catError } = await supabase
+  const { data: categories, error: _catError } = await supabase
     .from('categories')
     .select('id, name, slug')
     .order('name');
 
-  if (catError) {
-    console.error('Error fetching categories:', catError);
+  if (_catError) {
+    console.error('Error fetching categories:', _catError);
     return;
   }
 
@@ -78,7 +78,7 @@ async function main() {
   }
 
   console.log(`\n\n🎯 Available Standards: ${standards.length}`);
-  
+
   // Group standards by category
   const stdByCategory = {};
   standards.forEach(std => {

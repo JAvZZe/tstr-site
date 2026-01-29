@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro'
 import { supabase } from '../../lib/supabase'
-import { canAutoClaim, generateVerificationToken } from '../../lib/domain-verification'
+import { generateVerificationToken } from '../../lib/domain-verification'
 import { sendEmail, createDraftSaveEmail, createVerificationEmail } from '../../lib/email'
 
 export const POST: APIRoute = async ({ request }) => {
@@ -43,10 +43,15 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Handle draft saving
     if (mode === 'save_draft') {
-      const resumeToken = await supabase.rpc('generate_resume_token')
+      const { data: resumeToken, error: tokenError } = await supabase.rpc('generate_resume_token')
       const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
 
-      const { data: draft, error } = await supabase
+      if (tokenError || !resumeToken) {
+        console.error('Token generation error:', tokenError)
+        return new Response(JSON.stringify({ error: 'Failed to generate resume token' }), { status: 500 })
+      }
+
+      const { error } = await supabase
         .from('claims')
         .insert({
           provider_name: claimData.provider_name,
@@ -117,8 +122,8 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Check domain verification for ALL claims
     // Temporarily disabled until migration is applied
-    let domainVerified = false
-    let verificationMethod = 'manual_review'
+    const domainVerified = false
+    const verificationMethod = 'manual_review'
 
     // TODO: Re-enable domain verification after migration
     /*
@@ -188,7 +193,7 @@ export const POST: APIRoute = async ({ request }) => {
       }
 
       // Insert listing owner claim
-      const claimData = {
+      const listingOwnerClaim = {
         user_id: user.id,
         listing_id: listingId,
         status: domainVerified ? 'verified' : 'pending',
@@ -198,7 +203,7 @@ export const POST: APIRoute = async ({ request }) => {
 
       const { error: claimError } = await supabase
         .from('listing_owners')
-        .insert(claimData)
+        .insert(listingOwnerClaim)
 
       if (claimError) {
         console.error('Claim error:', claimError)

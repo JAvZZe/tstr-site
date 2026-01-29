@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { Client } from "https://deno.land/x/postgres@v0.17.0/mod.ts";
 
-serve(async (req) => {
+serve(async (_req) => {
     try {
         const dbUrl = Deno.env.get("SUPABASE_DB_URL");
         if (!dbUrl) {

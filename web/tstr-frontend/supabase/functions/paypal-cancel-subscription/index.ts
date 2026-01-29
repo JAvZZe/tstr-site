@@ -40,7 +40,7 @@ serve(async (req) => {
     let requestBody
     try {
       requestBody = await req.json()
-    } catch (e) {
+    } catch (_e) {
       return new Response(JSON.stringify({ error: 'Invalid JSON request body' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }

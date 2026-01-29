@@ -16,7 +16,7 @@ def check_rls_policies():
 
     try:
         # Check if RLS is enabled
-        result = supabase.table("listings").select("*").limit(1).execute()
+        supabase.table("listings").select("*").limit(1).execute()
         print("✅ RLS query successful - data accessible")
 
         # Try to check policies (this might not work with service role)

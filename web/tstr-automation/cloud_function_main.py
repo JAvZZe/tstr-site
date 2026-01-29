@@ -239,7 +239,7 @@ def run_cleanup(request):
         cleanup.validate_listings(listings)
         
         # Generate reports
-        timestamp = cleanup.generate_report()
+        cleanup.generate_report()
         
         # Get mode from request (default: move to research)
         request_json = request.get_json(silent=True)

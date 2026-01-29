@@ -1,0 +1,7 @@
+dist/
+venv/
+.venv/
+node_modules/
+.astro/
+**/shared/debugger.js
+**/dist/

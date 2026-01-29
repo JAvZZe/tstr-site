@@ -46,7 +46,6 @@ def main():
         print("❌ Category not found")
         return
     
-    cat_id = categories[0]['id']
     
     # Get new hydrogen standards
     new_standards = get_data("standards", {

@@ -270,15 +270,6 @@ EXTRACTED_DATA = {
         "confidence": "high",
         "notes": "3200 South 166th Street, ICP and OES analysis"
     },
-    "12A618F6-8114-4994-A522-26D9F1AA0986": {
-        "cert": "0363.01",
-        "org": "Not Found",
-        "city": "",
-        "state": "",
-        "scope": "Adhesives Plastics",
-        "confidence": "low",
-        "notes": "Adhesives, sealants, plastics, polymers testing"
-    },
     "4F2D1698-48D6-4E25-868E-7A98D7894A7B": {
         "cert": "2927.01",
         "org": "Eurofins Food Chemistry Testing Des Moines",
@@ -629,7 +620,6 @@ def create_final_report():
     low_conf = sum(1 for d in EXTRACTED_DATA.values() if d.get("confidence") == "low")
 
     found = sum(1 for d in EXTRACTED_DATA.values() if d.get("org") not in ["Not Found", ""])
-    not_found = total - found
 
     report = f"""# A2LA LABORATORY DATA EXTRACTION - FINAL REPORT
 

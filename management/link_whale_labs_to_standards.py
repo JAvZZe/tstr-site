@@ -112,7 +112,7 @@ def main():
     
     # Get all listings
     listings = get_data("listings", {"status": "eq.active"})
-    listing_map = {l['business_name']: l['id'] for l in listings}
+    listing_map = {listing['business_name']: listing['id'] for listing in listings}
     
     total_added = 0
     

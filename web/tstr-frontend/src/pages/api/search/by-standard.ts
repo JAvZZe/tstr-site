@@ -28,7 +28,7 @@ export const GET: APIRoute = async ({ request }) => {
     if (specsParam) {
       try {
         specs = JSON.parse(specsParam);
-      } catch (e) {
+      } catch (_e) {
         return new Response(
           JSON.stringify({
             error: 'Invalid specs parameter: must be valid JSON',

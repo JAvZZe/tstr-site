@@ -28,7 +28,7 @@ if result.data:
             print(f'    Desc: {desc}...\n')
 
         # Check custom fields
-        listing_ids = [l['id'] for l in listings.data]
+        listing_ids = [listing['id'] for listing in listings.data]
         custom_fields = supabase.from_('listing_custom_fields').select('*').in_('listing_id', listing_ids).execute()
         print(f'Custom field values in DB: {len(custom_fields.data)}')
 

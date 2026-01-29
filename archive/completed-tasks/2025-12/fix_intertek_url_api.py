@@ -67,7 +67,7 @@ def fix_intertek_url():
                 )
 
                 with urllib.request.urlopen(req) as response:
-                    result = json.loads(response.read().decode())
+                    json.loads(response.read().decode())
                     print(f"✅ Updated ID {entry['id']} to https://www.intertek.com/")
                     updated_count += 1
 

@@ -24,14 +24,14 @@ def run_migration():
         raise ValueError("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY environment variables")
 
     logging.info(f"Connecting to Supabase: {supabase_url}")
-    supabase = create_client(supabase_url, supabase_key)
+    create_client(supabase_url, supabase_key)
 
     # Read the migration SQL file
     migration_file = '/home/al/tstr-site-working/web/tstr-automation/migrations/add_niche_custom_fields.sql'
 
     logging.info(f"Reading migration file: {migration_file}")
     with open(migration_file, 'r') as f:
-        sql_content = f.read()
+        f.read()
 
     # Execute the SQL via RPC or direct query
     # Note: Supabase Python client doesn't have direct SQL execution
@@ -42,8 +42,7 @@ def run_migration():
     # Connection string format: postgresql://postgres:[password]@db.[project-ref].supabase.co:5432/postgres
 
     # For Supabase, the DB URL is typically constructed as:
-    db_url = supabase_url.replace('https://', '')
-    project_ref = db_url.split('.')[0]
+    supabase_url.replace('https://', '')
 
     # Note: This requires the database password, not the API key
     # Let's try using the service role key for now and see if it works

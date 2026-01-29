@@ -102,7 +102,7 @@ def apply_migration():
         try:
             conn.rollback()
             print("✓ Rollback successful")
-        except:
+        except Exception:
             print("✗ Rollback failed")
         
         print("\nPlease apply migration manually:")

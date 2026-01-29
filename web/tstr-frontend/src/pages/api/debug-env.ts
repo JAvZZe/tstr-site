@@ -1,10 +1,10 @@
 import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = async ({ locals }) => {
-  const env = (locals as any).runtime?.env;
-  
+  const env = (locals as { runtime?: { env?: Record<string, string> } }).runtime?.env;
+
   const debug = {
-    hasRuntime: !!(locals as any).runtime,
+    hasRuntime: !!(locals as { runtime?: unknown }).runtime,
     hasEnv: !!env,
     envKeys: env ? Object.keys(env) : [],
     importMetaEnvKeys: Object.keys(import.meta.env),

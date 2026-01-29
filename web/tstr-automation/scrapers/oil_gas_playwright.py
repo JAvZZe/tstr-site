@@ -195,7 +195,7 @@ def scrape_contract_laboratory(dry_run=False, limit=None):
                     continue
 
                 # Insert listing
-                result = supabase.table("listings").insert(listing).execute()
+                supabase.table("listings").insert(listing).execute()
                 saved_count += 1
                 logger.info(f"Saved: {listing['business_name']}")
 

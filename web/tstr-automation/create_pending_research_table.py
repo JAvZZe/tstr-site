@@ -15,11 +15,11 @@ def create_table():
         supabase_url = os.getenv("SUPABASE_URL")
         supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
         
-        client = create_client(supabase_url, supabase_key)
+        create_client(supabase_url, supabase_key)
         
         # Read SQL file
         with open('create_pending_research_table.sql', 'r') as f:
-            sql = f.read()
+            f.read()
         
         # Execute SQL (note: Supabase Python client doesn't directly support raw SQL execution)
         # We'll use the REST API instead

@@ -26,8 +26,7 @@ function createContactFormEmail(
     email: string,
     company: string,
     inquiryType: string,
-    message: string,
-    toEmail: string
+    message: string
 ): EmailTemplate {
     return {
         subject: `[TSTR Contact] ${TYPE_LABELS[inquiryType] || 'Inquiry'} from ${name}`,
@@ -72,7 +71,7 @@ export const POST: APIRoute = async ({ request }) => {
         const toEmail = EMAIL_ROUTING[inquiryType] || 'admin@tstr.directory';
 
         // Create email template using the shared pattern
-        const emailTemplate = createContactFormEmail(name, email, company, inquiryType, message, toEmail);
+        const emailTemplate = createContactFormEmail(name, email, company, inquiryType, message);
 
         // Send email using the shared sendEmail function (which has fallback API key)
         const result = await sendEmail(toEmail, emailTemplate);
@@ -90,9 +89,10 @@ export const POST: APIRoute = async ({ request }) => {
             status: 200,
             headers: { 'Content-Type': 'application/json' }
         });
-    } catch (err: any) {
+    } catch (err: unknown) {
+        const errorMsg = err instanceof Error ? err.message : String(err)
         console.error('Contact form error:', err);
-        return new Response(JSON.stringify({ error: err?.message || 'Server error' }), {
+        return new Response(JSON.stringify({ error: errorMsg || 'Server error' }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' }
         });
