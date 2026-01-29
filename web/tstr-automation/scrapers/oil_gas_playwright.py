@@ -169,7 +169,7 @@ def scrape_contract_laboratory(dry_run=False, limit=None):
         browser.close()
 
     logger.info(f"\n{'=' * 70}")
-    logger.info(f"SCRAPING COMPLETE")
+    logger.info("SCRAPING COMPLETE")
     logger.info(f"Total listings scraped: {len(listings)}")
     logger.info(f"{'=' * 70}\n")
 

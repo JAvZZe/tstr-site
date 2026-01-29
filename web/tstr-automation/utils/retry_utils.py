@@ -1,6 +1,6 @@
 import time
 import logging
-from typing import Callable, Any, Optional
+from typing import Callable, Any
 
 def retry_with_backoff(
     func: Callable,

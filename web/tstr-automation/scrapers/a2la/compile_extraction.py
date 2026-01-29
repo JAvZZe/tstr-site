@@ -6,7 +6,6 @@ Combines Gemini results with Claude web search findings
 
 import json
 from pathlib import Path
-from typing import Dict, List, Optional
 
 # Define extracted data from web searches
 EXTRACTED_DATA = {

@@ -20,7 +20,7 @@ if result.data:
     print(f'\nTotal listings: {len(listings.data)}')
 
     if listings.data:
-        print(f'\nFirst 3 listings:')
+        print('\nFirst 3 listings:')
         for listing in listings.data[:3]:
             print(f'  - {listing["business_name"][:60]}')
             print(f'    ID: {listing["id"][:8]}...')
@@ -33,7 +33,7 @@ if result.data:
         print(f'Custom field values in DB: {len(custom_fields.data)}')
 
         if custom_fields.data:
-            print(f'\nSample custom fields:')
+            print('\nSample custom fields:')
             for cf in custom_fields.data[:3]:
                 print(f'  - Listing: {cf["listing_id"][:8]}...')
                 print(f'    Field: {cf["custom_field_id"][:8]}...')

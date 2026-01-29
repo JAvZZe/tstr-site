@@ -184,10 +184,10 @@ def main():
         )
         
         if not success:
-            print(f"  ❌ Failed to add listing")
+            print("  ❌ Failed to add listing")
             continue
         
-        print(f"  ✅ Listing added")
+        print("  ✅ Listing added")
         added_labs += 1
         
         # Add capabilities for each standard
@@ -205,7 +205,7 @@ def main():
         
         print()
     
-    print(f"\n📊 Summary:")
+    print("\n📊 Summary:")
     print(f"  • Labs added: {added_labs}/{len(labs)}")
     print(f"  • Capabilities added: {added_caps}")
     print(f"  • Average capabilities per lab: {added_caps/added_labs if added_labs > 0 else 0:.1f}")

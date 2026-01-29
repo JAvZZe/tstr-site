@@ -6,8 +6,6 @@ Runs continuously to scrape new listings and check for updates
 import schedule
 import time
 from scraper import TestingLabScraper
-import subprocess
-import os
 
 def run_scraping_job():
     """

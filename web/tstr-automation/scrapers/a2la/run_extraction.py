@@ -6,7 +6,7 @@ This script coordinates with Claude's WebSearch tool to extract all 64 PIDs
 
 import json
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict
 
 # Load extraction plan
 PLAN_FILE = "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/extraction_plan_64.json"
@@ -41,9 +41,9 @@ def generate_search_instructions() -> str:
     instructions = []
     instructions.append("# A2LA LABORATORY EXTRACTION - SEARCH INSTRUCTIONS")
     instructions.append("\n## Task: Extract data for 64 PIDs using web search")
-    instructions.append(f"\nGemini completed: 8 PIDs (use these as baseline)")
-    instructions.append(f"Need to complete: 56 PIDs")
-    instructions.append(f"Gemini failures to retry: 2 PIDs\n")
+    instructions.append("\nGemini completed: 8 PIDs (use these as baseline)")
+    instructions.append("Need to complete: 56 PIDs")
+    instructions.append("Gemini failures to retry: 2 PIDs\n")
 
     # Group by status
     gemini_success = []
@@ -75,7 +75,7 @@ def generate_search_instructions() -> str:
     for i, (pid, cert, scope) in enumerate(gemini_failure, 1):
         instructions.append(f"{i}. PID: {pid}")
         instructions.append(f"   Cert: {cert} | Scope: {scope}")
-        instructions.append(f"   Search queries:")
+        instructions.append("   Search queries:")
         instructions.append(f"   a) site:customer.a2la.org \"{cert}\"")
         instructions.append(f"   b) site:a2la.org \"{cert}\"")
         instructions.append(f"   c) \"A2LA {cert}\" laboratory")

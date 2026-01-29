@@ -138,9 +138,9 @@ def main():
         
         print()
     
-    print(f"\n📊 Summary:")
+    print("\n📊 Summary:")
     print(f"  • Capabilities added: {total_added}")
-    print(f"  • Whale labs fully linked\n")
+    print("  • Whale labs fully linked\n")
 
 if __name__ == "__main__":
     main()

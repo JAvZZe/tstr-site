@@ -238,7 +238,7 @@ def main():
         if not success:
             continue
         
-        print(f"  ✅ Listing added")
+        print("  ✅ Listing added")
         added_labs += 1
         
         # Add capabilities
@@ -250,10 +250,10 @@ def main():
         
         print()
     
-    print(f"\n📊 Summary:")
+    print("\n📊 Summary:")
     print(f"  • Labs added: {added_labs}/6")
     print(f"  • Capabilities: {added_caps}")
-    print(f"\n🎯 Whale labs deployed!\n")
+    print("\n🎯 Whale labs deployed!\n")
 
 if __name__ == "__main__":
     main()

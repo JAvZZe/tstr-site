@@ -4,7 +4,6 @@ Apply standards and capabilities migration to Supabase
 Uses service role key to execute SQL directly
 """
 
-import requests
 import sys
 
 # Supabase project details

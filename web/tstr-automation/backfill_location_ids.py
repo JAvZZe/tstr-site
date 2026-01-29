@@ -9,7 +9,7 @@ import sys
 from postal.parser import parse_address
 from supabase import create_client
 import logging
-from typing import Optional, Dict, Tuple
+from typing import Optional, Dict
 
 # Setup logging
 logging.basicConfig(

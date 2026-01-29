@@ -4,10 +4,6 @@ Apply RLS policy for public form submissions
 Directly executes SQL against Supabase database
 """
 
-import os
-import json
-import base64
-from pathlib import Path
 
 # Supabase credentials
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"

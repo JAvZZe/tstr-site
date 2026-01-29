@@ -3,7 +3,6 @@
 Fix Intertek URL using Supabase REST API
 """
 
-import os
 import json
 import urllib.request
 import urllib.parse

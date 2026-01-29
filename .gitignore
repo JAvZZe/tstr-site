@@ -56,3 +56,4 @@ checkpoint.sh
 resume.sh
 handoff.sh
 bootstrap.sh
+.venv/

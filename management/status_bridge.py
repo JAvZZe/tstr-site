@@ -16,7 +16,6 @@ Usage:
     bridge.log_session("AgentName", "Action taken", "Result achieved")
 """
 
-import os
 import sys
 import datetime
 import re
@@ -134,7 +133,7 @@ class StatusBridge:
                 content += f"\n{history_marker}{entry}"
 
             self.session_file.write_text(content)
-            print(f"✅ Logged session entry to .ai-session.md")
+            print("✅ Logged session entry to .ai-session.md")
             return True
 
         except Exception as e:

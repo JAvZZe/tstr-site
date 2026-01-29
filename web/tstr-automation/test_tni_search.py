@@ -124,7 +124,7 @@ try:
     # Look for Telerik RadGrid
     radgrid = results_soup.find('div', class_=re.compile(r'RadGrid'))
     if radgrid:
-        print(f"\n   Found RadGrid element")
+        print("\n   Found RadGrid element")
 
     # Check for "no results" message
     no_results = results_soup.find(text=lambda x: x and 'no' in x.lower() and 'found' in x.lower())

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import os
-import sys
 import datetime
 import re
 import argparse
@@ -39,7 +38,7 @@ def update_status_header(agent_name):
     with open(STATUS_FILE, 'w') as f:
         f.write(content)
     
-    print(f"✅ Updated header in PROJECT_STATUS.md")
+    print("✅ Updated header in PROJECT_STATUS.md")
     return True
 
 def log_session(agent_name, action, result):
@@ -76,7 +75,7 @@ def log_session(agent_name, action, result):
     with open(SESSION_FILE, 'w') as f:
         f.writelines(lines)
 
-    print(f"✅ Logged session entry to .ai-session.md")
+    print("✅ Logged session entry to .ai-session.md")
     return True
 
 def main():

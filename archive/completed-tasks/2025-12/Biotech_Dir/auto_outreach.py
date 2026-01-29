@@ -6,9 +6,8 @@ Uses LLM to draft emails based on provider data and email templates.
 
 import sqlite3
 import os
-import json
 from datetime import datetime
-from typing import List, Dict, Optional
+from typing import List, Dict
 
 # Configuration
 DB_PATH = os.path.expanduser("~/memory/db/tstr.db")
@@ -339,7 +338,7 @@ def generate_batch(limit: int = 5, sequence: int = 1):
         
         # Check if email exists
         if not lead.get('email'):
-            print(f"   ⚠️  No email address on file. Skipping.")
+            print("   ⚠️  No email address on file. Skipping.")
             print(f"   💡 Add contact: python3 crm_utils.py add-contact {lead['id']} <email>")
             continue
         
@@ -364,10 +363,10 @@ def generate_batch(limit: int = 5, sequence: int = 1):
     print(f"\n{'='*60}")
     print(f"✅ Generated {drafts_created} email drafts")
     print(f"📁 Drafts location: {DRAFT_DIR}")
-    print(f"\nNext steps:")
+    print("\nNext steps:")
     print(f"1. Review drafts: ls -la {DRAFT_DIR}")
-    print(f"2. Customize as needed")
-    print(f"3. Send via email client or automation tool")
+    print("2. Customize as needed")
+    print("3. Send via email client or automation tool")
     print(f"4. Log sent emails: python3 crm_utils.py log <provider_id> {sequence}")
     print(f"{'='*60}\n")
 

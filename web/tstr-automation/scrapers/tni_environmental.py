@@ -10,7 +10,6 @@ import logging
 import time
 from typing import Dict, List, Optional
 from bs4 import BeautifulSoup
-import requests
 
 import sys
 import os
@@ -374,7 +373,7 @@ class TNIEnvironmentalScraper(BaseNicheScraper):
 
             # Build description from available data
             desc_parts = []
-            desc_parts.append(f"NELAP accredited environmental laboratory")
+            desc_parts.append("NELAP accredited environmental laboratory")
             if lab_data.get("accreditation_body"):
                 desc_parts.append(f"accredited by {lab_data['accreditation_body']}")
             if lab_data.get("tni_code"):

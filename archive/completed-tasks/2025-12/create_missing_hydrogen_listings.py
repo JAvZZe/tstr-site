@@ -171,7 +171,7 @@ def main():
         except Exception as e:
             print(f"❌ Error creating {name}: {e}")
 
-    print(f"\nSummary:")
+    print("\nSummary:")
     print(f"Created: {created}")
     print(f"Skipped: {skipped}")
     print(f"Total processed: {len(csv_data)}")

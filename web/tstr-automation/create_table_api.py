@@ -3,7 +3,6 @@ Create table using Supabase Management API
 """
 
 import os
-import requests
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -73,7 +72,7 @@ CREATE POLICY "Enable all for authenticated users" ON pending_research
     print(sql)
     print("="*70)
     
-    print(f"\n🌐 SQL Editor URL:")
+    print("\n🌐 SQL Editor URL:")
     print(f"https://supabase.com/dashboard/project/{project_ref}/sql")
     
     print("\n🔧 Or use Supabase CLI:")

@@ -10,8 +10,6 @@ from bs4 import BeautifulSoup
 import csv
 import time
 import json
-from urllib.parse import urljoin, urlparse
-import re
 import os
 import logging
 from dotenv import load_dotenv
@@ -546,7 +544,7 @@ def main():
     print("="*70)
     print(f"New Listings Found: {len(scraper.results)} (verified URLs only)")
     print(f"Duplicates Skipped: {len(scraper.existing_listings)}")
-    print(f"\nURL Validation Statistics:")
+    print("\nURL Validation Statistics:")
     print(f"  • Total URLs Validated: {validation_stats['total_validated']}")
     print(f"  • Valid URLs: {validation_stats['valid']}")
     print(f"  • Invalid URLs: {validation_stats['invalid']}")

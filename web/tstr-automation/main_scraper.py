@@ -4,14 +4,11 @@ tstr.directory Main Scraper Orchestrator
 Combines Google Maps API scraping with niche-specific scrapers
 """
 
-import os
-import sys
 import logging
 from utils.logging_utils import json_info, json_error
 from utils.retry_utils import retry_with_backoff
-import time
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict
 
 # Import existing scrapers
 from dual_scraper import DualPurposeScraper
@@ -20,7 +17,6 @@ from scrapers.a2la_materials import scrape_a2la_materials
 from scrapers.tni_environmental import scrape_tni_environmental
 
 # Setup structured logging
-from utils.logging_utils import json_info, json_error
 logger = logging.getLogger(__name__)
 # Use json_info/json_error for structured logs
 

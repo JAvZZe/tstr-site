@@ -118,7 +118,7 @@ def main():
             print(f"  ❌ {std['code']} (failed)")
             failed += 1
     
-    print(f"\n📊 Summary:")
+    print("\n📊 Summary:")
     print(f"  • Added: {added}")
     print(f"  • Failed: {failed}")
     print(f"  • Total hydrogen standards: {added + 5}")  # 5 existing

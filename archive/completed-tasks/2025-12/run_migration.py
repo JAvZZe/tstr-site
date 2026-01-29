@@ -3,7 +3,6 @@
 Execute source tracking migration
 """
 
-import os
 from supabase import create_client
 
 # Load environment

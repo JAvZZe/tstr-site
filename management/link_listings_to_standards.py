@@ -4,7 +4,6 @@ Link listings to appropriate standards based on their category
 """
 
 import requests
-import json
 from datetime import datetime
 
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
@@ -175,7 +174,7 @@ def main():
                     print(f"     ✅ {gen_std['code']} (general)")
                     total_added += 1
     
-    print(f"\n\n📊 Summary:")
+    print("\n\n📊 Summary:")
     print(f"  • Total capabilities added: {total_added}")
     print(f"  • Listings updated: {sum(len(cat_listings[:3]) for cat_listings in listings_by_cat.values())}")
     print("\n✅ Linking complete!\n")

@@ -54,6 +54,6 @@ try:
     # We can't easily check columns via API without selecting.
     # We'll try to select 'paypal_subscription_id' from user_profiles.
     response = supabase.table("user_profiles").select("paypal_subscription_id").limit(1).execute()
-    print(f"✅ 'paypal_subscription_id' column exists in user_profiles.")
+    print("✅ 'paypal_subscription_id' column exists in user_profiles.")
 except Exception as e:
     print(f"❌ Error checking columns in 'user_profiles': {e}")

@@ -67,7 +67,7 @@ def fix_intertek_url():
         # Fetch and display results
         results = cursor.fetchall()
 
-        print(f"\n✅ Successfully updated Intertek URL!")
+        print("\n✅ Successfully updated Intertek URL!")
         print(f"Found {len(results)} Intertek records:")
 
         for row in results:

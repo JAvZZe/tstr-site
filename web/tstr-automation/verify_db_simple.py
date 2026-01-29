@@ -1,7 +1,6 @@
 import os
 from supabase import create_client, Client
 from dotenv import load_dotenv
-import json
 
 load_dotenv()
 
@@ -39,7 +38,7 @@ for i, listing in enumerate(samples.data, 1):
 # Get custom fields for this listing
     lcf = supabase.table('listing_custom_fields').select('*, custom_fields(field_name)').eq('listing_id', listing['id']).execute()
     if lcf.data:
-        print(f"    Custom Fields:")
+        print("    Custom Fields:")
         for field in lcf.data:
             print(f"      - {field['custom_fields']['field_name']}: {field.get('field_value', 'N/A')}")
 
@@ -78,7 +77,7 @@ cities = [loc for loc in locations.data if loc['level'] == 'city']
 print(f"  - Regions (States): {len(regions)}")
 print(f"  - Cities: {len(cities)}")
 
-print(f"\nRecently Created Locations:")
+print("\nRecently Created Locations:")
 sorted_locs = sorted(locations.data, key=lambda x: x.get('created_at', ''), reverse=True)[:10]
 for loc in sorted_locs:
     print(f"  - {loc['name']} ({loc['level']}) - Created: {loc.get('created_at', 'N/A')[:10]}")

@@ -4,7 +4,6 @@ Test Supabase connections and configurations
 """
 
 import os
-import sys
 import subprocess
 
 def run_command(cmd, description):

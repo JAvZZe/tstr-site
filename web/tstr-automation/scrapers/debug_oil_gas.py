@@ -66,7 +66,7 @@ def debug_contract_laboratory():
             print("="*70)
             card = cards1[0]
 
-            print(f"\nCard HTML structure:")
+            print("\nCard HTML structure:")
             print(card.prettify()[:1000])
 
             print("\n\nExtracting data from first card:")

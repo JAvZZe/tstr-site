@@ -215,11 +215,11 @@ def main():
         success, listing_id = add_listing(lab)
         
         if not success:
-            print(f"  ❌ Failed to add listing")
+            print("  ❌ Failed to add listing")
             failed_labs.append(lab['business_name'])
             continue
         
-        print(f"  ✅ Listing added")
+        print("  ✅ Listing added")
         added_labs += 1
         
         # Add capabilities for each standard
@@ -237,7 +237,7 @@ def main():
         
         print()
     
-    print(f"\n📊 Final Summary:")
+    print("\n📊 Final Summary:")
     print(f"  • Labs added: {added_labs}/{len(labs)}")
     print(f"  • Capabilities added: {added_caps}")
     print(f"  • Average capabilities per lab: {added_caps/added_labs if added_labs > 0 else 0:.1f}")

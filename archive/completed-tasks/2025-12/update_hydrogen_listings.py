@@ -5,7 +5,6 @@ Avoids duplicates by matching on company name and website
 """
 
 import csv
-import json
 import requests
 import re
 from typing import Dict, Optional, List
@@ -222,9 +221,9 @@ def main():
             if update_listing(matching_listing["id"], csv_company, matching_listing):
                 updates_made += 1
         else:
-            print(f"  No match found - would need to create new listing")
+            print("  No match found - would need to create new listing")
 
-    print(f"\nSummary:")
+    print("\nSummary:")
     print(f"- Matches found: {matches_found}")
     print(f"- Updates made: {updates_made}")
     print(f"- New listings needed: {len(csv_data) - matches_found}")

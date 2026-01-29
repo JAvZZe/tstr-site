@@ -13,7 +13,7 @@ def main():
     
     print("🔍 Checking Supabase Status...")
     print(f"URL: {supabase_url}")
-    print(f"Project: haimjeaetrsaauitrhfy")
+    print("Project: haimjeaetrsaauitrhfy")
     print("-" * 40)
     
     # Test basic API connectivity
