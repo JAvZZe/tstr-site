@@ -1,10 +1,11 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-29 18:55 UTC
+> **Last Updated**: 2026-01-30 12:50 UTC
 > **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
+> **Maintenance**: See `docs/MAINTENANCE_LOG.md` for security/linting updates.
 
 ---
 
@@ -76,7 +77,7 @@
 
 ## 📈 CURRENT STATUS DASHBOARD
 
-```
+```text
 ┌─────────────────────────────────────────────┐
 │  COMPONENT STATUS                           │
 ├─────────────────────────────────────────────┤
@@ -500,9 +501,6 @@ Last Scrape:      November 10, 2025 02:31 UTC
   - Updated browse.astro, privacy.astro, terms.astro to use centralized contact system
   - Updated category/region pages to use sales email for concierge search
   - Updated documentation to reflect new email configuration
-
-### **v2.4.2** - January 1, 2026
-
 - 🛠️ **JSON-LD Parsing Error Fixed**: Resolved Google Search Console error for missing '}' or object member name
   - Changed from double curly braces {{ to Astro's set:html directive with JSON.stringify() in index.astro
   - Fixes schema.org markup validation and improves SEO compliance
