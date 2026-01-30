@@ -21,9 +21,9 @@ jobs:
         run: npm ci
 
       - name: Run linting
-        run: npm run lint:js
-        # Also run prettier check
-        run: npm run lint:css
+        run: |
+          npm run lint:js
+          npm run lint:css
 
       - name: Run tests
         run: npm test
