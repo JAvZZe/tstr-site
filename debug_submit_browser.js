@@ -8,7 +8,7 @@ async function debugSubmitForm() {
   // Test 1: Check Supabase connection
   console.log('1. Testing Supabase connection...');
   try {
-    const { data, error } = await window.supabase.from('categories').select('count').limit(1);
+    const { error } = await window.supabase.from('categories').select('count').limit(1);
     if (error) {
       console.error('❌ Supabase connection failed:', error);
       return;

@@ -5,9 +5,10 @@
  * Can be run standalone to test batches of URLs.
  */
 
-const axios = require('axios');
 /* eslint-disable @typescript-eslint/no-require-imports */
-const { URL } = require('url');
+const axios = require('axios');
+// const { URL } = require('url');
+
 const fs = require('fs');
 
 // Validation function (matches backend implementation)
@@ -29,7 +30,7 @@ async function validateUrl(url, timeout = 5000) {
       finalUrl: response.request.res?.responseUrl || url,
       redirected: response.request.res?.responseUrl !== url
     };
-  } catch (_error) {
+  } catch {
     // Try GET request if HEAD fails (some servers block HEAD requests)
     try {
       const response = await axios.get(url, {
