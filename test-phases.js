@@ -4,7 +4,8 @@
 // This tests the API endpoints without requiring authentication
 
 /* eslint-disable @typescript-eslint/no-require-imports */
-const { test } = require('@playwright/test');
+// const { test } = require('@playwright/test'); // Unused
+const http = require('http');
 
 const BASE_URL = 'http://localhost:4321';
 
@@ -34,7 +35,7 @@ function testEndpoint(path, method = 'GET', data = null) {
         try {
           const result = JSON.parse(body);
           resolve({ status: res.statusCode, data: result });
-        } catch (e) {
+        } catch {
           resolve({ status: res.statusCode, data: body });
         }
       });

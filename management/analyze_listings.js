@@ -96,7 +96,7 @@ async function main() {
   });
 
   // Check existing capabilities
-  const { data: capabilities, error: capError } = await supabase
+  const { data: capabilities } = await supabase
     .from('listing_capabilities')
     .select('count');
 
