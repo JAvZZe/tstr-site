@@ -1,0 +1,170 @@
+---
+export const prerender = false;
+
+import Layout from '../../layouts/AdminLayout.astro';
+import { supabase } from '../../lib/supabase';
+
+// Auth Check & Role Check
+const { data: { session } } = await supabase.auth.getSession();
+const userRole = session?.user?.user_metadata?.role;
+
+if (!session || (userRole !== 'staff' && userRole !== 'super_admin')) {
+  return Astro.redirect('/admin/login');
+}
+
+// Super Admin Only Check
+if (userRole !== 'super_admin') {
+  return Astro.redirect('/admin/dashboard?error=unauthorized');
+}
+
+// Fetch Staff List
+// Note: Client-side fetching is often better for admin lists to use fresh data
+// unless we use the Service Role to list users here.
+// Since supabase-js standard client can't list users, we need to use a server-side API or Edge Function.
+// We'll create a simple API endpoint for this: /api/admin/users
+---
+
+<Layout title="Team Management">
+  <div class="mb-8 flex justify-between items-center">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Staff Management</h1>
+      <p class="text-gray-600 mt-2">Manage access rights for TSTR Administration.</p>
+    </div>
+    <button onclick="document.getElementById('add-staff-modal').showModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+      </svg>
+      Add Team Member
+    </button>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="staff-table-body" class="bg-white divide-y divide-gray-200">
+        <!-- Loaded via JS -->
+        <tr>
+            <td colspan="5" class="px-6 py-12 text-center text-gray-500">Loading team members...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Add Staff Modal -->
+  <dialog id="add-staff-modal" class="p-0 rounded-lg shadow-xl backdrop:bg-gray-900/50 w-full max-w-md">
+    <div class="p-6">
+      <h3 class="text-lg font-bold text-gray-900 mb-4">Add New Team Member</h3>
+      <form id="add-staff-form" class="space-y-4">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+            <input type="email" name="email" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 border p-2">
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input type="password" name="password" required minlength="8" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 border p-2">
+            <p class="text-xs text-gray-500 mt-1">Min 8 chars, mix of letters & numbers recommended.</p>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+            <select name="role" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 border p-2">
+                <option value="staff">Staff (Standard Access)</option>
+                <option value="super_admin">Super Admin (Can Manage Team)</option>
+            </select>
+        </div>
+        
+        <div class="mt-6 flex justify-end gap-3">
+            <button type="button" onclick="document.getElementById('add-staff-modal').close()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">Cancel</button>
+            <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md">Create Account</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <script>
+    async function loadStaff() {
+        try {
+            const res = await fetch('/api/admin/users');
+            if (!res.ok) throw new Error('Failed to fetch data');
+            const data = await res.json();
+            
+            const tbody = document.getElementById('staff-table-body');
+            
+            if (data.users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No staff found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.users.map(u => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${u.email}</div>
+                        <div class="text-xs text-gray-500">ID: ${u.id.substring(0,8)}...</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${u.user_metadata?.role === 'super_admin' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800'}">
+                            ${u.user_metadata?.role === 'super_admin' ? 'Super Admin' : 'Staff'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${u.email_confirmed_at ? 'Active' : 'Pending'}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${new Date(u.created_at).toLocaleDateString()}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onclick="alert('Delete functionality coming soon')" class="text-red-600 hover:text-red-900">Remove</button>
+                    </td>
+                </tr>
+            `).join('');
+
+        } catch (e) {
+            console.error(e);
+            document.getElementById('staff-table-body').innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">Error loading users.</td></tr>';
+        }
+    }
+
+    loadStaff();
+
+    document.getElementById('add-staff-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+        const submitBtn = form.querySelector('button[type="submit"]');
+        
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Creating...';
+
+        try {
+            const res = await fetch('/api/admin/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(Object.fromEntries(formData))
+            });
+            
+            const result = await res.json();
+            
+            if (!res.ok) throw new Error(result.error || 'Failed to create user');
+            
+            alert(`User ${result.user.email} created successfully!`);
+            document.getElementById('add-staff-modal').close();
+            form.reset();
+            loadStaff();
+            
+        } catch (err) {
+            alert('Error: ' + err.message);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }
+    });
+  </script>
+</Layout>

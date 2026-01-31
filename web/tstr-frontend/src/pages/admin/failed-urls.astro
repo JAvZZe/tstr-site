@@ -6,7 +6,10 @@ export const prerender = false;
 
 // Auth Check
 const { data: { session } } = await supabase.auth.getSession();
-if (!session || !session.user.email?.endsWith('@tstr.directory')) {
+const userRole = session?.user?.user_metadata?.role;
+const isStaff = userRole === 'staff' || userRole === 'super_admin';
+
+if (!session || !isStaff) {
   return Astro.redirect('/admin/login');
 }
 
