@@ -209,7 +209,8 @@ import Footer from '../../components/Footer.astro'
     async function checkSession() {
       const { data: { session } } = await supabaseBrowser.auth.getSession()
       if (session) {
-        if (session.user.email?.endsWith('@tstr.directory')) {
+        const role = session.user?.user_metadata?.role;
+        if (role === 'staff' || role === 'super_admin') {
           window.location.href = '/admin/dashboard'
         } else {
              // If logged in as customer, verify if we should logout or show error
@@ -230,10 +231,12 @@ import Footer from '../../components/Footer.astro'
       const email = document.getElementById('email').value
       const password = document.getElementById('password').value
 
+      /* Domain check removed - validation happens on signIn result via RBAC metadata
       if (!email.endsWith('@tstr.directory')) {
         showMessage('Access restricted to TSTR staff only.', 'error')
         return
       }
+      */
 
       submitBtn.disabled = true
       submitBtn.textContent = 'Authenticating...'
@@ -252,10 +255,18 @@ import Footer from '../../components/Footer.astro'
         }
 
         if (data.user) {
-            showMessage('Access granted. Redirecting...', 'success')
-            setTimeout(() => {
-              window.location.href = '/admin/dashboard'
-            }, 800)
+            const role = data.user.user_metadata?.role;
+            if (role === 'staff' || role === 'super_admin') {
+                showMessage('Access granted. Redirecting...', 'success')
+                setTimeout(() => {
+                  window.location.href = '/admin/dashboard'
+                }, 800)
+            } else {
+                showMessage('Access Denied: You do not have staff permissions.', 'error')
+                await supabaseBrowser.auth.signOut()
+                submitBtn.disabled = false
+                submitBtn.textContent = 'Authenticate'
+            }
         }
 
       } catch (err) {
