@@ -4,6 +4,12 @@ import { supabase } from '../../lib/supabase'
 // Force SSR for dynamic data
 export const prerender = false;
 
+// Auth Check
+const { data: { session } } = await supabase.auth.getSession();
+if (!session || !session.user.email?.endsWith('@tstr.directory')) {
+  return Astro.redirect('/login');
+}
+
 // Fetch all claims
 const { data: claims, error: claimsError } = await supabase
   .from('claims')
@@ -93,14 +99,12 @@ const title = 'Claims Management'
                           <button
                             class="text-green-600 hover:text-green-900 approve-btn"
                             data-id={claim.id}
-                            onclick="approveClaim(this)"
                           >
                             Approve
                           </button>
                           <button
                             class="text-red-600 hover:text-red-900 reject-btn"
                             data-id={claim.id}
-                            onclick="rejectClaim(this)"
                           >
                             Reject
                           </button>
@@ -129,19 +133,19 @@ const title = 'Claims Management'
     </div>
 
     <script>
-      async function approveClaim(button) {
-        const claimId = button.getAttribute('data-id');
-        if (confirm('Are you sure you want to approve this claim?')) {
+      async function updateClaimStatus(claimId, status) {
+        if (confirm(`Are you sure you want to ${status} this claim?`)) {
           try {
             const response = await fetch('/api/claim-status', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ id: claimId, status: 'approved' })
+              body: JSON.stringify({ id: claimId, status: status })
             });
             if (response.ok) {
               location.reload();
             } else {
-              alert('Error updating claim status');
+              const error = await response.json();
+              alert('Error updating claim status: ' + (error.error || response.statusText));
             }
           } catch (error) {
             alert('Error: ' + error.message);
@@ -149,25 +153,22 @@ const title = 'Claims Management'
         }
       }
 
-      async function rejectClaim(button) {
-        const claimId = button.getAttribute('data-id');
-        if (confirm('Are you sure you want to reject this claim?')) {
-          try {
-            const response = await fetch('/api/claim-status', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ id: claimId, status: 'rejected' })
-            });
-            if (response.ok) {
-              location.reload();
-            } else {
-              alert('Error updating claim status');
-            }
-          } catch (error) {
-            alert('Error: ' + error.message);
-          }
-        }
-      }
+      // Bind dynamic listeners
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.approve-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            updateClaimStatus(id, 'approved');
+          });
+        });
+
+        document.querySelectorAll('.reject-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            updateClaimStatus(id, 'rejected');
+          });
+        });
+      });
     </script>
   </body>
 </html>

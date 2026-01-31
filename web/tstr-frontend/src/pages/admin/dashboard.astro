@@ -4,15 +4,27 @@ import { supabase } from '../../lib/supabase'
 // Force SSR for dynamic data
 export const prerender = false;
 
+// Auth Check
+const { data: { session } } = await supabase.auth.getSession();
+if (!session || !session.user.email?.endsWith('@tstr.directory')) {
+  return Astro.redirect('/login');
+}
+
 // Fetch dashboard data
 const { data: listings, error: listingsError } = await supabase
   .from('listings')
-  .select('id, name, created_at, updated_at, status, category:category_id(name, slug), source_script, script_location')
+  .select('id, business_name, created_at, updated_at, status, category:category_id(name, slug), source_script, script_location')
   .eq('status', 'active')
+
+const { data: pendingListings, error: pendingError } = await supabase
+  .from('listings')
+  .select('id, business_name, created_at, category:category_id(name)')
+  .eq('status', 'pending')
+  .order('created_at', { ascending: false })
 
 const { data: recentListings, error: recentError } = await supabase
   .from('listings')
-  .select('id, name, created_at, category:category_id(name)')
+  .select('id, business_name, created_at, category:category_id(name)')
   .eq('status', 'active')
   .order('created_at', { ascending: false })
   .limit(5)
@@ -46,6 +58,7 @@ const { data: categories, error: categoriesError } = await supabase
   .select('id, name, slug')
 
 const totalListings = listings?.length || 0
+const pendingCount = pendingListings?.length || 0
 const lastUpdate = listings?.[0]?.updated_at || 'Unknown'
 const recentClicks = clicks?.length || 0
 const pendingUrls = pendingResearch?.length || 0
@@ -194,20 +207,16 @@ const title = 'Scraper Dashboard'
           <h2 class="text-xl font-semibold text-gray-800 mb-4">Data Quality</h2>
           <div class="space-y-3">
             <div class="flex justify-between items-center">
-              <span class="text-gray-600">Total Listings:</span>
+              <span class="text-gray-600">Active Listings:</span>
               <span class="text-gray-900 font-semibold">{totalListings}</span>
             </div>
             <div class="flex justify-between items-center">
-              <span class="text-gray-600">Validation Rate:</span>
-              <span class="text-green-600 font-semibold">95%+</span>
+              <span class="text-gray-600">Pending Review:</span>
+              <span class="text-orange-600 font-bold">{pendingCount}</span>
             </div>
             <div class="flex justify-between items-center">
               <span class="text-gray-600">Invalid URLs:</span>
               <span class="text-red-600 font-semibold">{pendingUrls}</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Categories:</span>
-              <span class="text-gray-900">5 Active</span>
             </div>
           </div>
         </div>
@@ -346,6 +355,41 @@ const title = 'Scraper Dashboard'
          </div>
        </div>
 
+      <!-- Pending Review List -->
+      <div class="mt-8 bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4 font-bold text-orange-600">🆕 Pending Approval ({pendingCount})</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Business Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date Added</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              {pendingListings?.length === 0 && (
+                <tr>
+                  <td colspan="4" class="px-6 py-4 text-center text-gray-500">No pending listings to review.</td>
+                </tr>
+              )}
+              {pendingListings?.map((listing) => (
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{listing.business_name}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{listing.category?.name}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(listing.created_at).toLocaleDateString()}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <a href={`/listing/${listing.slug}`} class="text-blue-600 hover:text-blue-900 mr-4">Preview</a>
+                    <button class="text-green-600 hover:text-green-900" onclick="alert('TODO: Approval Logic')">Approve</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- Recent Activity & System Health -->
       <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Recent Listings -->
@@ -355,7 +399,7 @@ const title = 'Scraper Dashboard'
             {recentListings?.map((listing) => (
               <div class="flex justify-between items-center border-b border-gray-100 pb-2">
                 <div class="flex-1">
-                  <span class="text-gray-900 truncate block">{listing.name}</span>
+                  <span class="text-gray-900 truncate block">{listing.business_name}</span>
                   <span class="text-gray-500 text-xs">{listing.category?.name}</span>
                 </div>
                 <span class="text-gray-500 text-sm ml-2">{new Date(listing.created_at).toLocaleDateString()}</span>

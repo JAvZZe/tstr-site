@@ -4,6 +4,12 @@ import { supabase } from '../../lib/supabase'
 // Force SSR for dynamic data
 export const prerender = false;
 
+// Auth Check
+const { data: { session } } = await supabase.auth.getSession();
+if (!session || !session.user.email?.endsWith('@tstr.directory')) {
+  return Astro.redirect('/login');
+}
+
 // Initialize with empty data - will load client-side
 const title = 'Failed URL Validations'
 const failedUrls = []
