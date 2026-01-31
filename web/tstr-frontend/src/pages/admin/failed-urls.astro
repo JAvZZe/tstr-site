@@ -7,7 +7,7 @@ export const prerender = false;
 // Auth Check
 const { data: { session } } = await supabase.auth.getSession();
 if (!session || !session.user.email?.endsWith('@tstr.directory')) {
-  return Astro.redirect('/login');
+  return Astro.redirect('/admin/login');
 }
 
 // Initialize with empty data - will load client-side

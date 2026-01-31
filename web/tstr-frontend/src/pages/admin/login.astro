@@ -1,0 +1,270 @@
+---
+export const prerender = false // Force SSR for auth page
+
+import { supabaseBrowser } from '../../lib/supabase-browser'
+import Footer from '../../components/Footer.astro'
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Login - TSTR Administration</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    header h1 a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .subtitle {
+      color: #a0a0a0;
+      font-size: 0.9rem;
+      margin-left: 0.5rem;
+      font-weight: 400;
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .login-card {
+      background: white;
+      border-radius: 8px;
+      padding: 2.5rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .login-header h2 {
+      font-size: 1.5rem;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .login-header p {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #1a1a2e;
+      box-shadow: 0 0 0 2px rgba(26, 26, 46, 0.1);
+    }
+
+    .btn {
+      width: 100%;
+      background: #1a1a2e;
+      color: white;
+      padding: 0.875rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: #2a2a4ed0;
+    }
+
+    .btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .message {
+      padding: 0.75rem;
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    .message.error {
+      background: #fee;
+      border: 1px solid #fcc;
+      color: #c33;
+    }
+
+    .message.success {
+      background: #efe;
+      border: 1px solid #cfc;
+      color: #3c3;
+    }
+
+    footer {
+      color: rgba(255, 255, 255, 0.4);
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>
+      <a href="/">TSTR Hub</a>
+      <span class="subtitle">Administration</span>
+    </h1>
+  </header>
+
+  <div class="container">
+    <div class="login-card">
+      <div class="login-header">
+        <h2>Staff Login</h2>
+        <p>Authorized personnel only</p>
+      </div>
+
+      <div id="message-container"></div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required autocomplete="email" placeholder="name@tstr.directory">
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="btn" id="submit-btn">Authenticate</button>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    &copy; {new Date().getFullYear()} TSTR Directory. Internal System.
+  </footer>
+
+  <script>
+    import { supabaseBrowser } from '../../lib/supabase-browser'
+
+    const form = document.getElementById('login-form')
+    const submitBtn = document.getElementById('submit-btn')
+    const messageContainer = document.getElementById('message-container')
+
+    function showMessage(message, type = 'info') {
+      messageContainer.innerHTML = `<div class="message ${type}">${message}</div>`
+    }
+
+    // Check for session
+    async function checkSession() {
+      const { data: { session } } = await supabaseBrowser.auth.getSession()
+      if (session) {
+        if (session.user.email?.endsWith('@tstr.directory')) {
+          window.location.href = '/admin/dashboard'
+        } else {
+             // If logged in as customer, verify if we should logout or show error
+             // Ideally for checking admin, we might want to force logout of customer session
+             // or just redirect to account?
+             // Since this is admin login page, let's assume if they are here, they WANT to be admin
+             // If they are customer, we'll force sign out so they can sign in as admin
+             await supabaseBrowser.auth.signOut()
+        }
+      }
+    }
+    
+    checkSession();
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault()
+
+      const email = document.getElementById('email').value
+      const password = document.getElementById('password').value
+
+      if (!email.endsWith('@tstr.directory')) {
+        showMessage('Access restricted to TSTR staff only.', 'error')
+        return
+      }
+
+      submitBtn.disabled = true
+      submitBtn.textContent = 'Authenticating...'
+
+      try {
+        const { data, error } = await supabaseBrowser.auth.signInWithPassword({
+          email,
+          password
+        })
+
+        if (error) {
+          showMessage('Invalid credentials.', 'error')
+          submitBtn.disabled = false
+          submitBtn.textContent = 'Authenticate'
+          return
+        }
+
+        if (data.user) {
+            showMessage('Access granted. Redirecting...', 'success')
+            setTimeout(() => {
+              window.location.href = '/admin/dashboard'
+            }, 800)
+        }
+
+      } catch (err) {
+        showMessage('An unexpected error occurred.', 'error')
+        submitBtn.disabled = false
+        submitBtn.textContent = 'Authenticate'
+        console.error('Login error:', err)
+      }
+    })
+  </script>
+</body>
+</html>
