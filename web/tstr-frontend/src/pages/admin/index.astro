@@ -5,7 +5,7 @@ export const prerender = false;
 
 const { data: { session } } = await supabase.auth.getSession();
 if (!session || !session.user.email?.endsWith('@tstr.directory')) {
-  return Astro.redirect('/login');
+  return Astro.redirect('/admin/login');
 }
 
 const title = 'Admin Dashboard'
