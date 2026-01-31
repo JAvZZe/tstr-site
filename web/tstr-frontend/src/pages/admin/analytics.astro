@@ -4,9 +4,11 @@ import { supabase } from '../../lib/supabase';
 // Force SSR - need dynamic authentication check
 export const prerender = false;
 
-// TODO: Add authentication when auth system is implemented
-// For now, analytics is publicly accessible (internal use only)
-// Access via /admin/analytics
+// Auth Check
+const { data: { session } } = await supabase.auth.getSession();
+if (!session || !session.user.email?.endsWith('@tstr.directory')) {
+  return Astro.redirect('/login');
+}
 
 // Fetch analytics data
 const now = new Date();
