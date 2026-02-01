@@ -1,0 +1,3338 @@
+[
+  {
+    "company_name": "URS Testings Laboratory",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in Dubai. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "URS Testings Laboratory",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "Dubai",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Varuna Biotechnology",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in Abu Dhabi, Al Reem Island, ADGM. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Varuna Biotechnology",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "Abu Dhabi, Al Reem Island, ADGM",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "FABTECH Group",
+    "primary_category": "oil-gas-testing",
+    "description": "Oil and Gas company based in Fabtech International | Fabtech Engineering | Fabtech Coating | Fabtech Modular, UAE - contact@fabtech.ae. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "FABTECH Group",
+      "linkedin_industry": "Oil and Gas",
+      "location": "Fabtech International | Fabtech Engineering | Fabtech Coating | Fabtech Modular, UAE - contact@fabtech.ae",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Emirates Industrial Laboratory (EILAB)",
+    "primary_category": "oil-gas-testing",
+    "description": "Oil and Gas company based in Dubai. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Emirates Industrial Laboratory (EILAB)",
+      "linkedin_industry": "Oil and Gas",
+      "location": "Dubai",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Middle East Testing Services Qatar",
+    "primary_category": "materials-testing",
+    "description": "Medical and Diagnostic Laboratories company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Middle East Testing Services Qatar",
+      "linkedin_industry": "Medical and Diagnostic Laboratories",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Qualitas Material Testing Laboratories",
+    "primary_category": "oil-gas-testing",
+    "description": "Oil and Gas company based in Mussfah, Abu Dhabi. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Qualitas Material Testing Laboratories",
+      "linkedin_industry": "Oil and Gas",
+      "location": "Mussfah, Abu Dhabi",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Standards Technology Forum",
+    "primary_category": "materials-testing",
+    "description": "Non-profit Organizations company based in Wayne, PA. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Standards Technology Forum",
+      "linkedin_industry": "Non-profit Organizations",
+      "location": "Wayne, PA",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Standards Council of Canada (SCC)",
+    "primary_category": "materials-testing",
+    "description": "Government Administration company based in Ottawa, Ontario. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Standards Council of Canada (SCC)",
+      "linkedin_industry": "Government Administration",
+      "location": "Ottawa, Ontario",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "BASF Inhouse Consulting",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Ludwigshafen, Rhineland-Palatinate. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "BASF Inhouse Consulting",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Ludwigshafen, Rhineland-Palatinate",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "BASF Digital Solutions",
+    "primary_category": "materials-testing",
+    "description": "IT Services and IT Consulting company based in Ludwigshafen, Rhineland-Palatinate. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "BASF Digital Solutions",
+      "linkedin_industry": "IT Services and IT Consulting",
+      "location": "Ludwigshafen, Rhineland-Palatinate",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "BASF Fuel and Lubricant Solutions",
+    "primary_category": "materials-testing",
+    "description": "Chemical Manufacturing company based in Ludwigshafen, Rhineland-Palatinate. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "BASF Fuel and Lubricant Solutions",
+      "linkedin_industry": "Chemical Manufacturing",
+      "location": "Ludwigshafen, Rhineland-Palatinate",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "BASF Pharma Solutions",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in Ludwigshafen am Rhein. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "BASF Pharma Solutions",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "Ludwigshafen am Rhein",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "BASF Human Nutrition",
+    "primary_category": "materials-testing",
+    "description": "Chemical Manufacturing company based in Ludwigshafen, Rheinland-Pfalz. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "BASF Human Nutrition",
+      "linkedin_industry": "Chemical Manufacturing",
+      "location": "Ludwigshafen, Rheinland-Pfalz",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "BASF Plastic Additives",
+    "primary_category": "materials-testing",
+    "description": "Chemical Manufacturing company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "BASF Plastic Additives",
+      "linkedin_industry": "Chemical Manufacturing",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "BASF Renewable Energy",
+    "primary_category": "materials-testing",
+    "description": "Chemical Manufacturing company based in Ludwigshafen. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "BASF Renewable Energy",
+      "linkedin_industry": "Chemical Manufacturing",
+      "location": "Ludwigshafen",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "BASF Performance Materials",
+    "primary_category": "materials-testing",
+    "description": "Plastics Manufacturing company based in Waterloo. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "BASF Performance Materials",
+      "linkedin_industry": "Plastics Manufacturing",
+      "location": "Waterloo",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "BASF Battery Materials",
+    "primary_category": "materials-testing",
+    "description": "Chemical Manufacturing company based in Mannheim, Baden-W\u00fcrttemberg. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "BASF Battery Materials",
+      "linkedin_industry": "Chemical Manufacturing",
+      "location": "Mannheim, Baden-W\u00fcrttemberg",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "BASF Agricultural Solutions",
+    "primary_category": "materials-testing",
+    "description": "Farming company based in Limburgerhof, Rhineland-Palatinate. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "BASF Agricultural Solutions",
+      "linkedin_industry": "Farming",
+      "location": "Limburgerhof, Rhineland-Palatinate",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "BASF Automotive Solutions",
+    "primary_category": "materials-testing",
+    "description": "Automotive company based in Ludwigshafen, Rheinland-Pfalz. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "BASF Automotive Solutions",
+      "linkedin_industry": "Automotive",
+      "location": "Ludwigshafen, Rheinland-Pfalz",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Fintech Global Center",
+    "primary_category": "materials-testing",
+    "description": "IT Services and IT Consulting company based in Tinton Falls, New Jersey. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Fintech Global Center",
+      "linkedin_industry": "IT Services and IT Consulting",
+      "location": "Tinton Falls, New Jersey",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Global Center on AI Governance",
+    "primary_category": "materials-testing",
+    "description": "Technology, Information and Internet company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Global Center on AI Governance",
+      "linkedin_industry": "Technology, Information and Internet",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Association for African Medicinal Plants Standards",
+    "primary_category": "materials-testing",
+    "description": "Alternative Medicine company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Association for African Medicinal Plants Standards",
+      "linkedin_industry": "Alternative Medicine",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "African Organisation for Standardisation - ARSO",
+    "primary_category": "materials-testing",
+    "description": "International Trade and Development company based in Nairobi, Nairobi. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "African Organisation for Standardisation - ARSO",
+      "linkedin_industry": "International Trade and Development",
+      "location": "Nairobi, Nairobi",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "TrustMark",
+    "primary_category": "materials-testing",
+    "description": "Consumer Services company based in Basingstoke, Hampshire. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "TrustMark",
+      "linkedin_industry": "Consumer Services",
+      "location": "Basingstoke, Hampshire",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Standards Hub",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in San Diego, CA. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Standards Hub",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "San Diego, CA",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "STANDARDS ORGANISATION OF NIGERIA",
+    "primary_category": "materials-testing",
+    "description": "Government Administration company based in Wuse Zone 7, Federal Capital Territory. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "STANDARDS ORGANISATION OF NIGERIA",
+      "linkedin_industry": "Government Administration",
+      "location": "Wuse Zone 7, Federal Capital Territory",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Green Standards",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Toronto, Ontario. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Green Standards",
+      "linkedin_industry": "Environmental Services",
+      "location": "Toronto, Ontario",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "AI Standards Hub",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in London. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "AI Standards Hub",
+      "linkedin_industry": "Research Services",
+      "location": "London",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Kenya Bureau of Standards (KEBS)",
+    "primary_category": "materials-testing",
+    "description": "Government Administration company based in Nairobi, Kenya, Nairobi. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Kenya Bureau of Standards (KEBS)",
+      "linkedin_industry": "Government Administration",
+      "location": "Nairobi, Kenya, Nairobi",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Digital Governance Standards Institute | Institut des normes de gouvernance num\u00e9rique",
+    "primary_category": "materials-testing",
+    "description": "Technology, Information and Internet company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Digital Governance Standards Institute | Institut des normes de gouvernance num\u00e9rique",
+      "linkedin_industry": "Technology, Information and Internet",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "The National Institute for Biological Standards and Control",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "The National Institute for Biological Standards and Control",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "SASO, Saudi Standards Metrology and Quality Organization",
+    "primary_category": "materials-testing",
+    "description": "Government Administration company based in Al Muhammadiyah, Riyadh. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "SASO, Saudi Standards Metrology and Quality Organization",
+      "linkedin_industry": "Government Administration",
+      "location": "Al Muhammadiyah, Riyadh",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "UKAS",
+    "primary_category": "materials-testing",
+    "description": "Non-profit Organizations company based in Staines-upon-Thames, Middlesex. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "UKAS",
+      "linkedin_industry": "Non-profit Organizations",
+      "location": "Staines-upon-Thames, Middlesex",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ISO 20700",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ISO 20700",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ISO Certifications IRAQ",
+    "primary_category": "oil-gas-testing",
+    "description": "Oil and Gas company based in Basra. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ISO Certifications IRAQ",
+      "linkedin_industry": "Oil and Gas",
+      "location": "Basra",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ISO 9001 STARTER",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ISO 9001 STARTER",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ISO Certification WA",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Welshpool, Western Australia. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ISO Certification WA",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Welshpool, Western Australia",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "The ISO 9001 Group",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Houston, Texas. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "The ISO 9001 Group",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Houston, Texas",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ISO Quality Services Ltd (ISO QSL)",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Worcester, Worcestershire. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ISO Quality Services Ltd (ISO QSL)",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Worcester, Worcestershire",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ISO Certification Experts",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Northmead, NSW. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ISO Certification Experts",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Northmead, NSW",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ISO Consultants Pte Ltd",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Kallang, Central Singapore Community Development Council. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ISO Consultants Pte Ltd",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Kallang, Central Singapore Community Development Council",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ISO Experts",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ISO Experts",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ISO 9001 Knowledge",
+    "primary_category": "materials-testing",
+    "description": "Education Administration Programs company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ISO 9001 Knowledge",
+      "linkedin_industry": "Education Administration Programs",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ISO CERT INTERNATIONAL",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in United Kingdom. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ISO CERT INTERNATIONAL",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "United Kingdom",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Iso Cert",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Foggia, Foggia. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Iso Cert",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Foggia, Foggia",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ISO Environmental Management",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Ottawa, Ontario. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ISO Environmental Management",
+      "linkedin_industry": "Environmental Services",
+      "location": "Ottawa, Ontario",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Isomorphic Labs",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in London. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Isomorphic Labs",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "London",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ISO - International Organization for Standardization",
+    "primary_category": "materials-testing",
+    "description": "International Trade and Development company based in Geneva. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ISO - International Organization for Standardization",
+      "linkedin_industry": "International Trade and Development",
+      "location": "Geneva",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Intertek Energy",
+    "primary_category": "oil-gas-testing",
+    "description": "Oil and Gas company based in Global. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Intertek Energy",
+      "linkedin_industry": "Oil and Gas",
+      "location": "Global",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Intertek Engineering Consulting",
+    "primary_category": "materials-testing",
+    "description": "Industrial Machinery Manufacturing company based in Santa Clara, California. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Intertek Engineering Consulting",
+      "linkedin_industry": "Industrial Machinery Manufacturing",
+      "location": "Santa Clara, California",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Intertek Spain",
+    "primary_category": "materials-testing",
+    "description": "International Trade and Development company based in Bilbao, BI. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Intertek Spain",
+      "linkedin_industry": "International Trade and Development",
+      "location": "Bilbao, BI",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Intertek APAC",
+    "primary_category": "materials-testing",
+    "description": "International Trade and Development company based in Singapore. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Intertek APAC",
+      "linkedin_industry": "International Trade and Development",
+      "location": "Singapore",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Intertek Sweden",
+    "primary_category": "materials-testing",
+    "description": "International Trade and Development company based in Kista. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Intertek Sweden",
+      "linkedin_industry": "International Trade and Development",
+      "location": "Kista",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Intertek Bangladesh",
+    "primary_category": "materials-testing",
+    "description": "International Trade and Development company based in Dhaka, Dhaka. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Intertek Bangladesh",
+      "linkedin_industry": "International Trade and Development",
+      "location": "Dhaka, Dhaka",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Intertek France",
+    "primary_category": "materials-testing",
+    "description": "International Trade and Development company based in All\u00e9e de la Fosse Moret, Heudebouville. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Intertek France",
+      "linkedin_industry": "International Trade and Development",
+      "location": "All\u00e9e de la Fosse Moret, Heudebouville",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Intertek",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in Mirassol, S\u00e3o Paulo. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Intertek",
+      "linkedin_industry": "Research Services",
+      "location": "Mirassol, S\u00e3o Paulo",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Intertek Brazil",
+    "primary_category": "materials-testing",
+    "description": "International Trade and Development company based in Barueri, S\u00e3o Paulo. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Intertek Brazil",
+      "linkedin_industry": "International Trade and Development",
+      "location": "Barueri, S\u00e3o Paulo",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Intertek Italia",
+    "primary_category": "materials-testing",
+    "description": "International Trade and Development company based in Cernusco sul Naviglio (MI), Italy. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Intertek Italia",
+      "linkedin_industry": "International Trade and Development",
+      "location": "Cernusco sul Naviglio (MI), Italy",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Intertek India",
+    "primary_category": "materials-testing",
+    "description": "International Trade and Development company based in New Delhi, Delhi. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Intertek India",
+      "linkedin_industry": "International Trade and Development",
+      "location": "New Delhi, Delhi",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Intertek Controle Anal\u00edtico",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Osasco, S\u00e3o Paulo. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Intertek Controle Anal\u00edtico",
+      "linkedin_industry": "Environmental Services",
+      "location": "Osasco, S\u00e3o Paulo",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Intertek Middle East",
+    "primary_category": "materials-testing",
+    "description": "International Trade and Development company based in Airport Road, Abu Dhabi. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Intertek Middle East",
+      "linkedin_industry": "International Trade and Development",
+      "location": "Airport Road, Abu Dhabi",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Intertek Deutschland",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Leinfelden-Echterdingen, Baden-W\u00fcrttemberg. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Intertek Deutschland",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Leinfelden-Echterdingen, Baden-W\u00fcrttemberg",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Intertek",
+    "primary_category": "materials-testing",
+    "description": "International Trade and Development company based in London. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Intertek",
+      "linkedin_industry": "International Trade and Development",
+      "location": "London",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Oxford Instruments X-Ray Components",
+    "primary_category": "materials-testing",
+    "description": "Appliances, Electrical, and Electronics Manufacturing company based in Scotts Valley, CA. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Oxford Instruments X-Ray Components",
+      "linkedin_industry": "Appliances, Electrical, and Electronics Manufacturing",
+      "location": "Scotts Valley, CA",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Oxford Instruments Materials Science",
+    "primary_category": "materials-testing",
+    "description": "Nanotechnology Research company based in High Wycombe, Buckinghamshire. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Oxford Instruments Materials Science",
+      "linkedin_industry": "Nanotechnology Research",
+      "location": "High Wycombe, Buckinghamshire",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Oxford Instruments Chemistry",
+    "primary_category": "materials-testing",
+    "description": "Nanotechnology Research company based in High Wycombe, England. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Oxford Instruments Chemistry",
+      "linkedin_industry": "Nanotechnology Research",
+      "location": "High Wycombe, England",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Oxford Robotics Institute",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in Oxford, England. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Oxford Robotics Institute",
+      "linkedin_industry": "Research Services",
+      "location": "Oxford, England",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Oxford Instruments Semiconductors",
+    "primary_category": "materials-testing",
+    "description": "Semiconductor Manufacturing company based in Severn Beach, Bristol. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Oxford Instruments Semiconductors",
+      "linkedin_industry": "Semiconductor Manufacturing",
+      "location": "Severn Beach, Bristol",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Oxford Instruments Physics & Astronomy",
+    "primary_category": "materials-testing",
+    "description": "Appliances, Electrical, and Electronics Manufacturing company based in High Wycombe, England. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Oxford Instruments Physics & Astronomy",
+      "linkedin_industry": "Appliances, Electrical, and Electronics Manufacturing",
+      "location": "High Wycombe, England",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Quantum Design Oxford",
+    "primary_category": "materials-testing",
+    "description": "Nanotechnology Research company based in Abingdon, Oxfordshire. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Quantum Design Oxford",
+      "linkedin_industry": "Nanotechnology Research",
+      "location": "Abingdon, Oxfordshire",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Oxford Instruments GmbH",
+    "primary_category": "materials-testing",
+    "description": "Nanotechnology Research company based in Wiesbaden, Hessen. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Oxford Instruments GmbH",
+      "linkedin_industry": "Nanotechnology Research",
+      "location": "Wiesbaden, Hessen",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Oxford Instruments Life Science",
+    "primary_category": "materials-testing",
+    "description": "Appliances, Electrical, and Electronics Manufacturing company based in High Wycombe, England. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Oxford Instruments Life Science",
+      "linkedin_industry": "Appliances, Electrical, and Electronics Manufacturing",
+      "location": "High Wycombe, England",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Oxford PharmaGenesis",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Oxford, Oxfordshire. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Oxford PharmaGenesis",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Oxford, Oxfordshire",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Oxford Instruments plc",
+    "primary_category": "materials-testing",
+    "description": "Nanotechnology Research company based in High Wycombe, England. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Oxford Instruments plc",
+      "linkedin_industry": "Nanotechnology Research",
+      "location": "High Wycombe, England",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "FEI Company",
+    "primary_category": "materials-testing",
+    "description": "Nanotechnology Research company based in Hillsboro, Oregon. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "FEI Company",
+      "linkedin_industry": "Nanotechnology Research",
+      "location": "Hillsboro, Oregon",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Doe & Ingalls, A Thermo Fisher Scientific Brand",
+    "primary_category": "materials-testing",
+    "description": "Chemical Manufacturing company based in Durham, North Carolina. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Doe & Ingalls, A Thermo Fisher Scientific Brand",
+      "linkedin_industry": "Chemical Manufacturing",
+      "location": "Durham, North Carolina",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Linkage Biosciences | A Thermo Fisher Scientific Brand",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in South San Francisco, CA. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Linkage Biosciences | A Thermo Fisher Scientific Brand",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "South San Francisco, CA",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "MarqMetrix, part of Thermo Fisher Scientific",
+    "primary_category": "materials-testing",
+    "description": "Appliances, Electrical, and Electronics Manufacturing company based in Seattle, WA. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "MarqMetrix, part of Thermo Fisher Scientific",
+      "linkedin_industry": "Appliances, Electrical, and Electronics Manufacturing",
+      "location": "Seattle, WA",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "PeproTech, now part of Thermo Fisher Scientific",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in Cranbury, New Jersey. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "PeproTech, now part of Thermo Fisher Scientific",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "Cranbury, New Jersey",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Thermo Fisher Scientific Japan",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in \u6e2f\u533a, \u6771\u4eac\u90fd. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Thermo Fisher Scientific Japan",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "\u6e2f\u533a, \u6771\u4eac\u90fd",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Thermo Fisher Spectral Cytometry",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in NC. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Thermo Fisher Spectral Cytometry",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "NC",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "One Lambda | A Thermo Fisher Scientific Brand",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in Los Angeles, California. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "One Lambda | A Thermo Fisher Scientific Brand",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "Los Angeles, California",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Thermo Fisher Scientific - Materials Science",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in HILLSBORO, OR. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Thermo Fisher Scientific - Materials Science",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "HILLSBORO, OR",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Thermo Fisher Scientific Monterrey",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in Apodaca, Nuevo Le\u00f3n. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Thermo Fisher Scientific Monterrey",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "Apodaca, Nuevo Le\u00f3n",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Thermo Fisher Scientific India",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology company based in Mumbai, MAHARASHTRA. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Thermo Fisher Scientific India",
+      "linkedin_industry": "Biotechnology",
+      "location": "Mumbai, MAHARASHTRA",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Thermo Fisher Scientific",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in \u00c9cublens, Vaud. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Thermo Fisher Scientific",
+      "linkedin_industry": "Research Services",
+      "location": "\u00c9cublens, Vaud",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Thermo Fisher Scientific",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in Waltham, MA. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Thermo Fisher Scientific",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "Waltham, MA",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Setsco Services Pte Ltd",
+    "primary_category": "materials-testing",
+    "description": "Professional Organizations company based in Singapore, Singapore. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Setsco Services Pte Ltd",
+      "linkedin_industry": "Professional Organizations",
+      "location": "Singapore, Singapore",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Sustainability Services",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Northampton, Northamptonshire. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Sustainability Services",
+      "linkedin_industry": "Environmental Services",
+      "location": "Northampton, Northamptonshire",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Milj\u00f8 Danmark",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Vejen, South Denmark. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Milj\u00f8 Danmark",
+      "linkedin_industry": "Environmental Services",
+      "location": "Vejen, South Denmark",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Malaysia",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Bukit Mertajam, Penang. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Malaysia",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Bukit Mertajam, Penang",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Advinus",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in Bangalore, Karnataka. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Advinus",
+      "linkedin_industry": "Research Services",
+      "location": "Bangalore, Karnataka",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Agroscience Environmental Safety",
+    "primary_category": "materials-testing",
+    "description": "Research company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Agroscience Environmental Safety",
+      "linkedin_industry": "Research",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins | Solutions Durables",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Saverne, Grand Est. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins | Solutions Durables",
+      "linkedin_industry": "Environmental Services",
+      "location": "Saverne, Grand Est",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Viracor CMV Testing",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in Lenexa, Kansas. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Viracor CMV Testing",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "Lenexa, Kansas",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Agroscience Consumer/Human Safety",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Agroscience Consumer/Human Safety",
+      "linkedin_industry": "Research Services",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Agroscience Product Chemistry",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Agroscience Product Chemistry",
+      "linkedin_industry": "Research Services",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Agroscience Biological Assessment",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Agroscience Biological Assessment",
+      "linkedin_industry": "Research Services",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins PSS Insourcing Solutions",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in Luxembourg. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins PSS Insourcing Solutions",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "Luxembourg",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Agroscience Services India",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in Bangalore. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Agroscience Services India",
+      "linkedin_industry": "Research Services",
+      "location": "Bangalore",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins | EAG Laboratories Shanghai",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in \u4e0a\u6d77\u5e02. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins | EAG Laboratories Shanghai",
+      "linkedin_industry": "Research Services",
+      "location": "\u4e0a\u6d77\u5e02",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Agroscience Regulatory Consultancy",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Agroscience Regulatory Consultancy",
+      "linkedin_industry": "Research Services",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Agroscience Biological Solutions",
+    "primary_category": "materials-testing",
+    "description": "Research company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Agroscience Biological Solutions",
+      "linkedin_industry": "Research",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Agroscience Seed Services",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Agroscience Seed Services",
+      "linkedin_industry": "Research Services",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Bioanalytical Services India",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Bioanalytical Services India",
+      "linkedin_industry": "Research Services",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Electrical and Electronics (E&E)",
+    "primary_category": "materials-testing",
+    "description": "Appliances, Electrical, and Electronics Manufacturing company based in Reichenwalde, Berlin. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Electrical and Electronics (E&E)",
+      "linkedin_industry": "Appliances, Electrical, and Electronics Manufacturing",
+      "location": "Reichenwalde, Berlin",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Cosmetics and Personal Care",
+    "primary_category": "materials-testing",
+    "description": "Personal Care Product Manufacturing company based in Paris. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Cosmetics and Personal Care",
+      "linkedin_industry": "Personal Care Product Manufacturing",
+      "location": "Paris",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins | EAG Laboratories",
+    "primary_category": "materials-testing",
+    "description": "Research company based in San Diego, CA. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins | EAG Laboratories",
+      "linkedin_industry": "Research",
+      "location": "San Diego, CA",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Clinical Trial Solutions",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Clinical Trial Solutions",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Discovery",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology company based in St Charles, MO. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Discovery",
+      "linkedin_industry": "Biotechnology",
+      "location": "St Charles, MO",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins | Dermscan Pharmascan",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Villeurbanne, Rh\u00f4ne alpes. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins | Dermscan Pharmascan",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Villeurbanne, Rh\u00f4ne alpes",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Chemtest Limited",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Newmarket. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Chemtest Limited",
+      "linkedin_industry": "Environmental Services",
+      "location": "Newmarket",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Biomnis",
+    "primary_category": "materials-testing",
+    "description": "Medical and Diagnostic Laboratories company based in Lyon. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Biomnis",
+      "linkedin_industry": "Medical and Diagnostic Laboratories",
+      "location": "Lyon",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Environment Benelux",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Barneveld, Gelderland. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Environment Benelux",
+      "linkedin_industry": "Environmental Services",
+      "location": "Barneveld, Gelderland",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "IPROMA",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in CASTELLON, CASTELLON. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "IPROMA",
+      "linkedin_industry": "Environmental Services",
+      "location": "CASTELLON, CASTELLON",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Environment Testing - AUS/NZ",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Dandenong South, Victoria. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Environment Testing - AUS/NZ",
+      "linkedin_industry": "Environmental Services",
+      "location": "Dandenong South, Victoria",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Singapore",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Singapore, Singapore. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Singapore",
+      "linkedin_industry": "Environmental Services",
+      "location": "Singapore, Singapore",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in Luxembourg, Luxembourg. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "Luxembourg, Luxembourg",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Element Cambridge - Laboratory Solutions Division",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in Cambridge, Cambridgeshire. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Element Cambridge - Laboratory Solutions Division",
+      "linkedin_industry": "Research Services",
+      "location": "Cambridge, Cambridgeshire",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Element Lab Solutions",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in Strathaven, Lanarkshire. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Element Lab Solutions",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "Strathaven, Lanarkshire",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Element Air\u2122, a division of RGF Environmental Group, Inc.",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Riviera Beach, Florida. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Element Air\u2122, a division of RGF Environmental Group, Inc.",
+      "linkedin_industry": "Environmental Services",
+      "location": "Riviera Beach, Florida",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Element Materials Technology Medical Device",
+    "primary_category": "materials-testing",
+    "description": "Medical Device company based in Cincinnati, Ohio. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Element Materials Technology Medical Device",
+      "linkedin_industry": "Medical Device",
+      "location": "Cincinnati, Ohio",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Element Connected Technology and Mobility",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in London. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Element Connected Technology and Mobility",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "London",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Element Digital Engineering",
+    "primary_category": "materials-testing",
+    "description": "Engineering Services company based in Derby. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Element Digital Engineering",
+      "linkedin_industry": "Engineering Services",
+      "location": "Derby",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Element EMEAA Space & Defence",
+    "primary_category": "materials-testing",
+    "description": "Defense and Space Manufacturing company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Element EMEAA Space & Defence",
+      "linkedin_industry": "Defense and Space Manufacturing",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Element Life Sciences",
+    "primary_category": "materials-testing",
+    "description": "Health and Human Services company based in Concord, California. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Element Life Sciences",
+      "linkedin_industry": "Health and Human Services",
+      "location": "Concord, California",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Element Environmental Testing",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in London, England. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Element Environmental Testing",
+      "linkedin_industry": "Environmental Services",
+      "location": "London, England",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Element Built Environment",
+    "primary_category": "materials-testing",
+    "description": "Building Construction company based in Gent. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Element Built Environment",
+      "linkedin_industry": "Building Construction",
+      "location": "Gent",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Element Aerospace, Defense & Energy",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Element Aerospace, Defense & Energy",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Element Testing Services Pte Ltd",
+    "primary_category": "materials-testing",
+    "description": "Industrial Machinery Manufacturing company based in Singapore. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Element Testing Services Pte Ltd",
+      "linkedin_industry": "Industrial Machinery Manufacturing",
+      "location": "Singapore",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Elemental Group",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Luxembourg. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Elemental Group",
+      "linkedin_industry": "Environmental Services",
+      "location": "Luxembourg",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Element",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Mona Vale, New South Wales. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Element",
+      "linkedin_industry": "Environmental Services",
+      "location": "Mona Vale, New South Wales",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Element Biosciences",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in San Diego, California. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Element Biosciences",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "San Diego, California",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Element Materials Technology",
+    "primary_category": "materials-testing",
+    "description": "Manufacturing company based in London. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Element Materials Technology",
+      "linkedin_industry": "Manufacturing",
+      "location": "London",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Big Data & Analytics Canada",
+    "primary_category": "materials-testing",
+    "description": "IT Services and IT Consulting company based in Toronto, Ontario. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Big Data & Analytics Canada",
+      "linkedin_industry": "IT Services and IT Consulting",
+      "location": "Toronto, Ontario",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Analytical Instruments S.A.",
+    "primary_category": "materials-testing",
+    "description": "Medical Equipment Manufacturing company based in Chalandri, Athens. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Analytical Instruments S.A.",
+      "linkedin_industry": "Medical Equipment Manufacturing",
+      "location": "Chalandri, Athens",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Analytical Technologies S.A.",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology company based in Munro, Buenos Aires. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Analytical Technologies S.A.",
+      "linkedin_industry": "Biotechnology",
+      "location": "Munro, Buenos Aires",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Analytical Technology Laboratory",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Coimbatore, Tamilnadu. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Analytical Technology Laboratory",
+      "linkedin_industry": "Environmental Services",
+      "location": "Coimbatore, Tamilnadu",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Pace Analytical",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Minneapolis, MN. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Pace Analytical",
+      "linkedin_industry": "Environmental Services",
+      "location": "Minneapolis, MN",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "PPB Analytical Inc.",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in North York, Ontario. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "PPB Analytical Inc.",
+      "linkedin_industry": "Environmental Services",
+      "location": "North York, Ontario",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Analytical Mechanics Associates",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in Hampton, VA. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Analytical Mechanics Associates",
+      "linkedin_industry": "Research Services",
+      "location": "Hampton, VA",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Analytical Instruments (Pvt) Ltd",
+    "primary_category": "materials-testing",
+    "description": "Medical Equipment Manufacturing company based in Colombo 08. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Analytical Instruments (Pvt) Ltd",
+      "linkedin_industry": "Medical Equipment Manufacturing",
+      "location": "Colombo 08",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Analytical Technologies Limited",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in Vadodara, Gujarat. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Analytical Technologies Limited",
+      "linkedin_industry": "Research Services",
+      "location": "Vadodara, Gujarat",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ANALYTICAL LABORATORY - ALAB",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Prolongaci\u00f3n Zarumilla Mz. D2, Lt. 3., Bellavista, Callao. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ANALYTICAL LABORATORY - ALAB",
+      "linkedin_industry": "Environmental Services",
+      "location": "Prolongaci\u00f3n Zarumilla Mz. D2, Lt. 3., Bellavista, Callao",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ANALYTICAL LABORATORIES (SINGAPORE) PTE LTD",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Singapore. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ANALYTICAL LABORATORIES (SINGAPORE) PTE LTD",
+      "linkedin_industry": "Environmental Services",
+      "location": "Singapore",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Analytical Group",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Arzignano, Vicenza. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Analytical Group",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Arzignano, Vicenza",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "CS Analytical",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in Clifton, NJ. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "CS Analytical",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "Clifton, NJ",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "West Texas Analytics, LLC",
+    "primary_category": "oil-gas-testing",
+    "description": "Oil and Gas company based in San Angelo, Texas. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "West Texas Analytics, LLC",
+      "linkedin_industry": "Oil and Gas",
+      "location": "San Angelo, Texas",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Mega physical & mechanical testing, Mega for Quality & Standards \u2013 Qatar",
+    "primary_category": "materials-testing",
+    "description": "Engineering Services company based in Doha. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Mega physical & mechanical testing, Mega for Quality & Standards \u2013 Qatar",
+      "linkedin_industry": "Engineering Services",
+      "location": "Doha",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Guangzhou Worldwide Standards and Testing Co.Ltd.",
+    "primary_category": "materials-testing",
+    "description": "Consumer Services company based in Guangzhou, Guang Dong. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Guangzhou Worldwide Standards and Testing Co.Ltd.",
+      "linkedin_industry": "Consumer Services",
+      "location": "Guangzhou, Guang Dong",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Philippine Metrology, Standards, Testing and Quality Incorporated",
+    "primary_category": "materials-testing",
+    "description": "Non-profit Organization Management company based in Quezon City, National Capital Region. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Philippine Metrology, Standards, Testing and Quality Incorporated",
+      "linkedin_industry": "Non-profit Organization Management",
+      "location": "Quezon City, National Capital Region",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "The National Trust for Emerging Standards in Testing (NTEST)",
+    "primary_category": "materials-testing",
+    "description": "Strategic Management Services company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "The National Trust for Emerging Standards in Testing (NTEST)",
+      "linkedin_industry": "Strategic Management Services",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "BANGLADESH STANDARDS AND TESTING INSTITUTION (BSTI)",
+    "primary_category": "materials-testing",
+    "description": "Government Administration company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "BANGLADESH STANDARDS AND TESTING INSTITUTION (BSTI)",
+      "linkedin_industry": "Government Administration",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Bangladesh Standards and Testing Institution - BSTI",
+    "primary_category": "materials-testing",
+    "description": "Government Administration company based in 116/A, Tejgaon Industrial Area, Dhaka. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Bangladesh Standards and Testing Institution - BSTI",
+      "linkedin_industry": "Government Administration",
+      "location": "116/A, Tejgaon Industrial Area, Dhaka",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Applied Research Center for Metrology, Standards, and Testing",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in Dhahran. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Applied Research Center for Metrology, Standards, and Testing",
+      "linkedin_industry": "Research Services",
+      "location": "Dhahran",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Standards Testing Labs",
+    "primary_category": "materials-testing",
+    "description": "Motor Vehicle Manufacturing company based in Massillon , Ohio. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Standards Testing Labs",
+      "linkedin_industry": "Motor Vehicle Manufacturing",
+      "location": "Massillon , Ohio",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "STC Group (Hong Kong Standards and Testing Centre)",
+    "primary_category": "materials-testing",
+    "description": "Professional Services company based in Hong Kong. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "STC Group (Hong Kong Standards and Testing Centre)",
+      "linkedin_industry": "Professional Services",
+      "location": "Hong Kong",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Galbraith Laboratories, Inc., A Bureau Veritas Company",
+    "primary_category": "materials-testing",
+    "description": "Chemical Manufacturing company based in Knoxville, Tennessee. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Galbraith Laboratories, Inc., A Bureau Veritas Company",
+      "linkedin_industry": "Chemical Manufacturing",
+      "location": "Knoxville, Tennessee",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Versatec Energy Consultants - a Bureau Veritas company",
+    "primary_category": "oil-gas-testing",
+    "description": "Oil and Gas company based in Woerden, Utrecht. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Versatec Energy Consultants - a Bureau Veritas company",
+      "linkedin_industry": "Oil and Gas",
+      "location": "Woerden, Utrecht",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ArcVera Renewables, a Bureau Veritas company",
+    "primary_category": "oil-gas-testing",
+    "description": "Services for Renewable Energy company based in Golden, Colorado. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ArcVera Renewables, a Bureau Veritas company",
+      "linkedin_industry": "Services for Renewable Energy",
+      "location": "Golden, Colorado",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Aligned Incentives, a Bureau Veritas company",
+    "primary_category": "materials-testing",
+    "description": "Technology, Information and Internet company based in Middleton, Massachusetts. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Aligned Incentives, a Bureau Veritas company",
+      "linkedin_industry": "Technology, Information and Internet",
+      "location": "Middleton, Massachusetts",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ATL, A Bureau Veritas Company",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in Cincinnati, OH. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ATL, A Bureau Veritas Company",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "Cincinnati, OH",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Centricor Analytical Labs",
+    "primary_category": "materials-testing",
+    "description": "Chemical Manufacturing company based in Charlotte, North Carolina. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Centricor Analytical Labs",
+      "linkedin_industry": "Chemical Manufacturing",
+      "location": "Charlotte, North Carolina",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Centricor Compliance Limited",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in SOUTHPORT, Lancashire. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Centricor Compliance Limited",
+      "linkedin_industry": "Environmental Services",
+      "location": "SOUTHPORT, Lancashire",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Alphea Biopharma - Genetic Testing",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Alphea Biopharma - Genetic Testing",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins BioPharma Product Testing Norway",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in Moss. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins BioPharma Product Testing Norway",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "Moss",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins BioPharma Product Testing India",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in Bangalore, Karnataka. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins BioPharma Product Testing India",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "Bangalore, Karnataka",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins biopharma product testing SH",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in shanghai, shanghai. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins biopharma product testing SH",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "shanghai, shanghai",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins BioPharma Product Testing CEE",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in Zagreb, Zagreb. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins BioPharma Product Testing CEE",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "Zagreb, Zagreb",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins BioPharma Product Testing (Belgium)",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in Nazareth, Oost-Vlaanderen. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins BioPharma Product Testing (Belgium)",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "Nazareth, Oost-Vlaanderen",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins BioPharma Product Testing Sweden",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in Uppsala, Uppsala. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins BioPharma Product Testing Sweden",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "Uppsala, Uppsala",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins BioPharma Product Testing Switzerland",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in Sch\u00f6nenwerd, Solothurn. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins BioPharma Product Testing Switzerland",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "Sch\u00f6nenwerd, Solothurn",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins BioPharma Product Testing Finland",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in Kuopio, Northern Savonia. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins BioPharma Product Testing Finland",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "Kuopio, Northern Savonia",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins BioPharma Product Testing ANZ",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in Girraween, New South Wales. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins BioPharma Product Testing ANZ",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "Girraween, New South Wales",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Biopharma Product Testing UK",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in United Kingdom. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Biopharma Product Testing UK",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "United Kingdom",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Biopharma Product Testing Spain",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in Esplugues de Llobregat, Barcelona. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Biopharma Product Testing Spain",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "Esplugues de Llobregat, Barcelona",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins BioPharma Product Testing Denmark",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in Glostrup, Copenhagen. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins BioPharma Product Testing Denmark",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "Glostrup, Copenhagen",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins BioPharma Product Testing Europe",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in Luxembourg. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins BioPharma Product Testing Europe",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "Luxembourg",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins BioPharma Product Testing Germany",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in Planegg/Munich, Bavaria. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins BioPharma Product Testing Germany",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "Planegg/Munich, Bavaria",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Biopharma Product Testing Ireland",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in Dungarvan, Waterford. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Biopharma Product Testing Ireland",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "Dungarvan, Waterford",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins BioPharma Product Testing Netherlands",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in Leiden, Zuid-Holland. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins BioPharma Product Testing Netherlands",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "Leiden, Zuid-Holland",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Biopharma Product Testing (France)",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in Courtaboeuf. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Biopharma Product Testing (France)",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "Courtaboeuf",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins BioPharma Product Testing North America",
+    "primary_category": "biotech-testing",
+    "description": "Biotechnology Research company based in Lancaster, Pennsylvania. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins BioPharma Product Testing North America",
+      "linkedin_industry": "Biotechnology Research",
+      "location": "Lancaster, Pennsylvania",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins BioPharma Product Testing Italy",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in Vimodrone, (MI). Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins BioPharma Product Testing Italy",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "Vimodrone, (MI)",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Hydrogen Patent, Innovation and Technology Intelligence by PatForB",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Hydrogen Patent, Innovation and Technology Intelligence by PatForB",
+      "linkedin_industry": "Research Services",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Hydrogen Technology World Expo",
+    "primary_category": "oil-gas-testing",
+    "description": "Renewable Energy Semiconductor Manufacturing company based in Hamburg, HH. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Hydrogen Technology World Expo",
+      "linkedin_industry": "Renewable Energy Semiconductor Manufacturing",
+      "location": "Hamburg, HH",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "HuaDe Hydrogen",
+    "primary_category": "oil-gas-testing",
+    "description": "Renewable Energy Equipment Manufacturing company based in Zhangjiagang, Jiangsu. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "HuaDe Hydrogen",
+      "linkedin_industry": "Renewable Energy Equipment Manufacturing",
+      "location": "Zhangjiagang, Jiangsu",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Czech Hydrogen Technology Platform (HYTEP)",
+    "primary_category": "materials-testing",
+    "description": "Research company based in Prague, \u010cesko. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Czech Hydrogen Technology Platform (HYTEP)",
+      "linkedin_industry": "Research",
+      "location": "Prague, \u010cesko",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "HYDROGEN TECHNOLOGY LLC",
+    "primary_category": "oil-gas-testing",
+    "description": "Services for Renewable Energy company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "HYDROGEN TECHNOLOGY LLC",
+      "linkedin_industry": "Services for Renewable Energy",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Hydrogen Value Chain Technology",
+    "primary_category": "materials-testing",
+    "description": "Technology, Information and Media company based in Market Harborough. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Hydrogen Value Chain Technology",
+      "linkedin_industry": "Technology, Information and Media",
+      "location": "Market Harborough",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "DHT Hydrogen Engineering Technology",
+    "primary_category": "materials-testing",
+    "description": "Climate Technology Product Manufacturing company based in Glincz, Pomorskie. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "DHT Hydrogen Engineering Technology",
+      "linkedin_industry": "Climate Technology Product Manufacturing",
+      "location": "Glincz, Pomorskie",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Green Hydrogen Technology",
+    "primary_category": "oil-gas-testing",
+    "description": "Services for Renewable Energy company based in Augsburg, Bayern. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Green Hydrogen Technology",
+      "linkedin_industry": "Services for Renewable Energy",
+      "location": "Augsburg, Bayern",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Hydrogen Technology Expo North America",
+    "primary_category": "oil-gas-testing",
+    "description": "Oil and Gas company based in Houston, Texas. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Hydrogen Technology Expo North America",
+      "linkedin_industry": "Oil and Gas",
+      "location": "Houston, Texas",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Hydrogen Technology",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in London. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Hydrogen Technology",
+      "linkedin_industry": "Research Services",
+      "location": "London",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Hydrogen Insurance and Technology Conference",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Boston, MA. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Hydrogen Insurance and Technology Conference",
+      "linkedin_industry": "Environmental Services",
+      "location": "Boston, MA",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "HYDROSOLID\u00ae - Hydrogen Technology",
+    "primary_category": "environmental-testing",
+    "description": "Renewables &amp; Environment company based in Wilhelmsburg. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "HYDROSOLID\u00ae - Hydrogen Technology",
+      "linkedin_industry": "Renewables &amp; Environment",
+      "location": "Wilhelmsburg",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Resato Hydrogen Technology",
+    "primary_category": "materials-testing",
+    "description": "Industrial Machinery Manufacturing company based in Assen, Drenthe. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Resato Hydrogen Technology",
+      "linkedin_industry": "Industrial Machinery Manufacturing",
+      "location": "Assen, Drenthe",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ZELTWANGER Czech Republic",
+    "primary_category": "materials-testing",
+    "description": "Industrial Machinery Manufacturing company based in Ku\u0159im, Czech Republic. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ZELTWANGER Czech Republic",
+      "linkedin_industry": "Industrial Machinery Manufacturing",
+      "location": "Ku\u0159im, Czech Republic",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ZELTWANGER USA",
+    "primary_category": "materials-testing",
+    "description": "Automation Machinery Manufacturing company based in North Charleston, SC. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ZELTWANGER USA",
+      "linkedin_industry": "Automation Machinery Manufacturing",
+      "location": "North Charleston, SC",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ZELTWANGER Group",
+    "primary_category": "materials-testing",
+    "description": "Industrial Machinery Manufacturing company based in T\u00fcbingen, Baden-W\u00fcrttemberg. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ZELTWANGER Group",
+      "linkedin_industry": "Industrial Machinery Manufacturing",
+      "location": "T\u00fcbingen, Baden-W\u00fcrttemberg",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "CSA Group LLC.",
+    "primary_category": "materials-testing",
+    "description": "Research Services company based in Port St. Lucie, Florida. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "CSA Group LLC.",
+      "linkedin_industry": "Research Services",
+      "location": "Port St. Lucie, Florida",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "CSA Group",
+    "primary_category": "materials-testing",
+    "description": "Public Safety company based in Toronto, Ontario. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "CSA Group",
+      "linkedin_industry": "Public Safety",
+      "location": "Toronto, Ontario",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "SGS Supply Chain Assurance",
+    "primary_category": "materials-testing",
+    "description": "Transportation, Logistics, Supply Chain and Storage company based in Baar, Zug. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "SGS Supply Chain Assurance",
+      "linkedin_industry": "Transportation, Logistics, Supply Chain and Storage",
+      "location": "Baar, Zug",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "SGS Environment, Health & Safety",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "SGS Environment, Health & Safety",
+      "linkedin_industry": "Environmental Services",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "SGS Certification Solutions",
+    "primary_category": "materials-testing",
+    "description": "International Trade and Development company based in Baar, Zug. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "SGS Certification Solutions",
+      "linkedin_industry": "International Trade and Development",
+      "location": "Baar, Zug",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "SGS Cosmetics & Personal Care",
+    "primary_category": "materials-testing",
+    "description": "Personal Care Product Manufacturing company based in Baar, Zug. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "SGS Cosmetics & Personal Care",
+      "linkedin_industry": "Personal Care Product Manufacturing",
+      "location": "Baar, Zug",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "SGS Pharma",
+    "primary_category": "pharmaceutical-testing",
+    "description": "Pharmaceutical Manufacturing company based in Geneva, -. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "SGS Pharma",
+      "linkedin_industry": "Pharmaceutical Manufacturing",
+      "location": "Geneva, -",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "SGS Food",
+    "primary_category": "materials-testing",
+    "description": "Food and Beverage Services company based in Baar, Zug. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "SGS Food",
+      "linkedin_industry": "Food and Beverage Services",
+      "location": "Baar, Zug",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "SGS Natural Resources",
+    "primary_category": "materials-testing",
+    "description": "International Trade and Development company based in Baar, Zug. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "SGS Natural Resources",
+      "linkedin_industry": "International Trade and Development",
+      "location": "Baar, Zug",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "SGS",
+    "primary_category": "materials-testing",
+    "description": "Professional Services company based in Baar, Zug. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "SGS",
+      "linkedin_industry": "Professional Services",
+      "location": "Baar, Zug",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "SGS Environment, Health and Safety (North America)",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in East Syracuse, NY. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "SGS Environment, Health and Safety (North America)",
+      "linkedin_industry": "Environmental Services",
+      "location": "East Syracuse, NY",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "TUV NORD Malaysia",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "TUV NORD Malaysia",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "PT. T\u00dcV NORD Indonesia",
+    "primary_category": "materials-testing",
+    "description": "Consumer Services company based in Jakarta Selatan, DKI Jakarta. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "PT. T\u00dcV NORD Indonesia",
+      "linkedin_industry": "Consumer Services",
+      "location": "Jakarta Selatan, DKI Jakarta",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "TUV NORD Polska",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Katowice, \u015bl\u0105skie. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "TUV NORD Polska",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Katowice, \u015bl\u0105skie",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "T\u00dcV AUSTRIA Group",
+    "primary_category": "materials-testing",
+    "description": "Public Safety company based in Brunn am Gebirge, Nieder\u00f6sterreich. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "T\u00dcV AUSTRIA Group",
+      "linkedin_industry": "Public Safety",
+      "location": "Brunn am Gebirge, Nieder\u00f6sterreich",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "T\u00dcV Rheinland Africa",
+    "primary_category": "materials-testing",
+    "description": "Public Safety company based in Cologne, North Rhine-Westphalia. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "T\u00dcV Rheinland Africa",
+      "linkedin_industry": "Public Safety",
+      "location": "Cologne, North Rhine-Westphalia",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "T\u00dcV Rheinland North America",
+    "primary_category": "materials-testing",
+    "description": "Public Safety company based in Boxborough, Massachusetts. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "T\u00dcV Rheinland North America",
+      "linkedin_industry": "Public Safety",
+      "location": "Boxborough, Massachusetts",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "T\u00dcV NORD GROUP",
+    "primary_category": "materials-testing",
+    "description": "Consumer Services company based in Hannover. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "T\u00dcV NORD GROUP",
+      "linkedin_industry": "Consumer Services",
+      "location": "Hannover",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "T\u00dcV NORD Egypt",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Giza, Egypt. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "T\u00dcV NORD Egypt",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Giza, Egypt",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "T\u00dcV Rheinland South America",
+    "primary_category": "materials-testing",
+    "description": "Public Safety company based in S\u00e3o Paulo, S\u00e3o Paulo. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "T\u00dcV Rheinland South America",
+      "linkedin_industry": "Public Safety",
+      "location": "S\u00e3o Paulo, S\u00e3o Paulo",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "T\u00dcV Rheinland Europe",
+    "primary_category": "materials-testing",
+    "description": "Public Safety company based in MADRID. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "T\u00dcV Rheinland Europe",
+      "linkedin_industry": "Public Safety",
+      "location": "MADRID",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "T\u00dcV Rheinland Asia",
+    "primary_category": "materials-testing",
+    "description": "Public Safety company based in Cologne, North Rhine-Westphalia. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "T\u00dcV Rheinland Asia",
+      "linkedin_industry": "Public Safety",
+      "location": "Cologne, North Rhine-Westphalia",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "T\u00dcV NORD Nederland",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Son, North Brabant. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "T\u00dcV NORD Nederland",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Son, North Brabant",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "TUV India Pvt. Ltd.",
+    "primary_category": "materials-testing",
+    "description": "International Trade and Development company based in Mumbai, Maharashtra. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "TUV India Pvt. Ltd.",
+      "linkedin_industry": "International Trade and Development",
+      "location": "Mumbai, Maharashtra",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "T\u00dcV Rheinland Middle East",
+    "primary_category": "materials-testing",
+    "description": "Public Safety company based in Saudi Arabia, UAE, Kuwait, Oman, Qatar, Iraq, Pakistan, and rest of Middle East. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "T\u00dcV Rheinland Middle East",
+      "linkedin_industry": "Public Safety",
+      "location": "Saudi Arabia, UAE, Kuwait, Oman, Qatar, Iraq, Pakistan, and rest of Middle East",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "T\u00dcV S\u00dcD",
+    "primary_category": "materials-testing",
+    "description": "Public Safety company based in Munich, Germany. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "T\u00dcV S\u00dcD",
+      "linkedin_industry": "Public Safety",
+      "location": "Munich, Germany",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "T\u00dcV Rheinland Group",
+    "primary_category": "materials-testing",
+    "description": "Public Safety company based in Cologne. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "T\u00dcV Rheinland Group",
+      "linkedin_industry": "Public Safety",
+      "location": "Cologne",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "AB CERTIFICATION",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Paris, \u00cele-de-France. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "AB CERTIFICATION",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Paris, \u00cele-de-France",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Vector Testing Solutions",
+    "primary_category": "materials-testing",
+    "description": "Software Development company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Vector Testing Solutions",
+      "linkedin_industry": "Software Development",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "TESTING CENTER",
+    "primary_category": "materials-testing",
+    "description": "Software Development company based in Paris, \u00cele-de-France. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "TESTING CENTER",
+      "linkedin_industry": "Software Development",
+      "location": "Paris, \u00cele-de-France",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "The Testing Agency",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "The Testing Agency",
+      "linkedin_industry": "Environmental Services",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Testing SP",
+    "primary_category": "materials-testing",
+    "description": "Beverage Manufacturing company based in Bangalore, Karnataka. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Testing SP",
+      "linkedin_industry": "Beverage Manufacturing",
+      "location": "Bangalore, Karnataka",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurofins Environment Testing (USA)",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Lancaster, Pennsylvania. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurofins Environment Testing (USA)",
+      "linkedin_industry": "Environmental Services",
+      "location": "Lancaster, Pennsylvania",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Testing",
+    "primary_category": "materials-testing",
+    "description": "Electrical Equipment Manufacturing company based in Tlaquepaque, Jalisco. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Testing",
+      "linkedin_industry": "Electrical Equipment Manufacturing",
+      "location": "Tlaquepaque, Jalisco",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "TestingXperts",
+    "primary_category": "materials-testing",
+    "description": "IT Services and IT Consulting company based in Mechanicsburg, Pennsylvania. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "TestingXperts",
+      "linkedin_industry": "IT Services and IT Consulting",
+      "location": "Mechanicsburg, Pennsylvania",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Testing IT",
+    "primary_category": "materials-testing",
+    "description": "Software Development company based in M\u00e9xico, Distrito Federal. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Testing IT",
+      "linkedin_industry": "Software Development",
+      "location": "M\u00e9xico, Distrito Federal",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Testing Company",
+    "primary_category": "materials-testing",
+    "description": "IT Services and IT Consulting company based in Novo Hamburgo, Rio Grande do Sul. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Testing Company",
+      "linkedin_industry": "IT Services and IT Consulting",
+      "location": "Novo Hamburgo, Rio Grande do Sul",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "QSpiders - Software Testing Training Institute",
+    "primary_category": "materials-testing",
+    "description": "Software Development company based in Bangalore, Karnataka. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "QSpiders - Software Testing Training Institute",
+      "linkedin_industry": "Software Development",
+      "location": "Bangalore, Karnataka",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "TestCrew | Quality Engineering & Software Testing",
+    "primary_category": "materials-testing",
+    "description": "IT Services and IT Consulting company based in Riyadh. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "TestCrew | Quality Engineering & Software Testing",
+      "linkedin_industry": "IT Services and IT Consulting",
+      "location": "Riyadh",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "AI Tester",
+    "primary_category": "materials-testing",
+    "description": "Technology, Information and Internet company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "AI Tester",
+      "linkedin_industry": "Technology, Information and Internet",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "CTFL - ISTQB Certified Tester Foundation Level Exam",
+    "primary_category": "materials-testing",
+    "description": "IT Services and IT Consulting company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "CTFL - ISTQB Certified Tester Foundation Level Exam",
+      "linkedin_industry": "IT Services and IT Consulting",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Testing Daily",
+    "primary_category": "materials-testing",
+    "description": "Software Development company based in Bengaluru. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Testing Daily",
+      "linkedin_industry": "Software Development",
+      "location": "Bengaluru",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "TESTER",
+    "primary_category": "materials-testing",
+    "description": "Technology, Information and Internet company based in Toronto, Ontario. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "TESTER",
+      "linkedin_industry": "Technology, Information and Internet",
+      "location": "Toronto, Ontario",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Tester",
+    "primary_category": "materials-testing",
+    "description": "Medical Equipment Manufacturing company based in San Francisco, CA. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Tester",
+      "linkedin_industry": "Medical Equipment Manufacturing",
+      "location": "San Francisco, CA",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Testers HUB: Software Testing Company",
+    "primary_category": "materials-testing",
+    "description": "Software Development company based in Pune, Maharashtra. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Testers HUB: Software Testing Company",
+      "linkedin_industry": "Software Development",
+      "location": "Pune, Maharashtra",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "testers.ai",
+    "primary_category": "materials-testing",
+    "description": "Software Development company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "testers.ai",
+      "linkedin_industry": "Software Development",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Tester Electromechanical LLC",
+    "primary_category": "materials-testing",
+    "description": "Construction company based in Dubai, Dubai. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Tester Electromechanical LLC",
+      "linkedin_industry": "Construction",
+      "location": "Dubai, Dubai",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "EFCO USA, Inc. - Valve Repair & Testing Equipment",
+    "primary_category": "materials-testing",
+    "description": "Machinery Manufacturing company based in Charlotte, NC. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "EFCO USA, Inc. - Valve Repair & Testing Equipment",
+      "linkedin_industry": "Machinery Manufacturing",
+      "location": "Charlotte, NC",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "LBG testing equipment",
+    "primary_category": "materials-testing",
+    "description": "Industrial Machinery Manufacturing company based in Azzano San Paolo, Bergamo. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "LBG testing equipment",
+      "linkedin_industry": "Industrial Machinery Manufacturing",
+      "location": "Azzano San Paolo, Bergamo",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Utest Material Testing Equipment",
+    "primary_category": "materials-testing",
+    "description": "Machinery Manufacturing company based in Ankara, No States Found. Use Address. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Utest Material Testing Equipment",
+      "linkedin_industry": "Machinery Manufacturing",
+      "location": "Ankara, No States Found. Use Address",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "OFI Testing Equipment, Inc.",
+    "primary_category": "oil-gas-testing",
+    "description": "Oil and Gas company based in Houston, TX. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "OFI Testing Equipment, Inc.",
+      "linkedin_industry": "Oil and Gas",
+      "location": "Houston, TX",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Testing Equipment Specialist Team Co.",
+    "primary_category": "oil-gas-testing",
+    "description": "Oil and Gas company based in Dammam, Eastern Province. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Testing Equipment Specialist Team Co.",
+      "linkedin_industry": "Oil and Gas",
+      "location": "Dammam, Eastern Province",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "ITC Labs - Interstellar Testing Centre",
+    "primary_category": "materials-testing",
+    "description": "Professional Services company based in Panchkula, Haryana. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "ITC Labs - Interstellar Testing Centre",
+      "linkedin_industry": "Professional Services",
+      "location": "Panchkula, Haryana",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Chemical Testing Lab",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Kibutz Beit Ha&#39;emek, Israel. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Chemical Testing Lab",
+      "linkedin_industry": "Environmental Services",
+      "location": "Kibutz Beit Ha&#39;emek, Israel",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Environmental Testing And laboratories Company (ETLCO)",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Jubail. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Environmental Testing And laboratories Company (ETLCO)",
+      "linkedin_industry": "Environmental Services",
+      "location": "Jubail",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Testing Matters Labs",
+    "primary_category": "materials-testing",
+    "description": "Hospitals and Health Care company based in Sunrise, Florida. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Testing Matters Labs",
+      "linkedin_industry": "Hospitals and Health Care",
+      "location": "Sunrise, Florida",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Molecular Testing Labs",
+    "primary_category": "materials-testing",
+    "description": "Medical and Diagnostic Laboratories company based in Vancouver, WASHINGTON. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Molecular Testing Labs",
+      "linkedin_industry": "Medical and Diagnostic Laboratories",
+      "location": "Vancouver, WASHINGTON",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "GEOSCIENCE TESTING LABORATORY",
+    "primary_category": "materials-testing",
+    "description": "Hospitals and Health Care company based in Business related. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "GEOSCIENCE TESTING LABORATORY",
+      "linkedin_industry": "Hospitals and Health Care",
+      "location": "Business related",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "The Testing Lab PLC",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Bentley, England. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "The Testing Lab PLC",
+      "linkedin_industry": "Environmental Services",
+      "location": "Bentley, England",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "HIGHPOWER Validation Testing & Lab Services",
+    "primary_category": "materials-testing",
+    "description": "Medical Device company based in Rochester, New York. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "HIGHPOWER Validation Testing & Lab Services",
+      "linkedin_industry": "Medical Device",
+      "location": "Rochester, New York",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Middle East Testing Services(METS Lab), UAE",
+    "primary_category": "materials-testing",
+    "description": "Consumer Services company based in Abu Dhabi. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Middle East Testing Services(METS Lab), UAE",
+      "linkedin_industry": "Consumer Services",
+      "location": "Abu Dhabi",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Material Lab Testing Services",
+    "primary_category": "materials-testing",
+    "description": "Wholesale Building Materials company based in Al Quoz Industrial Area 4, Dubai. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Material Lab Testing Services",
+      "linkedin_industry": "Wholesale Building Materials",
+      "location": "Al Quoz Industrial Area 4, Dubai",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Bureau of Indian Standards",
+    "primary_category": "materials-testing",
+    "description": "Government Administration company based in New Delhi, Delhi. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Bureau of Indian Standards",
+      "linkedin_industry": "Government Administration",
+      "location": "New Delhi, Delhi",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Bureau Veritas Group",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Paris, Courbevoie. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Bureau Veritas Group",
+      "linkedin_industry": "Environmental Services",
+      "location": "Paris, Courbevoie",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "South African Bureau of Standards",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Pretoria, Gauteng. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "South African Bureau of Standards",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Pretoria, Gauteng",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Pioneers of Quality Systems and Certifications",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Pioneers of Quality Systems and Certifications",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Quality Asia Certifications",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Delhi, Delhi. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Quality Asia Certifications",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Delhi, Delhi",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Quality Certification Services",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Gainesville, FL. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Quality Certification Services",
+      "linkedin_industry": "Environmental Services",
+      "location": "Gainesville, FL",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Quality Control Certifications",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Delhi, Delhi. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Quality Control Certifications",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Delhi, Delhi",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Bio-Standards",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in riyadh, riyadh. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Bio-Standards",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "riyadh, riyadh",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Eurovent Certification",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Paris. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Eurovent Certification",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Paris",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "URS Certification",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "URS Certification",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "BM Certification",
+    "primary_category": "environmental-testing",
+    "description": "Environmental Services company based in Warwick , England. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "BM Certification",
+      "linkedin_industry": "Environmental Services",
+      "location": "Warwick , England",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "USB Certification",
+    "primary_category": "materials-testing",
+    "description": "Engineering Services company based in \u0130zmir. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "USB Certification",
+      "linkedin_industry": "Engineering Services",
+      "location": "\u0130zmir",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "QMS Certification - Brazil",
+    "primary_category": "materials-testing",
+    "description": "Business Consulting and Services company based in S\u00e3o Paulo, SP. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "QMS Certification - Brazil",
+      "linkedin_industry": "Business Consulting and Services",
+      "location": "S\u00e3o Paulo, SP",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "China Petroleum Pipeline Engineering Corporation (CPPE-AD)",
+    "primary_category": "oil-gas-testing",
+    "description": "Oil and Gas company based in Abu Dhabi, Abu Dhabi. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "China Petroleum Pipeline Engineering Corporation (CPPE-AD)",
+      "linkedin_industry": "Oil and Gas",
+      "location": "Abu Dhabi, Abu Dhabi",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "DustAct - Mine Dust Specialists",
+    "primary_category": "materials-testing",
+    "description": "Mining company based in Johannesburg, Gauteng. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "DustAct - Mine Dust Specialists",
+      "linkedin_industry": "Mining",
+      "location": "Johannesburg, Gauteng",
+      "source": "LinkedIn Following"
+    }
+  },
+  {
+    "company_name": "Instruments World",
+    "primary_category": "oil-gas-testing",
+    "description": "Oil and Gas company based in Unknown. Source: LinkedIn Following.",
+    "status": "pending_approval",
+    "source_data": {
+      "name": "Instruments World",
+      "linkedin_industry": "Oil and Gas",
+      "location": "Unknown",
+      "source": "LinkedIn Following"
+    }
+  }
+]

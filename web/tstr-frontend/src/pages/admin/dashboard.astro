@@ -1,509 +1,168 @@
 ---
-import { supabase } from '../../lib/supabase'
+import AdminLayout from '../../layouts/AdminLayout.astro';
 
-// Force SSR for dynamic data
-export const prerender = false;
-
-// Auth Check
-const { data: { session } } = await supabase.auth.getSession();
-const userRole = session?.user?.user_metadata?.role;
-const isStaff = userRole === 'staff' || userRole === 'super_admin';
-
-if (!session || !isStaff) {
-  return Astro.redirect('/admin/login');
-}
-
-// Fetch dashboard data
-const { data: listings, error: listingsError } = await supabase
-  .from('listings')
-  .select('id, business_name, created_at, updated_at, status, category:category_id(name, slug), source_script, script_location')
-  .eq('status', 'active')
-
-const { data: pendingListings, error: pendingError } = await supabase
-  .from('listings')
-  .select('id, business_name, created_at, category:category_id(name)')
-  .eq('status', 'pending')
-  .order('created_at', { ascending: false })
-
-const { data: recentListings, error: recentError } = await supabase
-  .from('listings')
-  .select('id, business_name, created_at, category:category_id(name)')
-  .eq('status', 'active')
-  .order('created_at', { ascending: false })
-  .limit(5)
-
-const { data: clicks, error: clicksError } = await supabase
-  .from('clicks')
-  .select('id, created_at')
-  .order('created_at', { ascending: false })
-  .limit(100)
-
-const { data: pendingResearch, error: researchError } = await supabase
-  .from('pending_research')
-  .select('id, url, error_message, created_at')
-
-// Fetch claims data
-const { data: claims, error: claimsError } = await supabase
-  .from('claims')
-  .select('id, provider_name, contact_name, business_email, phone, created_at, status')
-  .order('created_at', { ascending: false })
-
-// Fetch auth users (requires service role, but using anon for now - may need backend API)
-const { data: users, error: usersError } = await supabase.auth.admin.listUsers()
-
-// Calculate claims metrics
-const totalClaims = claims?.length || 0
-const pendingClaims = claims?.filter(c => !c.status || c.status === 'pending').length || 0
-const recentClaims = claims?.filter(c => new Date(c.created_at) > lastWeek).length || 0
-
-const { data: categories, error: categoriesError } = await supabase
-  .from('categories')
-  .select('id, name, slug')
-
-const totalListings = listings?.length || 0
-const pendingCount = pendingListings?.length || 0
-const lastUpdate = listings?.[0]?.updated_at || 'Unknown'
-const recentClicks = clicks?.length || 0
-const pendingUrls = pendingResearch?.length || 0
-
-// Calculate metrics
-const today = new Date()
-const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000)
-const recentListingsCount = listings?.filter(l => new Date(l.created_at) > lastWeek).length || 0
-const recentClicksCount = clicks?.filter(c => new Date(c.created_at) > lastWeek).length || 0
-
-// Group listings by category
-const listingsByCategory = listings?.reduce((acc, listing) => {
-  const categoryName = listing.category?.name || 'Unknown'
-  if (!acc[categoryName]) {
-    acc[categoryName] = []
-  }
-  acc[categoryName].push(listing)
-  return acc
-}, {}) || {}
-
-// For environmental testing, get subcategory breakdown
-let environmentalSubcategories = {}
-if (listingsByCategory['Environmental Testing']) {
-  const envListings = listingsByCategory['Environmental Testing']
-  // Fetch custom fields for environmental listings
-  const envListingIds = envListings.map(l => l.id)
-  if (envListingIds.length > 0) {
-    const { data: customFields } = await supabase
-      .from('listing_custom_field_values')
-      .select(`
-        listing_id,
-        value,
-        custom_fields (name)
-      `)
-      .in('listing_id', envListingIds)
-      .eq('custom_fields.name', 'test_types')
-
-    environmentalSubcategories = customFields?.reduce((acc, field) => {
-      const value = field.value?.toLowerCase() || ''
-      if (value.includes('air quality')) acc['Air Quality'] = (acc['Air Quality'] || 0) + 1
-      if (value.includes('water quality')) acc['Water Quality'] = (acc['Water Quality'] || 0) + 1
-      if (value.includes('soil')) acc['Soil Testing'] = (acc['Soil Testing'] || 0) + 1
-      if (value.includes('noise') || value.includes('vibration')) acc['Noise/Vibration'] = (acc['Noise/Vibration'] || 0) + 1
-      if (value.includes('esg') || value.includes('sustainability')) acc['ESG/Sustainability'] = (acc['ESG/Sustainability'] || 0) + 1
-      return acc
-    }, {}) || {}
-  }
-}
-
-// Calculate category metrics
-const categoryMetrics = Object.entries(listingsByCategory).map(([categoryName, categoryListings]) => {
-  const recent = categoryListings.filter(l => new Date(l.created_at) > lastWeek).length
-  return {
-    name: categoryName,
-    total: categoryListings.length,
-    recent: recent,
-    lastUpdate: categoryListings.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))[0]?.updated_at
-  }
-}).sort((a, b) => b.total - a.total)
-
-const title = 'Scraper Dashboard'
+// Force SSR to ensure fresh delivery of the shell (though logic is client-side)
+export const prerender = false; 
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
-    <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
-</head>
-  <body class="bg-gray-50 min-h-screen">
-    <div class="container mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-8">{title}</h1>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-         <!-- OCI Scraper Status -->
-         <div class="bg-white rounded-lg shadow-md p-6">
-           <h2 class="text-xl font-semibold text-gray-800 mb-4">OCI Scraper Status</h2>
-           <div class="space-y-3">
-             <div class="flex justify-between items-center">
-               <span class="text-gray-600">Status:</span>
-               <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Active</span>
-             </div>
-             <div class="flex justify-between items-center">
-               <span class="text-gray-600">Last Run:</span>
-               <span class="text-gray-900 text-sm">{new Date(lastUpdate).toLocaleString()}</span>
-             </div>
-             <div class="flex justify-between items-center">
-               <span class="text-gray-600">Script:</span>
-               <span class="text-gray-900 text-sm">run_scraper.py</span>
-             </div>
-             <div class="flex justify-between items-center">
-               <span class="text-gray-600">Location:</span>
-               <span class="text-gray-900 text-sm">/home/opc/tstr-scraper/</span>
-             </div>
-             <div class="flex justify-between items-center">
-               <span class="text-gray-600">Source:</span>
-               <span class="text-gray-900">OCI Daily Cron</span>
-             </div>
-             <div class="flex justify-between items-center">
-               <span class="text-gray-600">Frequency:</span>
-               <span class="text-gray-900">Daily @ 2:00 AM GMT</span>
-             </div>
-           </div>
-         </div>
-
-         <!-- Local Scraper Status -->
-         <div class="bg-white rounded-lg shadow-md p-6">
-           <h2 class="text-xl font-semibold text-gray-800 mb-4">Local Scraper Status</h2>
-           <div class="space-y-3">
-             <div class="flex justify-between items-center">
-               <span class="text-gray-600">Status:</span>
-               <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Automated</span>
-             </div>
-             <div class="flex justify-between items-center">
-               <span class="text-gray-600">Last Run:</span>
-               <span class="text-gray-900 text-sm">Oil & Gas: Dec 2, 2025 (Test Run)</span>
-             </div>
-             <div class="flex justify-between items-center">
-               <span class="text-gray-600">Script:</span>
-               <span class="text-gray-900 text-sm">scrapers/oil_gas_playwright.py</span>
-             </div>
-             <div class="flex justify-between items-center">
-               <span class="text-gray-600">Location:</span>
-               <span class="text-gray-900 text-sm">web/tstr-automation/</span>
-             </div>
-             <div class="flex justify-between items-center">
-               <span class="text-gray-600">RAM Available:</span>
-               <span class="text-green-600 font-semibold">40GB</span>
-             </div>
-             <div class="flex justify-between items-center">
-               <span class="text-gray-600">Frequency:</span>
-               <span class="text-gray-900">Weekly (Systemd Timer)</span>
-             </div>
-           </div>
-         </div>
-
-        <!-- Data Quality Summary -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h2 class="text-xl font-semibold text-gray-800 mb-4">Data Quality</h2>
-          <div class="space-y-3">
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Active Listings:</span>
-              <span class="text-gray-900 font-semibold">{totalListings}</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Pending Review:</span>
-              <span class="text-orange-600 font-bold">{pendingCount}</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Invalid URLs:</span>
-              <span class="text-red-600 font-semibold">{pendingUrls}</span>
-            </div>
-          </div>
+<AdminLayout title="Dashboard">
+    <div id="loading" class="flex items-center justify-center h-full min-h-[50vh]">
+        <div class="text-center">
+            <svg class="animate-spin h-10 w-10 text-blue-500 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="text-gray-500 text-lg">Verifying Access...</p>
         </div>
-
-        <!-- Failed URLs Alert -->
-        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
-          <div class="flex items-center justify-between">
-            <div>
-              <h3 class="text-sm font-medium text-red-800">Failed URL Validations</h3>
-              <p class="text-sm text-red-600 mt-1">{pendingUrls} URLs need attention</p>
-            </div>
-            <a href="/admin/failed-urls" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm font-medium">
-              View Details
-            </a>
-          </div>
-        </div>
-      </div>
-
-       <!-- Scraper Sources -->
-       <div class="mt-8">
-         <h2 class="text-2xl font-semibold text-gray-800 mb-6">Scraper Sources & Scripts</h2>
-         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-             <div>
-               <h3 class="text-lg font-semibold text-gray-800 mb-4">OCI Scrapers (Daily)</h3>
-               <div class="space-y-2">
-                 <div class="flex justify-between">
-                   <span class="text-gray-600">Pharmaceutical Testing:</span>
-                   <span class="text-gray-900 text-sm">dual_scraper.py</span>
-                 </div>
-                 <div class="flex justify-between">
-                   <span class="text-gray-600">Biotech Testing:</span>
-                   <span class="text-gray-900 text-sm">dual_scraper.py</span>
-                 </div>
-                 <div class="flex justify-between">
-                   <span class="text-gray-600">Materials Testing:</span>
-                   <span class="text-gray-900 text-sm">dual_scraper.py</span>
-                 </div>
-               </div>
-             </div>
-             <div>
-               <h3 class="text-lg font-semibold text-gray-800 mb-4">Local Scrapers (Weekly)</h3>
-               <div class="space-y-2">
-                 <div class="flex justify-between">
-                   <span class="text-gray-600">Oil & Gas Testing:</span>
-                   <span class="text-gray-900 text-sm">oil_gas_playwright.py</span>
-                 </div>
-                 <div class="flex justify-between">
-                   <span class="text-gray-600">A2LA Materials:</span>
-                   <span class="text-gray-900 text-sm">a2la_materials.py</span>
-                 </div>
-                 <div class="flex justify-between">
-                   <span class="text-gray-600">TNI Environmental:</span>
-                   <span class="text-gray-900 text-sm">tni_environmental.py</span>
-                 </div>
-               </div>
-             </div>
-           </div>
-         </div>
-       </div>
-
-       <!-- Source Tracking Statistics -->
-       <div class="mt-8">
-         <h2 class="text-2xl font-semibold text-gray-800 mb-6">Data Source Statistics</h2>
-         <div class="bg-white rounded-lg shadow-md p-6">
-           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-             {(() => {
-               const sourceStats = listings?.reduce((acc, listing) => {
-                 const script = listing.source_script || 'Unknown';
-                 const location = listing.script_location || 'Unknown';
-                 const key = `${script} (${location})`;
-                 if (!acc[key]) {
-                   acc[key] = { count: 0, categories: new Set() };
-                 }
-                 acc[key].count++;
-                 if (listing.category?.name) {
-                   acc[key].categories.add(listing.category.name);
-                 }
-                 return acc;
-               }, {}) || {};
-
-               return Object.entries(sourceStats).map(([source, stats]) => (
-                 <div class="border rounded-lg p-4">
-                   <h3 class="font-semibold text-gray-800 mb-2">{source}</h3>
-                   <div class="space-y-1 text-sm text-gray-600">
-                     <p>Listings: <span class="font-medium text-gray-900">{stats.count}</span></p>
-                     <p>Categories: <span class="font-medium text-gray-900">{Array.from(stats.categories).join(', ')}</span></p>
-                   </div>
-                 </div>
-               ));
-             })()}
-           </div>
-         </div>
-       </div>
-
-        <!-- Scraper Performance by Category -->
-        <div class="mt-8">
-          <h2 class="text-2xl font-semibold text-gray-800 mb-6">Scraper Performance by Category</h2>
-         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-           {categoryMetrics.map((category) => (
-             <div class="bg-white rounded-lg shadow-md p-6">
-               <h3 class="text-lg font-semibold text-gray-800 mb-4">{category.name}</h3>
-               <div class="space-y-3">
-                 <div class="flex justify-between items-center">
-                   <span class="text-gray-600">Total Listings:</span>
-                   <span class="text-gray-900 font-semibold">{category.total}</span>
-                 </div>
-                 <div class="flex justify-between items-center">
-                   <span class="text-gray-600">New (7 days):</span>
-                   <span class="text-blue-600 font-semibold">{category.recent}</span>
-                 </div>
-                 <div class="flex justify-between items-center">
-                   <span class="text-gray-600">Last Updated:</span>
-                   <span class="text-gray-500 text-sm">{category.lastUpdate ? new Date(category.lastUpdate).toLocaleDateString() : 'Unknown'}</span>
-                 </div>
-                 <div class="flex justify-between items-center">
-                   <span class="text-gray-600">Success Rate:</span>
-                   <span class="text-green-600 font-semibold">95%+</span>
-                 </div>
-                 {category.name === 'Environmental Testing' && Object.keys(environmentalSubcategories).length > 0 && (
-                   <div class="mt-4 pt-4 border-t border-gray-200">
-                     <span class="text-sm font-medium text-gray-700 mb-2 block">Subcategories:</span>
-                     <div class="space-y-1">
-                       {Object.entries(environmentalSubcategories).map(([sub, count]) => (
-                         <div class="flex justify-between text-sm">
-                           <span class="text-gray-600">{sub}:</span>
-                           <span class="text-gray-900">{count}</span>
-                         </div>
-                       ))}
-                     </div>
-                   </div>
-                 )}
-               </div>
-             </div>
-           ))}
-         </div>
-       </div>
-
-      <!-- Pending Review List -->
-      <div class="mt-8 bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-semibold text-gray-800 mb-4 font-bold text-orange-600">🆕 Pending Approval ({pendingCount})</h2>
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Business Name</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date Added</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              {pendingListings?.length === 0 && (
-                <tr>
-                  <td colspan="4" class="px-6 py-4 text-center text-gray-500">No pending listings to review.</td>
-                </tr>
-              )}
-              {pendingListings?.map((listing) => (
-                <tr>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{listing.business_name}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{listing.category?.name}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(listing.created_at).toLocaleDateString()}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <a href={`/listing/${listing.slug}`} class="text-blue-600 hover:text-blue-900 mr-4">Preview</a>
-                    <button class="text-green-600 hover:text-green-900" onclick="alert('TODO: Approval Logic')">Approve</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Recent Activity & System Health -->
-      <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Recent Listings -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Listings</h2>
-          <div class="space-y-3">
-            {recentListings?.map((listing) => (
-              <div class="flex justify-between items-center border-b border-gray-100 pb-2">
-                <div class="flex-1">
-                  <span class="text-gray-900 truncate block">{listing.business_name}</span>
-                  <span class="text-gray-500 text-xs">{listing.category?.name}</span>
-                </div>
-                <span class="text-gray-500 text-sm ml-2">{new Date(listing.created_at).toLocaleDateString()}</span>
-              </div>
-            )) || <p class="text-gray-500">No recent listings</p>}
-          </div>
-        </div>
-
-        <!-- System Health -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h2 class="text-xl font-semibold text-gray-800 mb-4">System Health</h2>
-          <div class="space-y-3">
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Database:</span>
-              <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Healthy</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Frontend:</span>
-              <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Deployed</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Scrapers:</span>
-              <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Running</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Uptime:</span>
-              <span class="text-gray-900">15+ days (OCI)</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Failed URLs:</span>
-              <span class="text-red-600 font-semibold">{pendingUrls}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-       <!-- User Management Section -->
-       <div class="mt-8">
-         <h2 class="text-2xl font-semibold text-gray-800 mb-6">👥 User & Claims Management</h2>
-         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-           <!-- Claims Overview -->
-           <div class="bg-white rounded-lg shadow-md p-6">
-             <h3 class="text-lg font-semibold text-gray-800 mb-4">Claims Status</h3>
-             <div class="space-y-3">
-               <div class="flex justify-between items-center">
-                 <span class="text-gray-600">Total Claims:</span>
-                 <span class="text-gray-900 font-semibold">{totalClaims}</span>
-               </div>
-               <div class="flex justify-between items-center">
-                 <span class="text-gray-600">Pending Review:</span>
-                 <span class="text-orange-600 font-semibold">{pendingClaims}</span>
-               </div>
-               <div class="flex justify-between items-center">
-                 <span class="text-gray-600">Recent (7 days):</span>
-                 <span class="text-blue-600 font-semibold">{recentClaims}</span>
-               </div>
-             </div>
-           </div>
-
-           <!-- Recent Claims -->
-           <div class="bg-white rounded-lg shadow-md p-6">
-             <h3 class="text-lg font-semibold text-gray-800 mb-4">Recent Claims</h3>
-             <div class="space-y-3 max-h-64 overflow-y-auto">
-               {claims?.slice(0, 5).map((claim) => (
-                 <div class="flex justify-between items-center border-b border-gray-100 pb-2">
-                   <div class="flex-1">
-                     <span class="text-gray-900 text-sm font-medium">{claim.provider_name}</span>
-                     <span class="text-gray-500 text-xs block">{claim.business_email}</span>
-                   </div>
-                   <span class={`px-2 py-1 rounded-full text-xs font-medium ${
-                     claim.status === 'approved' ? 'bg-green-100 text-green-800' :
-                     claim.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                     'bg-yellow-100 text-yellow-800'
-                   }`}>
-                     {claim.status || 'pending'}
-                   </span>
-                 </div>
-               )) || <p class="text-gray-500 text-sm">No claims yet</p>}
-             </div>
-           </div>
-         </div>
-       </div>
-
-       <!-- Additional Dashboard Sections -->
-       <div class="mt-8 bg-white rounded-lg shadow-md p-6">
-         <h2 class="text-xl font-semibold text-gray-800 mb-4">Quick Actions</h2>
-         <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-           <a href="/admin/analytics" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-center transition-colors">
-             View Analytics
-           </a>
-           <a href="/admin/claims" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-center transition-colors">
-             Manage Claims
-           </a>
-           <a href="/browse" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-center transition-colors">
-             Browse Listings
-           </a>
-           <a href="/submit" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-center transition-colors">
-             Add New Listing
-           </a>
-         </div>
-       </div>
     </div>
-  </body>
-</html>
+
+    <div id="dashboard-content" class="hidden space-y-8">
+        <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+
+        <!-- Metrics Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+                <h3 class="text-gray-500 text-sm font-medium uppercase">Total Listings</h3>
+                <p class="text-3xl font-bold text-gray-900 mt-2" id="stat-total-listings">-</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-orange-500">
+                <h3 class="text-gray-500 text-sm font-medium uppercase">Pending Review</h3>
+                <p class="text-3xl font-bold text-gray-900 mt-2" id="stat-pending">-</p>
+            </div>
+             <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-500">
+                <h3 class="text-gray-500 text-sm font-medium uppercase">Failed URLs</h3>
+                <p class="text-3xl font-bold text-gray-900 mt-2" id="stat-failed">-</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
+                <h3 class="text-gray-500 text-sm font-medium uppercase">Claims</h3>
+                <p class="text-3xl font-bold text-gray-900 mt-2" id="stat-claims">-</p>
+            </div>
+        </div>
+
+        <!-- Recent Activity & Claims -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Recent Listings -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                    <h2 class="text-lg font-semibold text-gray-800">Recent Listings</h2>
+                    <a href="/browse" class="text-sm text-blue-600 hover:text-blue-800">View All</a>
+                </div>
+                <div id="recent-listings-list" class="divide-y divide-gray-100">
+                   <!-- Populated via JS -->
+                </div>
+            </div>
+
+            <!-- Recent Claims -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                    <h2 class="text-lg font-semibold text-gray-800">Recent Claims</h2>
+                    <a href="/admin/claims" class="text-sm text-blue-600 hover:text-blue-800">Manage</a>
+                </div>
+                <div id="recent-claims-list" class="divide-y divide-gray-100">
+                   <!-- Populated via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+</AdminLayout>
+
+<script>
+    import { supabaseBrowser } from '../../lib/supabase-browser';
+
+    async function initDashboard() {
+        const loading = document.getElementById('loading');
+        const content = document.getElementById('dashboard-content');
+        
+        try {
+            // 1. Auth Check (Client-Side Stop to Redirect Loop)
+            const { data: { session } } = await supabaseBrowser.auth.getSession();
+            
+            if (!session) {
+                console.log('No session, redirecting to login');
+                window.location.href = '/admin/login';
+                return;
+            }
+
+            const role = session.user?.user_metadata?.role;
+            if (role !== 'staff' && role !== 'super_admin') {
+                console.log('Invalid role:', role);
+                await supabaseBrowser.auth.signOut();
+                window.location.href = '/admin/login?error=unauthorized';
+                return;
+            }
+
+            // 2. Fetch Data via Secure API
+            const res = await fetch('/api/admin/stats', {
+                headers: {
+                    'Authorization': `Bearer ${session.access_token}`
+                }
+            });
+
+            if (!res.ok) {
+                if (res.status === 401 || res.status === 403) {
+                     window.location.href = '/admin/login?error=session_expired';
+                     return;
+                }
+                throw new Error('Failed to load stats');
+            }
+
+            const data = await res.json();
+            
+            // 3. Render Data
+            document.getElementById('stat-total-listings').textContent = data.metrics.totalListings;
+            document.getElementById('stat-pending').textContent = data.metrics.pendingCount;
+            document.getElementById('stat-failed').textContent = data.metrics.failedUrls;
+            document.getElementById('stat-claims').textContent = data.metrics.totalClaims;
+
+            // Render Recent Listings
+            const listingsContainer = document.getElementById('recent-listings-list');
+            if (data.recentListings.length === 0) {
+                listingsContainer.innerHTML = '<p class="p-4 text-center text-gray-500">No recent listings</p>';
+            } else {
+                listingsContainer.innerHTML = data.recentListings.map(l => `
+                    <div class="px-6 py-3 hover:bg-gray-50">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">${l.business_name}</p>
+                                <p class="text-xs text-gray-500">${l.category?.name || 'Unknown'}</p>
+                            </div>
+                            <span class="text-xs text-gray-400">${new Date(l.created_at).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Render Recent Claims
+            const claimsContainer = document.getElementById('recent-claims-list');
+             if (data.claims.length === 0) {
+                claimsContainer.innerHTML = '<p class="p-4 text-center text-gray-500">No recent claims</p>';
+            } else {
+                claimsContainer.innerHTML = data.claims.map(c => `
+                    <div class="px-6 py-3 hover:bg-gray-50">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">${c.provider_name}</p>
+                                <p class="text-xs text-gray-500">${c.business_email}</p>
+                            </div>
+                            <span class="px-2 py-1 rounded-full text-xs font-medium ${
+                                c.status === 'approved' ? 'bg-green-100 text-green-800' :
+                                c.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                                'bg-yellow-100 text-yellow-800'
+                            }">${c.status || 'pending'}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Show Content
+            loading.classList.add('hidden');
+            content.classList.remove('hidden');
+
+        } catch (e) {
+            console.error(e);
+            loading.innerHTML = `<p class="text-red-500">Error loading dashboard: ${e.message}</p>`;
+        }
+    }
+
+    initDashboard();
+</script>
