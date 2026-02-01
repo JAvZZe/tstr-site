@@ -62,3 +62,45 @@ export const POST: APIRoute = async ({ request }) => {
         return new Response(JSON.stringify({ error: e.message }), { status: 500 });
     }
 }
+
+export const DELETE: APIRoute = async ({ request }) => {
+    const user = await verifySuperAdmin(request);
+    if (!user) return new Response('Unauthorized: Super Admin Access Required', { status: 403 });
+
+    try {
+        const url = new URL(request.url);
+        const id = url.searchParams.get('id');
+
+        if (!id) return new Response('Missing ID', { status: 400 });
+
+        const { error } = await supabaseAdmin.auth.admin.deleteUser(id);
+        if (error) throw error;
+
+        return new Response(JSON.stringify({ success: true }), { status: 200 });
+    } catch (e: any) {
+        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+    }
+};
+
+export const PUT: APIRoute = async ({ request }) => {
+    const user = await verifySuperAdmin(request);
+    if (!user) return new Response('Unauthorized: Super Admin Access Required', { status: 403 });
+
+    try {
+        const body = await request.json();
+        const { id, role, password } = body;
+
+        if (!id) return new Response('Missing ID', { status: 400 });
+
+        const updates: any = {};
+        if (role) updates.user_metadata = { role };
+        if (password) updates.password = password;
+
+        const { data, error } = await supabaseAdmin.auth.admin.updateUserById(id, updates);
+        if (error) throw error;
+
+        return new Response(JSON.stringify({ user: data.user }), { status: 200 });
+    } catch (e: any) {
+        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+    }
+};
