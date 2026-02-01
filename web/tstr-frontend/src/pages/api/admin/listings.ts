@@ -46,3 +46,37 @@ export const GET: APIRoute = async ({ request }) => {
         return new Response(JSON.stringify({ error: e.message }), { status: 500 });
     }
 };
+
+export const POST: APIRoute = async ({ request }) => {
+    const user = await verifyAuth(request);
+    if (!user) return new Response('Unauthorized', { status: 401 });
+
+    try {
+        const body = await request.json();
+        const { id, ...updates } = body;
+
+        if (!id) return new Response('Missing ID', { status: 400 });
+
+        // Allowed fields to update
+        const allowed = ['business_name', 'status', 'website', 'category_id'];
+        const payload: any = {};
+
+        for (const key of allowed) {
+            if (updates[key] !== undefined) payload[key] = updates[key];
+        }
+
+        const { error } = await supabaseAdmin
+            .from('listings')
+            .update(payload)
+            .eq('id', id);
+
+        if (error) throw error;
+
+        return new Response(JSON.stringify({ success: true }), {
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+    } catch (e: any) {
+        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+    }
+}
