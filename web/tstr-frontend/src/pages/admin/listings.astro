@@ -1,0 +1,161 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+
+// Force SSR shell
+export const prerender = false;
+---
+
+<AdminLayout title="Listings Management">
+    <div id="loading" class="flex items-center justify-center min-h-[50vh]">
+        <div class="text-center">
+             <svg class="animate-spin h-10 w-10 text-blue-500 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="text-gray-500 text-lg">Loading Listings...</p>
+        </div>
+    </div>
+
+    <div id="content" class="hidden">
+        <div class="mb-6 flex justify-between items-center">
+            <div>
+                 <a href="/admin/dashboard" class="text-blue-600 hover:text-blue-800 text-sm mb-2 inline-block">← Back to Dashboard</a>
+                 <h1 class="text-3xl font-bold text-gray-900">Listings Management</h1>
+            </div>
+            <div class="flex gap-2">
+                <button class="filter-btn bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium" data-filter="all">All</button>
+                <button class="filter-btn bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm font-medium" data-filter="pending">Pending</button>
+                <button class="filter-btn bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm font-medium" data-filter="active">Active</button>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-800">Listings (<span id="listings-count">0</span>)</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Business</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Source</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listings-table-body" class="bg-white divide-y divide-gray-200">
+                        <!-- Populated via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</AdminLayout>
+
+<script>
+    import { supabaseBrowser } from '../../lib/supabase-browser';
+
+    let currentSession = null;
+    let allListings = [];
+
+    async function loadListings() {
+        const loading = document.getElementById('loading');
+        const content = document.getElementById('content');
+        const tbody = document.getElementById('listings-table-body');
+        const countSpan = document.getElementById('listings-count');
+
+        try {
+            // 1. Auth Check
+            const { data: { session } } = await supabaseBrowser.auth.getSession();
+            if (!session) {
+                window.location.href = '/admin/login';
+                return;
+            }
+            currentSession = session;
+
+            // 2. Fetch Data
+            const res = await fetch('/api/admin/listings', {
+                headers: { 'Authorization': `Bearer ${session.access_token}` }
+            });
+
+            if (!res.ok) throw new Error('Failed to load listings');
+
+            allListings = await res.json();
+            
+            // 3. Render Initial (All)
+            renderTable(allListings);
+            
+            loading.classList.add('hidden');
+            content.classList.remove('hidden');
+
+        } catch (e) {
+            console.error(e);
+            loading.innerHTML = `<p class="text-red-500">Error: ${e.message}</p>`;
+        }
+    }
+
+    function renderTable(listings) {
+        const tbody = document.getElementById('listings-table-body');
+        document.getElementById('listings-count').textContent = listings.length;
+
+        if (listings.length === 0) {
+             tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-12 text-center text-gray-500">No listings found</td></tr>';
+             return;
+        }
+
+        tbody.innerHTML = listings.map(l => `
+            <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4">
+                    <div class="text-sm font-medium text-gray-900">${l.business_name}</div>
+                    <div class="text-xs text-gray-500 truncate max-w-[200px]">${l.website || ''}</div>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-500">
+                    ${l.category?.name || 'Uncategorized'}
+                </td>
+                <td class="px-6 py-4">
+                     <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        l.status === 'active' ? 'bg-green-100 text-green-800' : 
+                        l.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'
+                    }">
+                        ${l.status}
+                    </span>
+                </td>
+                 <td class="px-6 py-4 text-sm text-gray-500">
+                    ${l.source_script || 'Manual'}
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-500">
+                    ${new Date(l.created_at).toLocaleDateString()}
+                </td>
+                <td class="px-6 py-4 text-sm font-medium">
+                    <button class="text-blue-600 hover:text-blue-900">Edit</button>
+                    <!-- Add more actions later -->
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // Filter Logic
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            // Update UI
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.className = 'filter-btn bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm font-medium';
+            });
+            e.target.className = 'filter-btn bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium';
+
+            // Filter Data
+            const filter = e.target.getAttribute('data-filter');
+            if (filter === 'all') {
+                renderTable(allListings);
+            } else {
+                renderTable(allListings.filter(l => l.status === l.status)); // Typo in original logic, fixing here
+                renderTable(allListings.filter(l => l.status === filter));
+            }
+        });
+    });
+    
+    // Init
+    loadListings();
+</script>
