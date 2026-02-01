@@ -1,177 +1,171 @@
 ---
-import { supabase } from '../../lib/supabase'
+import AdminLayout from '../../layouts/AdminLayout.astro';
 
-// Force SSR for dynamic data
+// Force SSR shell
 export const prerender = false;
-
-// Auth Check
-const { data: { session } } = await supabase.auth.getSession();
-const userRole = session?.user?.user_metadata?.role;
-const isStaff = userRole === 'staff' || userRole === 'super_admin';
-
-if (!session || !isStaff) {
-  return Astro.redirect('/admin/login');
-}
-
-// Fetch all claims
-const { data: claims, error: claimsError } = await supabase
-  .from('claims')
-  .select('id, provider_name, contact_name, business_email, phone, created_at, status')
-  .order('created_at', { ascending: false })
-
-const title = 'Claims Management'
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
-</head>
-  <body class="bg-gray-50 min-h-screen">
-    <div class="container mx-auto px-4 py-8">
-      <div class="mb-6">
-        <a href="/admin" class="text-blue-600 hover:text-blue-800 text-sm">← Back to Admin Dashboard</a>
-      </div>
-
-      <h1 class="text-3xl font-bold text-gray-900 mb-8">{title}</h1>
-
-      {claimsError && (
-        <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-          <p class="text-red-800">Error loading claims: {claimsError.message}</p>
+<AdminLayout title="Claims Management">
+    <div id="loading" class="flex items-center justify-center min-h-[50vh]">
+        <div class="text-center">
+             <svg class="animate-spin h-10 w-10 text-blue-500 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="text-gray-500 text-lg">Loading Claims...</p>
         </div>
-      )}
-
-      <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200">
-          <h2 class="text-lg font-semibold text-gray-800">All Claims ({claims?.length || 0})</h2>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Provider</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              {claims?.map((claim) => (
-                <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm font-medium text-gray-900">{claim.provider_name}</div>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm text-gray-900">{claim.contact_name}</div>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm text-gray-900">{claim.business_email}</div>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm text-gray-500">{claim.phone || 'N/A'}</div>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <span class={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      claim.status === 'approved' ? 'bg-green-100 text-green-800' :
-                      claim.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                      'bg-yellow-100 text-yellow-800'
-                    }`}>
-                      {claim.status || 'pending'}
-                    </span>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(claim.created_at).toLocaleDateString()}
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div class="flex space-x-2">
-                      {(!claim.status || claim.status === 'pending') && (
-                        <>
-                          <button
-                            class="text-green-600 hover:text-green-900 approve-btn"
-                            data-id={claim.id}
-                          >
-                            Approve
-                          </button>
-                          <button
-                            class="text-red-600 hover:text-red-900 reject-btn"
-                            data-id={claim.id}
-                          >
-                            Reject
-                          </button>
-                        </>
-                      )}
-                      {claim.status === 'approved' && (
-                        <span class="text-green-600">Approved</span>
-                      )}
-                      {claim.status === 'rejected' && (
-                        <span class="text-red-600">Rejected</span>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              )) || (
-                <tr>
-                  <td colspan="7" class="px-6 py-4 text-center text-gray-500">
-                    No claims found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
 
-    <script>
-      async function updateClaimStatus(claimId, status) {
-        if (confirm(`Are you sure you want to ${status} this claim?`)) {
-          try {
-            const response = await fetch('/api/claim-status', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ id: claimId, status: status })
-            });
-            if (response.ok) {
-              location.reload();
-            } else {
-              const error = await response.json();
-              alert('Error updating claim status: ' + (error.error || response.statusText));
+    <div id="claims-content" class="hidden">
+        <div class="mb-6 flex justify-between items-center">
+            <div>
+                 <a href="/admin/dashboard" class="text-blue-600 hover:text-blue-800 text-sm mb-2 inline-block">← Back to Dashboard</a>
+                 <h1 class="text-3xl font-bold text-gray-900">Claims Management</h1>
+            </div>
+            <div id="status-message" class="hidden px-4 py-2 rounded-lg text-sm font-medium"></div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+              <h2 class="text-lg font-semibold text-gray-800">All Claims (<span id="claims-count">0</span>)</h2>
+              <button id="refresh-btn" class="text-sm text-blue-600 hover:text-blue-800">Refresh</button>
+            </div>
+    
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Provider</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="claims-table-body" class="bg-white divide-y divide-gray-200">
+                   <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+        </div>
+    </div>
+</AdminLayout>
+
+<script>
+    import { supabaseBrowser } from '../../lib/supabase-browser';
+
+    let currentSession = null;
+
+    function showStatus(msg, type = 'success') {
+        const el = document.getElementById('status-message');
+        el.textContent = msg;
+        el.className = `px-4 py-2 rounded-lg text-sm font-medium ${type === 'error' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`;
+        el.classList.remove('hidden');
+        setTimeout(() => el.classList.add('hidden'), 3000);
+    }
+
+    async function loadClaims() {
+        const loading = document.getElementById('loading');
+        const content = document.getElementById('claims-content');
+        const countSpan = document.getElementById('claims-count');
+        const tbody = document.getElementById('claims-table-body');
+
+        try {
+             // 1. Auth Check
+            const { data: { session } } = await supabaseBrowser.auth.getSession();
+            if (!session) {
+                window.location.href = '/admin/login';
+                return;
             }
-          } catch (error) {
-            alert('Error: ' + error.message);
-          }
+            currentSession = session;
+
+            // 2. Fetch Data
+            const res = await fetch('/api/admin/claims', {
+                headers: { 'Authorization': `Bearer ${session.access_token}` }
+            });
+
+            if (!res.ok) throw new Error('Failed to load claims');
+
+            const claims = await res.json();
+            
+            // 3. Render
+            countSpan.textContent = claims.length;
+            
+            if (claims.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">No claims found</td></tr>';
+            } else {
+                tbody.innerHTML = claims.map(claim => `
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">${claim.provider_name}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${claim.contact_name}</div>
+                            <div class="text-xs text-gray-500">${claim.phone || ''}</div>
+                        </td>
+                         <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${claim.business_email}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                claim.status === 'approved' ? 'bg-green-100 text-green-800' :
+                                claim.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                                'bg-yellow-100 text-yellow-800'
+                            }">
+                                ${claim.status || 'pending'}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${new Date(claim.created_at).toLocaleDateString()}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex space-x-2">
+                                ${(!claim.status || claim.status === 'pending') ? `
+                                    <button onclick="window.updateClaimStatus('${claim.id}', 'approved')" class="text-green-600 hover:text-green-900">Approve</button>
+                                    <button onclick="window.updateClaimStatus('${claim.id}', 'rejected')" class="text-red-600 hover:text-red-900">Reject</button>
+                                ` : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            loading.classList.add('hidden');
+            content.classList.remove('hidden');
+
+        } catch (e) {
+            console.error(e);
+            loading.innerHTML = `<p class="text-red-500">Error: ${e.message}</p>`;
         }
-      }
+    }
 
-      // Bind dynamic listeners
-      document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.approve-btn').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const id = btn.getAttribute('data-id');
-            updateClaimStatus(id, 'approved');
-          });
-        });
+    // Expose update function to window for inline onclicks
+    window.updateClaimStatus = async (id, status) => {
+        if (!confirm(`Are you sure you want to ${status} this claim?`)) return;
 
-        document.querySelectorAll('.reject-btn').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const id = btn.getAttribute('data-id');
-            updateClaimStatus(id, 'rejected');
-          });
-        });
-      });
-    </script>
-  </body>
-</html>
+        try {
+             const res = await fetch('/api/admin/claims', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${currentSession?.access_token}`
+                },
+                body: JSON.stringify({ id, status })
+            });
+
+            if (!res.ok) throw new Error('Update failed');
+            
+            showStatus(`Claim ${status} successfully`);
+            loadClaims(); // Reload list
+
+        } catch (e) {
+            alert('Error updating claim: ' + e.message);
+        }
+    }
+
+    document.getElementById('refresh-btn')?.addEventListener('click', loadClaims);
+    
+    // Init
+    loadClaims();
+</script>

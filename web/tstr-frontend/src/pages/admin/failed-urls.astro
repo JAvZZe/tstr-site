@@ -1,391 +1,169 @@
 ---
-import { supabase } from '../../lib/supabase'
+import AdminLayout from '../../layouts/AdminLayout.astro';
 
-// Force SSR for dynamic data
+// Force SSR shell
 export const prerender = false;
-
-// Auth Check
-const { data: { session } } = await supabase.auth.getSession();
-const userRole = session?.user?.user_metadata?.role;
-const isStaff = userRole === 'staff' || userRole === 'super_admin';
-
-if (!session || !isStaff) {
-  return Astro.redirect('/admin/login');
-}
-
-// Initialize with empty data - will load client-side
-const title = 'Failed URL Validations'
-const failedUrls = []
-const correctedUrls = []
-const fetchError = null
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
-    <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
-</head>
-  <body class="bg-gray-50 min-h-screen">
-    <div class="container mx-auto px-4 py-8">
-      <div class="flex items-center justify-between mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">{title}</h1>
-        <a href="/admin/dashboard" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
-          ← Back to Dashboard
-        </a>
-      </div>
-
-      <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200">
-          <h2 class="text-lg font-semibold text-gray-800">
-            Failed URL Management ({failedUrls?.length || 0} total)
-          </h2>
-          <p class="text-gray-600 text-sm mt-1">
-            URLs that failed validation. Green rows indicate URLs that have been corrected and now exist in the active listings.
-          </p>
-          <div class="flex gap-4 mt-2 text-sm">
-            <span id="summary-stats" class="text-gray-600">Loading data...</span>
-          </div>
+<AdminLayout title="Failed URL Validations">
+    <div id="loading" class="flex items-center justify-center min-h-[50vh]">
+        <div class="text-center">
+             <svg class="animate-spin h-10 w-10 text-blue-500 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="text-gray-500 text-lg">Loading Validation Data...</p>
         </div>
-
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  URL Validation
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Business
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  URL
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Error
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date Failed
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody id="failed-urls-table" class="bg-white divide-y divide-gray-200">
-              <tr class="hover:bg-gray-50">
-                <td class="px-6 py-4 whitespace-nowrap" colspan="7">
-                  <div class="text-center text-gray-500">
-                    Loading failed URLs data...
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Remedial Actions Guide -->
-      <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <h3 class="text-lg font-semibold text-blue-800 mb-3">Correction Process</h3>
-        <div class="text-sm text-blue-700 space-y-2">
-          <p><strong>1. Investigate:</strong> Use "Test URL" to verify if the site is accessible with correct URL</p>
-          <p><strong>2. Research:</strong> Find the correct website URL and company details</p>
-          <p><strong>3. Manual Database Update:</strong> Add the corrected listing directly to the <code>listings</code> table</p>
-          <p><strong>4. Verification:</strong> Dashboard shows "Corrected" when URL exists in listings + validates URL accessibility</p>
-          <p><strong>5. Validation Check:</strong> Green checkmark = URL is live and accessible, Yellow warning = HTTP error, Red = network error</p>
-          <p><strong>6. Scraper Updates:</strong> Only modify scraper code if issue is systematic (affects multiple entries)</p>
-        </div>
-
-        <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
-          <p class="text-sm text-yellow-800">
-            <strong>⚠️ Individual corrections do NOT automatically update scrapers.</strong> Manual fixes are for edge cases. Systematic issues require code changes.
-          </p>
-        </div>
-      </div>
     </div>
 
-    <script>
-      // Supabase client configuration
-      const SUPABASE_URL = 'https://haimjeaetrsaauitrhfy.supabase.co';
-      const SUPABASE_ANON_KEY = 'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO';
+    <div id="content" class="hidden">
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Failed URL Validations</h1>
+            <div>
+                 <a href="/admin/dashboard" class="text-blue-600 hover:text-blue-800 text-sm font-medium mr-4">← Dashboard</a>
+                 <button id="refresh-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm">Refresh</button>
+            </div>
+        </div>
 
-      // Initialize Supabase client
-      let supabaseClient = null;
+        <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-800" id="table-title">Failed URL Management</h2>
+                <div class="flex gap-4 mt-2 text-sm" id="summary-stats">
+                    <span class="text-gray-500">Calculating...</span>
+                </div>
+            </div>
 
-      async function initSupabase() {
-        try {
-          console.log('Loading Supabase library...');
-          // Load Supabase dynamically
-          const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
-          console.log('Creating Supabase client...');
-          supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-          console.log('Supabase client created successfully');
-          return true;
-        } catch (error) {
-          console.error('Failed to initialize Supabase:', error);
-          return false;
-        }
-      }
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Business</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">URL</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Error</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="failed-urls-table" class="bg-white divide-y divide-gray-200">
+                        <!-- Populated via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-      async function loadFailedUrls() {
-        try {
-          console.log('Starting to load failed URLs...');
-          if (!supabaseClient) {
-            throw new Error('Supabase client not initialized');
-          }
+        <!-- Guide -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-blue-800 mb-3">Correction Process</h3>
+            <div class="text-sm text-blue-700 space-y-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+               <div>
+                  <p><strong>1. Verify:</strong> Test the URL manually.</p>
+                  <p><strong>2. Search:</strong> Find the correct company website.</p>
+                  <p><strong>3. Fix:</strong> Add the corrected listing to the DB.</p>
+               </div>
+               <div>
+                  <p><strong>4. Status:</strong> Will turn <span class="text-green-700 font-bold">Green</span> here once fixed.</p>
+                  <p><strong>5. Clean:</strong> This list auto-cleans periodically.</p>
+               </div>
+            </div>
+        </div>
+    </div>
+</AdminLayout>
 
-          console.log('Fetching failed URLs from pending_research...');
-          // Fetch failed URLs
-          const { data: failedUrls, error: failedError } = await supabaseClient
-            .from('pending_research')
-            .select('id, website, validation_error, business_name, created_at')
-            .order('created_at', { ascending: false });
+<script>
+    import { supabaseBrowser } from '../../lib/supabase-browser';
 
-          console.log('Failed URLs query result:', { data: failedUrls, error: failedError });
-
-          if (failedError) {
-            throw failedError;
-          }
-
-          // Check which URLs are corrected
-          const correctedUrls = [];
-          if (failedUrls && failedUrls.length > 0) {
-            console.log(`Found ${failedUrls.length} failed URLs, checking corrections...`);
-            const websites = failedUrls.map(item => item.website).filter(Boolean);
-            console.log('Websites to check:', websites);
-
-            if (websites.length > 0) {
-              const { data: listings, error: listingsError } = await supabaseClient
-                .from('listings')
-                .select('website')
-                .in('website', websites)
-                .eq('status', 'active');
-
-              console.log('Listings query result:', { data: listings, error: listingsError });
-
-              if (listings) {
-                correctedUrls.push(...listings.map(l => l.website));
-                console.log('Corrected URLs found:', correctedUrls);
-              }
-            }
-          }
-
-          console.log('Updating UI with data...');
-          // Update the UI
-          updateTable(failedUrls || [], correctedUrls);
-          updateSummary(failedUrls || [], correctedUrls);
-
-        } catch (error) {
-          console.error('Failed to load failed URLs:', error);
-          const tableElement = document.getElementById('failed-urls-table');
-          if (tableElement) {
-            tableElement.innerHTML = `
-              <tr>
-                <td colspan="6" class="px-6 py-12 text-center">
-                  <div class="text-red-500">
-                    <h3 class="text-sm font-medium">Error Loading Data</h3>
-                    <p class="text-sm mt-1">${error.message}</p>
-                    <p class="text-xs mt-2 text-gray-600">Check browser console (F12) for detailed logs.</p>
-                  </div>
-                </td>
-              </tr>
-            `;
-          } else {
-            console.error('Could not find table element to show error');
-          }
-        }
-      }
-
-      function updateTable(failedUrls, correctedUrls) {
+    async function loadData() {
+        const loading = document.getElementById('loading');
+        const content = document.getElementById('content');
         const tbody = document.getElementById('failed-urls-table');
-        console.log('Updating table, element found:', !!tbody);
-
-        if (!tbody) {
-          console.error('Table element not found for update');
-          return;
-        }
-
-        if (!failedUrls || failedUrls.length === 0) {
-          tbody.innerHTML = `
-            <tr>
-              <td colspan="6" class="px-6 py-12 text-center">
-                <div class="text-gray-500">
-                  <h3 class="text-sm font-medium">All URLs Valid</h3>
-                  <p class="text-sm mt-1">No failed validations at this time.</p>
-                </div>
-              </td>
-            </tr>
-          `;
-          return;
-        }
-
-        const rows = failedUrls.map(item => {
-          const isCorrected = correctedUrls.includes(item.website);
-          return `
-            <tr class="hover:bg-gray-50 ${isCorrected ? 'bg-green-50' : ''}">
-              <td class="px-6 py-4 whitespace-nowrap">
-                ${isCorrected ? `
-                  <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
-                    Corrected
-                  </span>
-                ` : `
-                  <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">
-                    Failed
-                  </span>
-                `}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-900 max-w-xs truncate" title="${item.business_name || ''}">
-                  ${item.business_name || 'Unknown'}
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-900 max-w-xs truncate" title="${item.website || ''}">
-                  ${item.website || 'N/A'}
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span class="text-sm text-red-600" title="${item.validation_error || ''}">
-                  ${(item.validation_error || 'Validation failed').length > 50
-                    ? (item.validation_error || 'Validation failed').substring(0, 50) + '...'
-                    : (item.validation_error || 'Validation failed')}
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                ${item.created_at ? new Date(item.created_at).toLocaleString() : 'Unknown'}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <div class="flex space-x-2">
-                  ${item.website ? `
-                    <a href="${item.website}" target="_blank" rel="noopener noreferrer"
-                       class="text-blue-600 hover:text-blue-900">
-                      Test URL
-                    </a>
-                    <button class="text-green-600 hover:text-green-900 copy-url-btn"
-                            data-url="${item.website}">
-                      Copy
-                    </button>
-                  ` : ''}
-                  ${!isCorrected ? `
-                    <span class="text-xs text-gray-500" title="Manually add corrected listing to database">
-                      Manual Fix Needed
-                    </span>
-                  ` : ''}
-                </div>
-              </td>
-            </tr>
-          `;
-        }).join('');
-
-        tbody.innerHTML = rows;
-      }
-
-      function updateSummary(failedUrls, correctedUrls) {
-        const summaryEl = document.getElementById('summary-stats');
-        console.log('Updating summary, element found:', !!summaryEl);
-
-        if (!summaryEl) {
-          console.error('Summary element not found for update');
-          return;
-        }
-
-        const correctedCount = correctedUrls.length;
-        const failedCount = failedUrls.length - correctedCount;
-
-        summaryEl.innerHTML = `
-          <span class="text-green-600 font-medium">Corrected: ${correctedCount}</span>
-          <span class="text-red-600 font-medium ml-4">Still Failed: ${failedCount}</span>
-        `;
-
-        // Update page title
-        const titleEl = document.querySelector('h2');
-        if (titleEl) {
-          titleEl.textContent = `Failed URL Management (${failedUrls.length} total)`;
-        }
-      }
-
-      // Handle copy URL functionality
-      document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('copy-url-btn')) {
-          const url = e.target.getAttribute('data-url');
-          navigator.clipboard.writeText(url).then(() => {
-            const originalText = e.target.textContent;
-            e.target.textContent = 'Copied!';
-            e.target.classList.add('text-green-700');
-            setTimeout(() => {
-              e.target.textContent = originalText;
-              e.target.classList.remove('text-green-700');
-            }, 1000);
-          }).catch(err => {
-            console.error('Failed to copy: ', err);
-          });
-        }
-      });
-
-      // Simple element waiting with polling
-      function waitForElement(id, timeout = 10000) {
-        return new Promise((resolve, reject) => {
-          const checkElement = () => {
-            const element = document.getElementById(id);
-            if (element) {
-              resolve(element);
-            } else if (timeout <= 0) {
-              reject(new Error(`Element #${id} not found`));
-            } else {
-              timeout -= 100;
-              setTimeout(checkElement, 100);
-            }
-          };
-          checkElement();
-        });
-      }
-
-      // Load data when page loads
-      document.addEventListener('DOMContentLoaded', async () => {
-        console.log('Page loaded, DOM content:', document.body.innerHTML.substring(0, 500));
 
         try {
-          // Wait for the table element to be available
-          console.log('Waiting for table element...');
-          const tableElement = await waitForElement('failed-urls-table');
-          console.log('Table element found:', tableElement);
+             // 1. Auth Check
+            const { data: { session } } = await supabaseBrowser.auth.getSession();
+            if (!session) {
+                window.location.href = '/admin/login';
+                return;
+            }
 
-          const success = await initSupabase();
-          console.log('Supabase init result:', success);
-          if (success) {
-            console.log('Loading failed URLs...');
-            await loadFailedUrls();
-          } else {
-            console.error('Failed to initialize Supabase');
-            tableElement.innerHTML = `
-              <tr>
-                <td colspan="7" class="px-6 py-12 text-center">
-                  <div class="text-red-500">
-                    <h3 class="text-sm font-medium">Failed to Initialize</h3>
-                    <p class="text-sm mt-1">Could not load Supabase client.</p>
-                    <p class="text-xs mt-2">Check browser console for details.</p>
-                  </div>
-                </td>
-              </tr>
+            // 2. Fetch Data
+            const res = await fetch('/api/admin/failed-urls', {
+                headers: { 'Authorization': `Bearer ${session.access_token}` }
+            });
+
+            if (!res.ok) throw new Error('Failed to load data');
+
+            const { failedUrls, correctedUrls } = await res.json();
+            
+            // 3. Render Table
+            if (!failedUrls || failedUrls.length === 0) {
+                 tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-12 text-center text-gray-500">No failed validations found. Great job!</td></tr>';
+            } else {
+                 tbody.innerHTML = failedUrls.map(item => {
+                     const isCorrected = correctedUrls.includes(item.website);
+                     return `
+                        <tr class="hover:bg-gray-50 ${isCorrected ? 'bg-green-50' : ''}">
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            ${isCorrected ? 
+                                '<span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Corrected</span>' : 
+                                '<span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">Failed</span>'}
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                             <div class="text-sm font-medium text-gray-900">${item.business_name || 'Unknown'}</div>
+                          </td>
+                           <td class="px-6 py-4 whitespace-nowrap">
+                             <div class="text-sm text-gray-500 truncate max-w-xs" title="${item.website}">${item.website || 'N/A'}</div>
+                          </td>
+                           <td class="px-6 py-4 whitespace-nowrap">
+                             <span class="text-xs text-red-600 block max-w-xs truncate" title="${item.validation_error || ''}">
+                                ${item.validation_error || 'Unknown Error'}
+                             </span>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${new Date(item.created_at).toLocaleDateString()}
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            ${item.website ? `
+                                <a href="${item.website}" target="_blank" class="text-blue-600 hover:text-blue-900 mr-3">Test</a>
+                                <button class="text-green-600 hover:text-green-900 copy-btn" data-url="${item.website}">Copy</button>
+                            ` : ''}
+                          </td>
+                        </tr>
+                     `;
+                 }).join('');
+            }
+
+            // 4. Update Stats
+            const correctedCount = correctedUrls.length;
+            const failedCount = (failedUrls?.length || 0) - correctedCount;
+            document.getElementById('summary-stats').innerHTML = `
+                <span class="text-green-600 font-bold">Corrected: ${correctedCount}</span>
+                <span class="text-red-600 font-bold ml-4">Pending: ${failedCount}</span>
             `;
-          }
-        } catch (error) {
-          console.error('Failed to find table element:', error);
-          console.log('Available elements:', document.querySelectorAll('[id]').length);
-          document.querySelectorAll('[id]').forEach(el => console.log('Element ID:', el.id));
+            document.getElementById('table-title').textContent = `Failed URL Management (${failedUrls?.length || 0})`;
+
+            // Copy Handler
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const url = e.target.getAttribute('data-url');
+                    navigator.clipboard.writeText(url);
+                    const originalText = e.target.textContent;
+                    e.target.textContent = 'Copied!';
+                    setTimeout(() => e.target.textContent = originalText, 1000);
+                });
+            });
+
+            loading.classList.add('hidden');
+            content.classList.remove('hidden');
+
+        } catch (e) {
+            console.error(e);
+            loading.innerHTML = `<p class="text-red-500">Error: ${e.message}</p>`;
         }
-      });
-    </script>
-  </body>
-</html>
+    }
+
+    document.getElementById('refresh-btn')?.addEventListener('click', loadData);
+    
+    // Init
+    loadData();
+</script>
