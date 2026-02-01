@@ -87,6 +87,13 @@ const { title } = Astro.props;
 
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden bg-white">
+            <header class="bg-white border-b border-gray-200 px-8 py-4 flex justify-between items-center">
+                 <h2 class="text-xl font-semibold text-gray-800">{title}</h2>
+                 <div class="flex items-center gap-4">
+                     <span class="text-sm text-gray-500" id="user-display"></span>
+                     <button id="header-logout-btn" class="text-sm text-red-600 hover:text-red-800 font-medium">Logout</button>
+                 </div>
+            </header>
             <main class="flex-1 overflow-y-auto p-8">
                 <slot />
             </main>
@@ -96,16 +103,24 @@ const { title } = Astro.props;
     <script>
         import { supabaseBrowser } from '../lib/supabase-browser';
         
-        const logoutBtn = document.getElementById('logout-btn');
-        logoutBtn?.addEventListener('click', async () => {
+        async function handleLogout() {
             try {
-                // Sign out from Supabase (clears local storage)
                 await supabaseBrowser.auth.signOut();
-                // Redirect to login
                 window.location.href = '/admin/login';
             } catch (error) {
                 console.error('Logout failed:', error);
                 window.location.href = '/admin/login';
+            }
+        }
+
+        document.getElementById('logout-btn')?.addEventListener('click', handleLogout);
+        document.getElementById('header-logout-btn')?.addEventListener('click', handleLogout);
+
+        // Display User Email
+        supabaseBrowser.auth.getSession().then(({ data: { session } }) => {
+            if (session?.user?.email) {
+                const display = document.getElementById('user-display');
+                if (display) display.textContent = session.user.email;
             }
         });
     </script>
