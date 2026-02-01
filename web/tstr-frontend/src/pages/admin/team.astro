@@ -1,170 +1,209 @@
 ---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+
+// Force SSR shell
 export const prerender = false;
-
-import Layout from '../../layouts/AdminLayout.astro';
-import { supabase } from '../../lib/supabase';
-
-// Auth Check & Role Check
-const { data: { session } } = await supabase.auth.getSession();
-const userRole = session?.user?.user_metadata?.role;
-
-if (!session || (userRole !== 'staff' && userRole !== 'super_admin')) {
-  return Astro.redirect('/admin/login');
-}
-
-// Super Admin Only Check
-if (userRole !== 'super_admin') {
-  return Astro.redirect('/admin/dashboard?error=unauthorized');
-}
-
-// Fetch Staff List
-// Note: Client-side fetching is often better for admin lists to use fresh data
-// unless we use the Service Role to list users here.
-// Since supabase-js standard client can't list users, we need to use a server-side API or Edge Function.
-// We'll create a simple API endpoint for this: /api/admin/users
 ---
 
-<Layout title="Team Management">
-  <div class="mb-8 flex justify-between items-center">
-    <div>
-      <h1 class="text-3xl font-bold text-gray-900">Staff Management</h1>
-      <p class="text-gray-600 mt-2">Manage access rights for TSTR Administration.</p>
+<AdminLayout title="Team Management">
+    <div id="loading" class="flex items-center justify-center min-h-[50vh]">
+        <div class="text-center">
+             <svg class="animate-spin h-10 w-10 text-blue-500 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="text-gray-500 text-lg">Loading Team Data...</p>
+        </div>
     </div>
-    <button onclick="document.getElementById('add-staff-modal').showModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-      </svg>
-      Add Team Member
-    </button>
-  </div>
 
-  <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50">
-        <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
-          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-        </tr>
-      </thead>
-      <tbody id="staff-table-body" class="bg-white divide-y divide-gray-200">
-        <!-- Loaded via JS -->
-        <tr>
-            <td colspan="5" class="px-6 py-12 text-center text-gray-500">Loading team members...</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <div id="content" class="hidden">
+        <div class="mb-8 flex justify-between items-center">
+            <div>
+                 <a href="/admin/dashboard" class="text-blue-600 hover:text-blue-800 text-sm mb-2 inline-block">← Back to Dashboard</a>
+                 <h1 class="text-3xl font-bold text-gray-900">Team & Access</h1>
+            </div>
+            <button id="add-member-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
+                Add New Staff
+            </button>
+        </div>
 
-  <!-- Add Staff Modal -->
-  <dialog id="add-staff-modal" class="p-0 rounded-lg shadow-xl backdrop:bg-gray-900/50 w-full max-w-md">
-    <div class="p-6">
-      <h3 class="text-lg font-bold text-gray-900 mb-4">Add New Team Member</h3>
-      <form id="add-staff-form" class="space-y-4">
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-            <input type="email" name="email" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 border p-2">
+        <div id="error-banner" class="hidden bg-red-50 border border-red-200 rounded-lg p-4 mb-6 text-red-800"></div>
+
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-800">Staff Members (<span id="user-count">0</span>)</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Sign In</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-table-body" class="bg-white divide-y divide-gray-200">
+                        <!-- Filled via JS -->
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input type="password" name="password" required minlength="8" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 border p-2">
-            <p class="text-xs text-gray-500 mt-1">Min 8 chars, mix of letters & numbers recommended.</p>
-        </div>
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
-            <select name="role" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 border p-2">
-                <option value="staff">Staff (Standard Access)</option>
-                <option value="super_admin">Super Admin (Can Manage Team)</option>
-            </select>
-        </div>
-        
-        <div class="mt-6 flex justify-end gap-3">
-            <button type="button" onclick="document.getElementById('add-staff-modal').close()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">Cancel</button>
-            <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md">Create Account</button>
-        </div>
-      </form>
     </div>
-  </dialog>
 
-  <script>
-    async function loadStaff() {
+    <!-- Modal -->
+    <div id="modal-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-xl">
+            <h2 class="text-xl font-bold mb-4">Add Staff Member</h2>
+            <form id="add-staff-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" id="new-email" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="new-password" required minlength="6" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                    <select id="new-role" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <option value="staff">Staff (Standard)</option>
+                        <option value="super_admin">Super Admin (Full Access)</option>
+                    </select>
+                </div>
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" id="cancel-btn" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
+                    <button type="submit" id="submit-btn" class="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Create User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</AdminLayout>
+
+<script>
+    import { supabaseBrowser } from '../../lib/supabase-browser';
+
+    let currentSession = null;
+
+    async function loadUsers() {
+        const loading = document.getElementById('loading');
+        const content = document.getElementById('content');
+        const tbody = document.getElementById('user-table-body');
+        const errorBanner = document.getElementById('error-banner');
+
         try {
-            const res = await fetch('/api/admin/users');
-            if (!res.ok) throw new Error('Failed to fetch data');
-            const data = await res.json();
-            
-            const tbody = document.getElementById('staff-table-body');
-            
-            if (data.users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No staff found.</td></tr>';
+            // 1. Auth Check
+            const { data: { session } } = await supabaseBrowser.auth.getSession();
+            if (!session) {
+                window.location.href = '/admin/login';
+                return;
+            }
+            currentSession = session;
+
+            // 2. Fetch Data
+            const res = await fetch('/api/admin/users', {
+                headers: { 'Authorization': `Bearer ${session.access_token}` }
+            });
+
+            if (res.status === 403) {
+                loading.classList.add('hidden');
+                errorBanner.textContent = 'Access Denied: You must be a Super Admin to view this page.';
+                errorBanner.classList.remove('hidden');
+                content.classList.remove('hidden');
+                // Hide controls
+                document.getElementById('add-member-btn').classList.add('hidden');
                 return;
             }
 
-            tbody.innerHTML = data.users.map(u => `
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">
+            if (!res.ok) throw new Error('Failed to load users');
+
+            const { users } = await res.json();
+
+            // 3. Render
+            document.getElementById('user-count').textContent = users.length;
+            tbody.innerHTML = users.map(u => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4">
                         <div class="text-sm font-medium text-gray-900">${u.email}</div>
-                        <div class="text-xs text-gray-500">ID: ${u.id.substring(0,8)}...</div>
+                        <div class="text-xs text-gray-500">${u.id}</div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${u.user_metadata?.role === 'super_admin' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800'}">
-                            ${u.user_metadata?.role === 'super_admin' ? 'Super Admin' : 'Staff'}
+                    <td class="px-6 py-4">
+                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                             u.user_metadata?.role === 'super_admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+                        }">
+                            ${u.user_metadata?.role || 'staff'}
                         </span>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        ${u.email_confirmed_at ? 'Active' : 'Pending'}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td class="px-6 py-4 text-sm text-gray-500">
                         ${new Date(u.created_at).toLocaleDateString()}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button onclick="alert('Delete functionality coming soon')" class="text-red-600 hover:text-red-900">Remove</button>
+                    <td class="px-6 py-4 text-sm text-gray-500">
+                        ${u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString() : 'Never'}
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="text-xs ${u.confirmed_at ? 'text-green-600' : 'text-yellow-600'}">
+                            ${u.confirmed_at ? 'Confirmed' : 'Pending'}
+                        </span>
                     </td>
                 </tr>
             `).join('');
 
+            loading.classList.add('hidden');
+            content.classList.remove('hidden');
+
         } catch (e) {
             console.error(e);
-            document.getElementById('staff-table-body').innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">Error loading users.</td></tr>';
+            loading.innerHTML = `<p class="text-red-500">Error: ${e.message}</p>`;
         }
     }
 
-    loadStaff();
+    // Modal Logic
+    const modal = document.getElementById('modal-overlay');
+    
+    document.getElementById('add-member-btn').addEventListener('click', () => {
+        modal.classList.remove('hidden');
+    });
+
+    document.getElementById('cancel-btn').addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
 
     document.getElementById('add-staff-form').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const form = e.target;
-        const formData = new FormData(form);
-        const submitBtn = form.querySelector('button[type="submit"]');
-        
-        const originalText = submitBtn.textContent;
+        const submitBtn = document.getElementById('submit-btn');
+        const email = document.getElementById('new-email').value;
+        const password = document.getElementById('new-password').value;
+        const role = document.getElementById('new-role').value;
+
         submitBtn.disabled = true;
         submitBtn.textContent = 'Creating...';
 
         try {
             const res = await fetch('/api/admin/users', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(Object.fromEntries(formData))
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${currentSession?.access_token}`
+                },
+                body: JSON.stringify({ email, password, role })
             });
-            
+
             const result = await res.json();
-            
-            if (!res.ok) throw new Error(result.error || 'Failed to create user');
-            
-            alert(`User ${result.user.email} created successfully!`);
-            document.getElementById('add-staff-modal').close();
-            form.reset();
-            loadStaff();
-            
+             if (!res.ok) throw new Error(result.error);
+
+            alert('User created successfully!');
+            modal.classList.add('hidden');
+            loadUsers();
+            e.target.reset();
+
         } catch (err) {
             alert('Error: ' + err.message);
         } finally {
             submitBtn.disabled = false;
-            submitBtn.textContent = originalText;
+            submitBtn.textContent = 'Create User';
         }
     });
-  </script>
-</Layout>
+
+    loadUsers();
+</script>
