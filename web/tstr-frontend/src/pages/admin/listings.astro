@@ -176,17 +176,21 @@ export const prerender = false;
             </tr>
         `).join('');
 
-        // Bind Edit Buttons
-        document.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const id = e.target.getAttribute('data-id');
-                openEditModal(id);
-            });
-        });
+        // No need to bind individual buttons here anymore because we use delegation
     }
 
     // Modal Logic
     const modal = document.getElementById('edit-modal');
+    const tbody = document.getElementById('listings-table-body');
+
+    // Event Delegation for Table Clicks
+    tbody.addEventListener('click', (e) => {
+        const target = e.target;
+        if (target.classList.contains('edit-btn')) {
+            const id = target.getAttribute('data-id');
+            openEditModal(id);
+        }
+    });
     
     function openEditModal(id) {
         const listing = allListings.find(l => l.id === id);
