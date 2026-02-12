@@ -151,7 +151,7 @@ cd "/home/al/AI_PROJECTS_SPACE" && ./handoff.sh <agent> <reason>
 **Database**: Supabase (https://haimjeaetrsaauitrhfy.supabase.co)
 **API Keys**:
 - Publishable: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
-- Service Role: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDQzNjU4NSwiZXhwIjoyMDc2MDEyNTg1fQ.zd47WtS1G1XzjP1obmr_lxHU_xJWtlhhu4ktm9xC5hA
+- Service Role: [REDACTED - stored in .env and Cloudflare dashboard]
 
 **MCP Server**: ✅ Configured in `web/tstr-automation/TSTR1.mcp.json`
 - Server: @supabase/mcp-server-supabase@latest
@@ -159,7 +159,7 @@ cd "/home/al/AI_PROJECTS_SPACE" && ./handoff.sh <agent> <reason>
 - Access Token: sbp_e290bc7ea1ba64ae4b0be38134b7b4a67ca24e04
 - Mode: Read-only
 
-**Website**: http://tstr.directory (LIVE - 163 listings as of 2025-11-17)
+**Website**: http://tstr.directory (LIVE - 194 listings as of 2026-02-11)
 
 **Git Repo**: https://github.com/JAvZZe/tstr-site.git
 
@@ -257,7 +257,7 @@ const categories = (categoryData || [])
 
 ---
 
-### SEO Hybrid Hook Strategy ✅ LIVE (2025-11-23)
+### SEO Hybrid Hook Strategy ✅ LIVE (2026-02-11)
 
 **CRITICAL MARKETING PRINCIPLE - READ BEFORE ANY LANDING PAGE WORK**
 
@@ -298,9 +298,9 @@ const getTestingServiceName = (categoryName: string) => {
 grep -o 'Testers.*Testing' dist/[category]/index.html
 ```
 
-**Traffic Impact:** Deployed 2025-11-23, monitor Search Console for keyword performance.
+**Traffic Impact:** Deployed 2026-02-11, monitor Search Console for keyword performance.
 
 ---
 
-**Last Updated**: 2025-11-23
+**Last Updated**: 2026-02-11
 **System Version**: AI_PROJECTS_SPACE v2.0

@@ -53,6 +53,9 @@ const { data: listing, error } = await supabase
           level
         )
       )
+    ),
+    premium_data:listing_premium_data (
+      linkedin_url
     )
   `)
   .eq('slug', slug)
@@ -770,6 +773,23 @@ const pageDescription = formatDescription(
                <div class="info-value"><a href={getRedirectUrl(listing.website, listing.id)} target="_blank" rel="noopener noreferrer" onclick="trackContactAccess('website', '{listing.website}')">{listing.website}</a></div>
              </div>
            ) : null}
+
+           {/* LinkedIn - Premium Only */}
+           {listing.premium_data?.linkedin_url && (
+             <div class="info-item">
+               <div class="info-label">LinkedIn</div>
+               <div class="info-value">
+                 {userTier !== 'free' ? (
+                    <a href={getRedirectUrl(listing.premium_data.linkedin_url, listing.id)} target="_blank" rel="noopener noreferrer" onclick={`trackContactAccess('linkedin', '${listing.premium_data.linkedin_url}')`}>View Profile</a>
+                 ) : (
+                   <span class="contact-hidden">
+                     Available for subscribers
+                     <a href="/pricing" style="font-size: 0.8rem; margin-left: 0.5rem; color: #000080;">Unlock</a>
+                   </span>
+                 )}
+               </div>
+             </div>
+           )}
         </div>
       </div>
 

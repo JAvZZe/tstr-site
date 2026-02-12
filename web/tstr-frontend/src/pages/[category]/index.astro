@@ -50,10 +50,13 @@ const { data: listings, error: listingsError } = await supabase
       id,
       name,
       slug
+    ),
+    listing_categories!inner (
+      category_id
     )
   `)
   .eq('status', 'active')
-  .eq('category_id', categoryData.id)
+  .eq('listing_categories.category_id', categoryData.id)
   .order('priority_rank', { ascending: false })
   .order('created_at', { ascending: false });
 

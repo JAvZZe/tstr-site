@@ -1,0 +1,14 @@
+Project ID 
+haimjeaetrsaauitrhfy
+
+Supabase Account level API
+sbp_[REDACTED]
+Antigravity was stopped by Supabase
+
+Secret Key for agents and scrapers to use
+sb_secret_[REDACTED]
+
+Legacy Service Role Secret was stopped by Supabase.
+
+
+

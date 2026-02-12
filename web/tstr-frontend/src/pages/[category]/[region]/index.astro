@@ -63,20 +63,18 @@ const { data: pageListings, error: listingsError } = await supabase
   .from('listings')
   .select(`
     *,
-    category:category_id (
-      id,
-      name,
-      slug
-    ),
     location:location_id (
       id,
       name,
       slug
+    ),
+    listing_categories!inner (
+      category_id
     )
   `)
   .eq('status', 'active')
   .eq('region', region)
-  .eq('category_id', categoryData?.id || '00000000-0000-0000-0000-000000000000')
+  .eq('listing_categories.category_id', categoryData?.id || '00000000-0000-0000-0000-000000000000')
   .order('priority_rank', { ascending: false })
   .order('created_at', { ascending: false });
 

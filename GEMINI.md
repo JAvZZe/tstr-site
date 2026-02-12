@@ -142,7 +142,7 @@ cd "/home/al/AI_PROJECTS_SPACE" && ./handoff.sh <agent> <reason>
 - Access Token: sbp_e290bc7ea1ba64ae4b0be38134b7b4a67ca24e04
 - Mode: Read-only
 
-**Website**: http://tstr.directory (LIVE - 163 listings as of 2025-11-17)
+**Website**: http://tstr.directory (LIVE - 194 listings as of 2026-02-11)
 
 **Git Repo**: https://github.com/JAvZZe/tstr-site.git
 
@@ -240,5 +240,5 @@ const categories = (categoryData || [])
 
 ---
 
-**Last Updated**: 2025-11-22
+**Last Updated**: 2026-02-11
 **System Version**: AI_PROJECTS_SPACE v2.0

@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { Database } from '../types.ts'
 
 const PAYPAL_CLIENT_ID = Deno.env.get('PAYPAL_CLIENT_ID')!
 const PAYPAL_CLIENT_SECRET = Deno.env.get('PAYPAL_CLIENT_SECRET')!
@@ -130,12 +131,12 @@ serve(async (req) => {
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    )
+    ) as unknown as ReturnType<typeof createClient<Database>>
 
     console.log('Created Supabase client, validating user...')
 
     // Validate user exists and get their details
-    const { data: user, error: userError } = await supabase
+    let { data: user, error: userError } = await supabase
       .from('user_profiles')
       .select('id, billing_email')
       .eq('id', userId)

@@ -1,7 +1,7 @@
 # TSTR.md - AI Agent Context for TSTR.directory Project
 
 > **Purpose**: Instructions for AI agents (Claude, Gemini, etc.) working on TSTR.directory
-> **Last Updated**: 2026-01-16
+> **Last Updated**: 2026-02-11
 > **Read This**: Every new session, before making changes
 
 ---
@@ -12,9 +12,10 @@
 
 **Business Model**: B2B directory + lead generation for testing laboratories seeking clients in specialized sectors.
 
-**Status**: Production - 163 listings deployed, scrapers active on OCI and locally, frontend LIVE at https://tstr.directory
+**Status**: Production - 194 listings deployed, scrapers active on OCI and locally, frontend LIVE at <https://tstr.directory>
 
 **Strategic Focus (Q4 2025 - Q1 2026)**: Hydrogen Infrastructure Testing + Biotech/Pharma/Life Sciences
+
 - See `ORGANIZATION_UPDATE_2025-11-22.md` for niche directory structure
 - Hydrogen docs: `/Hydrogen Infrastructure Testing/`
 - Biotech docs: `/Biotech Directory/`
@@ -23,15 +24,19 @@
 
 ## 📊 PROJECT STATUS PROTOCOL (MANDATORY)
 
-**CRITICAL**: All agents MUST read and update `PROJECT_STATUS.md` before/after any work:
+**CRITICAL**: All agents MUST read and update `PROJECT_STATUS.md` before/after any work.
+**CRITICAL**: All agents MUST read `docs/SUPABASE_LOCAL_DEV.md` for database and type generation protocols.
+**CRITICAL**: All agents MUST run `supabase db diff` before committing any schema changes.
 
-### **Before Starting Work**:
+### **Before Starting Work**
+
 ```bash
 # Read current project state
 cat PROJECT_STATUS.md
 ```
 
-### **After Completing Changes**:
+### **After Completing Changes**
+
 1. **Update PROJECT_STATUS.md** with version increment and change details
 2. **Commit and push** the updated status document
 3. **Document ALL changes** that affect the live website:
@@ -42,7 +47,8 @@ cat PROJECT_STATUS.md
    - Link changes
    - Any successful change affecting tstr.directory
 
-### **Protocol Requirements**:
+### **Protocol Requirements**
+
 - ✅ **ALWAYS** update PROJECT_STATUS.md after successful changes
 - ✅ **NEVER** deploy changes without documenting them
 - ✅ **READ FIRST** - Check current state before making changes
@@ -58,26 +64,30 @@ cat PROJECT_STATUS.md
 ### Current Stack
 
 **Frontend** (LIVE):
+
 - Astro 5.14.4 + React 18.3.1 + Tailwind CSS
 - Location: `web/tstr-frontend/`
 - Target: Cloudflare Pages (free tier)
-- Status: ✅ LIVE at https://tstr.site
+- Status: ✅ LIVE at <https://tstr.directory>
 
 **Scrapers** (ACTIVE in production):
+
 - Python 3.9.21 on Oracle Linux 9
 - Location: OCI instance 84.8.139.90 at `~/tstr-scraper/`
 - Scheduler: Cron `0 2 * * *` (2 AM GMT daily)
-- Status: ✅ Working (last run 2025-10-27: 108 listings, 64 contacts)
+- Status: ✅ Working (last run 2026-02-12: 194 listings)
 - Cost: FREE (Oracle Always Free Tier)
 
 **Database**:
+
 - Supabase PostgreSQL (free tier)
-- URL: https://haimjeaetrsaauitrhfy.supabase.co
+- URL: <https://haimjeaetrsaauitrhfy.supabase.co>
 - Tables: `listings` (main), `custom_fields` (JSON), `pending_research`
 - Status: ✅ Operational
 - **MCP Server**: ✅ Installed (native tools for queries, migrations, security advisors)
 
 **Deployment Flow**:
+
 ```
 OCI Cron (daily 2AM)
     ↓
@@ -95,6 +105,7 @@ Frontend queries Supabase (when deployed)
 ## Key File Locations
 
 ### Project Root
+
 - tstr-site-working - this is the project root folder with the files and subfolders. Always save files here and clean up afterwards by moving redundant files to /archive.
 - `TSTR.md` - This file (agent instructions)
 - `PROJECT_STATUS.md` - Deployment status, infrastructure details
@@ -102,8 +113,10 @@ Frontend queries Supabase (when deployed)
 - `.ai-session.md` - Session notes and learnings
 - `GEMINI.md` - Gemini CLI agent context
 - `HANDOFF_FROM_GEMINI.md` - Latest handoff (from Gemini)
+- `docs/SUPABASE_LOCAL_DEV.md` - **CRITICAL** Database & Types guide
 
 ### Frontend
+
 ```
 web/tstr-frontend/
 ├── src/
@@ -116,6 +129,7 @@ web/tstr-frontend/
 ```
 
 ### Scrapers (Active on OCI)
+
 ```
 web/tstr-automation/
 ├── scrapers/
@@ -129,6 +143,7 @@ web/tstr-automation/
 ```
 
 ### OCI Scraper Deployment
+
 - **Instance IP**: 84.8.139.90
 - **OS**: Oracle Linux 9, Python 3.9.21
 - **Path**: `~/tstr-scraper/` on OCI instance
@@ -137,6 +152,7 @@ web/tstr-automation/
 - **Note**: External drive filesystem may prevent direct chmod; use local copy for access
 
 ### External Archive
+
 - **Project Archive**: `/media/al/1TB_AI_ARCH/AI_PROJECTS_ARCHIVE/TSTR-site Archive/`
 - **Purpose**: Long-term storage of completed work, reports, and handoffs
 - **Access**: Mount external drive before accessing archived files
@@ -146,11 +162,13 @@ web/tstr-automation/
 ## Development Principles
 
 ### User Profile
+
 - **Non-technical, AuDHD**: Terse, factual communication. No fluff.
 - **Methodologies**: OODA Loop, Pareto Principle (80/20), First Principles Thinking, Game Theory, Root Cause Analysis
 - **Testing**: Always test before deploying. MVP approach. Iterate fast.
 
 ### Code Standards
+
 1. **MVP-first**: Ship quickly, iterate based on feedback
 2. **Test systematically**: One feature at a time with checkpoints
 3. **Git discipline**: Commit every working checkpoint for easy rollback
@@ -160,6 +178,7 @@ web/tstr-automation/
 ### Common Patterns
 
 **Scraper Development**:
+
 - Base all scrapers on `base_scraper.py` (shared utilities)
 - Handle authentication complexity (A2LA uses Touchstone SAML2)
 - Parse locations with `location_parser.py` (handles "City, State" and "City, Country")
@@ -167,17 +186,20 @@ web/tstr-automation/
 - Log everything for debugging
 
 **Manual Payment Implementation Pattern**:
+
 - Use modals for sensitive payment info (EFT details, Crypto addresses).
 - Send instructions via email immediately upon user request to provide a "paper trail".
 - Avoid importing complex shared objects (like `CONTACTS`) in client-side `<script>` tags if they are only needed for a few strings; hardcoding or using explicit constants is more robust against bundler errors.
 
 **Database Operations**:
+
 - Use Supabase CLI: `~/.local/bin/supabase`
 - Local dev: `supabase status`, `supabase db remote psql`
 - Query: `supabase db remote psql -c "SELECT COUNT(*) FROM listings;"`
 - Schema changes: Create SQL migration files
 
 **Frontend Development**:
+
 - Use `npm run dev` for local testing
 - Build with `npm run build` (requires `.env` with Supabase keys)
 - Deploy via Github to Cloudflare Pages (connected to GitHub `main` branch)
@@ -187,26 +209,30 @@ web/tstr-automation/
 ## Current Priorities
 
 ### P0 - Critical
+
 1. **Fix OCI SSH access**: Locate correct SSH key path and verify scraper logs
     - Current key path may be outdated
     - Verify scraper cron jobs are running
     - Check for any scraper failures
 
 ### P1 - High
-3. **Expand scraper coverage**: Add more testing categories and regions
-4. **Monitoring**: Setup error alerting for OCI scraper failures
-5. **Admin dashboard**: Create simple dashboard to monitor scraper runs and data quality
+
+1. **Expand scraper coverage**: Add more testing categories and regions
+2. **Monitoring**: Setup error alerting for OCI scraper failures
+3. **Admin dashboard**: Create simple dashboard to monitor scraper runs and data quality
 
 ### P2 - Medium
-6. **Revenue features**: Lead generation, contact exports, premium listings
-7. **SEO optimization**: Meta tags, sitemap, structured data
-8. **Analytics**: Track user behavior, popular categories
+
+1. **Revenue features**: Lead generation, contact exports, premium listings
+2. **SEO optimization**: Meta tags, sitemap, structured data
+3. **Analytics**: Track user behavior, popular categories
 
 ---
 
 ## Common Commands
 
 ### OCI Scraper Management
+
 ```bash
 # Prepare SSH key (external drive permissions issue)
 cp "/media/al/69AD-FC41/AI_PROJECTS_ARCHIVE/Oracle_Cloud_Machines/avz_Oracle_Linux_9_pvt_ssh-key-2025-10-25.key" /tmp/oci-key.pem
@@ -226,6 +252,7 @@ ssh -i /tmp/oci-key.pem opc@84.8.139.90 "cd ~/tstr-scraper && python3 run_scrape
 ```
 
 ### Local Development
+
 ```bash
 # Frontend dev server
 cd web/tstr-frontend && npm run dev
@@ -248,6 +275,7 @@ python3 scrapers/tni_environmental.py
 **MCP Integration**: ✅ Installed (`droid mcp add bruno`)
 
 **Quick Commands**:
+
 ```bash
 # Health checks
 bru run bruno/supabase/health/ --env production
@@ -260,11 +288,13 @@ bru run bruno/supabase/health/connection-test.bru --env production
 ```
 
 **Agent Usage**:
+
 - "Run the Supabase health checks"
 - "Test the listings API"
 - "Validate database connectivity"
 
 **Benefits**:
+
 - 📁 Git-based API repository (version controlled)
 - 🔒 Environment-based secrets (production, local, ci)
 - 🤖 Agent tools via MCP (65% token savings)
@@ -280,6 +310,7 @@ bru run bruno/supabase/health/connection-test.bru --env production
 The Supabase MCP server provides native tools that are faster and more token-efficient than CLI calls:
 
 **Available Tools**:
+
 - `mcp__supabase__list_tables` - Get schema, columns, RLS status, row counts
 - `mcp__supabase__execute_sql` - Run SELECT queries (read-only recommended)
 - `mcp__supabase__apply_migration` - Execute DDL operations (CREATE, ALTER, etc.)
@@ -292,6 +323,7 @@ The Supabase MCP server provides native tools that are faster and more token-eff
 - Branch management: create, merge, reset, rebase
 
 **Example Usage**:
+
 ```typescript
 // List all tables with schema details
 mcp__supabase__list_tables(schemas: ["public"])
@@ -303,9 +335,10 @@ mcp__supabase__get_advisors(type: "security")
 mcp__supabase__execute_sql(query: "SELECT COUNT(*) FROM listings WHERE status='active'")
 ```
 
-**Connection**: https://mcp.supabase.com/mcp?project_ref=haimjeaetrsaauitrhfy
+**Connection**: <https://mcp.supabase.com/mcp?project_ref=haimjeaetrsaauitrhfy>
 
 ### Git Workflow
+
 ```bash
 # Standard flow
 git status
@@ -323,17 +356,20 @@ gh run view <run-id>
 ## Key Learnings (Add to .ai-session.md and to the Database in the AI System folder /media/al/AI_DATA/AI_PROJECTS_SPACE)
 
 ### Scrapers
+
 - **A2LA authentication**: Complex Touchstone SAML2, requires session cookies
 - **CSV encoding**: Use `encoding='utf-8-sig'` to handle BOM
 - **Oracle Linux**: Python 3.9.21 (not 3.11+), use compatible packages
 - **Cron gotcha**: Needs absolute paths or explicit PATH
 
 ### Database
+
 - **Supabase free tier**: 500MB limit, 50K rows
 - **Custom fields**: Use JSONB column for flexible schema
 - **RLS policies**: Required for frontend access, set up per table
 
 ### Deployment
+
 - **Google Cloud**: OVERDUE and unavailable - all moved to OCI
 - **OCI Always Free**: Perfect for scrapers, no expiry
 - **Cloudflare Pages**: Auto-deploy from GitHub, free tier generous
@@ -344,18 +380,21 @@ gh run view <run-id>
 ## Troubleshooting
 
 ### Scraper Issues
+
 1. Check OCI logs: `ssh opc@84.8.139.90 "tail -100 ~/tstr-scraper/scraper.log"`
 2. Verify cron is running: `ssh opc@84.8.139.90 "crontab -l"`
 3. Test scraper manually on OCI: `ssh opc@84.8.139.90 "cd ~/tstr-scraper && python3 main_scraper.py"`
 4. Check Supabase for new data: `supabase db remote psql -c "SELECT * FROM listings ORDER BY created_at DESC LIMIT 10;"`
 
 ### Frontend Issues
+
 1. Verify `.env` exists in `web/tstr-frontend/` with correct Supabase keys
 2. Test build locally: `cd web/tstr-frontend && npm run build`
 3. Check Cloudflare Pages deployment logs in dashboard
 4. Verify GitHub Actions workflow succeeded: `gh run list`
 
 ### Database Issues
+
 1. Test connection: `~/.local/bin/supabase status`
 2. Check RLS policies: `supabase db remote psql -c "\d+ listings"`
 3. Verify data: `supabase db remote psql -c "SELECT COUNT(*) FROM listings;"`
@@ -365,6 +404,7 @@ gh run view <run-id>
 ## File Retention Policy
 
 **Root-level files (keep only current)**:
+
 - `TSTR.md` - Agent instructions (this file)
 - `PROJECT_STATUS.md` - Deployment status
 - `README.md` - Project overview
@@ -373,17 +413,20 @@ gh run view <run-id>
 - Config files: `.gitignore`, `netlify.toml`, `package.json`
 
 **Archive to `archive/old-docs/`**:
+
 - Historical handoff files
 - Old deployment summaries
 - Outdated documentation
 - Meta-system scaffolding (AGENT_*.md, CASCADE.md, etc.)
 
 **Move to `docs/`**:
+
 - Technical deep-dives (still relevant)
 - Architecture diagrams
 - Domain knowledge references
 
 **Auto-generated reports** (in `web/tstr-automation/`):
+
 - Format: `REPORT_NAME_YYYYMMDD.md`
 - Archive anything >30 days old to `archive/reports/YYYY-MM/`
 - Examples: `DEPLOYMENT_REPORT_20251109.md`
@@ -395,6 +438,7 @@ gh run view <run-id>
 ## Next Session Checklist
 
 When starting a new session:
+
 1. ✅ Read `START_HERE.md` for orientation (if first time)
 2. ✅ Read `.ai-session.md` for latest context
 3. ✅ Check `HANDOFF_TO_CLAUDE.md` (or latest handoff file)
@@ -408,9 +452,9 @@ When starting a new session:
 
 ## References
 
-- **GitHub Repo**: https://github.com/JAvZZe/tstr-site.git
-- **Live Site**: https://tstr.directory (when deployed)
-- **Supabase Dashboard**: https://supabase.com/dashboard/project/haimjeaetrsaauitrhfy
+- **GitHub Repo**: <https://github.com/JAvZZe/tstr-site.git>
+- **Live Site**: <https://tstr.directory> (when deployed)
+- **Supabase Dashboard**: <https://supabase.com/dashboard/project/haimjeaetrsaauitrhfy>
 - **Cloudflare Pages**: (To be configured)
 - **Technical Docs**: See `docs/` folder
 
