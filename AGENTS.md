@@ -50,7 +50,7 @@ This loads:
 
 **URL**: https://haimjeaetrsaauitrhfy.supabase.co
 **Anon Key**: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
-**Service Role Key**: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDQzNjU4NSwiZXhwIjoyMDc2MDEyNTg1fQ.zd47WtS1G1XzjP1obmr_lxHU_xJWtlhhu4ktm9xC5hA
+**Service Role Key**: [REDACTED - stored in .env and Cloudflare dashboard]
 
 **MCP Server**: ✅ Configured in `web/tstr-automation/TSTR1.mcp.json`
 - Server: @supabase/mcp-server-supabase@latest

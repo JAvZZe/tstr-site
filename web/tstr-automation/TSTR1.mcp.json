@@ -11,6 +11,16 @@
       "env": {
         "SUPABASE_ACCESS_TOKEN": "sbp_e290bc7ea1ba64ae4b0be38134b7b4a67ca24e04"
       }
+    },
+    "stitch": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "stitch-mcp"
+      ],
+      "env": {
+        "STITCH_API_KEY": "AQ.Ab8RN6JEmwVEEp46heoYPGv6mTtxFNuDHIst2rmPdg-N6bxEFA"
+      }
     }
   }
 }

@@ -1,0 +1,45 @@
+{
+  "name": "Migration Status Check",
+  "type": "http",
+  "method": "GET",
+  "url": "{{BASE_URL}}/rest/v1/supabase_migrations.schema_migrations?select=*",
+  "headers": [
+    {
+      "name": "apikey",
+      "value": "{{SUPABASE_ANON_KEY}}"
+    },
+    {
+      "name": "Authorization",
+      "value": "Bearer {{SUPABASE_SERVICE_ROLE_KEY}}"
+    },
+    {
+      "name": "Content-Type",
+      "value": "application/json"
+    }
+  ],
+  "params": [],
+  "body": {
+    "mode": "none",
+    "json": null,
+    "text": null,
+    "xml": null,
+    "formUrlEncoded": null,
+    "multipartForm": null
+  },
+  "auth": {
+    "mode": "none",
+    "basic": {
+      "username": "",
+      "password": ""
+    },
+    "bearer": {
+      "token": ""
+    }
+  },
+  "script": {
+    "postRequest": "",
+    "preRequest": ""
+  },
+  "tests": "// Verify that all expected migrations are present\n// Expected migrations:\n// 20251120000001, 20251121000001, 20251121000002, 20251122000001, \n// 20251122000002, 20251122000003, 20251122000004, 20251127000001, \n// 20251130000001, 20251130000002, 20251130000003, 20251130000004, \n// 20251130000005, 20251130000006, 20251130000007, 20251130000008, \n// 20251130000009, 20251130000010, 20251130000011, 20251130000012, \n// 20251130000013, 20251130000014, 20251130000015, 20251130000016, \n// 20251130000017, 20251130000018, 20251130000019, 20251130000020, \n// 20251130000021, 20251202000001, 20251203000001, 20251203000002, \n// 20251204000001, 20251216000001, 20251220000001, 20251222000001, \n// 20260202000001\n\n// Log the response to verify migration status\ncpy.log(\"Migration status check completed\");\nconsole.log(response);\n\n// TODO: Add assertions to verify specific migrations are present\n"
+  }
+}

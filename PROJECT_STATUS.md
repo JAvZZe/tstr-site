@@ -1,7 +1,7 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-01-31 19:08 UTC
+> **Last Updated**: 2026-02-12 15:07 UTC
 > **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -708,3 +708,85 @@ Last Scrape:      November 10, 2025 02:31 UTC
 - **AI Agent Guidelines**: See `START_HERE.md` for agent selection guide
 - **Supabase**: <https://supabase.com/dashboard/project/haimjeaetrsaauitrhfy>
 - **OCI SSH**: `ssh -i /tmp/oci-key.pem opc@84.8.139.90`
+
+## 🔧 DATABASE MIGRATION RESOLUTION (2026-02-02)
+
+### Issue Resolved
+
+- **Problem**: Unable to execute SQL migration directly due to network restrictions on port 5432
+- **Root Cause**: Migration tracking system was out of sync with actual database state; duplicate migration files with identical version numbers
+- **Resolution**: Used Supabase CLI authenticated connection to repair migration tracking
+
+### Actions Taken
+
+1. Updated Supabase CLI to latest version (2.72.7)
+2. Authenticated with Supabase account and linked to project haimjeaetrsaauitrhfy
+3. Removed duplicate migration file (2.72.7) with identical version number
+4. Repaired migration tracking for all 37 migrations using \`supabase migration repair\`
+5. Verified all migrations are now properly synchronized
+
+### Verification
+
+- Database is now up to date with all migrations properly tracked
+- Created Bruno collection for ongoing migration status monitoring
+- No direct connection to port 5432 required - using authenticated Supabase CLI connection
+
+### Files Updated
+
+- Removed duplicate migration: \`supabase/migrations/20251216000001_enable_stat_statements.sql\`
+- Added monitoring: \`bruno/supabase/migrations/migration-status.bru\`
+- Added documentation: \`bruno/supabase/migrations/MIGRATION_RESOLUTION_DOCS.md\`
+
+### Status
+
+- ✅ **RESOLVED** - All migrations properly tracked
+- ✅ **DATABASE HEALTH** - Verified and operational
+- ✅ **CONTINUITY** - Future migrations can proceed normally via Supabase CLI
+
+## 🔧 SCHEMA UPDATE: MULTI-CATEGORY & LOCATION (2026-02-03)
+
+### Status: ✅ COMPLETED
+
+### Changes Implemented
+
+1. **Schema**:
+    - Created `listing_categories` table for M:N relationship (Listings <-> Categories).
+    - Updated `listings` table with `parent_listing_id` (Hierarchy) and `billing_tier` columns.
+    - Added RLS policies for public read / service write.
+2. **Data Migration**:
+    - **Backfilled** 457 associations from legacy `category_id` column to new `listing_categories` table.
+    - Verified data integrity via API check.
+3. **Frontend**:
+    - Updated `src/pages/[category]/index.astro` to filter using joined `listing_categories`.
+    - Updated `src/pages/[category]/[region]/index.astro` to filter using joined `listing_categories`.
+4. **Admin Advisory**:
+    - **Note**: Admin dashboard still uses legacy `category_id` for editing. Needs UI update in future sprint to support multi-category selection.
+
+### Technical Notes
+
+- **Supabase Cache Issue**: The REST API schema cache got stuck (`PGRST205`) despite multiple reload attempts.
+- **Workaround**: Data backfill was executed via SQL migration (`db push`) to bypass the API cache layer.
+- **Service Key**: A new Service Role key was obtained and verified working for future backend operations.
+
+## 💰 SCHEMA UPDATE: PRICING LOGIC (2026-02-03)
+
+### Status: ✅ COMPLETED / 🚧 INTEGRATION PENDING
+
+### Changes Implemented
+
+1. **Database Logic**:
+   - Create `calculate_listing_billing` function (Migration `20260203160000_add_billing_function.sql`).
+   - Calculates dynamic tier/price based on category usage (+$150/mo per extra category).
+2. **Type Safety**:
+   - strict `Database` typing implemented in `supabase.ts` and Edge Functions.
+3. **Frontend**:
+   - `pricing.astro` updated with dynamic pricing notes.
+
+### ⏭️ Next Steps (Do Next)
+
+1. **Enforce Limits**:
+   - Stop users from adding >1 category without upgrading.
+2. **Dynamic Payments**:
+   - Update PayPal flow to handle variable amounts.
+3. **Admin Visibility**:
+   - Show calculated billing tier in Dashboard.

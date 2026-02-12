@@ -11,8 +11,9 @@
 **"Read First, Update After, Document Always"**
 
 Every agent must:
+
 1. ✅ Read `PROJECT_STATUS.md` FIRST
-2. ✅ Make changes
+2. ✅ Make changes (If DB: run `supabase db diff` check)
 3. ✅ Update `PROJECT_STATUS.md` AFTER
 4. ✅ Log session in `handoff_core.md`
 
@@ -21,6 +22,7 @@ Every agent must:
 ## 📚 DOCUMENT HIERARCHY
 
 ### **Tier 1: Single Source of Truth**
+
 ```
 PROJECT_STATUS.md
 ├─ Current infrastructure state
@@ -33,6 +35,7 @@ PROJECT_STATUS.md
 **Rule**: This is ALWAYS the most current. Trust it above all else.
 
 ### **Tier 2: Technical Reference**
+
 ```
 PROJECT_REFERENCE.md
 ├─ Technology stack details
@@ -44,6 +47,7 @@ PROJECT_REFERENCE.md
 **Rule**: Update when stack/architecture changes.
 
 ### **Tier 3: Strategy & Plans**
+
 ```
 CLOUD_AUTOMATION_SOLUTION.md
 SCHEDULING_STRATEGY.md
@@ -53,6 +57,7 @@ URL_VALIDATION_LIVE.md
 **Rule**: Reference for "why" decisions were made.
 
 ### **Tier 4: Session History**
+
 ```
 handoff_core.md
 SESSION_SUMMARY_*.md
@@ -61,6 +66,7 @@ SESSION_SUMMARY_*.md
 **Rule**: Append-only logs. Never edit past sessions.
 
 ### **Tier 5: User-Facing**
+
 ```
 EXECUTIVE_SUMMARY.md
 QUICK_START.md
@@ -106,6 +112,7 @@ STATUS.txt
 ### **Making Infrastructure Changes**
 
 **Before deployment**:
+
 ```bash
 # 1. Check current state
 cat PROJECT_STATUS.md
@@ -116,6 +123,7 @@ cat PROJECT_STATUS.md
 ```
 
 **After deployment**:
+
 ```markdown
 Update PROJECT_STATUS.md:
 - Deployment timestamps
@@ -128,20 +136,23 @@ Update PROJECT_STATUS.md:
 
 ## 💰 COST TRACKING PROTOCOL
 
-### **Always Update When**:
+### **Always Update When**
+
 - Deploying new cloud resources
 - Changing tier/plan
 - Adding scheduled jobs
 - Scaling resources
 
-### **Cost Update Format**:
+### **Cost Update Format**
+
 ```markdown
 | Service | Usage | Cost | Status |
 |---------|-------|------|--------|
 | New Resource | Details | $X.XX | ACTIVE |
 ```
 
-### **Monthly Review**:
+### **Monthly Review**
+
 - First of every month
 - Compare actual vs projected
 - Update projections
@@ -151,31 +162,32 @@ Update PROJECT_STATUS.md:
 
 ## 🚨 CONFLICT RESOLUTION
 
-### **If Two Agents Update Simultaneously**:
+### **If Two Agents Update Simultaneously**
 
 1. **Check timestamps**
    - Most recent wins
-   
+
 2. **Merge changes if possible**
    - Both agents' work may be valid
-   
+
 3. **Ask user if unclear**
    - Don't guess
-   
+
 4. **Document in handoff_core.md**
    - Note the conflict
    - Explain resolution
 
-### **If Current State ≠ Documentation**:
+### **If Current State ≠ Documentation**
 
 1. **Verify actual state**
+
    ```bash
    gcloud functions list
    gcloud scheduler jobs list
    ```
 
 2. **Update documentation to match reality**
-   
+
 3. **Add to "Known Issues" if problem exists**
 
 4. **Alert user to discrepancy**
@@ -184,7 +196,8 @@ Update PROJECT_STATUS.md:
 
 ## 📝 UPDATE TEMPLATES
 
-### **After Deployment**:
+### **After Deployment**
+
 ```markdown
 **Last Updated**: October XX, 2025 HH:MM UTC
 **Updated By**: [AGENT_NAME]
@@ -195,7 +208,8 @@ Update PROJECT_STATUS.md:
 - Status: [component] → ✅ OPERATIONAL
 ```
 
-### **After Bug Fix**:
+### **After Bug Fix**
+
 ```markdown
 **Last Updated**: October XX, 2025 HH:MM UTC
 **Updated By**: [AGENT_NAME]
@@ -205,7 +219,8 @@ Update PROJECT_STATUS.md:
 - Resolved Issues: Remove from Known Issues section
 ```
 
-### **After Configuration Change**:
+### **After Configuration Change**
+
 ```markdown
 **Last Updated**: October XX, 2025 HH:MM UTC
 **Updated By**: [AGENT_NAME]
@@ -220,31 +235,38 @@ Update PROJECT_STATUS.md:
 ## 🎯 SPECIFIC AGENT GUIDELINES
 
 ### **CASCADE (Windsurf)**
+
 **Strengths**: Deployment, infrastructure, debugging  
 **Responsibilities**:
+
 - Cloud deployments
 - Infrastructure changes
 - Cost tracking
 - Technical documentation
 
 **Always update**:
+
 - `PROJECT_STATUS.md` after deployments
 - `handoff_core.md` with session logs
 - Cost breakdowns
 
 ### **CURSOR (VS Code Agent)**
+
 **Strengths**: Code editing, refactoring, local development  
 **Responsibilities**:
+
 - Code improvements
 - Local testing
 - Documentation updates
 - Code review
 
 **Always update**:
+
 - `PROJECT_STATUS.md` if code structure changes
 - `PROJECT_REFERENCE.md` for architecture changes
 
 ### **Future Agents**
+
 **First Task**: Read this document + `PROJECT_STATUS.md`  
 **Protocol**: Follow workflows above  
 **Questions**: Check handoff_core.md for context
@@ -282,7 +304,8 @@ Before marking anything as ✅ OPERATIONAL:
 
 ## 🚀 DEPLOYMENT SAFETY
 
-### **Pre-Deployment**:
+### **Pre-Deployment**
+
 ```bash
 # 1. Verify current state
 gcloud config get-value project
@@ -295,14 +318,16 @@ python main.py
 gcloud billing accounts list
 ```
 
-### **During Deployment**:
+### **During Deployment**
+
 ```bash
 # Use --quiet for automation
 # Log output to file
 # Monitor for errors
 ```
 
-### **Post-Deployment**:
+### **Post-Deployment**
+
 ```bash
 # 1. Verify function deployed
 gcloud functions describe [name]
@@ -320,17 +345,20 @@ gcloud functions logs read [name]
 
 ## 📅 REGULAR MAINTENANCE
 
-### **Daily** (Automated):
+### **Daily** (Automated)
+
 - Cloud Scheduler runs scrapers
 - Logs accumulated
 - (No agent action needed)
 
-### **Weekly** (Agent Check):
+### **Weekly** (Agent Check)
+
 - Review error logs
 - Check cost drift
 - Verify scheduled jobs ran
 
-### **Monthly** (Agent Update):
+### **Monthly** (Agent Update)
+
 - Update cost actual vs projected
 - Review and archive old session logs
 - Clean up temporary files
@@ -340,7 +368,8 @@ gcloud functions logs read [name]
 
 ## 🎓 BEST PRACTICES
 
-### **DO**:
+### **DO**
+
 ✅ Read before writing  
 ✅ Update after deploying  
 ✅ Document all changes  
@@ -350,7 +379,8 @@ gcloud functions logs read [name]
 ✅ Timestamp all updates  
 ✅ Sign updates with agent name  
 
-### **DON'T**:
+### **DON'T**
+
 ❌ Assume documentation is current  
 ❌ Deploy without testing  
 ❌ Change infrastructure without documenting  
@@ -363,7 +393,8 @@ gcloud functions logs read [name]
 
 ## 🔧 QUICK COMMANDS
 
-### **Check Current State**:
+### **Check Current State**
+
 ```bash
 # Functions
 gcloud functions list --project=business-directory-app-8888888
@@ -375,7 +406,8 @@ gcloud scheduler jobs list --location=us-central1
 gcloud billing projects describe business-directory-app-8888888
 ```
 
-### **Update Documentation**:
+### **Update Documentation**
+
 ```bash
 # Edit PROJECT_STATUS.md
 code PROJECT_STATUS.md
@@ -388,10 +420,11 @@ echo "Session update..." >> handoff_core.md
 
 ## 🎯 SUMMARY
 
-**The Golden Rule**: 
+**The Golden Rule**:
 > If it's deployed or changed, it MUST be in PROJECT_STATUS.md
 
 **The Protocol**:
+
 1. Read PROJECT_STATUS.md first
 2. Make your changes
 3. Update PROJECT_STATUS.md immediately
@@ -404,6 +437,7 @@ echo "Session update..." >> handoff_core.md
 ---
 
 **This protocol ensures**:
+
 - ✅ No conflicting changes
 - ✅ Always current documentation
 - ✅ Smooth agent handoffs

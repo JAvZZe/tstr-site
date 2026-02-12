@@ -57,3 +57,7 @@ resume.sh
 handoff.sh
 bootstrap.sh
 .venv/
+
+# Runtime artifacts
+dev.pid
+current_listings.json
