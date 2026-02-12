@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-02-12 15:07 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-02-12 18:50 UTC
+> **Updated By**: Antigravity (Gemini 2.0)
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 > **Maintenance**: See `docs/MAINTENANCE_LOG.md` for security/linting updates.
@@ -71,7 +71,7 @@
 **Type**: Testers & Testing Services Directory Platform
 **Stack**: Astro 5.14.4 + React 18.3.1 + Supabase + Python Scrapers
 **Deployment**: OCI (Scrapers) + Cloudflare Pages (Frontend)
-**Status**: ✅ LIVE - 191 listings
+**Status**: ✅ LIVE - 194 listings
 
 ---
 
@@ -90,12 +90,12 @@
 │  ✅ Analytics (Apollo)         ACTIVE 🎯    │
 └─────────────────────────────────────────────┘
 
-Listings:         191 verified
+Listings:         194 verified
 Data Quality:     95%+ (URL validation active)
 Automation:       100% (cron daily 2 AM GMT)
 Cost/Month:       $0.00 (Oracle Always Free Tier)
 OCI Uptime:       15 days continuous
-Last Scrape:      November 10, 2025 02:31 UTC
+Last Scrape:      February 11, 2026 02:31 UTC
 ```
 
 ---
@@ -126,16 +126,16 @@ Last Scrape:      November 10, 2025 02:31 UTC
 
 ### **Test Results Summary**
 
-| Component | Status | Response | Notes |
-|-----------|--------|----------|-------|
-| Account Pages | ✅ Working | 200 | Proper authentication protection |
-| Edit Page | ✅ Working | 200 | Dynamic routing functional |
-| Analytics Page | ✅ Working | 200 | Dashboard structure complete |
-| Leads Page | ✅ Working | 200 | Management interface ready |
-| Bulk Page | ✅ Working | 200 | Selection tools implemented |
-| APIs | ✅ Working | 400/401 | Proper validation/auth |
-| Lead Tracking | ✅ Working | Present | JavaScript integrated |
-| Build Process | ✅ Working | Success | No compilation errors |
+| Component      | Status    | Response | Notes                            |
+| -------------- | --------- | -------- | -------------------------------- |
+| Account Pages  | ✅ Working | 200      | Proper authentication protection |
+| Edit Page      | ✅ Working | 200      | Dynamic routing functional       |
+| Analytics Page | ✅ Working | 200      | Dashboard structure complete     |
+| Leads Page     | ✅ Working | 200      | Management interface ready       |
+| Bulk Page      | ✅ Working | 200      | Selection tools implemented      |
+| APIs           | ✅ Working | 400/401  | Proper validation/auth           |
+| Lead Tracking  | ✅ Working | Present  | JavaScript integrated            |
+| Build Process  | ✅ Working | Success  | No compilation errors            |
 
 ### **Security Verification** ✅ PASSED
 
@@ -284,6 +284,14 @@ Last Scrape:      November 10, 2025 02:31 UTC
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.6.0** - 2026-02-12 - **Security Redaction & Repository Cleanup** (antigravity)
+
+- **Security**: Redacted exposed `sb_secret_*` and `sbp_*` Service Role and Management API keys across `CLAUDE.md`, `OPENCODE.md`, `AGENTS.md`, and automation scripts.
+- **Organization**: Moved ~60 historical docs and handoff files to `_ARCHIVE/` to reduce agent context noise.
+- **Git Compliance**: Removed a 120MB backup ZIP that was blocking GitHub pushes (>100MB limit).
+- **Maintenance**: Consolidated identical agent start scripts into symbolic links to `start-agent.sh`.
+- **Infrastructure**: Updated global agent paths to reflect `/media/al/AI_DATA/AI_PROJECTS_SPACE/` partition.
 
 ### **v2.5.5** - 2026-01-28 - **Apollo Tracking Site-Wide** (antigravity)
 
