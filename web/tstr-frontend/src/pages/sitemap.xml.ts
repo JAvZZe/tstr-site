@@ -19,21 +19,15 @@ export const GET: APIRoute = async () => {
     { url: '/privacy', priority: '0.5', changefreq: 'yearly' },
   ];
 
-  // Standard-specific pages (high priority for SEO)
-  const standardPages = [
-    { url: '/standards/iso-19880-3', priority: '0.9', changefreq: 'weekly' },
-    { url: '/standards/iso-19880-5', priority: '0.9', changefreq: 'weekly' },
-    { url: '/standards/iso-11114-4', priority: '0.9', changefreq: 'weekly' },
-  ];
-
-  // Fetch all active standards for dynamic standard pages
+  // Fetch all active standards with slugs for dynamic standard pages
   const { data: standards } = await supabase
     .from('standards')
-    .select('code')
-    .eq('is_active', true);
+    .select('slug')
+    .eq('is_active', true)
+    .not('slug', 'is', null);
 
-  const standardSearchPages = (standards || []).map(std => ({
-    url: `/search/standards?standard=${encodeURIComponent(std.code)}`,
+  const dynamicStandardPages = (standards || []).map(std => ({
+    url: `/standards/${std.slug}`,
     priority: '0.8',
     changefreq: 'weekly'
   }));
@@ -106,11 +100,10 @@ export const GET: APIRoute = async () => {
   // Combine all pages
   const allPages = [
     ...staticPages,
-    ...standardPages,
+    ...dynamicStandardPages,
     ...categoryPages,
     ...categoryRegionPages,
     ...subcategoryPages,
-    ...standardSearchPages.slice(0, 50), // Limit to top 50
     ...categoryBrowsePages
   ];
 
