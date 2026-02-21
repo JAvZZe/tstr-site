@@ -54,14 +54,12 @@ async function verifyWebhookSignature(req: Request, body: string): Promise<boole
 }
 
 serve(async (req) => {
-  // CORS headers for all responses
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
   }
 
-  // Handle OPTIONS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -69,7 +67,6 @@ serve(async (req) => {
   try {
     const body = await req.text()
 
-    // Handle empty body (e.g., health check)
     if (!body) {
       return new Response(JSON.stringify({ status: 'ok', message: 'Webhook endpoint ready' }), {
         status: 200,
@@ -77,7 +74,6 @@ serve(async (req) => {
       })
     }
 
-    // Verify webhook signature in production
     if (PAYPAL_MODE === 'live') {
       const isValid = await verifyWebhookSignature(req, body)
       if (!isValid) {
@@ -89,22 +85,52 @@ serve(async (req) => {
     const event = JSON.parse(body)
     console.log('Webhook event:', event.event_type)
 
-
-    // Use service role for database updates
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     )
 
     const resource = event.resource
-    const userId = resource.custom_id // We stored Supabase user ID here
+    let customId = resource.custom_id
     const subscriptionId = resource.id || resource.billing_agreement_id
+
+    let isClaim = false;
+    let listingId = '';
+    let userId = customId;
+
+    if (customId?.startsWith('claim_')) {
+      isClaim = true;
+      const parts = customId.split('_'); // ['claim', 'uuid-listing', 'uuid-user']
+      if (parts.length >= 3) {
+        listingId = parts[1];
+        userId = parts.slice(2).join('_');
+      }
+    }
 
     switch (event.event_type) {
       case 'BILLING.SUBSCRIPTION.ACTIVATED': {
-        // Subscription activated - upgrade user
         const planId = resource.plan_id
         const tier = PLAN_TO_TIER[planId] || 'professional'
+
+        if (isClaim && listingId) {
+          await supabase.from('listings').update({
+            claimed: true,
+            claimed_at: new Date().toISOString()
+          }).eq('id', listingId)
+
+          await supabase.from('listing_owners').update({
+            status: 'verified',
+            verified_at: new Date().toISOString()
+          }).eq('listing_id', listingId).eq('user_id', userId)
+
+          try {
+            await supabase.rpc('calculate_trust_score', { p_listing_id: listingId })
+          } catch (e) {
+            console.error('Error recalculating trust score:', e)
+          }
+
+          console.log(`Listing ${listingId} successfully claimed by user ${userId}`)
+        }
 
         await supabase.from('user_profiles').update({
           subscription_tier: tier,
@@ -119,7 +145,6 @@ serve(async (req) => {
       }
 
       case 'PAYMENT.SALE.COMPLETED': {
-        // Payment received - log it
         const amount = resource.amount?.total || resource.amount?.value
 
         await supabase.from('payment_history').insert({
@@ -133,7 +158,6 @@ serve(async (req) => {
           description: 'Monthly subscription payment'
         })
 
-        // Update last payment date
         await supabase.from('user_profiles').update({
           last_payment_date: new Date().toISOString()
         }).eq('id', userId)
@@ -144,7 +168,6 @@ serve(async (req) => {
 
       case 'BILLING.SUBSCRIPTION.CANCELLED':
       case 'BILLING.SUBSCRIPTION.EXPIRED': {
-        // Subscription ended - set end date (keep tier until end of period)
         await supabase.from('user_profiles').update({
           subscription_status: 'cancelled',
           subscription_end_date: new Date().toISOString()
@@ -155,7 +178,6 @@ serve(async (req) => {
       }
 
       case 'BILLING.SUBSCRIPTION.SUSPENDED': {
-        // Payment failed - mark as past_due, begin 7-day grace period
         await supabase.from('user_profiles').update({
           subscription_status: 'past_due'
         }).eq('paypal_subscription_id', subscriptionId)
@@ -165,7 +187,6 @@ serve(async (req) => {
       }
 
       case 'BILLING.SUBSCRIPTION.PAYMENT.FAILED': {
-        // Log failed payment
         await supabase.from('payment_history').insert({
           user_id: userId,
           amount: 0,
