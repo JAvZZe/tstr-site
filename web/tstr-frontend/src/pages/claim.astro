@@ -24,7 +24,7 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
         <!-- Header Section -->
         <div class="text-center mb-8">
             <a href="/" class="inline-block mb-4 text-blue-600 hover:text-blue-700 font-semibold text-sm">
-                ← Back to TSTR.directory
+                &larr; Back to TSTR.directory
             </a>
             <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
                 Claim Your Profile
@@ -122,7 +122,7 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
                          id="submit-btn"
                          class="flex-1 px-6 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-200 transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                      >
-                         <span id="btn-text">Verify & Claim Profile</span>
+                         <span id="btn-text">Verify &amp; Claim Profile</span>
                          <span id="btn-loading" class="hidden">
                              <svg class="animate-spin h-5 w-5 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -165,7 +165,7 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
         <!-- Security Note -->
         <div class="mt-6 text-center">
             <p class="text-xs text-gray-500">
-                🔒 Your information is secure and will only be used for verification purposes
+                &#128274; Your information is secure and will only be used for verification purposes
             </p>
         </div>
     </div>
@@ -182,12 +182,12 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
 
         // Auto-save functionality
         let autoSaveTimeout: number;
-        const AUTO_SAVE_DELAY = 30000; // 30 seconds
+        const AUTO_SAVE_DELAY = 30000;
 
         function scheduleAutoSave() {
             clearTimeout(autoSaveTimeout);
             autoSaveTimeout = setTimeout(() => {
-                saveDraft(true); // Silent auto-save
+                saveDraft(true);
             }, AUTO_SAVE_DELAY);
         }
 
@@ -195,7 +195,6 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
             const formData = new FormData(form);
             const payload = Object.fromEntries(formData);
 
-            // Only save if there's data
             if (!payload.provider_name && !payload.contact_name && !payload.business_email) {
                 return;
             }
@@ -211,14 +210,12 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
                 if (data.success && !silent) {
                     showMessage('Draft saved! Resume link sent to your email.', 'success');
                 }
-            }).catch(() => {
-                // Silent fail for auto-save
-            });
+            }).catch(() => {});
         }
 
-        // Load draft if resume token present
         const urlParams = new URLSearchParams(window.location.search);
         const resumeToken = urlParams.get('resume');
+        const listingId = urlParams.get('id') || urlParams.get('listingId') || '';
 
         if (resumeToken) {
             fetch('/api/claim', {
@@ -227,7 +224,6 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
                 body: JSON.stringify({ resumeToken })
             }).then(res => res.json()).then(data => {
                 if (data.success && data.draft) {
-                    // Populate form with draft data
                     Object.keys(data.draft).forEach(key => {
                         const input = form.elements.namedItem(key) as HTMLInputElement;
                         if (input) input.value = data.draft[key];
@@ -237,19 +233,14 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
             });
         }
 
-        // Check auth status
         supabaseBrowser.auth.getSession().then(({ data: { session } }) => {
             if (session && listingId) {
-                // Authenticated user with listing ID - proceed with claim
                 return;
             }
-            // Stay on page for anonymous claims or new submissions
         });
 
-        // Form input event listeners for auto-save
         form.addEventListener('input', scheduleAutoSave);
 
-        // Save draft button
         if (saveDraftBtn) {
             saveDraftBtn.addEventListener('click', () => saveDraft(false));
         }
@@ -257,7 +248,6 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // Show loading state
             btnText.classList.add('hidden');
             btnLoading.classList.remove('hidden');
             submitBtn.disabled = true;
@@ -267,7 +257,6 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
             const formData = new FormData(form);
             const payload = Object.fromEntries(formData);
 
-            // Add listing ID if present
             if (listingId) {
                 payload.listingId = listingId;
             }
@@ -283,23 +272,29 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
 
                 if (res.ok) {
                     if (data.method === 'auto') {
-                        msg.textContent = `✅ ${data.message}`;
+                        msg.textContent = `\u2705 ${data.message}`;
                         msg.className = 'text-center text-sm font-medium text-green-600 bg-green-50 p-4 rounded-lg border border-green-200';
-                        // Redirect to account after successful auto-claim
                         setTimeout(() => window.location.href = '/account', 2000);
                     } else {
-                        msg.textContent = `✅ ${data.message}`;
                         msg.className = 'text-center text-sm font-medium text-blue-600 bg-blue-50 p-4 rounded-lg border border-blue-200';
+                        const upgradeUrl = listingId ? `/pricing?listingId=${listingId}` : `/pricing`;
+                        msg.innerHTML = `
+                            <div class="mb-3">\u2705 ${data.message}</div>
+                            <div class="mt-4 p-4 bg-white rounded border border-blue-100 shadow-sm">
+                                <h4 class="font-bold text-gray-900 mb-2">Skip Verification &amp; Get Instant Access</h4>
+                                <p class="text-sm text-gray-600 mb-3">Upgrade to a Professional or Premium plan now to instantly verify your claim and unlock lead notifications.</p>
+                                <a href="${upgradeUrl}" class="inline-block w-full py-2 px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition">View Upgrade Plans</a>
+                            </div>
+                        `;
                     }
                 } else {
-                    msg.textContent = `❌ ${data.error || 'Error submitting claim. Please try again.'}`;
+                    msg.textContent = `\u274c ${data.error || 'Error submitting claim. Please try again.'}`;
                     msg.className = 'text-center text-sm font-medium text-red-600 bg-red-50 p-4 rounded-lg border border-red-200';
                 }
             } catch (error) {
-                msg.textContent = '❌ Network error. Please check your connection and try again.';
+                msg.textContent = '\u274c Network error. Please check your connection and try again.';
                 msg.className = 'text-center text-sm font-medium text-red-600 bg-red-50 p-4 rounded-lg border border-red-200';
             } finally {
-                // Reset button state
                 btnText.classList.remove('hidden');
                 btnLoading.classList.add('hidden');
                 submitBtn.disabled = false;
