@@ -1,0 +1,85 @@
+---
+import { supabase } from '../../lib/supabase';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const { data } = await supabase
+    .from('standards')
+    .select('id, slug, name, code, description')
+    .not('slug', 'is', null);
+
+  return (data || []).map((s: any) => ({
+    params: { slug: s.slug },
+    props: { standard: s }
+  }));
+}
+
+const { standard } = Astro.props;
+
+// Get listings that have this standard
+const { data: listings } = await supabase
+  .from('listing_capabilities')
+  .select('listing_id, listings!inner(id, business_name, region, trust_score, status)')
+  .eq('standard_id', standard.id)
+  .eq('listings.status', 'active')
+  .order('trust_score', { foreignTable: 'listings', ascending: false });
+---
+
+<BaseLayout title={`${standard.code} Testing Labs | TSTR.directory`} description={standard.description || `Find laboratories certified for ${standard.code} testing.`}>
+  <div class="hero" style="background: linear-gradient(135deg, #000080 0%, #32CD32 100%); color: white; padding: 4rem 2rem; text-align: center;">
+    <div class="hero-content" style="max-width: 1200px; margin: 0 auto;">
+      <div class="breadcrumb" style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 1rem;">
+        <a href="/" style="color: white; text-decoration: none;">Home</a> / <a href="/standards" style="color: white; text-decoration: none;">Standards</a> / {standard.code}
+      </div>
+      <h1 style="font-size: 2.8rem; margin-bottom: 1rem; font-weight: 700;">{standard.code}: {standard.name}</h1>
+      <p style="font-size: 1.2rem; opacity: 0.95; margin-bottom: 2rem;">{standard.description}</p>
+      <p><strong>{listings?.length || 0}</strong> certified laboratories</p>
+    </div>
+  </div>
+
+  <main style="max-width: 1200px; margin: 0 auto; padding: 3rem 2rem;">
+    <section class="section" style="background: white; padding: 2.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      <h2 style="color: #000080; font-size: 2rem; margin-bottom: 1.5rem;">Labs certified for {standard.code}</h2>
+      
+      {listings && listings.length > 0 ? (
+        listings.map((item: any) => (
+          <div class="lab-card" style="background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; transition: all 0.3s ease;">
+            <div class="lab-name" style="color: #000080; font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem;">{item.listings.business_name}</div>
+            <div style="color: #666; margin-bottom: 1rem;">&#128205; {item.listings.region || 'Global'}</div>
+            <div style="color: #32CD32; font-weight: 600;">Trust Score: {item.listings.trust_score || 0}</div>
+            <a href={`/listing/${item.listings.id}`} style="display: inline-block; background: #000080; color: white; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; margin-top: 1rem;">View Profile</a>
+          </div>
+        ))
+      ) : (
+        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #000080;">
+          <p>No laboratories currently listed for this standard.</p>
+        </div>
+      )}
+    </section>
+  </main>
+
+  <style>
+    .lab-card:hover { border-color: #32CD32 !important; box-shadow: 0 4px 12px rgba(50,205,50,0.2) !important; transform: translateY(-2px); }
+  </style>
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": `${standard.code} Testing Laboratories`,
+    "itemListElement": (listings || []).map((l: any, i: number) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "item": {
+        "@type": "LocalBusiness",
+        "name": l.listings.business_name,
+        "hasCredential": {
+          "@type": "EducationalOccupationalCredential",
+          "name": standard.code
+        }
+      }
+    }))
+  })} />
+</BaseLayout>
