@@ -1,7 +1,7 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-02-23 07:28 UTC
+> **Last Updated**: 2026-02-23 07:29 UTC
 > **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -26,15 +26,16 @@
   - **Bitcoin Flow**: Modal QR Code + Email instructions (Verified)
   - **Auth**: Redirect to login for unauthenticated users (Verified)
 - 📊 **Alternative evaluated**: Upmind.com (decision: use later at scale)
+- ✅ **LIVE MODE ACTIVE** (2026-02-23): `PAYPAL_MODE=live`, production Plan IDs configured. PayPal endpoint using `api-m.paypal.com`.
 
-### To Go Live (Next Session)
+### Go-Live Checklist ✅ COMPLETE
 
 1. [x] Create PayPal subscription plans in Dashboard ($295/mo, $795/mo)
 2. [x] Configure webhook URL: `https://haimjeaetrsaauitrhfy.supabase.co/functions/v1/paypal-webhook`
 3. [x] Set secrets with Plan IDs and Webhook ID
 4. [x] Deploy (`supabase functions deploy`)
 5. [x] Test end-to-end in sandbox mode
-6. [ ] **LIVE MODE**: Switch `PAYPAL_MODE` to `live` and update to production Plan IDs
+6. [x] **LIVE MODE**: `PAYPAL_MODE` set to `live`, production Plan IDs active (confirmed 2026-02-23)
 
 ### Reference Documents
 
@@ -284,6 +285,12 @@ Last Scrape:      February 11, 2026 02:31 UTC
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.6.2** - 2026-02-23 - **PayPal Live Mode Confirmed & Docs Fixed** (antigravity)
+
+- **Status Fix**: Corrected stale `[ ]` TODO for PayPal live switch — user confirmed live mode is ACTIVE.
+- **Docs**: Updated Payment System section to reflect `PAYPAL_MODE=live` and production Plan IDs.
+- **Next**: Live payment flow browser test to verify end-to-end. See task next steps.
 
 ### **v2.6.1** - 2026-02-22 - **Alternate Gemini API Key Integration** (antigravity)
 
