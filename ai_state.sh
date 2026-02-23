@@ -1,0 +1,1 @@
+/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/tools/ai_state.sh

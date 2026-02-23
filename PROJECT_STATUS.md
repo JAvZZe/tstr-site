@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-02-12 18:50 UTC
-> **Updated By**: Antigravity (Gemini 2.0)
+> **Last Updated**: 2026-02-23 04:43 UTC
+> **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 > **Maintenance**: See `docs/MAINTENANCE_LOG.md` for security/linting updates.
@@ -126,8 +126,8 @@ Last Scrape:      February 11, 2026 02:31 UTC
 
 ### **Test Results Summary**
 
-| Component      | Status    | Response | Notes                            |
-| -------------- | --------- | -------- | -------------------------------- |
+| Component      | Status     | Response | Notes                            |
+| -------------- | ---------- | -------- | -------------------------------- |
 | Account Pages  | ✅ Working | 200      | Proper authentication protection |
 | Edit Page      | ✅ Working | 200      | Dynamic routing functional       |
 | Analytics Page | ✅ Working | 200      | Dashboard structure complete     |
@@ -267,7 +267,7 @@ Last Scrape:      February 11, 2026 02:31 UTC
 1. **Auth Pattern**: Standard Supabase `getUser()` fails with 3rd-party auth or certain Gateway configs. Reliable pattern is: Frontend sends `userId` + Anon Key -> Edge Function uses `SERVICE_ROLE_KEY` to look up user in DB. DO NOT rely on `Authorization` header validation in Edge Function for this stack.
 2. **Astro Imports**: Variables imported in Frontmatter are NOT available in `<script>` tags. Must be re-imported.
 3. **API-Created Plans**: Successfully created PayPal subscription plans programmatically via REST API instead of dashboard
-4. **Webhook Setup**: Created webhooks via API with proper event subscriptions (BILLING.SUBSCRIPTION.*, PAYMENT.SALE.*)
+4. **Webhook Setup**: Created webhooks via API with proper event subscriptions (BILLING.SUBSCRIPTION._, PAYMENT.SALE._)
 5. **Authentication Flow**: Supabase auth integration works, but OAuth redirect handling needs refinement
 6. **Environment Management**: Secrets properly configured across local, Supabase, and Bruno environments
 7. **Cancellation Error Handling**: Treatment of 404 (Not Found) and 422 (Unprocessable) as success paths is CRITICAL for payment providers with multiple environments. It ensures local DB state remains consistent with the user's intent even if the provider's API returns "missing" or "duplicate" errors.
@@ -285,6 +285,13 @@ Last Scrape:      February 11, 2026 02:31 UTC
 
 ## 📊 VERSION HISTORY (LATEST)
 
+### **v2.6.1** - 2026-02-22 - **Alternate Gemini API Key Integration** (antigravity)
+
+- **AI Integration**: Added a second Gemini API key (`GEMINI_API_KEY_ALT`) as a failover for rate limits.
+- **Credentials**: Updated `docs/credentials/TSTR_CREDENTIALS_MASTER.md` as the single source of truth.
+- **Environment**: Configured `web/tstr-frontend/.env` and `web/tstr-automation/.env`.
+- **API Testing**: Integrated the new key into Bruno environment files (`production.bru`, `local.bru`).
+
 ### **v2.6.0** - 2026-02-12 - **Security Redaction & Repository Cleanup** (antigravity)
 
 - **Security**: Redacted exposed `sb_secret_*` and `sbp_*` Service Role and Management API keys across `CLAUDE.md`, `OPENCODE.md`, `AGENTS.md`, and automation scripts.
@@ -299,6 +306,7 @@ Last Scrape:      February 11, 2026 02:31 UTC
 - **Implementation**: Automated injection into 40+ Astro pages with custom `<head>` sections.
 - **Verification**: Verified script presence in built HTML output (minified).
 - **Optimization**: Used async/defer for zero performance impact.
+- This is not working, we need to test it. How do we do that?
 
 ### **v2.5.4** - 2026-01-28 - **Domain Reference Migration** (antigravity)
 
@@ -698,7 +706,7 @@ Last Scrape:      February 11, 2026 02:31 UTC
 - 🔄 **Database Count Verification** - Dashboard shows 0 listings (query bug); site shows 191
 - ✅ **Infrastructure Operational** - OCI scrapers active, Cloudflare Pages live
 
-*(See `docs/REFERENCE_STATUS.md` for older versions)*
+_(See `docs/REFERENCE_STATUS.md` for older versions)_
 
 ---
 
@@ -758,17 +766,17 @@ Last Scrape:      February 11, 2026 02:31 UTC
 ### Changes Implemented
 
 1. **Schema**:
-    - Created `listing_categories` table for M:N relationship (Listings <-> Categories).
-    - Updated `listings` table with `parent_listing_id` (Hierarchy) and `billing_tier` columns.
-    - Added RLS policies for public read / service write.
+   - Created `listing_categories` table for M:N relationship (Listings <-> Categories).
+   - Updated `listings` table with `parent_listing_id` (Hierarchy) and `billing_tier` columns.
+   - Added RLS policies for public read / service write.
 2. **Data Migration**:
-    - **Backfilled** 457 associations from legacy `category_id` column to new `listing_categories` table.
-    - Verified data integrity via API check.
+   - **Backfilled** 457 associations from legacy `category_id` column to new `listing_categories` table.
+   - Verified data integrity via API check.
 3. **Frontend**:
-    - Updated `src/pages/[category]/index.astro` to filter using joined `listing_categories`.
-    - Updated `src/pages/[category]/[region]/index.astro` to filter using joined `listing_categories`.
+   - Updated `src/pages/[category]/index.astro` to filter using joined `listing_categories`.
+   - Updated `src/pages/[category]/[region]/index.astro` to filter using joined `listing_categories`.
 4. **Admin Advisory**:
-    - **Note**: Admin dashboard still uses legacy `category_id` for editing. Needs UI update in future sprint to support multi-category selection.
+   - **Note**: Admin dashboard still uses legacy `category_id` for editing. Needs UI update in future sprint to support multi-category selection.
 
 ### Technical Notes
 

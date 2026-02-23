@@ -59,7 +59,7 @@ const { data: categoryData } = await supabase
   .single();
 
 // Fetch listings for this category/region
-const { data: pageListings, error: listingsError } = await supabase
+let listingsQuery = supabase
   .from('listings')
   .select(`
     *,
@@ -73,8 +73,14 @@ const { data: pageListings, error: listingsError } = await supabase
     )
   `)
   .eq('status', 'active')
-  .eq('region', region)
-  .eq('listing_categories.category_id', categoryData?.id || '00000000-0000-0000-0000-000000000000')
+  .eq('listing_categories.category_id', categoryData?.id || '00000000-0000-0000-0000-000000000000');
+
+// If region is 'global', don't filter by region to show all listings in this category
+if (region !== 'global') {
+  listingsQuery = listingsQuery.eq('region', region);
+}
+
+const { data: pageListings, error: listingsError } = await listingsQuery
   .order('priority_rank', { ascending: false })
   .order('created_at', { ascending: false });
 

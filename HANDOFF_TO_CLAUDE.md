@@ -1,30 +1,43 @@
 # Handoff to Claude
 
-**Date:** 2026-02-03
+**Date:** 2026-02-21
 **From:** Gemini (Antigravity)
-**Status:** Schema Migration Complete
+**Status:** AI Search & Homepage Redesign Complete (Verification Fallback)
 
-## ✅ Accomplished
+## ✅ Accomplished (Phases 3, 4, 5)
 
-1. **Schema Update**:
-    - `listing_categories` table created (M:N relationship).
-    - `listings` table updated with `parent_listing_id` and `billing_tier`.
-    - Migration file: `supabase/migrations/20260203000002_backfill_data.sql`.
-2. **Data Migration**:
-    - **457 listings** backfilled from `category_id` -> `listing_categories`.
-    - Verified via `web/tstr-automation/verify_migration.py`.
-3. **Frontend Update**:
-    - Category Page (`src/pages/[category]/index.astro`) now queries `listing_categories`.
-    - Region Page (`src/pages/[category]/[region]/index.astro`) now queries `listing_categories`.
-    - Build verified.
+1.  **AI Search Integration**:
+    - Created `src/pages/api/ai-search.ts` with natural language processing.
+    - Implemented **Dual-Model Fallback**: Gemini 2.0 Flash (direct) → OpenRouter (google/gemini-flash-1.5-8b:free) → Keyword/Full-text search.
+    - Verified that if AI keys fail (quota/credits), the site remains functional via keyword search.
+2.  **Homepage Redesign**:
+    - Shifted to a search-first hero component.
+    - Added "Industry Pillars" shortcuts with live counts.
+    - Added "Recently Verified" strip.
+3.  **Revenue & Badges (Phase 4)**:
+    - Finished claim-to-payment end-to-end flow logic (webhook routing).
+    - Created dynamic SVG Badge API: `/api/badge/[id].ts`.
+    - Created outreach email API for automation support.
+4.  **Credential Management**:
+    - Updated `.env` and `.dev.vars` with new Gemini and OpenRouter keys.
+    - Documented all keys in `TSTR_CREDENTIALS_MASTER.md`.
 
-## 🚧 Known Issues
+## 🚧 Known Issues / Blockers
 
-- **Supabase REST Private Cache**: The API cache (`PGRST205`) was stuck during migration. We bypassed it using SQL (`db push`). If you see cache errors, try restarting the project via Dashboard, but the App itself (Cloudflare) should be fine as it builds statically.
-- **Admin Dashboard**: Still uses the legacy single `category_id` field. Needs update to support multiple categories.
+- **API Key Limits**:
+  - **Gemini Key**: Reached `RESOURCE_EXHAUSTED` free-tier quota today.
+  - **OpenRouter Key**: Valid but account needs credits (`402` error).
+- **Schema Migration**: The trust engine schema changes (`migrations/001_trust_schema.sql`) have been drafted but still need to be formally applied to the remote DB if not already done.
+- **Deployment**: Edge functions (`paypal-webhook`, etc.) need redeploying to pick up the new logic.
 
-## ⏭️ Next Steps (Priority: Pricing Logic)
+## ⏭️ Next Steps
 
-1. **Pricing Model**: Implement logic to count categories/locations and determine `billing_tier`.
-2. **Stripe/PayPal Update**: Update payment flows to respect the new tiers (Standard vs Enterprise).
-3. **UI**: Update Pricing Page to reflect "Extra Categories = +$150/mo".
+1.  **Apply Migrations**: Formally run `supabase db push` or use MCP to apply the trust engine schema.
+2.  **Enrichment**: Run `web/tstr-automation/enrich_listings.py` once the schema is live to populate trust signals.
+3.  **UI Polish**: Verify the desktop mobile transition of the new search widget.
+4.  **Funding**: Add a small balance to OpenRouter to enable the high-performance Gemini 2.0 models.
+
+---
+
+> [!NOTE]
+> See `task.md` and `walkthrough.md` in the latest brain session directory or `docs/walkthrough.md` for full technical details of the AI Search logic.
