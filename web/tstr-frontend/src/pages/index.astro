@@ -2,120 +2,80 @@
 import { supabase } from '../lib/supabase'
 import Footer from '../components/Footer.astro'
 import Header from '../components/Header.astro'
-
-// Fetch all active listings with location data and category from database
-const { data: listings, error } = await supabase
-  .from('listings')
-  .select(`
-    *,
-    category:category_id (
-      id,
-      name,
-      slug
-    ),
-    location:location_id (
-      id,
-      name,
-      slug,
-      level,
-      parent:parent_id (
-        id,
-        name,
-        slug,
-        level,
-        parent:parent_id (
-          id,
-          name,
-          slug,
-          level
-        )
-      )
-    )
-  `)
-  .eq('status', 'active')
-  .order('created_at', { ascending: false })
-
-// Log error if any
-if (error) {
-  console.error('Supabase error:', error)
-}
-
-// Fetch all categories from the database
-const { data: allCategories, error: categoriesError} = await supabase
-  .from('categories')
-  .select('*')
-  .order('name', { ascending: true });
-
-// Log error if any
-if (categoriesError) {
-  console.error('Supabase categories error:', categoriesError);
-}
-
-// Extract countries from location hierarchy
-const getCountryFromLocation = (location) => {
-  if (!location) return null
-
-  // If this is a country, return it
-  if (location.level === 'country') {
-    return { name: location.name, slug: location.slug }
-  }
-
-  // Navigate up parent chain to find country
-  let current = location
-  while (current && current.level !== 'country') {
-    current = current.parent
-  }
-
-  return current ? { name: current.name, slug: current.slug } : null
-}
-
-const locations = listings ?
-  [...new Map(
-    listings
-      .map(l => getCountryFromLocation(l.location))
-      .filter(Boolean)
-      .map(c => [c.slug, c])
-  ).values()].slice(0, 8) : []
-
-// Count stats
-const totalListings = listings?.length || 0
-const totalCategories = allCategories?.length || 0
-
-// Prepare categories for display
-const displayCategories = [];
-
-if (allCategories && allCategories.length > 0) {
-  // Combined Biopharma & Life Sciences category
-  const biotechCat = allCategories.find(c => c.name === 'Biotech Testers');
-  const pharmaCat = allCategories.find(c => c.name === 'Biopharma & Life Sciences Testers');
-  const biotechCount = biotechCat && listings ? listings.filter(l => l.category_id === biotechCat.id).length : 0;
-  const pharmaCount = pharmaCat && listings ? listings.filter(l => l.category_id === pharmaCat.id).length : 0;
-
-  displayCategories.push({
-    name: 'Biopharma & Life Sciences Testers',
-    href: '/browse?category=Biopharma%20%26%20Life%20Sciences%20Testers',
-    count: biotechCount + pharmaCount
-  });
-
-  // Add other categories
-  allCategories
-    .filter(cat => cat.name !== 'Biotech Testers' && cat.name !== 'Biopharma & Life Sciences Testers')
-    .forEach(cat => {
-      displayCategories.push({
-        name: cat.name,
-        href: `/browse?category=${encodeURIComponent(cat.name)}`,
-        count: listings ? listings.filter(l => l.category_id === cat.id).length : 0
-      });
-    });
-}
-
 import { formatTitle, formatDescription } from '../lib/seo';
+
+// Fetch total active listings count
+const { count: totalListings } = await supabase
+  .from('listings')
+  .select('*', { count: 'exact', head: true })
+  .eq('status', 'active');
+
+// Fetch counts for specific industry pillars
+const PILLAR_SLUGS = [
+  'hydrogen-infrastructure-testing',
+  'materials-testing',
+  'environmental-testing',
+  'pharmaceutical-testing'
+];
+
+const { data: categoryCountsData } = await supabase
+  .from('categories')
+  .select(`
+    slug,
+    listings:listings!category_id(count)
+  `)
+  .in('slug', PILLAR_SLUGS);
+
+const catCounts = {};
+categoryCountsData?.forEach(c => {
+  catCounts[c.slug] = c.listings?.[0]?.count || 0;
+});
+
+// Fetch top 4 recently verified/claimed labs
+const { data: featuredLabs } = await supabase
+  .from('listings')
+  .select('business_name, slug, region, trust_score, claimed')
+  .eq('status', 'active')
+  .eq('claimed', true)
+  .order('trust_score', { ascending: false })
+  .limit(4);
 
 // Optimized SEO parts
 const pageTitle = formatTitle(['Specialist Testing Services Directory'], true);
 const pageDescription = formatDescription(
-  `Find and compare ${totalListings} verified testing laboratories and certification bodies worldwide. ISO 17025 accredited labs for materials, environmental, and biotech testing.`
+  `Find and compare ${totalListings || 200} verified testing laboratories and certification bodies worldwide. AI-powered search for materials, environmental, and hydrogen testing.`
 );
+
+const PILLARS = [
+  { 
+    slug: 'hydrogen-infrastructure-testing',
+    label: 'Hydrogen Testing',
+    icon: '⚡',
+    color: '#0066cc',
+    description: 'H2 infrastructure, pressure & valves'
+  },
+  {
+    slug: 'materials-testing',
+    label: 'Materials Testing',
+    icon: '🔬',
+    color: '#166534',
+    description: 'Fatigue, tensile, composites'
+  },
+  {
+    slug: 'environmental-testing',
+    label: 'Environmental',
+    icon: '🌿',
+    color: '#065f46',
+    description: 'Air, water, soil, ESG'
+  },
+  {
+    slug: 'pharmaceutical-testing',
+    label: 'Biopharma',
+    icon: '🧬',
+    color: '#6b21a8',
+    description: 'Life sciences, pharma QC'
+  },
+];
 ---
 
 <!DOCTYPE html>
@@ -125,296 +85,301 @@ const pageDescription = formatDescription(
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{pageTitle}</title>
   <meta name="description" content={pageDescription} />
-  <meta name="keywords" content="testing laboratory, ISO 17025, certification body, materials testing, environmental testing, biotech testing, hydrogen testing, accredited labs, testing services" />
   <meta property="og:title" content={pageTitle} />
   <meta property="og:description" content={pageDescription} />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://tstr.directory" />
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "TSTR Hub",
-    "description": "Specialist Testing Services, Products and Solutions Directory",
-    "url": "https://tstr.directory",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://tstr.directory/browse?search={search_term_string}",
-      "query-input": "required name=search_term_string"
-    }
-  })} />
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
-     crossorigin="anonymous"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       line-height: 1.6;
-      color: #333;
-      background: #f5f5f5;
+      color: #1e293b;
+      background: #f8fafc;
     }
+    main { width: 100%; }
     
-
-    
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 3rem 2rem;
-    }
-    
-    section {
+    .pillar-card {
       background: white;
-      border-radius: 12px;
+      border-radius: 16px;
       padding: 2rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    
-    h2 {
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
-      color: #000080;
-      border-bottom: 3px solid #000080;
-      padding-bottom: 0.5rem;
-    }
-    
-    .category-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1.5rem;
-    }
-    
-    .category-card {
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 1.5rem;
-      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
-    }
-    
-    .category-card:hover {
-      border-color: #000080;
-      transform: translateY(-4px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
-    }
-    
-    .category-card h3 {
-      color: #000080;
-      margin-bottom: 0.75rem;
-      font-size: 1.25rem;
-    }
-    
-    .category-card p {
-      color: #666;
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-    
-    .location-list {
       display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-top: 1rem;
+      flex-direction: column;
+      height: 100%;
     }
-    
-    .location-tag {
-      background: #f0f0f0;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      color: #555;
-      transition: all 0.2s ease;
-    }
-    
-    .location-tag:hover {
-      background: #000080;
-      color: white;
-      cursor: pointer;
-    }
-    
-    footer {
-      background: #333;
-      color: white;
-      text-align: center;
-      padding: 2rem;
-      margin-top: 3rem;
+    .pillar-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
     
     .cta-button {
       display: inline-block;
       background: #000080;
       color: white;
-      padding: 1rem 2rem;
-      border-radius: 8px;
+      padding: 0.875rem 2rem;
+      border-radius: 12px;
       text-decoration: none;
-      font-weight: 600;
-      margin-top: 1rem;
-      transition: all 0.3s ease;
+      font-weight: 700;
+      transition: all 0.2s;
     }
-    
     .cta-button:hover {
       background: #32CD32;
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    }
-    
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1.5rem;
-    }
-    
-    .stat-card {
-      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
-      color: white;
-      padding: 1.5rem;
-      border-radius: 8px;
-      text-align: center;
-    }
-    
-    .stat-number {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-    
-    .stat-label {
-      font-size: 1rem;
-      opacity: 0.9;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
     }
 
-    .stat-description {
-      font-size: 0.85rem;
-      color: white;
-      opacity: 0.9;
-      line-height: 1.4;
-      max-width: 220px;
-      margin: 0 auto;
+    #search-results a:last-child { border-bottom: none; }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    #search-results {
+      animation: fadeIn 0.2s ease-out;
     }
   </style>
-  <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
 </head>
 <body>
-   <Header />
+  <Header />
 
   <main>
-    <!-- Value Propositions Section -->
-    <section>
-      <div class="stats">
-        <div class="stat-card">
-          <div class="stat-number">100%</div>
-          <div class="stat-label">Free Search</div>
-          <div class="stat-description">Find and compare laboratories, no registration required</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">100%</div>
-          <div class="stat-label">URL Verified</div>
-          <div class="stat-description">Every laboratory website confirmed active</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">100%</div>
-          <div class="stat-label">Free Listings</div>
-          <div class="stat-description">List your laboratory at no cost, reach global clients</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">5+</div>
-          <div class="stat-label">Specialist Sectors</div>
-          <div class="stat-description">Hydrogen, Oil & Gas, Biopharma, Environmental & Materials</div>
-        </div>
-      </div>
-    </section>
+    <!-- HERO: AI Search Section -->
+    <section id="hero-search" style="background: linear-gradient(135deg, #000033 0%, #000080 100%); padding: 6rem 1.5rem 5rem; text-align: center; position: relative; overflow: hidden;">
+      <!-- Subtle background decoration -->
+      <div style="position: absolute; top: -10%; right: -5%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(50, 205, 50, 0.15) 0%, transparent 70%); border-radius: 50%;"></div>
+      <div style="position: absolute; bottom: -10%; left: -5%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(0, 102, 204, 0.2) 0%, transparent 70%); border-radius: 50%;"></div>
 
-    <!-- Hydrogen Testing Spotlight -->
-    <section style="background: linear-gradient(135deg, #0066cc 0%, #004d99 100%); color: white; padding: 3rem 2rem; border-radius: 12px; text-align: center;">
-      <h2 style="color: white; font-size: 2.2rem; margin-bottom: 1rem;">⚡ Hydrogen Infrastructure Testers</h2>
-      <p style="font-size: 1.2rem; margin-bottom: 1rem; opacity: 0.95;">
-        Find labs certified for <strong>ISO 19880-3</strong> valve testing, <strong>700 bar pressure</strong>, and hydrogen embrittlement
-      </p>
-      <p style="font-size: 1rem; margin-bottom: 2rem; opacity: 0.9;">
-        The only directory indexed by H2 standards: ISO 19880-3/5, SAE J2601, ISO 11114-4, UN ECE R134
-      </p>
-      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <a href="/hydrogen-testing" style="background: white; color: #0066cc; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block; transition: all 0.3s ease;">
-          Explore H2 Labs →
-        </a>
-        <a href="/search/standards?filter=hydrogen" style="background: transparent; border: 2px solid white; color: white; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block; transition: all 0.3s ease;">
-          Search by Standard
-        </a>
-      </div>
-    </section>
-
-    <!-- International Coverage Section -->
-    <section>
-      <h2>International Coverage</h2>
-      <p style="margin-bottom: 1rem; color: #666;">
-        Testing service providers ready to serve you in select markets internationally
-      </p>
-      <div class="location-list">
-        {locations.map((location) => (
-          <a href={`/browse/${location.slug}`} class="location-tag" style="text-decoration: none; cursor: pointer;">{location.name}</a>
-        ))}
-      </div>
-      {locations.length === 0 && (
-        <p style="text-align: center; color: #666; margin-top: 1rem;">
-          International coverage will expand as more providers are added.
+      <div style="position: relative; z-index: 10; max-width: 900px; margin: 0 auto;">
+        <h1 style="color: white; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 900; margin-bottom: 1.5rem; line-height: 1.1; letter-spacing: -0.02em;">
+          The global directory for<br/>specialist testing
+        </h1>
+        <p style="color: rgba(255,255,255,0.85); font-size: 1.25rem; margin-bottom: 3rem; font-weight: 500;">
+          Find and compare {totalListings || 200}+ verified laboratories internationally
         </p>
-      )}
+        
+        <!-- Search bar UI -->
+        <div id="search-container" style="position: relative; max-width: 750px; margin: 0 auto;">
+          <div style="display: flex; gap: 8px; background: rgba(255,255,255,0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 8px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
+            <div style="flex: 1; background: white; border-radius: 14px; display: flex; align-items: center; padding: 0 16px;">
+              <span style="font-size: 1.4rem; opacity: 0.5;">🔍</span>
+              <input
+                type="text"
+                id="ai-search-input"
+                placeholder="Searching for labs..."
+                autocomplete="off"
+                style="width: 100%; border: none; outline: none; font-size: 1.15rem; padding: 1.1rem 0.75rem; border-radius: 10px; font-family: inherit; font-weight: 500;"
+              />
+            </div>
+            <button id="ai-search-btn" style="background: #32CD32; color: white; border: none; border-radius: 14px; padding: 0 2rem; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: all 0.2s;">
+              Search
+            </button>
+          </div>
+          
+          <!-- Results dropdown -->
+          <div id="search-results" style="display: none; position: absolute; top: calc(100% + 12px); left: 0; right: 0; background: white; border-radius: 20px; box-shadow: 0 30px 60px -12px rgba(0,0,0,0.3); z-index: 1000; max-height: 480px; overflow-y: auto; text-align: left; border: 1px solid #e2e8f0;">
+          </div>
+        </div>
+        
+        <!-- Rotating placeholder examples -->
+        <p id="example-query" style="color: rgba(255,255,255,0.5); font-size: 0.95rem; margin-top: 1.5rem; font-weight: 500; min-height: 1.5em;"></p>
+      </div>
     </section>
 
-    <!-- Browse Listings CTA -->
-    <section style="text-align: center;">
-      <h2>Browse Testers</h2>
-      <p style="margin: 1rem 0 2rem; color: #666; font-size: 1.1rem;">
-        Explore {totalListings} testing service providers worldwide
-      </p>
-      <a href="/browse" class="cta-button" style="display: inline-block; margin-right: 1rem;">View All Listings</a>
-      <a href="/search/standards" class="cta-button" style="display: inline-block; background: #32CD32;">Search by Standard</a>
-    </section>
+    <!-- PILLARS: Industry Sectors -->
+    <section style="padding: 5rem 1.5rem; max-width: 1240px; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 4rem;">
+        <h2 style="font-size: 2.25rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem;">Browse by sector</h2>
+        <div style="width: 60px; height: 4px; background: #32CD32; margin: 0 auto; border-radius: 2px;"></div>
+      </div>
 
-    <!-- Categories Section -->
-    <section>
-      <h2>Browse by Category</h2>
-      <div class="category-grid">
-        {displayCategories.map((category) => (
-          <a href={category.href} style="text-decoration: none; color: inherit;">
-            <div class="category-card">
-              <h3>{category.name}</h3>
-              <p>{category.count} listings</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem;">
+        {PILLARS.map(p => (
+          <a href={`/browse?category=${p.slug}`} style="text-decoration: none; color: inherit;">
+            <div class="pillar-card" style={`border-top: 6px solid ${p.color};`}>
+              <div style="font-size: 2.5rem; margin-bottom: 1.5rem;">{p.icon}</div>
+              <h3 style="font-size: 1.5rem; font-weight: 800; color: #1e293b; margin-bottom: 0.5rem;">{p.label}</h3>
+              <p style="color: #64748b; font-size: 1rem; margin-bottom: 1.5rem; flex-grow: 1;">{p.description}</p>
+              <div style={`display: flex; align-items: center; gap: 8px; font-weight: 700; color: ${p.color}; font-size: 0.95rem;`}>
+                <span>{catCounts[p.slug] || 0} laboratories</span>
+                <span>→</span>
+              </div>
             </div>
           </a>
         ))}
       </div>
-      {displayCategories.length === 0 && (
-        <p style="text-align: center; color: #666; margin-top: 2rem;">
-          Categories will appear as listings are added.
-        </p>
-      )}
     </section>
 
-    <!-- CTA Section -->
-    <section style="text-align: center; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
-      <h2 style="color: #333;">List Your Company</h2>
-      <p style="margin: 1rem 0; color: #555; font-size: 1.1rem;">
-        Join our directory and connect with clients seeking testing services
-      </p>
-      <a href="/submit" class="cta-button">Get Started Free</a>
+    <!-- RECENTLY VERIFIED STRIP -->
+    {featuredLabs && featuredLabs.length > 0 && (
+      <section style="background: #0f172a; color: white; padding: 4rem 1.5rem;">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2rem;">
+          <div style="max-width: 400px;">
+            <h2 style="color: white; border: none; font-size: 1.8rem; margin-bottom: 0.5rem;">Top Verified Labs</h2>
+            <p style="color: #94a3b8; font-size: 1rem;">Directly certified and high-trust laboratories added this month.</p>
+          </div>
+          <div style="flex: 1; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem;">
+            {featuredLabs.map(lab => (
+              <a href={`/listing/${lab.slug}`} style="text-decoration: none; color: inherit; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.25rem; transition: background 0.2s;">
+                <div style="font-weight: 700; color: #32CD32; font-size: 0.85rem; margin-bottom: 0.5rem;">★ TRUSTED</div>
+                <div style="font-weight: 600; font-size: 1.05rem; margin-bottom: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{lab.business_name}</div>
+                <div style="color: #94a3b8; font-size: 0.85rem;">{lab.region}</div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- FINAL CTAs -->
+    <section style="padding: 6rem 1.5rem; text-align: center; background: white;">
+      <h2 style="border: none; font-size: 2.5rem; margin-bottom: 3rem;">Ready to start?</h2>
+      <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
+        <a href="/submit" class="cta-button" style="padding: 1.25rem 3rem; font-size: 1.2rem;">List Your Lab Free</a>
+        <a href="/search/standards" class="cta-button" style="padding: 1.25rem 3rem; font-size: 1.2rem; background: #0f172a;">Search by ISO Standard</a>
+      </div>
+      <p style="margin-top: 2rem; color: #64748b; font-weight: 500;">Join {totalListings || 200}+ specialist laboratories on TSTR.directory</p>
     </section>
   </main>
 
   <Footer />
+
+  <script>
+    // --- AI SEARCH WIDGET ---
+    const input = document.getElementById('ai-search-input');
+    const resultsDiv = document.getElementById('search-results');
+    const searchBtn = document.getElementById('ai-search-btn');
+    const exampleEl = document.getElementById('example-query');
+
+    const debounce = (fn, ms) => {
+      let t;
+      return (...args) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn(...args), ms);
+      };
+    };
+
+    const examples = [
+      '"hydrogen infrastructure testing"',
+      '"ISO 19880-3 valve certification"',
+      '"water quality analysis Germany"',
+      '"materials fatigue labs UK"',
+      '"ISO 17025 accredited testers"',
+      '"biopharma clinical labs USA"',
+      '"oil and gas pipeline inspection"'
+    ];
+    let exIdx = 0;
+    
+    // Function to cycle placeholder examples
+    const cycleExample = () => {
+      if (!input || !exampleEl) return;
+      if (document.activeElement === input) {
+        exampleEl.textContent = 'Press Enter to see all results';
+        return;
+      }
+      exampleEl.style.opacity = '0';
+      setTimeout(() => {
+        exampleEl.textContent = `Try searching ${examples[exIdx % examples.length]}...`;
+        exampleEl.style.opacity = '1';
+        input.placeholder = examples[exIdx % examples.length].replace(/"/g, '');
+        exIdx++;
+      }, 500);
+    };
+
+    setInterval(cycleExample, 4000);
+    cycleExample();
+
+    const doSearch = async (query) => {
+      if (!query || query.length < 2) {
+        resultsDiv.style.display = 'none';
+        return;
+      }
+
+      resultsDiv.innerHTML = '<div style="padding: 2rem; text-align: center; color: #64748b; font-weight: 500;">🔍 Analyzing intent...</div>';
+      resultsDiv.style.display = 'block';
+
+      try {
+        const res = await fetch('/api/ai-search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query })
+        });
+        const data = await res.json();
+        
+        if (!data.results?.length) {
+          resultsDiv.innerHTML = `
+            <div style="padding: 2rem; text-align: center;">
+              <p style="color: #64748b; margin-bottom: 1rem;">No direct matches found for "${query}"</p>
+              <a href="/browse?q=${encodeURIComponent(query)}" style="color: #000080; font-weight: 700; text-decoration: none; border-bottom: 2px solid #32CD32;">Try manual browse &rarr;</a>
+            </div>`;
+          return;
+        }
+
+        const modeBadge = data.search_mode?.startsWith('ai') 
+          ? '<span style="background: #f0fdf4; color: #166534; padding: 4px 10px; border-radius: 99px; font-size: 0.75rem; font-weight: 700;">✨ AI Intent Found</span>' 
+          : '';
+
+        const resultsHtml = data.results.map(r => `
+          <a href="/listing/${r.slug}" style="display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; text-decoration: none; border-bottom: 1px solid #f1f5f9; transition: background 0.15s;">
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-weight: 800; color: #0f172a; font-size: 1.1rem; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${r.business_name}</div>
+              <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #64748b;">
+                <span style="background: #f8fafc; padding: 2px 8px; border-radius: 4px; border: 1px solid #e2e8f0;">${r.category_name}</span>
+                <span>${r.region || 'International'}</span>
+              </div>
+            </div>
+            <div style="text-align: right; flex-shrink: 0; margin-left: 1rem;">
+              ${r.claimed ? '<div style="color: #16a34a; font-size: 0.75rem; font-weight: 900;">✓ VERIFIED</div>' : ''}
+              ${r.trust_score ? `<div style="color: #94a3b8; font-size: 0.75rem; font-weight: 600;">Score ${r.trust_score}</div>` : ''}
+            </div>
+          </a>
+        `).join('');
+
+        resultsDiv.innerHTML = `
+          <div style="padding: 0.75rem 1.5rem; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.85rem; font-weight: 600; color: #64748b;">Found ${data.total} matches</span>
+            ${modeBadge}
+          </div>
+          ${resultsHtml}
+          <a href="/browse?q=${encodeURIComponent(query)}" style="display: block; padding: 1.25rem; text-align: center; color: #000080; font-weight: 800; font-size: 1rem; border-top: 1px solid #e2e8f0; background: white; transition: background 0.2s;">
+            See all ${data.total} results &rarr;
+          </a>
+        `;
+      } catch (err) {
+        console.error('Search failed:', err);
+        resultsDiv.innerHTML = '<div style="padding: 2rem; color: #ef4444; font-weight: 600;">⚠️ Search is temporarily unavailable.</div>';
+      }
+    };
+
+    const debouncedSearch = debounce(doSearch, 400);
+
+    input?.addEventListener('input', (e) => debouncedSearch(e.target.value));
+    
+    searchBtn?.addEventListener('click', () => {
+      const q = input.value.trim();
+      if (q) window.location.href = `/browse?q=${encodeURIComponent(q)}`;
+    });
+
+    input?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') searchBtn.click();
+      if (e.key === 'Escape') resultsDiv.style.display = 'none';
+    });
+
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#search-container')) {
+        resultsDiv.style.display = 'none';
+      }
+    });
+
+    // Interaction tracking or other init
+    input?.addEventListener('focus', () => {
+      if (input.value.length >= 2) resultsDiv.style.display = 'block';
+    });
+  </script>
 </body>
 </html>

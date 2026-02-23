@@ -57,13 +57,13 @@ def enrich_listings():
 
     # Filter: processed if existing website OR existing premium data
     to_process = []
-    for l in listings:
-        has_premium = len(l.get('listing_premium_data', [])) > 0
-        has_website = bool(l.get('website'))
+    for item in listings:
+        has_premium = len(item.get('listing_premium_data', [])) > 0
+        has_website = bool(item.get('website'))
         
         # We want to process if MISSING website OR MISSING premium (linkedin)
         if not has_website or not has_premium:
-            to_process.append(l)
+            to_process.append(item)
 
     print(f"Found {len(to_process)} listings to enrich.")
     

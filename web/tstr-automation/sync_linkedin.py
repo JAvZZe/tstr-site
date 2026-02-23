@@ -131,12 +131,12 @@ def sync_companies():
     
     # Fetch all listings with IDs to check for missing links
     listings_data = fetch_table("listings", "id,business_name,slug")
-    existing_listings_map = {l["business_name"].lower(): l for l in listings_data}
-    existing_slugs = {l["slug"] for l in listings_data}
+    existing_listings_map = {listing["business_name"].lower(): listing for listing in listings_data}
+    existing_slugs = {listing["slug"] for listing in listings_data}
     
     # Fetch existing category links to avoid duplicates
     links_data = fetch_table("listing_categories", "listing_id,category_id")
-    linked_listing_ids = {l["listing_id"] for l in links_data}
+    linked_listing_ids = {link["listing_id"] for link in links_data}
     
     # Mappings
     category_mapping = {
@@ -211,7 +211,8 @@ def sync_companies():
         industry = company.get('industry')
         location_raw = company.get('location')
         
-        if not name: continue
+        if not name:
+            continue
         
         # 1. Determine Category ID (Get or Create)
         cat_id = None
@@ -319,7 +320,7 @@ def sync_companies():
     if listings_to_insert:
         print("Inserting new listings...")
         # Remove _temp_cat_id before insert
-        clean_listings = [{k:v for k,v in l.items() if k != '_temp_cat_id'} for l in listings_to_insert]
+        clean_listings = [{k:v for k,v in item.items() if k != '_temp_cat_id'} for item in listings_to_insert]
         
         # We need the IDs. PostgREST returns created rows with Prefer: return=representation.
         # But batch insert returns array. existing validation logic might fail if batch fails?
@@ -340,9 +341,9 @@ def sync_companies():
                 
                 created_map = {r['slug']: r['id'] for r in created_rows}
                 
-                for l in listings_to_insert:
-                    lid = created_map.get(l['slug'])
-                    cid = l.get('_temp_cat_id')
+                for item in listings_to_insert:
+                    lid = created_map.get(item['slug'])
+                    cid = item.get('_temp_cat_id')
                     if lid and cid:
                          links_to_insert.append({
                             "listing_id": lid,
