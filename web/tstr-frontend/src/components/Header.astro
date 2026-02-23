@@ -1,4 +1,5 @@
 ---
+const { showHero = true } = Astro.props;
 ---
 
 <header style="background: linear-gradient(135deg, #000080 0%, #32CD32 100%); color: white; padding: 3rem 2rem; position: relative;">
@@ -25,15 +26,17 @@
     </button>
   </div>
 
-  <!-- Hero Content -->
-  <div style="text-align: center; margin-top: 2rem;">
-    <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; font-weight: 700;">
-      Specialist Testing Services, Products and Solutions Directory
-    </h1>
-    <p style="font-size: 1rem; margin-top: 0.5rem; opacity: 0.85;">
-      Oil & Gas • Biopharma & Life Sciences • Environmental • Materials Testing
-    </p>
-  </div>
+  {showHero && (
+    <!-- Hero Content -->
+    <div style="text-align: center; margin-top: 2rem;">
+      <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; font-weight: 700;">
+        Specialist Testing Services, Products and Solutions Directory
+      </h1>
+      <p style="font-size: 1rem; margin-top: 0.5rem; opacity: 0.85;">
+        Oil & Gas • Biopharma & Life Sciences • Environmental • Materials Testing
+      </p>
+    </div>
+  )}
 
   <!-- Mobile Menu Overlay -->
   <div id="mobile-menu" class="mobile-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; padding-top: 5rem;">
