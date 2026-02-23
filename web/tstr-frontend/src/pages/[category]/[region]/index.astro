@@ -5,48 +5,8 @@ import { MAILTO_LINKS } from '../../../lib/contacts';
 import Footer from '../../../components/Footer.astro';
 import { getRedirectUrl } from '../../../lib/redirect';
 
-// Enable static prerendering at build time
-export const prerender = true;
+// SSR rendering (output: 'server' in astro.config)
 
-// 1. getStaticPaths: Generate pages for each category/region combination
-export async function getStaticPaths() {
-  // Fetch all categories
-  const { data: categories } = await supabase
-    .from('categories')
-    .select('slug');
-
-  // Fetch all regions currently in use in listings (regardless of status)
-  const { data: listingRegions } = await supabase
-    .from('listings')
-    .select('region');
-
-  if (!categories || !listingRegions) {
-    return [];
-  }
-
-  // Define core regions to ensure they always exist
-  const uniqueRegions = new Set(['global', 'europe', 'north-america', 'asia', 'oceania', 'africa', 'south-america']);
-  
-  // Add any regions found in listings
-  listingRegions.forEach(l => {
-    if (l.region) uniqueRegions.add(l.region.toLowerCase());
-  });
-
-  // Create cross-join of all categories and all regions
-  const paths = [];
-  categories.forEach(cat => {
-    uniqueRegions.forEach(region => {
-      paths.push({
-        params: { 
-          category: cat.slug, 
-          region: region 
-        }
-      });
-    });
-  });
-
-  return paths;
-}
 
 // 2. Page rendering: Fetch data for this specific page
 const { category, region } = Astro.params;

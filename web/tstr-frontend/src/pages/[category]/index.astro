@@ -3,25 +3,8 @@
 import { supabase } from '../../lib/supabase';
 import Footer from '../../components/Footer.astro';
 
-// Enable static prerendering at build time
-export const prerender = true;
+// SSR rendering (output: 'server' in astro.config)
 
-// 1. getStaticPaths: Generate pages for each category
-export async function getStaticPaths() {
-  const { data: categories, error } = await supabase
-    .from('categories')
-    .select('slug')
-    .order('display_order', { ascending: true });
-
-  if (error || !categories) {
-    console.error('Error fetching categories for static paths:', error);
-    return [];
-  }
-
-  return categories.map(cat => ({
-    params: { category: cat.slug }
-  }));
-}
 
 // 2. Page rendering: Fetch data for this category
 const { category } = Astro.params;
