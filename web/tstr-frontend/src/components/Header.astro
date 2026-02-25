@@ -114,6 +114,7 @@ const { showHero = true } = Astro.props;
       if (desktopNav) {
         desktopNav.innerHTML = ''
 
+        const blogLink = createNavLink('/blog', 'Blog', false)
         const pricingLink = createNavLink('/pricing', 'Pricing', false)
         const contactLink = createNavLink('/contact', 'Contact', false)
         const browseLink = createNavLink('/browse', 'Browse', false)
@@ -127,6 +128,7 @@ const { showHero = true } = Astro.props;
         }
 
         desktopNav.appendChild(browseLink)
+        desktopNav.appendChild(blogLink)
         desktopNav.appendChild(pricingLink)
         desktopNav.appendChild(contactLink)
       }
@@ -145,10 +147,12 @@ const { showHero = true } = Astro.props;
         }
 
         const browseLink = createNavLink('/browse', 'Browse Listings', false)
+        const blogLink = createNavLink('/blog', 'Blog', false)
         const pricingLink = createNavLink('/pricing', 'Pricing', false)
         const contactLink = createNavLink('/contact', 'Contact Us', false)
 
         mobileNav.appendChild(browseLink)
+        mobileNav.appendChild(blogLink)
         mobileNav.appendChild(pricingLink)
         mobileNav.appendChild(contactLink)
       }

@@ -97,9 +97,25 @@ export const GET: APIRoute = async () => {
     changefreq: 'weekly'
   }));
 
+  // Fetch published blog posts
+  const { data: blogPosts } = await supabase
+    .from('blog_posts')
+    .select('slug, published_at')
+    .eq('is_published', true);
+
+  const blogPages = (blogPosts || []).map(post => ({
+    url: `/blog/${post.slug}`,
+    priority: '0.7',
+    changefreq: 'weekly',
+    lastmod: post.published_at ? post.published_at.split('T')[0] : currentDate
+  }));
+
   // Combine all pages
   const allPages = [
     ...staticPages,
+    { url: '/blog', priority: '0.8', changefreq: 'daily' },
+    { url: '/press', priority: '0.8', changefreq: 'weekly' },
+    ...blogPages,
     ...dynamicStandardPages,
     ...categoryPages,
     ...categoryRegionPages,

@@ -2,6 +2,7 @@
 import { supabase } from '../../lib/supabase'
 import { getRedirectUrl } from '../../lib/redirect'
 import Footer from '../../components/Footer.astro'
+import ContactLabModal from '../../components/ContactLabModal'
 
 // Disable static prerendering for performance - use SSR instead
 export const prerender = false
@@ -703,15 +704,17 @@ const pageDescription = formatDescription(
     <a href="/browse" class="back-link">← Back to Browse</a>
 
     <div class="listing-card">
-       <div class="listing-header">
-         <h1 class="listing-title">{listing.business_name}</h1>
-         <div class="header-badges">
-           {listing.category?.name && (
-             <div class="category-badge">{listing.category.name}</div>
-           )}
-           <div id="ownership-badge" class="ownership-badge" style="display: none;"></div>
-         </div>
-       </div>
+        <div class="listing-header">
+          <h1 class="listing-title">{listing.business_name}</h1>
+          <div class="header-badges">
+            {listing.category?.name && (
+              <div class="category-badge">{listing.category.name}</div>
+            )}
+            <div id="ownership-badge" class="ownership-badge" style="display: none;"></div>
+          </div>
+          
+          <ContactLabModal client:visible listingId={listing.id} labName={listing.business_name} />
+        </div>
 
       {listing.description && (
         <div class="info-section">
