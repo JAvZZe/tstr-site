@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { supabase } from '../lib/supabase';
+
+// Static generation
+export const prerender = true;
+
+// Fetch published posts in 'Press' category
+const { data: pressReleases, error } = await supabase
+  .from('blog_posts')
+  .select('slug, title, excerpt, published_at, cover_image_url')
+  .eq('is_published', true)
+  .eq('category', 'Press')
+  .order('published_at', { ascending: false });
+
+const title = "Newsroom & Press Releases | TSTR.directory";
+const description = "Official press releases and announcements from TSTR Hub, the global directory for specialist testing and certification services.";
+
+// Format date helper
+const formatDate = (dateStr: string) => {
+  return new Date(dateStr).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+};
+---
+
+<BaseLayout title={title} description={description}>
+  <main style="max-width: 1000px; margin: 0 auto; padding: 4rem 2rem;">
+    <div style="margin-bottom: 4rem; border-bottom: 2px solid #000080; padding-bottom: 2rem;">
+      <h1 style="font-size: 3rem; color: #000080; margin-bottom: 0.5rem;">Newsroom</h1>
+      <p style="font-size: 1.2rem; color: #666;">
+        Official media resources and corporate announcements.
+      </p>
+    </div>
+
+    {error && (
+      <div style="padding: 2rem; background: #fee2e2; border-radius: 8px; color: #dc2626;">
+        Error loading items. Please try again later.
+      </div>
+    )}
+
+    {!pressReleases || pressReleases.length === 0 ? (
+      <div style="padding: 4rem 0;">
+        <p style="font-size: 1.1rem; color: #666;">No recent press releases found. For media enquiries, please contact <a href="mailto:media@tstr.directory" style="color: #32CD32; font-weight: 600;">media@tstr.directory</a></p>
+      </div>
+    ) : (
+      <div style="display: flex; flex-direction: column; gap: 3rem;">
+        {pressReleases.map((release) => (
+          <div style="display: flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap;">
+            <div style="color: #666; font-size: 0.9rem; font-weight: 600; width: 120px; flex-shrink: 0; padding-top: 0.5rem;">
+              {formatDate(release.published_at)}
+            </div>
+            
+            <div style="flex: 1; min-width: 300px;">
+              <h2 style="font-size: 1.8rem; margin: 0 0 1rem; color: #000080; line-height: 1.2;">
+                <a href={`/blog/${release.slug}`} style="text-decoration: none; color: inherit; hover: color: #32CD32 transition: color 0.2s;">
+                  {release.title}
+                </a>
+              </h2>
+              <p style="color: #4b5563; font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.5rem;">{release.excerpt}</p>
+              <a href={`/blog/${release.slug}`} style="color: #32CD32; font-weight: 600; text-decoration: none; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.05em;">
+                Read Full Release →
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+
+    <div style="margin-top: 6rem; background: #f3f4f6; border-radius: 16px; padding: 3rem; text-align: center;">
+      <h3 style="font-size: 1.8rem; color: #000080; margin-bottom: 1rem;">Media Kit</h3>
+      <p style="color: #4b5563; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+        Access logos, brand assets, and spokesperson bios for media publications.
+      </p>
+      <a href="/contact?subject=MediaKit" style="background: linear-gradient(135deg, #000080 0%, #32CD32 100%); color: white; padding: 0.8rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block;">
+        Request Media Kit
+      </a>
+    </div>
+  </main>
+</BaseLayout>

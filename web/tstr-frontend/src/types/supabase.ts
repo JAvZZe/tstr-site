@@ -1,10 +1,4 @@
-[?25l[?2004h
-                                                                                                                      
-  >  1. haimjeaetrsaauitrhfy [name: tstr.site1@gmail.com's TSTR Project, org: arwfgdvauauvyjecwoic, region: us-east-1]
-                                                                                                                      
-                                                                                                                      
-    ↑/k up • ↓/j down • / filter • q quit • ? more                                                                    
-                                                                                                                      [6A [J[2K[?2004l[?25h[?1002l[?1003l[?1006lexport type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -20,6 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      blog_posts: {
+        Row: {
+          author: string | null
+          body: string
+          canonical_url: string | null
+          category: string
+          cover_image_url: string | null
+          created_at: string | null
+          excerpt: string
+          id: string
+          is_published: boolean | null
+          meta_description: string | null
+          meta_title: string | null
+          published_at: string | null
+          reading_time_mins: number | null
+          related_listings: string[] | null
+          slug: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          author?: string | null
+          body: string
+          canonical_url?: string | null
+          category: string
+          cover_image_url?: string | null
+          created_at?: string | null
+          excerpt: string
+          id?: string
+          is_published?: boolean | null
+          meta_description?: string | null
+          meta_title?: string | null
+          published_at?: string | null
+          reading_time_mins?: number | null
+          related_listings?: string[] | null
+          slug: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          author?: string | null
+          body?: string
+          canonical_url?: string | null
+          category?: string
+          cover_image_url?: string | null
+          created_at?: string | null
+          excerpt?: string
+          id?: string
+          is_published?: boolean | null
+          meta_description?: string | null
+          meta_title?: string | null
+          published_at?: string | null
+          reading_time_mins?: number | null
+          related_listings?: string[] | null
+          slug?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string | null
@@ -60,6 +114,57 @@ export type Database = {
             columns: ["parent_id"]
             isOneToOne: false
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      certifications: {
+        Row: {
+          confidence: number | null
+          created_at: string | null
+          expiry_date: string | null
+          id: string
+          issued_date: string | null
+          issuing_body: string | null
+          listing_id: string | null
+          name: string
+          source: string | null
+        }
+        Insert: {
+          confidence?: number | null
+          created_at?: string | null
+          expiry_date?: string | null
+          id?: string
+          issued_date?: string | null
+          issuing_body?: string | null
+          listing_id?: string | null
+          name: string
+          source?: string | null
+        }
+        Update: {
+          confidence?: number | null
+          created_at?: string | null
+          expiry_date?: string | null
+          id?: string
+          issued_date?: string | null
+          issuing_body?: string | null
+          listing_id?: string | null
+          name?: string
+          source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "certifications_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "certifications_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "potential_dead_links"
             referencedColumns: ["id"]
           },
         ]
@@ -182,6 +287,114 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      equipment: {
+        Row: {
+          category: string | null
+          confidence: number | null
+          created_at: string | null
+          id: string
+          listing_id: string | null
+          manufacturer: string | null
+          model: string
+          source: string | null
+        }
+        Insert: {
+          category?: string | null
+          confidence?: number | null
+          created_at?: string | null
+          id?: string
+          listing_id?: string | null
+          manufacturer?: string | null
+          model: string
+          source?: string | null
+        }
+        Update: {
+          category?: string | null
+          confidence?: number | null
+          created_at?: string | null
+          id?: string
+          listing_id?: string | null
+          manufacturer?: string | null
+          model?: string
+          source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "equipment_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipment_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "potential_dead_links"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leads_rfq: {
+        Row: {
+          buyer_company: string | null
+          buyer_email: string
+          buyer_industry: string | null
+          buyer_name: string
+          buyer_role: string | null
+          created_at: string | null
+          id: string
+          listing_id: string | null
+          message: string
+          notified_lab: boolean | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          buyer_company?: string | null
+          buyer_email: string
+          buyer_industry?: string | null
+          buyer_name: string
+          buyer_role?: string | null
+          created_at?: string | null
+          id?: string
+          listing_id?: string | null
+          message: string
+          notified_lab?: boolean | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          buyer_company?: string | null
+          buyer_email?: string
+          buyer_industry?: string | null
+          buyer_name?: string
+          buyer_role?: string | null
+          created_at?: string | null
+          id?: string
+          listing_id?: string | null
+          message?: string
+          notified_lab?: boolean | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_rfq_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_rfq_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "potential_dead_links"
             referencedColumns: ["id"]
           },
         ]
@@ -492,15 +705,62 @@ export type Database = {
           },
         ]
       }
+      listing_premium_data: {
+        Row: {
+          created_at: string
+          crunchbase_url: string | null
+          email: string | null
+          id: string
+          linkedin_url: string | null
+          listing_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          crunchbase_url?: string | null
+          email?: string | null
+          id?: string
+          linkedin_url?: string | null
+          listing_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          crunchbase_url?: string | null
+          email?: string | null
+          id?: string
+          linkedin_url?: string | null
+          listing_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_premium_data_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "listing_premium_data_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "potential_dead_links"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       listings: {
         Row: {
           address: string | null
           billing_tier: string | null
           business_name: string
           category_id: string
+          category_slug: string | null
           claimed: boolean | null
           claimed_at: string | null
           contact_email: string | null
+          contact_visibility: string | null
           created_at: string | null
           description: string | null
           email: string | null
@@ -511,6 +771,7 @@ export type Database = {
           latitude: number | null
           location_id: string
           longitude: number | null
+          outreach_sent_at: string | null
           owner_id: string | null
           parent_listing_id: string | null
           phone: string | null
@@ -522,6 +783,7 @@ export type Database = {
           slug: string
           source_script: string | null
           status: string | null
+          trust_score: number | null
           updated_at: string | null
           verified: boolean | null
           views: number | null
@@ -533,9 +795,11 @@ export type Database = {
           billing_tier?: string | null
           business_name: string
           category_id: string
+          category_slug?: string | null
           claimed?: boolean | null
           claimed_at?: string | null
           contact_email?: string | null
+          contact_visibility?: string | null
           created_at?: string | null
           description?: string | null
           email?: string | null
@@ -546,6 +810,7 @@ export type Database = {
           latitude?: number | null
           location_id: string
           longitude?: number | null
+          outreach_sent_at?: string | null
           owner_id?: string | null
           parent_listing_id?: string | null
           phone?: string | null
@@ -557,6 +822,7 @@ export type Database = {
           slug: string
           source_script?: string | null
           status?: string | null
+          trust_score?: number | null
           updated_at?: string | null
           verified?: boolean | null
           views?: number | null
@@ -568,9 +834,11 @@ export type Database = {
           billing_tier?: string | null
           business_name?: string
           category_id?: string
+          category_slug?: string | null
           claimed?: boolean | null
           claimed_at?: string | null
           contact_email?: string | null
+          contact_visibility?: string | null
           created_at?: string | null
           description?: string | null
           email?: string | null
@@ -581,6 +849,7 @@ export type Database = {
           latitude?: number | null
           location_id?: string
           longitude?: number | null
+          outreach_sent_at?: string | null
           owner_id?: string | null
           parent_listing_id?: string | null
           phone?: string | null
@@ -592,6 +861,7 @@ export type Database = {
           slug?: string
           source_script?: string | null
           status?: string | null
+          trust_score?: number | null
           updated_at?: string | null
           verified?: boolean | null
           views?: number | null
@@ -835,6 +1105,57 @@ export type Database = {
         }
         Relationships: []
       }
+      rfq_leads: {
+        Row: {
+          buyer_company: string | null
+          buyer_email: string
+          buyer_name: string | null
+          created_at: string | null
+          id: string
+          listing_id: string | null
+          standards_needed: string[] | null
+          status: string | null
+          test_description: string | null
+        }
+        Insert: {
+          buyer_company?: string | null
+          buyer_email: string
+          buyer_name?: string | null
+          created_at?: string | null
+          id?: string
+          listing_id?: string | null
+          standards_needed?: string[] | null
+          status?: string | null
+          test_description?: string | null
+        }
+        Update: {
+          buyer_company?: string | null
+          buyer_email?: string
+          buyer_name?: string | null
+          created_at?: string | null
+          id?: string
+          listing_id?: string | null
+          standards_needed?: string[] | null
+          status?: string | null
+          test_description?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rfq_leads_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rfq_leads_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "potential_dead_links"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       schema_migrations: {
         Row: {
           applied_at: string
@@ -886,12 +1207,19 @@ export type Database = {
           code: string
           created_at: string | null
           description: string | null
+          description_long: string | null
           id: string
           is_active: boolean | null
           issuing_body: string | null
+          meta_description: string | null
+          meta_title: string | null
           name: string
+          page_published: boolean | null
+          related_equipment: string[] | null
           revision: string | null
+          slug: string | null
           standard_type: string | null
+          typical_industries: string[] | null
           updated_at: string | null
           url: string | null
         }
@@ -900,12 +1228,19 @@ export type Database = {
           code: string
           created_at?: string | null
           description?: string | null
+          description_long?: string | null
           id?: string
           is_active?: boolean | null
           issuing_body?: string | null
+          meta_description?: string | null
+          meta_title?: string | null
           name: string
+          page_published?: boolean | null
+          related_equipment?: string[] | null
           revision?: string | null
+          slug?: string | null
           standard_type?: string | null
+          typical_industries?: string[] | null
           updated_at?: string | null
           url?: string | null
         }
@@ -914,12 +1249,19 @@ export type Database = {
           code?: string
           created_at?: string | null
           description?: string | null
+          description_long?: string | null
           id?: string
           is_active?: boolean | null
           issuing_body?: string | null
+          meta_description?: string | null
+          meta_title?: string | null
           name?: string
+          page_published?: boolean | null
+          related_equipment?: string[] | null
           revision?: string | null
+          slug?: string | null
           standard_type?: string | null
+          typical_industries?: string[] | null
           updated_at?: string | null
           url?: string | null
         }
@@ -993,6 +1335,7 @@ export type Database = {
           company_name: string | null
           created_at: string
           id: string
+          industry: string | null
           last_payment_date: string | null
           payment_method: string | null
           paypal_subscription_id: string | null
@@ -1002,12 +1345,14 @@ export type Database = {
           subscription_status: string
           subscription_tier: string
           updated_at: string
+          user_type: string | null
         }
         Insert: {
           billing_email?: string | null
           company_name?: string | null
           created_at?: string
           id: string
+          industry?: string | null
           last_payment_date?: string | null
           payment_method?: string | null
           paypal_subscription_id?: string | null
@@ -1017,12 +1362,14 @@ export type Database = {
           subscription_status?: string
           subscription_tier?: string
           updated_at?: string
+          user_type?: string | null
         }
         Update: {
           billing_email?: string | null
           company_name?: string | null
           created_at?: string
           id?: string
+          industry?: string | null
           last_payment_date?: string | null
           payment_method?: string | null
           paypal_subscription_id?: string | null
@@ -1032,8 +1379,54 @@ export type Database = {
           subscription_status?: string
           subscription_tier?: string
           updated_at?: string
+          user_type?: string | null
         }
         Relationships: []
+      }
+      verification_evidence: {
+        Row: {
+          created_at: string | null
+          file_type: string | null
+          file_url: string
+          id: string
+          listing_id: string | null
+          uploaded_by: string | null
+          verified: boolean | null
+        }
+        Insert: {
+          created_at?: string | null
+          file_type?: string | null
+          file_url: string
+          id?: string
+          listing_id?: string | null
+          uploaded_by?: string | null
+          verified?: boolean | null
+        }
+        Update: {
+          created_at?: string | null
+          file_type?: string | null
+          file_url?: string
+          id?: string
+          listing_id?: string | null
+          uploaded_by?: string | null
+          verified?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "verification_evidence_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "verification_evidence_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "potential_dead_links"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       waitlist: {
         Row: {
@@ -1078,6 +1471,11 @@ export type Database = {
       }
     }
     Functions: {
+      calculate_listing_billing: {
+        Args: { p_listing_id: string }
+        Returns: Json
+      }
+      calculate_trust_score: { Args: { p_listing_id: string }; Returns: number }
       can_auto_claim: {
         Args: { listing_website: string; user_email: string }
         Returns: boolean

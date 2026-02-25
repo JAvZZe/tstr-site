@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-02-23 07:29 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-02-25 14:00 UTC
+> **Updated By**: Antigravity (Gemini 2.5 Pro)
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 > **Maintenance**: See `docs/MAINTENANCE_LOG.md` for security/linting updates.
@@ -73,6 +73,26 @@
 **Stack**: Astro 5.14.4 + React 18.3.1 + Supabase + Python Scrapers
 **Deployment**: OCI (Scrapers) + Cloudflare Pages (Frontend)
 **Status**: ✅ LIVE - 194 listings
+
+---
+
+---
+
+## 📰 BLOG & NEWSROOM STATUS
+
+- ✅ **Blog System COMPLETE** (v2.7.0): `blog_posts` schema, SSG listing and post pages.
+- ✅ **Newsroom COMPLETE**: Press release section implemented at `/press`.
+- ✅ **Content Seeded**: Initial announcements and industry articles populated.
+- ✅ **SEO**: Integrated into sitemap, meta tags active.
+
+---
+
+## 🤝 MARKETPLACE PHASE 1 (LEAD CAPTURE)
+
+- ✅ **RFQ System COMPLETE**: `leads_rfq` schema and enhanced `user_profiles` implemented.
+- ✅ **Lead Capture UI**: `ContactLabModal` integrated across 100% of listing pages.
+- ✅ **Automated Notifications**: `/api/leads` integrated with Resend for lab owner notification.
+- ✅ **Verified**: End-to-end lead flow verified (Form submission -> DB Tracking -> Notified Lab flag).
 
 ---
 
