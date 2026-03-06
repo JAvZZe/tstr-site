@@ -54,7 +54,7 @@ export default function NewsletterBanner() {
         <div className="flex-shrink-0 text-center xl:text-left">
           <p className="font-bold text-sm md:text-base tracking-wide">
             JOIN OUR NEWSLETTER <span className="hidden xl:inline">|</span> 
-            <span className="block xl:inline xl:ml-2 font-normal text-xs md:text-sm text-orange-100">
+            <span className="block xl:inline xl:ml-2 font-normal text-xs md:text-sm text-white opacity-90">
               Get the latest industry testing updates
             </span>
           </p>

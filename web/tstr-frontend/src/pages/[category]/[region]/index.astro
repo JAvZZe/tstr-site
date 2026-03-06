@@ -2,6 +2,7 @@
 // src/pages/[category]/[region]/index.astro
 import { supabase } from '../../../lib/supabase';
 import { MAILTO_LINKS } from '../../../lib/contacts';
+import NewsletterBanner from '../../../components/NewsletterBanner';
 import Footer from '../../../components/Footer.astro';
 import { getRedirectUrl } from '../../../lib/redirect';
 
@@ -83,6 +84,7 @@ const pageDescription = formatDescription(
   <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
 
     <!-- Navigation -->
+    <NewsletterBanner client:only="react" />
     <nav class="bg-white shadow-sm p-4">
       <div class="max-w-6xl mx-auto">
         <a href="/" class="font-bold text-xl hover:text-blue-600 transition">
