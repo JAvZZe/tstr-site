@@ -1,6 +1,7 @@
 ---
 // src/pages/environmental-testing/air-quality/index.astro
 import { supabase } from '../../../lib/supabase';
+import NewsletterBanner from '../../../components/NewsletterBanner';
 import Footer from '../../../components/Footer.astro';
 
 // Enable static prerendering at build time
@@ -102,6 +103,7 @@ const testingServiceName = getTestingServiceName(categoryData.name);
   <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
 
     <!-- Navigation -->
+    <NewsletterBanner client:only="react" />
     <nav class="bg-white shadow-sm p-4">
       <div class="max-w-6xl mx-auto">
         <a href="/" class="font-bold text-xl hover:text-blue-600 transition">
