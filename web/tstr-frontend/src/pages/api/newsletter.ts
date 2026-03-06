@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '../../lib/supabase';
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -9,26 +9,13 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(JSON.stringify({ error: 'All fields are required' }), { status: 400 });
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return new Response(JSON.stringify({ error: 'Invalid email address' }), { status: 400 });
     }
 
-    // Create a server-side Supabase client using secrets
-    // Note: In Cloudflare/Astro, environment variables are accessed differently
-    const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-    const supabaseKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
-
-    if (!supabaseUrl || !supabaseKey) {
-      console.error('Missing Supabase configuration');
-      return new Response(JSON.stringify({ error: 'Server configuration error' }), { status: 500 });
-    }
-
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
     const { error } = await supabase
-      .from('newsletter_subscribers')
+      .from('newsletter_subscribers' as any)
       .insert([
         { 
           first_name: firstName, 
