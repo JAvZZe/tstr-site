@@ -50,17 +50,17 @@ export default function NewsletterBanner() {
 
   return (
     <div className="bg-orange-500 text-white py-2 px-4 shadow-md transition-all duration-300 overflow-hidden">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex-shrink-0 text-center md:text-left">
+      <div className="max-w-6xl mx-auto flex flex-col xl:flex-row items-center justify-between gap-4">
+        <div className="flex-shrink-0 text-center xl:text-left">
           <p className="font-bold text-sm md:text-base tracking-wide">
-            JOIN OUR NEWSLETTER <span className="hidden md:inline">|</span> 
-            <span className="block md:inline md:ml-2 font-normal text-xs md:text-sm text-orange-500/10">
+            JOIN OUR NEWSLETTER <span className="hidden xl:inline">|</span> 
+            <span className="block xl:inline xl:ml-2 font-normal text-xs md:text-sm text-orange-100">
               Get the latest industry testing updates
             </span>
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2 w-full xl:w-auto mt-2 xl:mt-0">
           <input
             required
             type="text"

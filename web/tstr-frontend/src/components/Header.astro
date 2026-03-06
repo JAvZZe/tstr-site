@@ -1,7 +1,9 @@
 ---
+import NewsletterBanner from './NewsletterBanner';
 const { showHero = true } = Astro.props;
 ---
 
+<NewsletterBanner client:load />
 <header style="background: linear-gradient(135deg, #000080 0%, #32CD32 100%); color: white; padding: 3rem 2rem; position: relative;">
   <div class="header-content" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
     <!-- Logo Section -->
