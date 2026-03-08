@@ -22,6 +22,15 @@
 
 ---
 
+## 🛑 AUTO-EXECUTION POLICY (MANDATORY)
+
+**CRITICAL: DO NOT AUTOMATICALLY TAKE FURTHER ACTIONS WITHOUT REPORTING FIRST.**
+- After completing a specific requested task, **STOP** and report your findings or completion status to the user.
+- **NEVER** autonomously decide to start the next task, refactor code, or run further scripts without explicit user approval.
+- Present your findings, propose the next steps, and **WAIT** for the user to say "proceed" or give new instructions.
+
+---
+
 ## 📊 PROJECT STATUS PROTOCOL (MANDATORY)
 
 **CRITICAL**: All agents MUST read and update `PROJECT_STATUS.md` before/after any work.

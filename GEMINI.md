@@ -12,6 +12,15 @@ AI agents should make it explicit when they do not know and are guessing. If the
 
 ---
 
+## 🛑 AUTO-EXECUTION POLICY: REPORT FIRST
+
+**CRITICAL RULE FOR ALL AGENTS: DO NOT AUTOMATICALLY TAKE FURTHER ACTIONS.**
+- After completing your designated task or finding an issue, **STOP and report to the user.**
+- **NEVER** autonomously continue to the next task, implement unrequested features, or execute further commands without explicit user approval.
+- Provide a summary of your work, propose the next logical steps, and **WAIT** for the user's explicit confirmation before proceeding.
+
+---
+
 ## 🚨 CRITICAL: Mandatory First Step
 
 ### ⚠️ ALWAYS BOOTSTRAP BEFORE STARTING WORK

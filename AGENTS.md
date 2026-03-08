@@ -21,6 +21,15 @@ cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 
 ---
 
+## 🛑 AUTO-EXECUTION POLICY (MANDATORY)
+
+**CRITICAL: DO NOT AUTOMATICALLY TAKE FURTHER ACTIONS WITHOUT REPORTING FIRST.**
+- After completing a specific requested task, **STOP** and report your findings or completion status to the user.
+- **NEVER** autonomously decide to start the next task, refactor code, or run further scripts without explicit user approval.
+- Present your findings, propose the next steps, and **WAIT** for the user to say "proceed" or give new instructions.
+
+---
+
 ## 🚀 PROJECT INITIALIZATION (After Global Bootstrap)
 
 **When starting work in this project:**
@@ -50,7 +59,7 @@ This loads:
 
 **URL**: https://haimjeaetrsaauitrhfy.supabase.co
 **Anon Key**: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
-**Service Role Key**: [REDACTED - stored in .env and Cloudflare dashboard]
+**Service Role Key**: [stored in .env and Cloudflare dashboard]
 
 **MCP Server**: ✅ Configured in `web/tstr-automation/TSTR1.mcp.json`
 - Server: @supabase/mcp-server-supabase@latest
@@ -68,13 +77,7 @@ This loads:
 
 ## 📊 PROJECT STATUS PROTOCOL (MANDATORY)
 
-**CRITICAL**: All agents MUST read and update `PROJECT_STATUS.md` before/after any work:
-
-### **Before Starting Work**:
-```bash
-# Read current project state
-cat PROJECT_STATUS.md
-```
+**CRITICAL**: All agents MUST read and update `PROJECT_STATUS.md` before & after any work:
 
 ### **After Completing Changes**:
 1. **Update PROJECT_STATUS.md** with version increment and change details
