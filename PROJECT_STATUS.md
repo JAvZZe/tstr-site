@@ -1,7 +1,7 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-03-08 14:20 UTC
+> **Last Updated**: 2026-03-08 18:35 UTC
 > **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -305,6 +305,14 @@ Last Scrape:      February 11, 2026 02:31 UTC
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.8.0** - 2026-03-08 - **Hydrogen Taxonomy & Certification Filters** (antigravity)
+
+- **Database**: Implemented "Amazon-style" browse nodes for Hydrogen category. Added 5 sub-categories (Valve/Fitting, Hose/Seal, etc.).
+- **Standards**: Corrected linkage for 9+ H2 standards and added 5 new certifications (ISO/TS 15916:2026, TÜV H2-Ready, etc.).
+- **UX**: Implemented dynamic browse node cards and a premium certification filter panel in `[category]/index.astro`.
+- **SEO**: Transitioned certification filters to use SEO-friendly slugs/codes in the URL (e.g., `?standard=ISO+19880-3`).
+- **Privacy**: Restricted certification filter visibility strictly to the Hydrogen category as per niche requirements.
 
 ### **v2.6.2** - 2026-02-23 - **PayPal Live Mode Confirmed & Docs Fixed** (antigravity)
 
