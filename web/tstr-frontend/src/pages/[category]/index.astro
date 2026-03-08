@@ -21,15 +21,32 @@ if (!categoryData) {
   return Astro.redirect('/404');
 }
 
-// Fetch listings grouped by region
+// 3. Subcategories & Standards Fetching
+const { data: subCategories } = await supabase
+  .from('categories')
+  .select('id, name, slug, description')
+  .eq('parent_id', categoryData.id)
+  .order('name');
+
+const { data: standards } = await supabase
+  .from('standards')
+  .select('id, code, name, description')
+  .eq('category_id', categoryData.id)
+  .eq('is_active', true)
+  .order('code');
+
+// 2.5 Fetch Listings
 const { data: listings, error: listingsError } = await supabase
   .from('listings')
   .select(`
     id,
     business_name,
+    description,
     region,
     featured,
     verified,
+    claimed,
+    website,
     location:location_id (
       id,
       name,
@@ -44,9 +61,13 @@ const { data: listings, error: listingsError } = await supabase
   .order('priority_rank', { ascending: false })
   .order('created_at', { ascending: false });
 
-// Group listings by region
+// 4. Filtering Logic
+const standardFilter = Astro.url.searchParams.get('standard');
+let filteredListings = listings || [];
+
+// Group listings by region (if not filtered by standard)
 const listingsByRegion = new Map<string, typeof listings>();
-listings?.forEach(listing => {
+filteredListings.forEach(listing => {
   const region = listing.region || 'global';
   if (!listingsByRegion.has(region)) {
     listingsByRegion.set(region, []);
@@ -58,9 +79,12 @@ listings?.forEach(listing => {
 const sortedRegions = Array.from(listingsByRegion.entries())
   .sort((a, b) => b[1].length - a[1].length);
 
-const totalListings = listings?.length || 0;
+const totalListings = filteredListings.length;
+const isFiltered = !!standardFilter;
 
 import { formatTitle, formatDescription } from '../../lib/seo';
+import { getRedirectUrl } from '../../lib/redirect';
+import { MAILTO_LINKS } from '../../lib/contacts';
 
 // Helper: Convert "Testers" to "Testing" for SEO hybrid hook
 const getTestingServiceName = (categoryName: string) => {
@@ -144,135 +168,158 @@ const pageDescription = formatDescription(
         </p>
       </div>
 
-      <!-- Subcategories (Environmental Testing Only) -->
-      {category === 'environmental-testing' && (
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold text-gray-900 mb-4">Specialized Environmental Testing Services</h2>
+      <!-- Certification Filters (Niche Taxonomy UX) -->
+      {standards && standards.length > 0 && (
+        <div class="mb-8 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-blue-600">🛡️</span>
+            <h2 class="text-xl font-bold text-gray-900">Filter by Certification / Standard</h2>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <a
+              href={`/${category}`}
+              class={`px-4 py-2 rounded-full border text-sm font-medium transition ${!isFiltered ? 'bg-blue-600 text-white border-blue-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:border-blue-400'}`}
+            >
+              All Standards
+            </a>
+            {standards.map(std => (
+              <a
+                href={`/${category}?standard=${std.id}`}
+                class={`px-4 py-2 rounded-full border text-sm font-medium transition ${standardFilter === std.id ? 'bg-blue-600 text-white border-blue-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:border-blue-400'}`}
+                title={std.description}
+              >
+                {std.code}
+              </a>
+            ))}
+          </div>
+          {isFiltered && (
+            <p class="mt-4 text-sm text-gray-500 italic">
+              Showing labs matching selected certification. Remove filter to see all locations.
+            </p>
+          )}
+        </div>
+      )}
+
+      <!-- Subcategories (Dynamic Browse Nodes) -->
+      {subCategories && subCategories.length > 0 && !isFiltered && (
+        <div class="mb-12">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-blue-600">📂</span>
+            <h2 class="text-2xl font-bold text-gray-900">Explore by Specialty</h2>
+          </div>
           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <a
-              href="/environmental-testing/air-quality"
-              class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg border border-blue-200 hover:shadow-md hover:border-blue-400 transition group"
-            >
-              <h3 class="text-lg font-bold text-blue-900 group-hover:text-blue-700 mb-2">
-                Air Quality Testing
-              </h3>
-              <p class="text-blue-800 text-sm mb-3">
-                Emissions testing, particulate matter analysis, and air monitoring services
-              </p>
-              <div class="text-blue-600 text-sm font-medium group-hover:underline">
-                Explore air quality labs →
-              </div>
-            </a>
+            {subCategories.map(sub => {
+              // Color mapping based on index or slug for variety
+              const colorSchemes = [
+                'from-blue-50 to-blue-100 border-blue-200 text-blue-900',
+                'from-cyan-50 to-cyan-100 border-cyan-200 text-cyan-900',
+                'from-green-50 to-green-100 border-green-200 text-green-900',
+                'from-purple-50 to-purple-100 border-purple-200 text-purple-900',
+                'from-emerald-50 to-emerald-100 border-emerald-200 text-emerald-900',
+                'from-indigo-50 to-indigo-100 border-indigo-200 text-indigo-900'
+              ];
+              const scheme = colorSchemes[Math.abs(sub.slug.length) % colorSchemes.length];
 
-            <a
-              href="/environmental-testing/water-quality"
-              class="bg-gradient-to-br from-cyan-50 to-cyan-100 p-6 rounded-lg border border-cyan-200 hover:shadow-md hover:border-cyan-400 transition group"
-            >
-              <h3 class="text-lg font-bold text-cyan-900 group-hover:text-cyan-700 mb-2">
-                Water Quality Testing
-              </h3>
-              <p class="text-cyan-800 text-sm mb-3">
-                Drinking water testing, wastewater analysis, and groundwater monitoring
-              </p>
-              <div class="text-cyan-600 text-sm font-medium group-hover:underline">
-                Explore water testing labs →
-              </div>
-            </a>
-
-            <a
-              href="/environmental-testing/soil-testing"
-              class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-lg border border-green-200 hover:shadow-md hover:border-green-400 transition group"
-            >
-              <h3 class="text-lg font-bold text-green-900 group-hover:text-green-700 mb-2">
-                Soil Testing & Contamination
-              </h3>
-              <p class="text-green-800 text-sm mb-3">
-                Heavy metals testing, contamination analysis, and remediation assessment
-              </p>
-              <div class="text-green-600 text-sm font-medium group-hover:underline">
-                Explore soil testing labs →
-              </div>
-            </a>
-
-            <a
-              href="/environmental-testing/noise-vibration"
-              class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-lg border border-purple-200 hover:shadow-md hover:border-purple-400 transition group"
-            >
-              <h3 class="text-lg font-bold text-purple-900 group-hover:text-purple-700 mb-2">
-                Noise & Vibration Testing
-              </h3>
-              <p class="text-purple-800 text-sm mb-3">
-                Acoustic testing, noise monitoring, and vibration analysis services
-              </p>
-              <div class="text-purple-600 text-sm font-medium group-hover:underline">
-                Explore acoustic labs →
-              </div>
-            </a>
-
-            <a
-              href="/environmental-testing/esg-sustainability"
-              class="bg-gradient-to-br from-emerald-50 to-emerald-100 p-6 rounded-lg border border-emerald-200 hover:shadow-md hover:border-emerald-400 transition group"
-            >
-              <h3 class="text-lg font-bold text-emerald-900 group-hover:text-emerald-700 mb-2">
-                ESG & Sustainability Testing
-              </h3>
-              <p class="text-emerald-800 text-sm mb-3">
-                Carbon footprint measurement, GHG emissions verification, and sustainability reporting
-              </p>
-              <div class="text-emerald-600 text-sm font-medium group-hover:underline">
-                Explore ESG testing labs →
-              </div>
-            </a>
+              return (
+                <a
+                  href={`/${sub.slug}`}
+                  class={`bg-gradient-to-br ${scheme} p-6 rounded-lg border hover:shadow-md transition group`}
+                >
+                  <h3 class="text-lg font-bold mb-2 group-hover:underline">
+                    {sub.name}
+                  </h3>
+                  <p class="text-gray-700 text-sm mb-3 line-clamp-2">
+                    {sub.description}
+                  </p>
+                  <div class="text-blue-600 text-sm font-medium mt-auto group-hover:underline">
+                    View providers →
+                  </div>
+                </a>
+              );
+            })}
           </div>
         </div>
       )}
 
-      <!-- Error Handling -->
-      {listingsError && (
-        <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
-          <p class="text-red-800 text-sm">
-            ⚠️ Error loading listings. Please try again later.
-          </p>
-        </div>
-      )}
-
-      <!-- Regions Grid -->
-      {sortedRegions.length > 0 ? (
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {sortedRegions.map(([region, regionListings]) => {
-            const featuredCount = regionListings.filter(l => l.featured).length;
-            const verifiedCount = regionListings.filter(l => l.verified).length;
-
-            return (
-              <a
-                href={`/${category}/${region.toLowerCase()}`}
-                class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-blue-400 transition group"
-              >
-                <div class="flex justify-between items-start mb-2">
-                  <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600">
-                    {region.toUpperCase()}
-                  </h3>
-                  <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-2.5 py-0.5 rounded">
-                    {regionListings.length}
-                  </span>
+      <!-- Content Grid: Regions OR Flat Listing List (if filtered) -->
+      {totalListings > 0 ? (
+        <div>
+          {isFiltered ? (
+            <div class="grid gap-6">
+              {filteredListings.map((listing) => (
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <h3 class="text-xl font-bold text-blue-900">
+                        {listing.business_name}
+                      </h3>
+                      <div class="text-sm text-gray-500 mt-1 flex flex-wrap gap-3">
+                        <span>📍 {listing.location?.name || listing.region?.toUpperCase()}</span>
+                        {listing.featured && (
+                          <span class="text-yellow-600 font-semibold">⭐ Featured</span>
+                        )}
+                        {listing.verified && (
+                          <span class="text-green-600 font-semibold">✓ Verified</span>
+                        )}
+                      </div>
+                      {listing.description && (
+                        <p class="text-gray-700 mt-3 text-sm line-clamp-2">
+                          {listing.description}
+                        </p>
+                      )}
+                    </div>
+                    {listing.website && (
+                      <a
+                        href={getRedirectUrl(listing.website, listing.id)}
+                        target="_blank"
+                        rel="nofollow noopener noreferrer"
+                        class="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-blue-700 transition whitespace-nowrap"
+                      >
+                        Visit Website
+                      </a>
+                    )}
+                  </div>
                 </div>
+              ))}
+            </div>
+          ) : (
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {sortedRegions.map(([region, regionListings]) => {
+                const featuredCount = regionListings.filter(l => l.featured).length;
+                const verifiedCount = regionListings.filter(l => l.verified).length;
 
-                <div class="text-sm text-gray-600 space-y-1">
-                  <p>{regionListings.length} {regionListings.length === 1 ? 'provider' : 'providers'}</p>
-                  {featuredCount > 0 && (
-                    <p class="text-yellow-600">⭐ {featuredCount} featured</p>
-                  )}
-                  {verifiedCount > 0 && (
-                    <p class="text-green-600">✓ {verifiedCount} verified</p>
-                  )}
-                </div>
+                return (
+                  <a
+                    href={`/${category}/${region.toLowerCase()}`}
+                    class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-blue-400 transition group"
+                  >
+                    <div class="flex justify-between items-start mb-2">
+                      <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600">
+                        {region.toUpperCase()}
+                      </h3>
+                      <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-2.5 py-0.5 rounded">
+                        {regionListings.length}
+                      </span>
+                    </div>
 
-                <div class="mt-4 text-blue-600 text-sm font-medium group-hover:underline">
-                  View all →
-                </div>
-              </a>
-            );
-          })}
+                    <div class="text-sm text-gray-600 space-y-1">
+                      <p>{regionListings.length} {regionListings.length === 1 ? 'provider' : 'providers'}</p>
+                      {featuredCount > 0 && (
+                        <p class="text-yellow-600">⭐ {featuredCount} featured</p>
+                      )}
+                      {verifiedCount > 0 && (
+                        <p class="text-green-600">✓ {verifiedCount} verified</p>
+                      )}
+                    </div>
+
+                    <div class="mt-4 text-blue-600 text-sm font-medium group-hover:underline">
+                      View all →
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
+          )}
         </div>
       ) : (
         <!-- Empty State -->

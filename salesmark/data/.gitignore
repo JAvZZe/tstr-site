@@ -1,0 +1,10 @@
+# Ignore all data files containing PII or sensitive lists
+*.csv
+*.xlsx
+*.json
+*.sql
+*.log
+
+# Do not ignore gitkeep and documentation
+!.gitkeep
+!README.md
