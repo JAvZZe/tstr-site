@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-03-08 18:35 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-03-19 15:15 UTC
+> **Updated By**: opencode
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 > **Maintenance**: See `docs/MAINTENANCE_LOG.md` for security/linting updates.
@@ -305,6 +305,14 @@ Last Scrape:      February 11, 2026 02:31 UTC
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.8.3** - 2026-03-19 - **Hydrogen Standards Expansion** (opencode)
+
+- **Added**: 15 new hydrogen testing standards from Google Sheets analysis
+- **Key Additions**: ASTM G142, ASTM F1459-06, ASME B31.12, IEC 62282-3-100, ISO 22734, ISO 16110-1, ISO 16111, ISO 17268, ISO/TS 19870:2023, CSA CHMC 1/2, CSA HPIT 1, NFPA 2, ISO 19880-1
+- **Source**: Curated top 20% from 60+ standards using Pareto principle
+- **Migration**: Created `20260319000001_add_hydrogen_standards.sql`
+- **Database**: Standards expanded from 40 to 55
 
 ### **v2.8.0** - 2026-03-08 - **Hydrogen Taxonomy & Certification Filters** (antigravity)
 
