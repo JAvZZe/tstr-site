@@ -96,7 +96,6 @@ export const GET: APIRoute = async ({ request }) => {
     }
 
     const { data, error } = await query
-      .order('listing_capabilities.verified', { ascending: false })
       .order('is_featured', { ascending: false })
       .order('created_at', { ascending: false })
 
