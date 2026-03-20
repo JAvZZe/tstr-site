@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-03-19 15:15 UTC
-> **Updated By**: opencode
+> **Last Updated**: 2026-03-20 11:34 UTC
+> **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 > **Maintenance**: See `docs/MAINTENANCE_LOG.md` for security/linting updates.
@@ -304,6 +304,41 @@ Last Scrape:      February 11, 2026 02:31 UTC
 
 ---
 
+## 🐛 ACTIVE BUGS
+
+### Critical: Search API Location Filter Broken (2026-03-19)
+
+**Severity**: High - Breaks standard search with location filter
+
+**Affected Endpoint**: `/api/search/by-standard?standard=X&location=Y`
+
+**Error**:
+
+```
+"failed to parse logic tree ((location.name.ilike.%United States%,...))"
+```
+
+**Root Cause**: Supabase `.or()` clause conflicts with nested `listing_capabilities!inner` join in SELECT statement.
+
+**File**: `web/tstr-frontend/src/pages/api/search/by-standard.ts`
+
+**Attempts Made**:
+
+1. `.or()` with string concat - Failed
+2. `.or()` chaining - Failed
+3. Single `.or()` - Failed
+4. `.ilike('address', ...)` only - Code ready but Cloudflare not rebuilding
+
+**Recommended Fixes** (pick one):
+
+1. **Two-phase approach**: Fetch listings by standard, filter by location in JS
+2. **Create Supabase RPC function**: Handle complex filtering server-side
+3. **Simplify**: Use address field only for location (current code ready to deploy)
+
+**Test URL**: `curl "https://tstr.directory/api/search/by-standard?standard=ISO%2014687&location=United%20States"`
+
+---
+
 ## 📊 VERSION HISTORY (LATEST)
 
 ### **v2.8.3** - 2026-03-19 - **Hydrogen Standards Expansion** (opencode)
@@ -313,6 +348,7 @@ Last Scrape:      February 11, 2026 02:31 UTC
 - **Source**: Curated top 20% from 60+ standards using Pareto principle
 - **Migration**: Created `20260319000001_add_hydrogen_standards.sql`
 - **Database**: Standards expanded from 40 to 55
+- **⚠️ KNOWN ISSUE**: Search API location filter broken - see BUGS section
 
 ### **v2.8.0** - 2026-03-08 - **Hydrogen Taxonomy & Certification Filters** (antigravity)
 
