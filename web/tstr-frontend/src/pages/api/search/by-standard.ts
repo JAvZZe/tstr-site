@@ -58,15 +58,10 @@ export const GET: APIRoute = async ({ request }) => {
           parent:parent_id (
             id,
             name,
-            level,
-            parent:parent_id (
-              id,
-              name,
-              level
-            )
+            level
           )
         ),
-        listing_capabilities!inner(
+        listing_capabilities(
           standard:standard_id!inner(
             id,
             code,
@@ -87,7 +82,12 @@ export const GET: APIRoute = async ({ request }) => {
     // Add location filter if provided
     if (location) {
       // Search in both location hierarchy and address field
-      query = query.or(`location.name.ilike.%${location}%,location.parent.name.ilike.%${location}%,location.parent.parent.name.ilike.%${location}%,address.ilike.%${location}%`)
+      // Use or() method chaining to build OR conditions properly
+      query = query
+        .or(`location.name.ilike.%${location}%`)
+        .or(`location.parent.name.ilike.%${location}%`)
+        .or(`location.parent.parent.name.ilike.%${location}%`)
+        .or(`address.ilike.%${location}%`)
     }
 
     // Add specifications filter if provided
