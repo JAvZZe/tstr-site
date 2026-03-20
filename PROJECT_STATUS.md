@@ -1,7 +1,7 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-03-20 11:34 UTC
+> **Last Updated**: 2026-03-20 18:31 UTC
 > **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -885,3 +885,30 @@ _(See `docs/REFERENCE_STATUS.md` for older versions)_
    - Update PayPal flow to handle variable amounts.
 3. **Admin Visibility**:
    - Show calculated billing tier in Dashboard.
+
+## 🔗 SEO & BROKEN LINK FIXES (2026-03-20)
+
+### Status: ✅ PARTIALLY COMPLETE / 🔜 PENDING (Email Exposure Fixes)
+
+### Completed This Session (Antigravity)
+
+1. **ISO Standard Slug Fixed** ✅
+   - **Standard**: `ISO/TS 15916:2026`
+   - **Problem**: `slug` was `NULL` in Supabase `standards` table, causing 404s on `/standards/iso-ts-15916-2026`.
+   - **Fix**: Updated `slug` to `iso-ts-15916-2026` using the Service Role key via Node.js script.
+   - **Route**: Dynamic route `src/pages/standards/[slug].astro` will now generate this page on next build.
+   - **Note**: Requires a Cloudflare Pages redeploy to go live (triggers static regeneration).
+
+### Pending Next Session (Gemini Flash — Execution Plan Ready)
+
+2. **Email Exposure Removal** 🔜
+   - **Problem**: `pricing.astro`, `contact.astro`, `privacy.astro`, `terms.astro` all expose `@tstr.directory` emails to scrapers, causing Cloudflare `/cdn-cgi/l/email-protection` 404 errors.
+   - **Solution**: Replace all `mailto:` links and raw `{CONTACTS.*}` text with `/contact?inquiry=...` redirects.
+   - **Execution Plan**: See `.gemini/antigravity/brain/68635c4f-00e9-4560-9cf6-a26df25ae66f/gemini_flash_execution_plan.md`
+   - **Files to Edit**: `pricing.astro` (11 points), `contact.astro` (3 points), `privacy.astro` (1 point), `terms.astro` (1 point)
+   - **Phase 2 (Deferred)**: Cloudflare Turnstile CAPTCHA + per-provider contact modal (new Edge Function required)
+   - **Branch**: `search-fix`
+
+### Key Finding
+
+The `supabase db query` and `supabase db execute` CLI commands were **non-functional** in this environment (return help text instead of results). Direct Node.js scripts using `@supabase/supabase-js` with the **Service Role key** (`sb_secret_*` in `web/tstr-automation/.env`) were the reliable workaround.
