@@ -1,7 +1,7 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-03-27 06:33 UTC
+> **Last Updated**: 2026-03-27 08:50 UTC
 > **Updated By**: Gemini 3 Flash
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -340,6 +340,10 @@ Last Scrape:      February 11, 2026 02:31 UTC
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.8.5** - 2026-03-27 - **Search Path Security Hardening** (gemini-3-flash)
+
+- **Security**: Hardened `public.calculate_trust_score` function by pinning `search_path=''` and schema-qualifying all references to prevent search path manipulation attacks (Supabase lint 0011).
 
 ### **v2.8.4** - 2026-03-27 - **RLS Security Hardening** (gemini-3-flash)
 
