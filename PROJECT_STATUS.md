@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-03-20 18:31 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-03-27 06:33 UTC
+> **Updated By**: Gemini 3 Flash
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 > **Maintenance**: See `docs/MAINTENANCE_LOG.md` for security/linting updates.
@@ -340,6 +340,11 @@ Last Scrape:      February 11, 2026 02:31 UTC
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.8.4** - 2026-03-27 - **RLS Security Hardening** (gemini-3-flash)
+
+- **Security**: Enabled Row Level Security on `public.schema_migrations` to prevent internet exposure via PostgREST API (Default Deny posture).
+- **Compliance**: Addressed Supabase advisor lint `0013_rls_disabled_in_public`.
 
 ### **v2.8.3** - 2026-03-19 - **Hydrogen Standards Expansion** (opencode)
 
