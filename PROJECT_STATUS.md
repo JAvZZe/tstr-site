@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-03-27 08:50 UTC
-> **Updated By**: Gemini 3 Flash
+> **Last Updated**: 2026-03-27 06:48 UTC
+> **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 > **Maintenance**: See `docs/MAINTENANCE_LOG.md` for security/linting updates.
@@ -340,6 +340,19 @@ Last Scrape:      February 11, 2026 02:31 UTC
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.8.6** - 2026-03-27 - **Mass RLS Policy Hardening** (claude-sonnet-thinking)
+
+- **Security**: Fixed 9x "RLS Policy Always True" warnings across 7 tables.
+- `claims` INSERT: enforces `provider_name`, `contact_name`, `business_email` NOT NULL + `status = 'pending'`.
+- `clicks` INSERT: enforces `url IS NOT NULL`; SELECT restricted to `service_role` only.
+- `newsletter_subscribers` INSERT: enforces `email IS NOT NULL AND length(trim(email)) > 3`.
+- `leads_rfq` INSERT: enforces `buyer_name`, `buyer_email`, `message` NOT NULL.
+- `rfq_leads` INSERT: consolidated 2 duplicate policies into 1; enforces `buyer_email IS NOT NULL`.
+- `waitlist` INSERT: enforces `email IS NOT NULL AND length(trim(email)) > 3`; SELECT restricted to `service_role` only.
+- `payment_history` INSERT: **CRITICAL FIX** — restricted from `public` role to `service_role` only (prevented public fake payment injection).
+- `pending_research` ALL: restricted from `authenticated` (all) to `service_role` only.
+- **⚠️ Manual Action Required**: Leaked Password Protection (#10) requires Pro plan. Check Supabase Dashboard → Authentication → Security.
 
 ### **v2.8.5** - 2026-03-27 - **Search Path Security Hardening** (gemini-3-flash)
 
