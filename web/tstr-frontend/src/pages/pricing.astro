@@ -707,7 +707,7 @@ import Footer from '../components/Footer.astro'
           <li>White-label profile widget</li>
           <li>Custom contract terms</li>
         </ul>
-        <a href={MAILTO_LINKS.enterprisePlan} class="cta-button secondary">Contact Sales</a>
+        <a href="/contact?inquiry=sales&subject=Enterprise%20Plan%20Inquiry" class="cta-button secondary">Contact Sales</a>
       </div>
     </div>
 
@@ -797,27 +797,27 @@ import Footer from '../components/Footer.astro'
 
       <div class="faq-item">
         <h3>How do I claim my free listing?</h3>
-        <p>If you're already listed in our directory, you can claim your listing by contacting us at {CONTACTS.support} with your company name and verification details. If you're not listed yet, submit your lab via our <a href="/submit">submission form</a> - it's completely free!</p>
+        <p>If you're already listed in our directory, you can claim your listing by <a href="/contact?inquiry=support&subject=Claim%20My%20Listing">contacting us</a> with your company name and verification details. If you're not listed yet, submit your lab via our <a href="/submit">submission form</a> - it's completely free!</p>
       </div>
 
       <div class="faq-item">
         <h3>Can I upgrade or downgrade my plan?</h3>
-        <p>Yes! You can upgrade to a higher tier at any time. Contact our sales team at {CONTACTS.sales} to discuss plan changes. Downgrades take effect at the end of your current billing cycle.</p>
+        <p>Yes! You can upgrade to a higher tier at any time. <a href="/contact?inquiry=sales&subject=Plan%20Upgrade">Contact our sales team</a> to discuss plan changes. Downgrades take effect at the end of your current billing cycle.</p>
       </div>
 
        <div class="faq-item">
          <h3>What payment methods do you accept?</h3>
-         <p>We accept PayPal (instant online payments), bank transfers (EFT), Bitcoin cryptocurrency, company checks, and major credit cards. PayPal subscriptions are processed instantly. For EFT and Bitcoin payments, contact {CONTACTS.sales} to arrange payment details and account setup. Enterprise clients can arrange custom payment terms including annual billing with discounts.</p>
+         <p>We accept PayPal (instant online payments), bank transfers (EFT), Bitcoin cryptocurrency, company checks, and major credit cards. PayPal subscriptions are processed instantly. For EFT and Bitcoin payments, <a href="/contact?inquiry=sales&subject=Payment%20Arrangements">contact our sales team</a> to arrange payment details and account setup. Enterprise clients can arrange custom payment terms including annual billing with discounts.</p>
        </div>
 
       <div class="faq-item">
         <h3>Do you offer annual billing?</h3>
-        <p>Yes! Pay annually and save 2 months (17% discount). Contact {CONTACTS.sales} for annual billing options.</p>
+        <p>Yes! Pay annually and save 2 months (17% discount). <a href="/contact?inquiry=sales&subject=Annual%20Billing">Contact our sales team</a> for annual billing options.</p>
       </div>
 
       <div class="faq-item">
         <h3>What is category exclusivity (Enterprise)?</h3>
-        <p>Category exclusivity means your lab is the only one displayed when buyers search for your specific testing type in your region. This premium feature ensures 100% of relevant leads come to you. Contact us to discuss availability for your category.</p>
+        <p>Category exclusivity means your lab is the only one displayed when buyers search for your specific testing type in your region. This premium feature ensures 100% of relevant leads come to you. <a href="/contact?inquiry=sales&subject=Category%20Exclusivity">Contact us</a> to discuss availability for your category.</p>
       </div>
 
       <div class="faq-item">
@@ -834,7 +834,7 @@ import Footer from '../components/Footer.astro'
     <div class="guarantee-section" style="text-align: center; margin-top: 3rem;">
       <h3>Ready to Grow Your Testing Business?</h3>
       <p style="margin-bottom: 1.5rem;">Join testing laboratories already generating qualified leads through TSTR Hub.</p>
-      <a href={getMailtoLink('sales', 'Pricing Plan Inquiry')} class="cta-button" style="display: inline-block; width: auto; padding: 1rem 3rem;">Contact Sales Team</a>
+      <a href="/contact?inquiry=sales&subject=Pricing%20Plan%20Inquiry" class="cta-button" style="display: inline-block; width: auto; padding: 1rem 3rem;">Contact Sales Team</a>
     </div>
   </main>
 
@@ -854,7 +854,7 @@ import Footer from '../components/Footer.astro'
           Please use the details below to complete your payment.
         </p>
         <p class="email-note">
-          We've also sent these details to your email address.
+          Please follow the steps below to finalize your upgrade.
         </p>
 
         <div class="bank-details-card">
@@ -888,7 +888,7 @@ import Footer from '../components/Footer.astro'
           <h4>Next Steps:</h4>
           <ol>
             <li>Make the transfer using the reference above.</li>
-            <li>Email proof of payment to <a href="mailto:sales@tstr.directory">sales@tstr.directory</a>.</li>
+            <li>Submit your proof of payment via our <a href="/contact?inquiry=sales&subject=Proof%20of%20Payment">Contact Form</a>.</li>
             <li>Your account will be upgraded within 24-48 hours.</li>
           </ol>
         </div>
@@ -930,7 +930,7 @@ import Footer from '../components/Footer.astro'
           <h4>Next Steps:</h4>
           <ol>
             <li>Send the payment to the address above.</li>
-            <li>Email your transaction hash to <a href="mailto:sales@tstr.directory">sales@tstr.directory</a>.</li>
+            <li>Submit your transaction hash via our <a href="/contact?inquiry=sales&subject=BTC%20Transaction%20Proof">Contact Form</a>.</li>
             <li>Your account will be upgraded within 24 hours of confirmation.</li>
           </ol>
         </div>
@@ -1173,9 +1173,8 @@ import Footer from '../components/Footer.astro'
           // EFT/Bank Transfer
           const amount = tier === 'professional' ? 295 : 795
           const subject = `TSTR ${tier.charAt(0).toUpperCase() + tier.slice(1)} Plan - Bank Transfer`
-          const body = `Please process bank transfer for TSTR ${tier} plan subscription ($${amount}/month).\n\nBank details will be provided upon confirmation.\n\nPlease include your account email in the transfer reference.`
-
-          window.location.href = `mailto:sales@tstr.directory?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+          
+          window.location.href = `/contact?inquiry=sales&subject=${encodeURIComponent(subject)}`
           button.textContent = originalText
           button.disabled = false
           return
@@ -1183,9 +1182,8 @@ import Footer from '../components/Footer.astro'
           // Bitcoin payment
           const amount = tier === 'professional' ? 295 : 795
           const subject = `TSTR ${tier.charAt(0).toUpperCase() + tier.slice(1)} Plan - Bitcoin Payment`
-          const body = `Please send Bitcoin payment for TSTR ${tier} plan subscription ($${amount}/month).\n\nBTC wallet address: [WALLET_ADDRESS_HERE]\n\nPlease include transaction ID and your account email for verification.`
 
-          window.location.href = `mailto:sales@tstr.directory?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+          window.location.href = `/contact?inquiry=sales&subject=${encodeURIComponent(subject)}`
           button.textContent = originalText
           button.disabled = false
           return

@@ -79,16 +79,12 @@ export const GET: APIRoute = async ({ request }) => {
       query = query.eq('category_id', category)
     }
 
-    // Add location filter if provided
-    if (location) {
-      // Search in both location hierarchy and address field
-      // Use or() method chaining to build OR conditions properly
-      query = query
-        .or(`location.name.ilike.%${location}%`)
-        .or(`location.parent.name.ilike.%${location}%`)
-        .or(`location.parent.parent.name.ilike.%${location}%`)
-        .or(`address.ilike.%${location}%`)
-    }
+     // Add location filter if provided
+     if (location) {
+       // Search in address field directly to avoid complex OR conditions that break the PostgREST parser
+       // when combined with nested joins.
+       query = query.ilike('address', `%${location}%`);
+     }
 
     // Add specifications filter if provided
     if (Object.keys(specs).length > 0) {

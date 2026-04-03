@@ -61,3 +61,5 @@ bootstrap.sh
 # Runtime artifacts
 dev.pid
 current_listings.json
+
+/net-commander

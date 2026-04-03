@@ -1,5 +1,4 @@
 ---
-import { CONTACTS } from '../lib/contacts';
 import Footer from '../components/Footer.astro';
 ---
 
@@ -242,26 +241,37 @@ import Footer from '../components/Footer.astro';
         <div id="responseMessage" class="message"></div>
       </form>
     </div>
-
-    <div class="contact-info">
-      <div class="info-item">
-        <h3>Sales</h3>
-        <p>{CONTACTS.sales}</p>
-      </div>
-      <div class="info-item">
-        <h3>Support</h3>
-        <p>{CONTACTS.support}</p>
-      </div>
-      <div class="info-item">
-        <h3>Admin</h3>
-        <p>{CONTACTS.admin}</p>
-      </div>
-    </div>
   </main>
 
   <Footer />
 
   <script>
+    // Handle query parameters for pre-filling the form
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const inquiryParam = urlParams.get('inquiry');
+      const subjectParam = urlParams.get('subject');
+      
+      if (inquiryParam) {
+        const inquirySelect = document.getElementById('inquiryType') as HTMLSelectElement;
+        if (inquirySelect) {
+          // Map URL params to select values
+          const validOptions = ['quotation', 'sales', 'support', 'partnership', 'general', 'other'];
+          if (validOptions.includes(inquiryParam)) {
+            inquirySelect.value = inquiryParam;
+          }
+        }
+      }
+
+      if (subjectParam) {
+        const messageTextarea = document.getElementById('message') as HTMLTextAreaElement;
+        if (messageTextarea) {
+          messageTextarea.value = `Subject: ${decodeURIComponent(subjectParam)}\n\n`;
+          messageTextarea.focus();
+        }
+      }
+    });
+
     const form = document.getElementById('contactForm') as HTMLFormElement;
     const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;
     const responseMsg = document.getElementById('responseMessage') as HTMLDivElement;
