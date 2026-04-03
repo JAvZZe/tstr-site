@@ -199,3 +199,41 @@ nano web/tstr-frontend/.env  # or vim, code, etc.
 ### Git Commits
 - Format: `[AGENTNAME] Brief description`
 - Include context in body for complex changes
+
+---
+
+## 🔍 Code Review Protocol (Mandatory)
+
+**ALL code changes MUST be reviewed before merge/completion.**
+
+### For Every Agent (Automatic & Proactive)
+
+1. **After writing code**: Proactively offer/use code review
+2. **After task completion**: Use `requesting-code-review` skill
+3. **Before handoff**: Ensure code reviewed or noted issues documented
+
+### Review Process
+
+```bash
+# Get SHAs for review
+BASE_SHA=$(git rev-parse HEAD~1)
+HEAD_SHA=$(git rev-parse HEAD)
+
+# Use requesting-code-review skill from Superpowers
+```
+
+### Issue Handling
+
+| Severity | Action |
+|----------|--------|
+| **Critical** | Fix immediately, do not proceed |
+| **Important** | Fix before next task |
+| **Minor** | Document, fix later |
+
+### Proactive Review Policy
+
+**I will automatically:**
+- Offer code review after writing code
+- Flag potential issues when I see them
+- Suggest improvements proactively
+- Not wait to be asked

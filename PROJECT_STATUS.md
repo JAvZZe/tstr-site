@@ -1,7 +1,7 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-03-27 06:48 UTC
+> **Last Updated**: 2026-03-28 06:08 UTC
 > **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
@@ -921,16 +921,26 @@ _(See `docs/REFERENCE_STATUS.md` for older versions)_
    - **Route**: Dynamic route `src/pages/standards/[slug].astro` will now generate this page on next build.
    - **Note**: Requires a Cloudflare Pages redeploy to go live (triggers static regeneration).
 
-### Pending Next Session (Gemini Flash — Execution Plan Ready)
+### Analysis & Implementation Completed (Antigravity - 2026-04-03)
 
-2. **Email Exposure Removal** 🔜
-   - **Problem**: `pricing.astro`, `contact.astro`, `privacy.astro`, `terms.astro` all expose `@tstr.directory` emails to scrapers, causing Cloudflare `/cdn-cgi/l/email-protection` 404 errors.
-   - **Solution**: Replace all `mailto:` links and raw `{CONTACTS.*}` text with `/contact?inquiry=...` redirects.
-   - **Execution Plan**: See `.gemini/antigravity/brain/68635c4f-00e9-4560-9cf6-a26df25ae66f/gemini_flash_execution_plan.md`
-   - **Files to Edit**: `pricing.astro` (11 points), `contact.astro` (3 points), `privacy.astro` (1 point), `terms.astro` (1 point)
-   - **Phase 2 (Deferred)**: Cloudflare Turnstile CAPTCHA + per-provider contact modal (new Edge Function required)
-   - **Branch**: `search-fix`
+1. **Search API Location Filter Fixed** ✅
+   - **Problem**: Complex `.or()` clauses on joined tables caused PostgREST parser errors.
+   - **Fix**: Simplified query to use `.ilike('address', ...)` on the main `listings` table.
+   - **File**: `web/tstr-frontend/src/pages/api/search/by-standard.ts`
+   - **Note**: Restores critical search functionality; regional hierarchy search deferred to Phase 2.
+
+2. **Email Exposure Remediation Complete** ✅
+   - **Problem**: Raw `@tstr.directory` emails triggered Cloudflare protection 404s.
+   - **Fix**: Replaced all `mailto:` links and raw text with `/contact?inquiry=...` redirects.
+   - **Files Updated**:
+     - `pricing.astro`: 11+ points (including EFT/BTC modals and client-side JS).
+     - `contact.astro`: Removed info grid, added `inquiry` query param handler.
+     - `terms.astro` & `privacy.astro`: Updated contact boxes.
+     - `account/subscription.astro`: 4 points in management dashboard.
+     - `press.astro`: Media enquiry link.
+   - **Next Step**: Verify form auto-selection via `/contact?inquiry=sales`.
 
 ### Key Finding
 
-The `supabase db query` and `supabase db execute` CLI commands were **non-functional** in this environment (return help text instead of results). Direct Node.js scripts using `@supabase/supabase-js` with the **Service Role key** (`sb_secret_*` in `web/tstr-automation/.env`) were the reliable workaround.
+The `supabase db query` and `supabase db execute` CLI commands remain **non-functional**; direct Node.js scripts using the Service Role key are mandatory for DB operations.
+
