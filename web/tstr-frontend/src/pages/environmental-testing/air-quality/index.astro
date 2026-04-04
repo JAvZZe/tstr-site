@@ -166,55 +166,59 @@ const testingServiceName = getTestingServiceName(categoryData.name);
 
       <!-- Regions Grid -->
       {sortedRegions.length > 0 ? (
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {sortedRegions.map(([region, regionListings]) => {
-            const featuredCount = regionListings.filter(l => l.featured).length;
-            const verifiedCount = regionListings.filter(l => l.verified).length;
+        <>
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {sortedRegions.map(([region, regionListings]) => {
+              const featuredCount = regionListings.filter(l => l.featured).length;
+              const verifiedCount = regionListings.filter(l => l.verified).length;
 
-            return (
-              <a
-                href={`/environmental-testing/${region.toLowerCase()}?filter=air-quality`}
-                class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-blue-400 transition group"
-              >
-                <div class="flex justify-between items-start mb-2">
-                  <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600">
-                    {region.toUpperCase()}
-                  </h3>
-                  <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-2.5 py-0.5 rounded">
-                    {regionListings.length}
-                  </span>
-                </div>
+              return (
+                <a
+                  href={`/environmental-testing/${region.toLowerCase()}?filter=air-quality`}
+                  class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-blue-400 transition group"
+                >
+                  <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600">
+                      {region.toUpperCase()}
+                    </h3>
+                    <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-2.5 py-0.5 rounded">
+                      {regionListings.length}
+                    </span>
+                  </div>
 
-                <div class="text-sm text-gray-600 space-y-1">
-                  <p>{regionListings.length} air quality {regionListings.length === 1 ? 'provider' : 'providers'}</p>
-                  {featuredCount > 0 && (
-                    <p class="text-yellow-600">⭐ {featuredCount} featured</p>
-                  )}
-                  {verifiedCount > 0 && (
-                    <p class="text-green-600">✓ {verifiedCount} verified</p>
-                  )}
-                </div>
+                  <div class="text-sm text-gray-600 space-y-1">
+                    <p>{regionListings.length} air quality {regionListings.length === 1 ? 'provider' : 'providers'}</p>
+                    {featuredCount > 0 && (
+                      <p class="text-yellow-600">⭐ {featuredCount} featured</p>
+                    )}
+                    {verifiedCount > 0 && (
+                      <p class="text-green-600">✓ {verifiedCount} verified</p>
+                    )}
+                  </div>
 
-                <div class="mt-4 text-blue-600 text-sm font-medium group-hover:underline">
-                  View all →
-                </div>
-              </a>
-            );
-          })}
-        </div>
+                  <div class="mt-4 text-blue-600 text-sm font-medium group-hover:underline">
+                    View all →
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        </>
       ) : (
-        <!-- Empty State -->
-        <div class="text-center py-16 bg-white rounded-lg border-2 border-dashed border-gray-300">
-          <p class="text-gray-500 text-lg mb-2">
-            No air quality testing providers listed yet.
-          </p>
-          <p class="text-gray-400 text-sm mb-4">
-            We're working to add accredited air quality testing laboratories.
-          </p>
-          <a href="/contact" class="text-blue-600 font-bold hover:underline">
-            Be the first to list here →
-          </a>
-        </div>
+        <>
+          <!-- Empty State -->
+          <div class="text-center py-16 bg-white rounded-lg border-2 border-dashed border-gray-300">
+            <p class="text-gray-500 text-lg mb-2">
+              No air quality testing providers listed yet.
+            </p>
+            <p class="text-gray-400 text-sm mb-4">
+              We're working to add accredited air quality testing laboratories.
+            </p>
+            <a href="/contact" class="text-blue-600 font-bold hover:underline">
+              Be the first to list here →
+            </a>
+          </div>
+        </>
       )}
 
       <!-- CTA Section -->

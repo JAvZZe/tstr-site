@@ -3,50 +3,35 @@
 import { supabase } from '../../lib/supabase';
 import NewsletterBanner from '../../components/NewsletterBanner';
 import Footer from '../../components/Footer.astro';
+import { MAILTO_LINKS } from '../../lib/contacts';
+import { getRedirectUrl } from '../../lib/redirect';
 
 // SSR rendering (output: 'server' in astro.config)
 
-
-// 2. Page rendering: Fetch data for this category
+// 1. Params and Data fetching
 const { category } = Astro.params;
 
 // Fetch category metadata
-const { data: categoryData } = await supabase
+const { data: categoryData, error: catError } = await supabase
   .from('categories')
-  .select('id, name, slug, description, icon')
+  .select('id, name, slug, description')
   .eq('slug', category)
   .single();
 
-if (!categoryData) {
+if (catError || !categoryData) {
   return Astro.redirect('/404');
 }
 
-// 3. Subcategories & Standards Fetching
-const { data: subCategories } = await supabase
-  .from('categories')
-  .select('id, name, slug, description')
-  .eq('parent_id', categoryData.id)
-  .order('name');
+// Check for search filters
+const url = new URL(Astro.request.url);
+const regionFilter = url.searchParams.get('region');
+const isFiltered = !!regionFilter;
 
-const { data: standards } = await supabase
-  .from('standards')
-  .select('id, code, name, description')
-  .eq('category_id', categoryData.id)
-  .eq('is_active', true)
-  .order('code');
-
-// 2.5 Fetch Listings
-const { data: listings, error: listingsError } = await supabase
+// Fetch ALL active listings for this category
+const { data: allListings, error: listingsError } = await supabase
   .from('listings')
   .select(`
-    id,
-    business_name,
-    description,
-    region,
-    featured,
-    verified,
-    claimed,
-    website,
+    *,
     location:location_id (
       id,
       name,
@@ -61,52 +46,27 @@ const { data: listings, error: listingsError } = await supabase
   .order('priority_rank', { ascending: false })
   .order('created_at', { ascending: false });
 
-// 4. Filtering Logic
-const standardFilter = Astro.url.searchParams.get('standard');
-let filteredListings = listings || [];
+// Group by region OR filter
+const filteredListings = isFiltered 
+  ? allListings?.filter(l => l.region?.toLowerCase() === regionFilter?.toLowerCase())
+  : allListings;
 
-// If standard filter is present, filter by either ID or Code (for SEO friendliness)
-if (standardFilter) {
-  filteredListings = (listings || []).filter(listing => {
-    // This is a naive check; in a production app, we'd ideally have standard association in the listings join
-    // However, the browser test confirmed the backend handles ?standard=ISO+19880-3 correctly via RPC or existing logic
-    // We will ensure the UI matches the search.
-    return true; // The backend is already filtering correctly or we will adjust the RPC call if needed
-  });
-}
+const listingsByRegion = !isFiltered && allListings ? allListings.reduce((acc, listing) => {
+  const reg = listing.region || 'GLOBAL';
+  if (!acc[reg]) acc[reg] = [];
+  acc[reg].push(listing);
+  return acc;
+}, {} as Record<string, any[]>) : {};
 
-// Group listings by region (if not filtered by standard)
-const listingsByRegion = new Map<string, typeof listings>();
-filteredListings.forEach(listing => {
-  const region = listing.region || 'global';
-  if (!listingsByRegion.has(region)) {
-    listingsByRegion.set(region, []);
-  }
-  listingsByRegion.get(region)?.push(listing);
-});
-
-// Sort regions by listing count (descending)
-const sortedRegions = Array.from(listingsByRegion.entries())
-  .sort((a, b) => b[1].length - a[1].length);
-
-const totalListings = filteredListings.length;
-const isFiltered = !!standardFilter;
+const sortedRegions = Object.entries(listingsByRegion).sort((a, b) => b[1].length - a[1].length);
+const totalListings = allListings?.length || 0;
 
 import { formatTitle, formatDescription } from '../../lib/seo';
-import { getRedirectUrl } from '../../lib/redirect';
-import { MAILTO_LINKS } from '../../lib/contacts';
-
-// Helper: Convert "Testers" to "Testing" for SEO hybrid hook
-const getTestingServiceName = (categoryName: string) => {
-  return categoryName.replace('Testers', 'Testing');
-};
-
-const testingServiceName = getTestingServiceName(categoryData.name);
 
 // Optimized SEO parts
-const pageTitle = formatTitle([categoryData.name, testingServiceName]);
+const pageTitle = formatTitle([categoryData.name, 'Regional Directory']);
 const pageDescription = formatDescription(
-  `Find ${totalListings} verified ${categoryData.name.toLowerCase()} and ${testingServiceName.toLowerCase()}. Compare ISO 17025 accredited labs and certification bodies worldwide. Get quotes from certified providers.`
+  `Browse ${totalListings} verified ${categoryData.name.toLowerCase()} providers across ${sortedRegions.length} regions. Compare ISO 17025 accredited labs and specialized testing facilities.`
 );
 ---
 
@@ -119,144 +79,81 @@ const pageDescription = formatDescription(
     <meta name="description" content={pageDescription} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
-    <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
-</head>
+    <script is:inline set:html={`
+      function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
+      o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
+      o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
+      document.head.appendChild(o)}initApollo();
+    `}></script>
+  </head>
 
   <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
 
     <!-- Navigation -->
     <NewsletterBanner client:only="react" />
     <nav class="bg-white shadow-sm p-4">
-      <div class="max-w-6xl mx-auto">
+      <div class="max-w-6xl mx-auto flex justify-between items-center">
         <a href="/" class="font-bold text-xl hover:text-blue-600 transition">
           TSTR<span class="text-blue-600">.directory</span>
         </a>
+        <div class="flex gap-4">
+          <a href="/browse" class="text-gray-600 hover:text-blue-600 font-medium">Browse All</a>
+          <a href="/pricing" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 transition">List Your Lab</a>
+        </div>
       </div>
     </nav>
 
     <!-- Main Content -->
-    <main class="max-w-5xl mx-auto p-6">
+    <main class="max-w-6xl mx-auto p-6">
 
       <!-- Breadcrumbs -->
       <div class="text-sm text-gray-500 mb-4">
-        <a href="/" class="hover:underline hover:text-blue-600">Home</a>
+        <a href="/" class="hover:underline">Home</a>
         <span class="mx-2">›</span>
         <span class="text-gray-900 font-medium">{categoryData.name}</span>
       </div>
 
       <!-- Page Header -->
-      <div class="mb-8">
-        <div class="flex items-center gap-3 mb-3">
-          {categoryData.icon && (
-            <span class="text-4xl">{categoryData.icon}</span>
-          )}
-          <h1 class="text-3xl md:text-5xl font-bold">
-            {categoryData.name}
-          </h1>
-        </div>
-
-        <!-- H2: SEO Payload (Hybrid Hook Strategy) -->
-        <h2 class="text-xl md:text-2xl font-semibold text-gray-700 mb-4">
-          Compare Premium {testingServiceName} & ISO 17025 Certified Labs
-        </h2>
-
-        <!-- SEO-enhanced intro text combining both keywords -->
-        <p class="text-gray-600 text-base mb-4">
-          Find verified <strong>{categoryData.name.toLowerCase()}</strong> and
-          compare <strong>{testingServiceName.toLowerCase()}</strong> from
-          ISO 17025 accredited laboratories worldwide.
-          {categoryData.description && `Expert providers for ${categoryData.description.toLowerCase()}.`}
-        </p>
-
-        <p class="text-gray-700">
-          <span class="font-bold text-2xl text-blue-600">{totalListings}</span>
-          {' '}verified {totalListings === 1 ? 'provider' : 'providers'} across
-          {' '}<span class="font-semibold">{sortedRegions.length}</span> {sortedRegions.length === 1 ? 'region' : 'regions'}
-        </p>
+      <div class="mb-12">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">
+          {categoryData.name}
+        </h1>
+        {categoryData.description && (
+          <p class="text-xl text-gray-600 max-w-3xl leading-relaxed">
+            {categoryData.description}
+          </p>
+        )}
       </div>
 
-      <!-- Certification Filters (Niche Taxonomy UX - Hydrogen Only) -->
-      {categoryData.id === '2817126e-65fa-4ddf-8ec6-dbedb021001a' && standards && standards.length > 0 && (
-        <div class="mb-8 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-          <div class="flex items-center gap-2 mb-4">
-            <span class="text-blue-600">🛡️</span>
-            <h2 class="text-xl font-bold text-gray-900">Filter by Certification / Standard</h2>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <a
-              href={`/${category}`}
-              class={`px-4 py-2 rounded-full border text-sm font-medium transition ${!isFiltered ? 'bg-blue-600 text-white border-blue-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:border-blue-400'}`}
-            >
-              All Standards
-            </a>
-            {standards.map(std => (
-              <a
-                href={`/${category}?standard=${encodeURIComponent(std.code)}`}
-                class={`px-4 py-2 rounded-full border text-sm font-medium transition ${standardFilter === std.code || standardFilter === std.id ? 'bg-blue-600 text-white border-blue-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:border-blue-400'}`}
-                title={std.description}
-              >
-                {std.code}
-              </a>
-            ))}
-          </div>
-          {isFiltered && (
-            <p class="mt-4 text-sm text-gray-500 italic">
-              Showing labs matching selected certification. Remove filter to see all locations.
+      <!-- Error Handling -->
+      {listingsError && (
+        <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-8 rounded-r-lg">
+          <div class="flex items-center">
+            <span class="text-red-400 text-xl mr-3">⚠️</span>
+            <p class="text-red-800 font-medium">
+              We encountered an error loading the directory. Our engineers have been notified.
             </p>
-          )}
+          </div>
         </div>
       )}
 
-      <!-- Subcategories (Dynamic Browse Nodes) -->
-      {subCategories && subCategories.length > 0 && !isFiltered && (
-        <div class="mb-12">
-          <div class="flex items-center gap-2 mb-4">
-            <span class="text-blue-600">📂</span>
-            <h2 class="text-2xl font-bold text-gray-900">Explore by Specialty</h2>
-          </div>
-          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {subCategories.map(sub => {
-              // Color mapping based on index or slug for variety
-              const colorSchemes = [
-                'from-blue-50 to-blue-100 border-blue-200 text-blue-900',
-                'from-cyan-50 to-cyan-100 border-cyan-200 text-cyan-900',
-                'from-green-50 to-green-100 border-green-200 text-green-900',
-                'from-purple-50 to-purple-100 border-purple-200 text-purple-900',
-                'from-emerald-50 to-emerald-100 border-emerald-200 text-emerald-900',
-                'from-indigo-50 to-indigo-100 border-indigo-200 text-indigo-900'
-              ];
-              const scheme = colorSchemes[Math.abs(sub.slug.length) % colorSchemes.length];
-
-              return (
-                <a
-                  href={`/${sub.slug}`}
-                  class={`bg-gradient-to-br ${scheme} p-6 rounded-lg border hover:shadow-md transition group`}
-                >
-                  <h3 class="text-lg font-bold mb-2 group-hover:underline">
-                    {sub.name}
-                  </h3>
-                  <p class="text-gray-700 text-sm mb-3 line-clamp-2">
-                    {sub.description}
-                  </p>
-                  <div class="text-blue-600 text-sm font-medium mt-auto group-hover:underline">
-                    View providers →
-                  </div>
-                </a>
-              );
-            })}
-          </div>
+      <!-- Filter Active Indicator -->
+      {isFiltered && (
+        <div class="mb-8 flex items-center gap-3">
+          <span class="text-gray-600">Showing results for:</span>
+          <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-bold text-sm uppercase tracking-wide">
+            📍 {regionFilter}
+          </span>
+          <a href={`/${category}`} class="text-blue-600 text-sm hover:underline ml-2">Clear filter</a>
         </div>
       )}
 
       <!-- Content Grid: Regions OR Flat Listing List (if filtered) -->
-      {totalListings > 0 ? (
+      {totalListings > 0 && (
         <div>
           {isFiltered ? (
             <div class="grid gap-6">
-              {filteredListings.map((listing) => (
+              {filteredListings?.map((listing) => (
                 <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition">
                   <div class="flex justify-between items-start">
                     <div>
@@ -331,8 +228,9 @@ const pageDescription = formatDescription(
             </div>
           )}
         </div>
-      ) : (
-        <!-- Empty State -->
+      )}
+
+      {totalListings === 0 && (
         <div class="text-center py-16 bg-white rounded-lg border-2 border-dashed border-gray-300">
           <p class="text-gray-500 text-lg mb-2">
             No {categoryData.name.toLowerCase()} listed yet.
@@ -346,18 +244,18 @@ const pageDescription = formatDescription(
       <!-- CTA Section -->
       {totalListings > 0 && (
         <div class="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
-          <h2 class="text-xl font-bold text-blue-900 mb-2">
-            List Your {testingServiceName}
-          </h2>
-          <p class="text-gray-700 mb-4">
-            Reach thousands of customers searching for {categoryData.name.toLowerCase()} and {testingServiceName.toLowerCase()}. Free basic listings available.
-          </p>
-          <a
-            href="/contact"
-            class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
-          >
-            Get Listed
-          </a>
+          <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="text-center md:text-left">
+              <h2 class="text-2xl font-bold text-blue-900 mb-1">List Your Lab in this Category</h2>
+              <p class="text-blue-800">Reach buyers specifically searching for {categoryData.name.toLowerCase()}.</p>
+            </div>
+            <a 
+              href="/pricing" 
+              class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+            >
+              Get Listed
+            </a>
+          </div>
         </div>
       )}
 

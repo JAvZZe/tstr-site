@@ -1330,7 +1330,9 @@ import Footer from '../components/Footer.astro'
           try {
             const errorData = await response.json()
             if (errorData.error) errorMsg = errorData.error
-          } catch (e) {}
+          } catch (e) {
+          console.error('Session check error:', e)
+        }
           throw new Error(errorMsg)
         }
 

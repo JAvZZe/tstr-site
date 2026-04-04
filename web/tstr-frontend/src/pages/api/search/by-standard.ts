@@ -139,12 +139,12 @@ export const GET: APIRoute = async ({ request }) => {
         }
       }
     );
-  } catch (err) {
-    console.error('Unexpected error:', err);
+  } catch (_e) {
+    console.error('Unexpected error:', _e);
     return new Response(
       JSON.stringify({
         error: 'Internal server error',
-        message: err instanceof Error ? err.message : 'Unknown error'
+        message: _e instanceof Error ? _e.message : 'Unknown error'
       }),
       {
         status: 500,

@@ -41,7 +41,7 @@ function request(path, method = 'GET', headers = {}, body = null) {
                 try {
                     const json = JSON.parse(data);
                     resolve({ status: res.statusCode, data: json });
-                } catch (e) {
+                } catch (_e) {
                     resolve({ status: res.statusCode, data });
                 }
             });
@@ -74,7 +74,7 @@ async function createPlan(planData) {
 async function main() {
     // Get access token first
     console.log('\n1. Getting access token...');
-    const tokenRes = await new Promise((resolve, reject) => {
+    const tokenRes = await new Promise((resolve, _reject) => {
         const req = https.request({
             hostname,
             path: '/v1/oauth2/token',

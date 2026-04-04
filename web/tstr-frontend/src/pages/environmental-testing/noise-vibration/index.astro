@@ -168,8 +168,9 @@ const testingServiceName = getTestingServiceName(categoryData.name);
 
       <!-- Regions Grid -->
       {sortedRegions.length > 0 ? (
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {sortedRegions.map(([region, regionListings]) => {
+        <>
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {sortedRegions.map(([region, regionListings]) => {
             const featuredCount = regionListings.filter(l => l.featured).length;
             const verifiedCount = regionListings.filter(l => l.verified).length;
 
@@ -204,19 +205,22 @@ const testingServiceName = getTestingServiceName(categoryData.name);
             );
           })}
         </div>
+      </>
       ) : (
-        <!-- Empty State -->
-        <div class="text-center py-16 bg-white rounded-lg border-2 border-dashed border-gray-300">
-          <p class="text-gray-500 text-lg mb-2">
-            No noise & vibration testing providers listed yet.
-          </p>
-          <p class="text-gray-400 text-sm mb-4">
-            We're working to add accredited acoustic testing laboratories.
-          </p>
-          <a href="/contact" class="text-blue-600 font-bold hover:underline">
-            Be the first to list here →
-          </a>
-        </div>
+        <>
+          <!-- Empty State -->
+          <div class="text-center py-16 bg-white rounded-lg border-2 border-dashed border-gray-300">
+            <p class="text-gray-500 text-lg mb-2">
+              No noise & vibration testing providers listed yet.
+            </p>
+            <p class="text-gray-400 text-sm mb-4">
+              We're working to add accredited acoustic testing laboratories.
+            </p>
+            <a href="/contact" class="text-blue-600 font-bold hover:underline">
+              Be the first to list here →
+            </a>
+          </div>
+        </>
       )}
 
       <!-- CTA Section -->

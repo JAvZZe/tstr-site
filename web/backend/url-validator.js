@@ -5,7 +5,6 @@
  * Can be run standalone to test batches of URLs.
  */
 
-/* eslint-disable @typescript-eslint/no-require-imports */
 const axios = require('axios');
 // const { URL } = require('url');
 

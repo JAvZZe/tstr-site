@@ -851,6 +851,7 @@ const pageDescription = formatDescription(
    <script type="module">
      import { supabaseBrowser } from '../../lib/supabase-browser'
 
+     let isOwner = false
      const listingId = '{listing.id}'
      const listingName = '{listing.business_name}'
 
@@ -1066,7 +1067,7 @@ const pageDescription = formatDescription(
             const phoneLink = document.createElement('a')
             phoneLink.href = `tel:{listing.phone}`
             phoneLink.textContent = '{listing.phone}'
-            phoneLink.addEventListener('click', () => trackContactAccess('phone', '{listing.phone}'))
+            phoneLink.addEventListener('click', () => (window as any).trackContactAccess('phone', '{listing.phone}'))
             valueDiv.innerHTML = ''
             valueDiv.appendChild(phoneLink)
           }
@@ -1080,7 +1081,7 @@ const pageDescription = formatDescription(
             const emailLink = document.createElement('a')
             emailLink.href = `mailto:{listing.email}`
             emailLink.textContent = '{listing.email}'
-            emailLink.addEventListener('click', () => trackContactAccess('email', '{listing.email}'))
+            emailLink.addEventListener('click', () => (window as any).trackContactAccess('email', '{listing.email}'))
             valueDiv.innerHTML = ''
             valueDiv.appendChild(emailLink)
           }

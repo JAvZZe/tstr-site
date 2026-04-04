@@ -1131,7 +1131,7 @@ const categoryDisplayName = getCategoryDisplayName(categoryParam)
           if (contextParts.length > 0) {
             subject += ' - ' + contextParts.join(', ')
           }
-          conciergeLink.href = `${MAILTO_LINKS.enterprisePlan}&body=${encodeURIComponent(subject)}`
+          conciergeLink.href = `/contact?inquiry=sales&subject=Concierge%20Search%20Request&body=${encodeURIComponent(subject)}`
         } else {
           lowDensityFallback.classList.add('hidden')
         }
@@ -1187,8 +1187,6 @@ const categoryDisplayName = getCategoryDisplayName(categoryParam)
           // For now, always redirect to claim page (simplified for testing)
           window.location.href = `/claim?id=${listingId}&provider=${encodeURIComponent(listingName)}`
         })
-      })
-    })
       })
     })
   </script>
