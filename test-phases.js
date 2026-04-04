@@ -3,7 +3,6 @@
 // Simple test script to verify Phase 1 and Phase 2 functionality
 // This tests the API endpoints without requiring authentication
 
-/* eslint-disable @typescript-eslint/no-require-imports */
 // const { test } = require('@playwright/test'); // Unused
 const http = require('http');
 

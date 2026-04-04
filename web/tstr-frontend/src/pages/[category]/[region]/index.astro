@@ -75,10 +75,12 @@ const pageDescription = formatDescription(
     <meta name="description" content={pageDescription} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
-    <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
+    <script is:inline set:html={`
+      function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
+      o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
+      o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
+      document.head.appendChild(o)}initApollo();
+    `}></script>
 </head>
 
   <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
@@ -137,7 +139,7 @@ const pageDescription = formatDescription(
       )}
 
       <!-- Listings Grid -->
-      {pageListings && pageListings.length > 0 ? (
+      {pageListings && pageListings.length > 0 && (
         <div class="grid gap-6">
           {pageListings.map((listing) => (
             <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition">
@@ -214,8 +216,9 @@ const pageDescription = formatDescription(
             </div>
           )}
         </div>
-      ) : (
-        <!-- Empty State -->
+      )}
+
+      {(!pageListings || pageListings.length === 0) && (
         <div class="text-center py-16 bg-white rounded-lg border-2 border-dashed border-gray-300">
           <p class="text-gray-500 text-lg mb-2">
             No {titleCat.toLowerCase()} listed in {titleReg} yet.

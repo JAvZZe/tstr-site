@@ -34,7 +34,7 @@ import { CONTENT } from '../lib/contacts'
     {CONTENT.footerTagline}
   </p>
    <p style="margin-top: 1rem;">
-     {CONTENT.footerLinks.map((link, index) => (
+     {CONTENT.footerLinks.map((link) => (
        <>
          {link.icon === 'linkedin' ? (
            <a href={link.href} style="color: white; text-decoration: none; margin: 0 1rem; display: inline-block;" title={link.label}>

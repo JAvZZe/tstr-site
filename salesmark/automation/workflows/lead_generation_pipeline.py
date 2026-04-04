@@ -63,7 +63,7 @@ def register_batch_to_muninndb(batch_id: str, count: int, topic: str):
     so future agents know this cohort has been processed.
     """
     print(f"[*] Registering batch {batch_id} in MuninnDB.")
-    learning_content = f"Generated {count} leads for {topic} in batch {batch_id}"
+    # learning_content = f"Generated {count} leads for {topic} in batch {batch_id}"
     # Example integration:
     # cmd = f"python3 {DB_UTILS_PATH} learning-add '{learning_content}' 'lead_gen' 5 'salesmark,{topic}'"
     # subprocess.run(cmd, shell=True)

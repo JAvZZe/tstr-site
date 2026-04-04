@@ -5,7 +5,6 @@
  * Generates a report showing which URLs are valid/invalid.
  */
 
-/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 // const { validateUrl: _validateUrl } = require('../../../tstr-automation/src/utils/validation');
 const { validateBatch, generateReport } = require('./url-validator');

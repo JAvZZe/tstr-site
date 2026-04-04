@@ -13,11 +13,12 @@ const { title } = Astro.props;
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title} | TSTR Admin</title>
-    <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
+    <script is:inline set:html={`
+      function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
       o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
       o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
       document.head.appendChild(o)}initApollo();
-    </script>
+    `}></script>
 </head>
 <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
     <div class="flex h-screen overflow-hidden">

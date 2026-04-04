@@ -61,7 +61,7 @@ async function initAdmins() {
         } else {
             // Update User
             try {
-                const { data, error } = await supabase.auth.admin.updateUserById(userId, {
+                const { error } = await supabase.auth.admin.updateUserById(userId, {
                     password: TARGET_PASSWORD,
                     email_confirm: true,
                     user_metadata: { role: target.role }
