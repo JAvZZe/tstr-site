@@ -436,7 +436,7 @@ class BaseNicheScraper(ABC):
                 "slug": slug,
                 "category_id": self.category_id,
                 "status": "active",
-                "parent_listing_id": parent_id,
+                "parent_listing_id": None,
                 "description": f"Parent brand for {parent_name} group of testing facilities."
             }
             
