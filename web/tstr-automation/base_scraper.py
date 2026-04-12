@@ -19,6 +19,7 @@ from dotenv import load_dotenv
 
 from location_parser import LocationParser
 from url_validator import URLValidator
+from conglomerates import detect_parent
 
 # Load environment variables
 load_dotenv()
@@ -414,6 +415,39 @@ class BaseNicheScraper(ABC):
             logger.error(f"Error checking duplicate: {e}")
             return False
 
+
+    def _get_or_create_parent_id(self, parent_name: str) -> Optional[str]:
+        if not parent_name:
+            return None
+            
+        try:
+            # Check if parent exists (must be a top-level listing)
+            result = self.supabase.from_("listings").select("id").eq("business_name", parent_name).is_("parent_listing_id", "null").execute()
+            
+            if result.data:
+                return result.data[0]["id"]
+                
+            # Create parent listing
+            import re
+            slug = re.sub(r"[^a-z0-9]+", "-", parent_name.lower()).strip("-")
+            
+            parent_data = {
+                "business_name": parent_name,
+                "slug": slug,
+                "category_id": self.category_id,
+                "status": "active",
+                "parent_listing_id": parent_id,
+                "description": f"Parent brand for {parent_name} group of testing facilities."
+            }
+            
+            result = self.supabase.from_("listings").insert(parent_data).execute()
+            if result.data:
+                logger.info(f"Created new parent listing: {parent_name}")
+                return result.data[0]["id"]
+        except Exception as e:
+            logger.error(f"Failed to get/create parent ID for {parent_name}: {e}")
+            
+        return None
     def save_listing(
         self, standard_fields: Dict, custom_fields: Dict, source_url: str
     ) -> Optional[str]:
@@ -453,6 +487,10 @@ class BaseNicheScraper(ABC):
             else:
                 slug = "listing"
 
+            # Detect parent brand
+            parent_name = detect_parent(business_name)
+            parent_id = self._get_or_create_parent_id(parent_name) if parent_name else None
+
             # Prepare listing data
             listing_data = {
                 "business_name": business_name,
@@ -467,6 +505,7 @@ class BaseNicheScraper(ABC):
                 "latitude": standard_fields.get("latitude"),
                 "longitude": standard_fields.get("longitude"),
                 "status": "active",
+                "parent_listing_id": parent_id,
             }
 
             # Insert listing

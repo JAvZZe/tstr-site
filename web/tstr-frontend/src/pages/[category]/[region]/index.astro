@@ -8,6 +8,7 @@ import { getRedirectUrl } from '../../../lib/redirect';
 
 // SSR rendering (output: 'server' in astro.config)
 
+Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=3600');
 
 // 2. Page rendering: Fetch data for this specific page
 const { category, region } = Astro.params;

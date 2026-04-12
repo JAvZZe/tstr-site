@@ -1,0 +1,64 @@
+---
+// src/pages/group/[slug].astro
+import { supabase } from '../../lib/supabase';
+import Footer from '../../components/Footer.astro';
+import BranchLocator from '../../components/BranchLocator';
+import { formatTitle, formatDescription } from '../../lib/seo';
+
+Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=3600');
+
+const { slug } = Astro.params;
+
+// 1. Fetch Group Data using our new view
+const { data: group, error } = await supabase
+  .from('listing_groups_view')
+  .select('*')
+  .eq('group_slug', slug)
+  .single();
+
+if (!group || error) {
+  return Astro.redirect('/404');
+}
+
+const pageTitle = formatTitle([group.group_name, "Global Branch Network"]);
+const pageDescription = formatDescription(
+  `Explore the global branch network of ${group.group_name}. Find ${group.branch_count} local physical labs and verified testing facilities worldwide.`
+);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+</head>
+  <body class="bg-gray-50 text-gray-900 font-sans">
+    <nav class="bg-white shadow-sm p-4 sticky top-0 z-10 border-b border-gray-100">
+      <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <a href="/" class="font-black text-2xl tracking-tighter hover:text-blue-600 transition-colors">TSTR<span class="text-blue-600">.directory</span></a>
+      </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto p-6 md:p-12">
+      <div class="mb-16">
+        <h1 class="text-5xl md:text-7xl font-black text-blue-900 mb-6 tracking-tight leading-[0.9]">{group.group_name}</h1>
+        <p class="text-2xl text-gray-600 max-w-3xl mb-10 font-medium leading-relaxed">{group.group_description}</p>
+        
+        <div class="flex flex-wrap gap-4 items-center">
+          <div class="bg-white border border-gray-200 px-6 py-3 rounded-2xl shadow-sm flex items-center gap-3">
+            <span class="text-2xl">🌍</span>
+            <div>
+              <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">Network Scale</div>
+              <div class="text-lg font-black text-blue-900">{group.branch_count} Certified Locations</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <BranchLocator branches={group.branches} groupName={group.group_name} />
+    </main>
+    
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,104 @@
+---
+// src/pages/[category]/[standard]/[region]/index.astro
+import { supabase } from '../../../../../lib/supabase';
+import NewsletterBanner from '../../../../../components/NewsletterBanner';
+import Footer from '../../../../../components/Footer.astro';
+import TrustBadge from '../../../../../components/TrustBadge';
+import { getRedirectUrl } from '../../../../../lib/redirect';
+import { formatTitle, formatDescription } from '../../../../../lib/seo';
+
+// 1. SSR Edge Caching
+Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=3600');
+
+const { category, standard, region } = Astro.params;
+
+// 2. Fetch Aggregated Data
+const { data: pageData, error } = await supabase
+  .from('listings')
+  .select(`
+    id,
+    business_name,
+    slug,
+    description,
+    region,
+    verified,
+    claimed,
+    website,
+    location:location_id (name),
+    listing_categories!inner (category:category_id (name, slug)),
+    listing_capabilities!inner (
+      verified,
+      standard:standard_id!inner (code, name)
+    )
+  `)
+  .eq('status', 'active')
+  .eq('listing_categories.category.slug', category)
+  .eq('listing_capabilities.standard.code', standard)
+  .eq('region', region === 'global' ? undefined : region);
+
+if (error || !pageData) {
+  return Astro.redirect('/404');
+}
+
+const standardName = pageData[0]?.listing_capabilities[0]?.standard.name || standard;
+const categoryName = pageData[0]?.listing_categories[0]?.category.name || category;
+const regionTitle = region.toUpperCase();
+
+const pageTitle = formatTitle([`${standard} ${categoryName}`, regionTitle]);
+const pageDescription = formatDescription(
+  `Find ${pageData.length} labs verified for ${standard} (${standardName}) in ${regionTitle}. Compare ISO 17025 accredited providers for specialized ${categoryName.toLowerCase()} requirements.`
+);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+</head>
+
+  <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
+    <NewsletterBanner client:only="react" />
+    <nav class="bg-white shadow-sm p-4">
+      <div class="max-w-6xl mx-auto">
+        <a href="/" class="font-black text-xl hover:text-blue-600 transition">TSTR<span class="text-blue-600">.directory</span></a>
+      </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto p-6">
+      <div class="mb-12">
+        <h1 class="text-4xl md:text-6xl font-black text-blue-900 mb-4 tracking-tight">
+          {standard} Labs in {regionTitle}
+        </h1>
+      </div>
+
+      <div class="grid gap-6 mb-12">
+        {pageData.map((listing) => (
+          <div class="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-all group">
+            <div class="flex flex-col md:flex-row justify-between items-start gap-6">
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                  <h3 class="text-2xl font-black text-blue-900 group-hover:text-blue-600 transition-colors">
+                    {listing.business_name}
+                  </h3>
+                  <TrustBadge level={listing.verified ? 'verified' : (listing.claimed ? 'claimed' : 'aggregated')} size="sm" />
+                </div>
+                <p class="text-gray-700 line-clamp-2 leading-relaxed mb-4">{listing.description}</p>
+              </div>
+              
+              <div class="flex flex-col gap-3 w-full md:w-auto">
+                <a href={`/company/${listing.slug}`} class="text-center px-6 py-3 border-2 border-blue-900 text-blue-900 rounded-xl font-black hover:bg-blue-900 hover:text-white transition-all">
+                  View Full Scope
+                </a>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </main>
+
+    <Footer />
+  </body>
+</html>
