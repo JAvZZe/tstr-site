@@ -58,10 +58,15 @@ export const GET: APIRoute = async ({ request }) => {
           parent:parent_id (
             id,
             name,
-            level
+            level,
+            parent:parent_id (
+              id,
+              name,
+              level
+            )
           )
         ),
-        listing_capabilities(
+        listing_capabilities!inner(
           standard:standard_id!inner(
             id,
             code,
@@ -79,12 +84,11 @@ export const GET: APIRoute = async ({ request }) => {
       query = query.eq('category_id', category)
     }
 
-     // Add location filter if provided
-     if (location) {
-       // Search in address field directly to avoid complex OR conditions that break the PostgREST parser
-       // when combined with nested joins.
-       query = query.ilike('address', `%${location}%`);
-     }
+    // Add location filter if provided
+    if (location) {
+      // Search in both location hierarchy and address field
+      query = query.or(`location.name.ilike.%${location}%,location.parent.name.ilike.%${location}%,location.parent.parent.name.ilike.%${location}%,address.ilike.%${location}%`)
+    }
 
     // Add specifications filter if provided
     if (Object.keys(specs).length > 0) {
@@ -139,12 +143,12 @@ export const GET: APIRoute = async ({ request }) => {
         }
       }
     );
-  } catch (_e) {
-    console.error('Unexpected error:', _e);
+  } catch (err) {
+    console.error('Unexpected error:', err);
     return new Response(
       JSON.stringify({
         error: 'Internal server error',
-        message: _e instanceof Error ? _e.message : 'Unknown error'
+        message: err instanceof Error ? err.message : 'Unknown error'
       }),
       {
         status: 500,
