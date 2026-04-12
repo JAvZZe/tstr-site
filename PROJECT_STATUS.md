@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-03-28 06:08 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-04-09 04:00 UTC
+> **Updated By**: Gemini (Antigravity)
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 > **Maintenance**: See `docs/MAINTENANCE_LOG.md` for security/linting updates.
@@ -96,6 +96,20 @@
 
 ---
 
+## 🏗️ NICHE LOCALIZATION & TRUST ARCHITECTURE (IN PROGRESS)
+
+- 📄 **Strategy Document**: `tstr-architecture-plan.md` (located in project root)
+- 🎯 **Status**: Plan finalized, awaiting execution.
+- 🛠️ **Key Components**:
+  - **Dynamic SSR PSEO**: Transition from static routes to dynamic Category/Standard/Region intersections.
+  - **Edge Caching**: Cloudflare `Cache-Control` optimization to protect Supabase.
+  - **3-Tier Trust Funnel**: verified status levels (Aggregated -> Claimed -> TSTR Verified).
+  - **Group Hierarchy**: Parent/Branch database structure and branch aggregation views.
+- 📅 **Planned By**: Gemini CLI (Architecture v3)
+- 🤖 **Assigned Agents**: `opencode` (DB/RLS), `omg-executor` (Astro/SSR), `qwen` (Scraper updates).
+
+---
+
 ## 📈 CURRENT STATUS DASHBOARD
 
 ```text
@@ -111,7 +125,7 @@
 │  ✅ Analytics (Apollo)         ACTIVE 🎯    │
 └─────────────────────────────────────────────┘
 
-Listings:         194 verified
+Listings:         239 verified (Calibration & Hydraulic Expansion)
 Data Quality:     95%+ (URL validation active)
 Automation:       100% (cron daily 2 AM GMT)
 Cost/Month:       $0.00 (Oracle Always Free Tier)
@@ -340,6 +354,124 @@ Last Scrape:      February 11, 2026 02:31 UTC
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.9.13** - 2026-04-09 - **Niche Specialization: Calibration & Hydraulic Testing** (gemini-2.5-pro)
+
+- **Database**: Created specialized categories `Calibration & Metrology Services` and `Hydraulic & Pneumatic Testing`.
+- **Standards**: Added 5 specialized standards (**ISO 9001**, **ANSI/ASHRAE 199**, **ISO 15001**, **NIST Traceable**, etc.).
+- **Listings**: Added **Trescal**, **Transcat**, **Parker Hannifin**, and **Swagelok** with detailed high-fidelity profiles.
+- **Taxonomy**: Mapped listings to specialized tags for Dimensional Metrology, Hydrostatic Testing, and Cleanroom Assembly.
+
+### **v2.9.12** - 2026-04-09 - **Niche Specialization: Battery Fire Safety & EMC/Wireless** (gemini-2.5-pro)
+
+- **Database**: Created specialized categories `Battery Fire & Thermal Abuse Testing` and `Product Safety, EMC & Wireless`.
+- **Standards**: Added 6 core standards (**UL 1973**, **IEEE 1547**, **FCC Part 15**, **CISPR 32**, etc.).
+- **Listings**: Added **DNV BEST Test Center**, **CSA Group**, **Eurofins MET Labs**, and **TÜV SÜD America**; expanded **UL Solutions** and **SGS** with specialized safety/EMC context.
+- **Taxonomy**: Mapped listings to specialized tags for Thermal Runaway, Anechoic Chambers, and NRTL Safety Listings.
+
+### **v2.9.11** - 2026-04-09 - **Niche Specialization: Subsea Integrity & Acoustics** (gemini-2.5-pro)
+
+- **Database**: Created specialized categories `Subsea Pipeline & Asset Integrity` and `Acoustics, Vibration & Seismic Testing`.
+- **Standards**: Added 5 core standards (**ISO 3744**, **IEC 60980**, **DNV-RP-F116**, **IMCA D 006**, etc.).
+- **Listings**: Added **DeepOcean**, **i-Tech 7**, **HBK**, and **Sopemea**; expanded **Oceaneering** and **Element** with specialized subsea/acoustic context.
+- **Taxonomy**: Mapped listings to specialized tags for Through-Coating Inspection (ART), Seismic Qualification, and NVH Analysis.
+
+### **v2.9.10** - 2026-04-09 - **Sector Specialization: Defense & Ballistics Testing** (gemini-2.5-pro)
+
+- **Database**: Created specialized category `Defense & Ballistics Testing`.
+- **Standards**: Added 6 core defense standards (**MIL-STD-810H**, **MIL-DTL-901E**, **NIJ 0101.06**, **STANAG 4569**, etc.).
+- **Listings**: Added **Element U.S. Space & Defense**, **QinetiQ**, **Dayton T. Brown**, and **Oregon Ballistic Laboratories**.
+- **Taxonomy**: Mapped listings to specialized tags for Ballistics & Ordnance, Heavyweight Shock, and Armor Validation.
+
+### **v2.9.9** - 2026-04-09 - **Sector Specialization: Forensics & Semiconductors** (gemini-2.5-pro)
+
+- **Database**: Created specialized categories `Forensic Engineering & Failure Analysis` and `Advanced Semiconductor & Materials Characterization`.
+- **Standards**: Added 5 specialized standards (**ASTM E2332**, **NFPA 921**, **SEMI E54**, **ISO 18115**, **JEDEC JESD22**).
+- **Listings**: Added **Exponent** and **Jensen Hughes**; expanded **EAG Laboratories** with semiconductor/materials characterization context.
+- **Taxonomy**: Mapped listings to specialized tags for Failure Analysis, Fire Investigation, Surface Analysis, and FIB-SEM.
+
+### **v2.9.8** - 2026-04-08 - **Sector Specialization: Building Science & Mining** (gemini-2.5-pro)
+
+- **Database**: Created specialized categories `Building & Construction Testing` and `Mining & Geochemistry Testing`.
+- **Standards**: Added 7 core standards (**NFPA 285**, **ASTM E331/E1105**, **NI 43-101**, **JORC Code**, etc.).
+- **Listings**: Added **ALS Minerals** and **Element Building Science**; expanded **UL**, **SGS**, **BV**, and **Intertek** with building envelope and geochemical context.
+- **Taxonomy**: Mapped listings to specialized tags for Fire Safety, Facade Testing, and Geochemical Assaying.
+
+### **v2.9.7** - 2026-04-08 - **Sector Specialization: Nuclear & Consumer Goods Testing** (gemini-2.5-pro)
+
+- **Database**: Created specialized categories `Nuclear Energy Testing & Inspection` and `Consumer Goods & Textile Testing`.
+- **Standards**: Added 8 core standards (**ASME Section III**, **RSE-M**, **AATCC TM61**, **ASTM F963**, etc.).
+- **Listings**: Added **Westinghouse**, **Framatome**, **Orano**, and **QIMA**; expanded **Bureau Veritas** and **Intertek** with specialized consumer lab context.
+- **Taxonomy**: Mapped listings to specialized tags for Fuel Validation, In-Service Inspection (ISI), and Ethical Audits.
+
+### **v2.9.6** - 2026-04-08 - **Niche Specialization: Carbon MRV & 5G Validation** (gemini-2.5-pro)
+
+- **Database**: Created specialized categories `Carbon Sequestration & MRV` and `Telecommunications & 5G Testing`.
+- **Standards**: Added 6 core standards (**ISO 14064-1**, **Verra VM0042**, **DNV-RP-A203**, **3GPP Rel-17**, etc.).
+- **Listings**: Added **Yard Stick PBC**, **Aker Carbon Capture**, **Keysight**, **Rohde & Schwarz**, and **Spirent**; expanded **DNV** and **SGS** with CCUS validation context.
+- **Taxonomy**: Mapped listings to specialized tags for Soil Carbon Mapping, O-RAN Interop, and 6G Research.
+
+### **v2.9.5** - 2026-04-08 - **Sector Specialization: Cybersecurity & Food Safety** (gemini-2.5-pro)
+
+- **Database**: Created specialized categories `Cybersecurity & Software Testing` and `Food Safety & Agricultural Testing`.
+- **Standards**: Added 8 core standards (**ISO 27001**, **SOC 2**, **FSSC 22000**, **HACCP**, etc.).
+- **Listings**: Added **NCC Group**, **Mérieux NutriSciences**, and **ALS Global**; expanded 6 global heavyweights (**UL**, **SGS**, **Eurofins**, etc.) with Cyber/Food capabilities.
+- **Taxonomy**: Mapped listings to specialized tags for Red Teaming, Pentesting, Food Fraud, and Microbiology.
+
+### **v2.9.4** - 2026-04-08 - **Sector Specialization: Railway & Medical Device Testing** (gemini-2.5-pro)
+
+- **Database**: Created specialized categories `Railway & Rolling Stock Testing` and `Medical Device & Healthcare Testing`.
+- **Standards**: Added 6 core standards (**EN 50126/45545**, **ISO 22163**, **IEC 60601**, **ISO 11135/11137**).
+- **Listings**: Added **TÜV SÜD Rail**, **Ricardo Rail**, **Nelson Labs**, **Charles River**, and **NAMSA**; batch-updated **52 Eurofins** locations with medical device capabilities.
+- **Taxonomy**: Mapped listings to specialized service tags for signaling, biocompatibility, and sterilization validation.
+
+### **v2.9.3** - 2026-04-08 - **Niche Specialization: Subsea & EV Battery Safety** (gemini-2.5-pro)
+
+- **Database**: Created specialized categories `Subsea & Offshore Testing` and `EV & Battery Safety Testing`.
+- **Standards**: Added 5 core niche standards (**DNV-ST-F101**, **API 17D**, **UN 38.3**, **ECE R100**, **SAE J2464**).
+- **Listings**: Added **Oceaneering**, **FEV**, **UTAC Millbrook**, and **Ricardo**; updated **AVL** and **HORIBA** with specialized propulsion and abuse tags.
+- **Taxonomy**: Implemented cross-category linkage for maritime and automotive electrification.
+
+### **v2.9.2** - 2026-04-08 - **Renewable Energy Expansion: Wind, Solar & BESS** (gemini-2.5-pro)
+
+- **Database**: Created new category `Renewable Energy Testing & Certification` (Slug: `renewable-energy-testing`).
+- **Standards**: Added 5 core renewable standards (**IEC 61400 series**, **IEC 61215**, **UL 9540A**, **VDE-AR-N 4105**).
+- **Listings**: Added **TÜV Rheinland**, **Fraunhofer ISE**, **Fraunhofer IWES**, and **VDE Renewables**; expanded **UL Solutions** with high-fidelity profiles.
+- **Taxonomy**: Mapped listings to specialized service tags for Wind, Solar, and Battery Storage safety.
+
+### **v2.9.1** - 2026-04-08 - **Heading Refinement & Aerospace Integration** (gemini-2.5-pro)
+
+- **UI/UX**: Refined business headings by separating service descriptors into "Service Tags" (badges).
+- **Architecture**: Repurposed `listing_capabilities` to act as high-visibility tags (AIM, H2-SAFETY, etc.).
+- **Aerospace**: Added specialized NDT listings for **Magnaflux**, **Waygate Technologies**, and **Eddyfi Technologies**.
+- **Standards**: Integrated aerospace codes (**AMS 2644**, **AMS 3041**, **ASTM E3022**).
+
+### **v2.9.0** - 2026-04-08 - **Asset Integrity Expansion: DNV, DEKRA & LRQA** (gemini-2.5-pro)
+
+- **Listings**: Expanded **DNV** and **DEKRA**, and added **LRQA** with high-fidelity profiles. Highlights include DNV's **Synergi/Veracity** ecosystem, DEKRA's industrial safety diagnostics, and LRQA's specialized **MAUT** and maritime integrity services.
+- **Standards**: Added pipeline and maritime standards (**API RP 1173**, **ISO 10426**).
+- **Taxonomy**: Synchronized listings across NDT, Materials, Oil & Gas, Engineering, and Hydrogen categories.
+
+### **v2.8.9** - 2026-04-08 - **Asset Integrity Expansion: Intertek, BV & TÜV SÜD** (gemini-2.5-pro)
+
+- **Listings**: Expanded **Intertek**, **Bureau Veritas**, and **TÜV SÜD** with high-fidelity profiles highlighting proprietary software (**Aware™ suite**, **Veristar AIM 3D**, **T-REMS**) and advanced NDT/FFS services.
+- **Standards**: Added core compliance and safety standards (**API 579**, **ASME Section XI**, **ISO 45001**).
+- **Taxonomy**: Synchronized listings across NDT, Materials, Oil & Gas, Engineering, and Hydrogen categories.
+
+### **v2.8.8** - 2026-04-08 - **Asset Integrity Expansion: Applus+ & SGS** (gemini-2.5-pro)
+
+- **Listings**: Expanded **Applus+** and **SGS** with high-fidelity profiles highlighting proprietary software (**IDMS**, **Traza+**, **SGS MIMS**, **IMS Suite**) and advanced NDT tech (**IWEX**, **UT FAST**).
+- **Standards**: Added 4 new Asset Management and RBI standards (**API 580/581**, **ISO 19011**, **ISO 55001**).
+- **Capabilities**: Linked both companies to core NDT and compliance standards with technical specs.
+- **Taxonomy**: Synchronized both listings across NDT, Materials, Oil & Gas, Engineering, and Hydrogen categories.
+
+### **v2.8.7** - 2026-04-08 - **NDT Context & Mistras Group Integration** (gemini-2.5-pro)
+
+- **Database**: Created new category `Non-Destructive Testing (NDT) & Asset Integrity` (Slug: `ndt-testing-inspection`).
+- **Standards**: Added 10 core NDT and API standards (ASNT SNT-TC-1A, NAS 410, ASTM E1417/E1444/E1742/E569, API 510/570/653, ISO 9712).
+- **Listing**: Added **MISTRAS Group, Inc.** (NYSE: MG) as a Gold Standard listing with detailed profile and capabilities.
+- **Taxonomy**: Associated Mistras Group with 5 categories (NDT, Materials, Oil & Gas, Engineering, Hydrogen).
+- **Template**: Established NDT/Asset Integrity profile template for future industry peers (Applus, SGS, etc.).
 
 ### **v2.8.6** - 2026-03-27 - **Mass RLS Policy Hardening** (claude-sonnet-thinking)
 

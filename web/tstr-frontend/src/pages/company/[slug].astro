@@ -1,0 +1,120 @@
+---
+// src/pages/company/[slug].astro
+import { supabase } from '../../lib/supabase';
+import NewsletterBanner from '../../components/NewsletterBanner';
+import Footer from '../../components/Footer.astro';
+import ComplianceMatrix from '../../components/ComplianceMatrix';
+import TrustBadge from '../../components/TrustBadge';
+import { getRedirectUrl } from '../../lib/redirect';
+import { formatTitle, formatDescription } from '../../lib/seo';
+
+// 1. SSR Edge Caching
+Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=3600');
+
+const { slug } = Astro.params;
+
+// 2. Fetch Comprehensive Company Data
+const { data: listing, error } = await supabase
+  .from('listings')
+  .select(`
+    *,
+    location:location_id (id, name, slug),
+    capabilities:listing_capabilities (
+      id,
+      verified,
+      notes,
+      standard:standard_id (id, code, name, description)
+    ),
+    parent:parent_listing_id (id, business_name, slug)
+  `)
+  .eq('slug', slug)
+  .single();
+
+if (!listing || error) {
+  return Astro.redirect('/404');
+}
+
+const pageTitle = formatTitle([listing.business_name, "Verified Testing Services"]);
+const pageDescription = formatDescription(
+  `${listing.business_name} offers verified testing services in ${listing.location?.name || listing.region}. View ISO certifications, equipment, and request quotes.`
+);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+</head>
+
+  <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
+    <NewsletterBanner client:only="react" />
+    
+    <nav class="bg-white shadow-sm p-4 sticky top-0 z-10">
+      <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <a href="/" class="font-bold text-xl">TSTR<span class="text-blue-600">.directory</span></a>
+        {listing.website && (
+          <a href={getRedirectUrl(listing.website, listing.id)} class="bg-blue-600 text-white px-4 py-2 rounded font-bold hover:bg-blue-700 transition">Visit Website</a>
+        )}
+      </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto p-6">
+      <!-- Breadcrumbs -->
+      <div class="text-sm text-gray-500 mb-6">
+        <a href="/" class="hover:text-blue-600">Home</a>
+        <span class="mx-2">›</span>
+        {listing.parent && (
+          <>
+            <a href={`/group/${listing.parent.slug}`} class="hover:text-blue-600">{listing.parent.business_name}</a>
+            <span class="mx-2">›</span>
+          </>
+        )}
+        <span class="text-gray-900 font-medium">{listing.business_name}</span>
+      </div>
+
+      <!-- Hero Header -->
+      <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 mb-8 relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-4">
+           <TrustBadge level={listing.verified ? 'verified' : (listing.claimed ? 'claimed' : 'aggregated')} size="lg" />
+        </div>
+        
+        <div class="flex flex-col md:flex-row justify-between items-start gap-6">
+          <div class="flex-1">
+            <h1 class="text-4xl md:text-5xl font-black text-blue-900 mb-3 tracking-tight">{listing.business_name}</h1>
+            <p class="text-xl text-gray-600 mb-6 flex items-center gap-2 font-medium">
+              📍 {listing.location?.name}, {listing.region?.toUpperCase()}
+            </p>
+            <div class="prose prose-blue max-w-3xl text-gray-700 text-lg leading-relaxed">
+              {listing.description}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accreditations Section -->
+      <section id="certifications" class="mb-16 scroll-mt-32">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-xl">📜</div>
+          <h2 class="text-3xl font-black text-gray-900 tracking-tight">Verified Compliance Matrix</h2>
+        </div>
+        
+        <ComplianceMatrix capabilities={listing.capabilities} />
+      </section>
+
+      <!-- Contact CTA -->
+      <div id="contact" class="bg-gradient-to-br from-blue-900 to-indigo-950 text-white p-12 rounded-3xl text-center shadow-2xl relative overflow-hidden mb-12">
+        <h2 class="text-4xl font-black mb-4 relative z-1">Request technical data from {listing.business_name}</h2>
+        <p class="text-blue-100 text-xl mb-10 max-w-2xl mx-auto relative z-1">Discuss specialized testing requirements, get turnaround times, and receive verified quotes within 24 hours.</p>
+        
+        <button class="bg-white text-blue-900 px-12 py-5 rounded-2xl font-black text-2xl hover:bg-blue-50 transition-all transform hover:scale-105 shadow-lg active:scale-95 relative z-1">
+          Contact This Laboratory
+        </button>
+      </div>
+    </main>
+
+    <Footer />
+  </body>
+</html>
