@@ -10,26 +10,49 @@ const { count: totalListings } = await supabase
   .select('*', { count: 'exact', head: true })
   .eq('status', 'active');
 
-// Fetch counts for specific industry pillars
-const PILLAR_SLUGS = [
-  'hydrogen-infrastructure-testing',
-  'materials-testing',
-  'environmental-testing',
-  'pharmaceutical-testing'
-];
 
-const { data: categoryCountsData } = await supabase
+// Fetch counts for core industry pillars (any category with a description)
+const { data: categoryData } = await supabase
   .from('categories')
   .select(`
+    name,
     slug,
+    description,
     listings:listings!category_id(count)
   `)
-  .in('slug', PILLAR_SLUGS);
+  .not('description', 'is', null)
+  .order('name');
 
-const catCounts = {};
-categoryCountsData?.forEach(c => {
-  catCounts[c.slug] = c.listings?.[0]?.count || 0;
-});
+const PILLARS_CONFIG = {
+  'hydrogen-infrastructure-testing': { icon: '⚡', color: '#0066cc' },
+  'materials-testing': { icon: '🔬', color: '#166534' },
+  'environmental-testing': { icon: '🌿', color: '#065f46' },
+  'pharmaceutical-testing': { icon: '🧬', color: '#6b21a8' },
+  'oil-gas-testing': { icon: '🛢️', color: '#b45309' },
+  'biotech-testing': { icon: '🧫', color: '#be185d' },
+  'aerospace-testing': { icon: '🚀', color: '#1e40af' },
+  'ev-battery-testing': { icon: '🔋', color: '#15803d' },
+  'railway-testing': { icon: '🚆', color: '#4338ca' },
+  'cybersecurity-testing': { icon: '🛡️', color: '#334155' },
+  'telecom-5g-testing': { icon: '📶', color: '#7c3aed' },
+  'nuclear-testing': { icon: '☢️', color: '#ca8a04' },
+  'building-construction-testing': { icon: '🏗️', color: '#b91c1c' },
+  'mining-geochemistry-testing': { icon: '⛏️', color: '#4d7c0f' },
+  'defense-ballistics-testing': { icon: '🎯', color: '#111827' },
+  'acoustics-vibration-testing': { icon: '🔊', color: '#0891b2' },
+  'product-safety-emc-testing': { icon: '🔌', color: '#ea580c' },
+  'calibration-metrology-services': { icon: '📏', color: '#475569' }
+};
+
+const pillars = categoryData?.map(cat => ({
+  slug: cat.slug,
+  label: cat.name.replace(' Testers', '').replace(' Testing', '').replace(' Services', ''),
+  icon: PILLARS_CONFIG[cat.slug]?.icon || '🔬',
+  color: PILLARS_CONFIG[cat.slug]?.color || '#475569',
+  description: cat.description?.split('.')[0] + '.',
+  count: cat.listings?.[0]?.count || 0
+})).filter(p => p.count > 0) || [];
+
 
 // Fetch top 4 recently verified/claimed labs
 const { data: featuredLabs } = await supabase
@@ -46,36 +69,7 @@ const pageDescription = formatDescription(
   `Find and compare ${totalListings || 200} verified testing laboratories and certification bodies worldwide. AI-powered search for materials, environmental, and hydrogen testing.`
 );
 
-const PILLARS = [
-  { 
-    slug: 'hydrogen-infrastructure-testing',
-    label: 'Hydrogen Testing',
-    icon: '⚡',
-    color: '#0066cc',
-    description: 'H2 infrastructure, pressure & valves'
-  },
-  {
-    slug: 'materials-testing',
-    label: 'Materials Testing',
-    icon: '🔬',
-    color: '#166534',
-    description: 'Fatigue, tensile, composites'
-  },
-  {
-    slug: 'environmental-testing',
-    label: 'Environmental',
-    icon: '🌿',
-    color: '#065f46',
-    description: 'Air, water, soil, ESG'
-  },
-  {
-    slug: 'pharmaceutical-testing',
-    label: 'Biopharma',
-    icon: '🧬',
-    color: '#6b21a8',
-    description: 'Life sciences, pharma QC'
-  },
-];
+
 ---
 
 <!DOCTYPE html>
