@@ -192,14 +192,14 @@ const pageDescription = formatDescription(
       </div>
 
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem;">
-        {PILLARS.map(p => (
+        {pillars.map(p => (
           <a href={`/browse?category=${p.slug}`} style="text-decoration: none; color: inherit;">
             <div class="pillar-card" style={`border-top: 6px solid ${p.color};`}>
               <div style="font-size: 2.5rem; margin-bottom: 1.5rem;">{p.icon}</div>
               <h3 style="font-size: 1.5rem; font-weight: 800; color: #1e293b; margin-bottom: 0.5rem;">{p.label}</h3>
               <p style="color: #64748b; font-size: 1rem; margin-bottom: 1.5rem; flex-grow: 1;">{p.description}</p>
               <div style={`display: flex; align-items: center; gap: 8px; font-weight: 700; color: ${p.color}; font-size: 0.95rem;`}>
-                <span>{catCounts[p.slug] || 0} laboratories</span>
+                <span>{p.count} laboratories</span>
                 <span>→</span>
               </div>
             </div>
