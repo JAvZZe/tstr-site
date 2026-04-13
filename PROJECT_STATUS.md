@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-04-09 04:00 UTC
-> **Updated By**: Gemini (Antigravity)
+> **Last Updated**: 2026-04-13 05:48 UTC
+> **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 > **Maintenance**: See `docs/MAINTENANCE_LOG.md` for security/linting updates.
@@ -72,7 +72,7 @@
 **Type**: Testers & Testing Services Directory Platform
 **Stack**: Astro 5.14.4 + React 18.3.1 + Supabase + Python Scrapers
 **Deployment**: OCI (Scrapers) + Cloudflare Pages (Frontend)
-**Status**: ✅ LIVE - 194 listings
+**Status**: ✅ LIVE - 579 active listings
 
 ---
 
