@@ -1,11 +1,11 @@
 ---
 // src/pages/[category]/[standard]/[region]/index.astro
-import { supabase } from '../../../../../lib/supabase';
-import NewsletterBanner from '../../../../../components/NewsletterBanner';
-import Footer from '../../../../../components/Footer.astro';
-import TrustBadge from '../../../../../components/TrustBadge';
-import { getRedirectUrl } from '../../../../../lib/redirect';
-import { formatTitle, formatDescription } from '../../../../../lib/seo';
+import { supabase } from '../../../../lib/supabase';
+import NewsletterBanner from '../../../../components/NewsletterBanner';
+import Footer from '../../../../components/Footer.astro';
+import TrustBadge from '../../../../components/TrustBadge';
+import { getRedirectUrl } from '../../../../lib/redirect';
+import { formatTitle, formatDescription } from '../../../../lib/seo';
 
 // 1. SSR Edge Caching
 Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=3600');
