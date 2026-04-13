@@ -53,8 +53,6 @@ cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 
 ## Mandatory Protocol for ALL Agents
 
-## Mandatory Protocol for ALL Agents
-
 ### 1. Global Bootstrap (MANDATORY - See Top of Document)
 The mandatory global bootstrap step is documented at the top of this file. Always run the global bootstrap first.
 
@@ -111,6 +109,14 @@ cd "/home/al/AI_PROJECTS_SPACE" && ./handoff.sh <agent> <reason>
 
 ---
 
+## Skills System
+
+**Skills Location**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/skills/` - Procedural guidance for specific tasks.
+
+## Architecture & Memory
+
+**MuninnDB**: Part of the core memory system. All learnings and tasks are synced here via the global continuity system.
+
 ## Gemini / Antigravity Specifics
 
 ### Strengths & Capabilities
@@ -138,6 +144,10 @@ cd "/home/al/AI_PROJECTS_SPACE" && ./handoff.sh <agent> <reason>
 
 ---
 
+## System Tools
+
+Full reference of available system tools: [SYSTEM_TOOLS_REFERENCE.md](../../SYSTEM/docs/SYSTEM_TOOLS_REFERENCE.md)
+
 ## Quick Reference
 
 **Project Root**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working`
@@ -151,7 +161,7 @@ cd "/home/al/AI_PROJECTS_SPACE" && ./handoff.sh <agent> <reason>
 - Access Token: sbp_e290bc7ea1ba64ae4b0be38134b7b4a67ca24e04
 - Mode: Read-only
 
-**Website**: http://tstr.directory (LIVE - 194 listings as of 2026-02-11)
+**Website**: http://tstr.directory (LIVE - 579 active listings as of 2026-02-11)
 
 **Git Repo**: https://github.com/JAvZZe/tstr-site.git
 
