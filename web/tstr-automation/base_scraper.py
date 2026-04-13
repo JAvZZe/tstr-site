@@ -5,6 +5,7 @@ Abstract base class providing common functionality for all niche scrapers
 """
 
 import os
+import re
 import time
 import logging
 from abc import ABC, abstractmethod
@@ -184,7 +185,7 @@ class BaseNicheScraper(ABC):
             "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         )
 
-    def check_robots_allowed(self, url: str) -> bool:
+    def check_robots_allowed(self, url: str) -> Optional[str]:
         """
         Check if URL is allowed by robots.txt
 
@@ -352,12 +353,12 @@ class BaseNicheScraper(ABC):
         """
         raise NotImplementedError("Subclass must implement get_listing_urls()")
 
-    def is_duplicate(
+    def find_existing_id(
         self,
         website: str,
         phone: Optional[str] = None,
         business_name: Optional[str] = None,
-    ) -> bool:
+    ) -> Optional[str]:
         """
         Check if listing already exists in database
 
@@ -367,7 +368,7 @@ class BaseNicheScraper(ABC):
             business_name: Business name (fallback for sources without websites)
 
         Returns:
-            True if duplicate exists, False otherwise
+            Listing UUID if found, None otherwise
         """
         try:
             # Check by website URL (primary key for duplicates) - only if website is provided
@@ -381,7 +382,7 @@ class BaseNicheScraper(ABC):
                 result = query.execute()
 
                 if result.data:
-                    return True
+                    return result.data[0]['id']
 
             # Check by phone if provided
             if phone and phone.strip():
@@ -394,7 +395,7 @@ class BaseNicheScraper(ABC):
                 result = query.execute()
 
                 if result.data:
-                    return True
+                    return result.data[0]['id']
 
             # Fallback: Check by business name for sources without website/phone
             if business_name and business_name.strip():
@@ -407,7 +408,7 @@ class BaseNicheScraper(ABC):
                 result = query.execute()
 
                 if result.data:
-                    return True
+                    return result.data[0]['id']
 
             return False
 
@@ -452,37 +453,21 @@ class BaseNicheScraper(ABC):
         self, standard_fields: Dict, custom_fields: Dict, source_url: str
     ) -> Optional[str]:
         """
-        Save listing to database (listings + custom field values)
-
-        Args:
-            standard_fields: Standard listing data
-            custom_fields: Niche-specific custom field data
-            source_url: URL where data was scraped from
-
-        Returns:
-            listing_id (UUID) if successful, None otherwise
+        Save listing to database (listings + custom field values). 
+        Updates existing listing if found.
         """
         try:
-            # Check for duplicates
-            if self.is_duplicate(
+            # Check for existing record
+            existing_id = self.find_existing_id(
                 standard_fields.get("website", ""),
                 standard_fields.get("phone"),
                 standard_fields.get("business_name"),
-            ):
-                logger.info(
-                    f"Skipping duplicate listing: {standard_fields.get('business_name', 'Unknown')}"
-                )
-                self.stats["listings_skipped_duplicate"] += 1
-                return None
+            )
 
             # Generate slug from business name
             business_name = standard_fields.get("business_name", "")
             if business_name:
-                # Create URL-safe slug
-                import re
-
                 slug = re.sub(r"[^a-z0-9]+", "-", business_name.lower()).strip("-")
-                # Truncate if too long
                 slug = slug[:100] if len(slug) > 100 else slug
             else:
                 slug = "listing"
@@ -506,19 +491,21 @@ class BaseNicheScraper(ABC):
                 "longitude": standard_fields.get("longitude"),
                 "status": "active",
                 "parent_listing_id": parent_id,
+                "updated_at": "now()"
             }
 
-            # Insert listing
-            result = self.supabase.from_("listings").insert(listing_data).execute()
-
-            if not result.data:
-                logger.error("Failed to insert listing - no data returned")
-                return None
-
-            listing_id = result.data[0]["id"]
-            logger.info(
-                f"✓ Saved listing: {standard_fields.get('business_name', 'Unknown')} (ID: {listing_id[:8]}...)"
-            )
+            if existing_id:
+                logger.info(f"Updating existing listing: {business_name} ({existing_id})")
+                result = self.supabase.from_("listings").update(listing_data).eq("id", existing_id).execute()
+                listing_id = existing_id
+            else:
+                logger.info(f"Creating new listing: {business_name}")
+                result = self.supabase.from_("listings").insert(listing_data).execute()
+                if result.data:
+                    listing_id = result.data[0]["id"]
+                else:
+                    logger.error("Failed to insert listing - no data returned")
+                    return None
 
             # Save custom field values
             self._save_custom_field_values(listing_id, custom_fields)
@@ -591,7 +578,7 @@ class BaseNicheScraper(ABC):
         except Exception as e:
             logger.error(f"Failed to save custom field values: {e}")
 
-    def scrape_listing(self, url: str) -> bool:
+    def scrape_listing(self, url: str) -> Optional[str]:
         """
         Scrape single listing and save to database
 
