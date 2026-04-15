@@ -36,7 +36,7 @@ cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 
 **After global bootstrap, use project bootstrap**:
 ```bash
-./bootstrap.sh TSTR.directory
+muninn-cli bootstrap TSTR   # Load project memories (PRIMARY)
 ```
 
 **Why bootstrap > resume**:
@@ -45,7 +45,7 @@ cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 - High confidence learnings only (≥4)
 - Project-specific context and pending tasks
 
-**Symlinks available**: In this folder, just run `./bootstrap.sh TSTR.directory`
+**Symlinks available**: In this folder, just run `muninn-cli bootstrap TSTR   # Load project memories (PRIMARY)`
 
 ### 2. During Work
 

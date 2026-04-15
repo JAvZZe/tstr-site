@@ -51,7 +51,8 @@ cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 **After global bootstrap, run project-specific bootstrap:**
 
 ```bash
-./bootstrap.sh TSTR.directory
+./bootstrap_global.sh          # loads MuninnDB memories automatically
+muninn-cli bootstrap TSTR      # optional: project-scoped memory filter
 ```
 
 **Note**: The bootstrap script file is `Link_to_bootstrap_agent.sh` in the project root. Always run project bootstrap after global bootstrap.
