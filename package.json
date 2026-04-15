@@ -19,7 +19,7 @@
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
-    "lint:js": "eslint . --ext .js,.ts,.jsx,.tsx",
+    "lint:js": "eslint .",
     "lint:css": "prettier --check .",
     "dev": "astro dev",
     "start": "astro dev",
