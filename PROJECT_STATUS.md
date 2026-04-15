@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-04-13 12:19 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-04-15 11:15 UTC
+> **Updated By**: antigravity
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 > **Maintenance**: See `docs/MAINTENANCE_LOG.md` for security/linting updates.
@@ -320,7 +320,7 @@ Last Scrape:      February 11, 2026 02:31 UTC
 
 ## 🐛 ACTIVE BUGS
 
-### Critical: Search API Location Filter Broken (2026-03-19)
+### ✅ FIXED: Search API Location Filter Broken (2026-04-15)
 
 **Severity**: High - Breaks standard search with location filter
 
@@ -354,6 +354,11 @@ Last Scrape:      February 11, 2026 02:31 UTC
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.9.14** - 2026-04-15 - **Search API Bug Fix** (antigravity)
+
+- **Bug Fix**: Resolved critical Search API location filter `.or()` clause conflict in `by-standard.ts`.
+- **Implementation**: Bypassed PostgREST error by rewriting query to use two-phase fetch (fetching data, filtering nested objects via local Javascript). Search locally on location hierarchy and address.
 
 ### **v2.9.13** - 2026-04-09 - **Niche Specialization: Calibration & Hydraulic Testing** (gemini-2.5-pro)
 

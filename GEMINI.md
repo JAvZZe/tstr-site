@@ -1,6 +1,6 @@
 # GEMINI.md - TSTR.directory Project
 
-> **CRITICAL**: This project is part of the AI_PROJECTS_SPACE continuity system.
+> **CRITICAL**: This project occurs in the context of the AI_PROJECTS_SPACE continuity system.
 > **Global System**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/`
 > **Project Context**: Read `TSTR.md` (this directory) for project-specific details.
 
@@ -60,7 +60,7 @@ The mandatory global bootstrap step is documented at the top of this file. Alway
 After global bootstrap, you may run project-specific bootstrap for additional TSTR.directory context:
 
 ```bash
-./bootstrap.sh TSTR.directory
+muninn-cli bootstrap TSTR   # Load project memories (PRIMARY)
 ```
 
 **What this adds:**
@@ -69,7 +69,7 @@ After global bootstrap, you may run project-specific bootstrap for additional TS
 - **High-confidence learnings only** (≥4 rating)
 - **Project-specific task filtering**
 
-**When to use**: For deep TSTR.site work requiring extensive project history. The global bootstrap provides sufficient context for most tasks.
+**When to use**: For deep TSTR.directory work requiring extensive project history. The global bootstrap provides sufficient context for most tasks.
 
 ### 2. During Work
 
@@ -115,7 +115,7 @@ cd "/home/al/AI_PROJECTS_SPACE" && ./handoff.sh <agent> <reason>
 
 ## Architecture & Memory
 
-**MuninnDB**: Part of the core memory system. All learnings and tasks are synced here via the global continuity system.
+**MuninnDB**: Primary memory system — 65+ memories, semantic search via `muninn-cli`. Available from any directory. Run `muninn-cli bootstrap TSTR` at session start to load project-relevant memories.
 
 ## Gemini / Antigravity Specifics
 
@@ -150,7 +150,7 @@ Full reference of available system tools: [SYSTEM_TOOLS_REFERENCE.md](../../SYST
 
 ## Quick Reference
 
-**Project Root**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working`
+**Project Root**: `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working`
 
 **Frontend**: `web/tstr-frontend/` (Astro + React + Tailwind)
 **Scrapers**: `web/tstr-automation/` (Python, deployed on OCI)
@@ -208,42 +208,9 @@ See `TSTR.md` for:
 - Common patterns
 - Troubleshooting guides
 
-**Remember**: First Principles. OODA Loop. Test before deploy. No theater, working code only.
+**Remember**: First Principles. OODA Loop. Test before deploy (define success in the beginning). No theater, working code only.
 
 ---
-
-## Recent Implementation Notes (2025-11-22)
-
-### Category/Region Dynamic Routes ✅ LIVE
-**Routes created:**
-- `/[category]` - Category overview showing all regions (e.g., `/hydrogen-infrastructure-testing`)
-- `/[category]/[region]` - Filtered listings by category + region (e.g., `/hydrogen-infrastructure-testing/global`)
-
-**Files:**
-- `src/pages/[category]/index.astro` - Category overview page
-- `src/pages/[category]/[region]/index.astro` - Category+region listings page
-- Both use `export const prerender = true` for static generation
-
-**Deployment:** Live on https://tstr.directory with Cloudflare Pages edge caching
-
-### Sitemap Optimization ✅ LIVE
-**Change:** Sitemap now filters out categories with 0 active listings
-
-**Implementation:** `src/pages/sitemap.xml.ts` joins categories with listing counts:
-```typescript
-const { data: categoryData } = await supabase
-  .from('categories')
-  .select(`
-    slug,
-    listings:listings!category_id(count)
-  `);
-
-const categories = (categoryData || [])
-  .filter(cat => cat.listings && cat.listings[0]?.count > 0)
-  .map(cat => ({ slug: cat.slug }));
-```
-
-**Result:** Biotech Testing (0 listings) excluded, Pharmaceutical Testing (108 listings) included. Sitemap: 61 URLs (was 63).
 
 ### Supabase API Key Migration ✅ COMPLETE
 **Old format (deprecated):** JWT tokens (`eyJhbGci...`)
