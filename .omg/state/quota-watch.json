@@ -1,7 +1,12 @@
 {
-  "turn_count": 1,
-  "last_session_id": "d5722bc6-9881-4714-8bd3-6194e4aa6cb3",
-  "last_event_key": "d5722bc6-9881-4714-8bd3-6194e4aa6cb3:transcript:19215f3b8ea128e2bfce5b9b993721c5a114da8f69629315f078550ad337dea2",
-  "last_transcript_hash": "19215f3b8ea128e2bfce5b9b993721c5a114da8f69629315f078550ad337dea2",
-  "updated_at": "2026-04-09T10:07:59.302Z"
+  "turn_count": 2,
+  "last_session_id": "449f3f6d-d975-43c7-a9ae-bbfe15c15bfe",
+  "last_event_key": "449f3f6d-d975-43c7-a9ae-bbfe15c15bfe:transcript:b08134e8814c981a4aa033f70038c7111c51155557572640833bd8315510cb16",
+  "last_transcript_hash": "b08134e8814c981a4aa033f70038c7111c51155557572640833bd8315510cb16",
+  "last_model": "gemini-3-flash-preview",
+  "last_turn_total_tokens": 85287,
+  "last_session_total_tokens": 985046,
+  "cwd_mode": "parent-leaf",
+  "last_cwd_label": "ACTIVE_PROJECTS/tstr-site-working",
+  "updated_at": "2026-04-14T04:43:40.190Z"
 }
