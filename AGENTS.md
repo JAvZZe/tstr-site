@@ -36,7 +36,8 @@ cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 ```bash
 ./start-agent.sh    # Recommended: Complete project initialization with status
 # OR
-./bootstrap.sh TSTR-site    # Direct project bootstrap (legacy)
+muninn-cli bootstrap TSTR   # Load project memories (PRIMARY)
+./bootstrap.sh TSTR-site    # Legacy SQLite context (fallback)
 ```
 
 **Quick Start Commands:**

@@ -84,20 +84,27 @@ export const GET: APIRoute = async ({ request }) => {
       query = query.eq('category_id', category)
     }
 
-    // Add location filter if provided
-    if (location) {
-      // Search in both location hierarchy and address field
-      query = query.or(`location.name.ilike.%${location}%,location.parent.name.ilike.%${location}%,location.parent.parent.name.ilike.%${location}%,address.ilike.%${location}%`)
-    }
-
     // Add specifications filter if provided
     if (Object.keys(specs).length > 0) {
       query = query.contains('listing_capabilities.specifications', specs)
     }
 
-    const { data, error } = await query
+    let { data, error } = await query
       .order('is_featured', { ascending: false })
       .order('created_at', { ascending: false })
+
+    // Manual JS filtering for location since Supabase OR across embedded resources is problematic
+    if (location && data) {
+      const locLower = location.toLowerCase();
+      data = data.filter((item: any) => {
+        const addressMatch = (item.address?.toLowerCase() || '').includes(locLower);
+        const nameMatch = (item.location?.name?.toLowerCase() || '').includes(locLower);
+        const parentMatch = (item.location?.parent?.name?.toLowerCase() || '').includes(locLower);
+        const pParentMatch = (item.location?.parent?.parent?.name?.toLowerCase() || '').includes(locLower);
+        
+        return addressMatch || nameMatch || parentMatch || pParentMatch;
+      });
+    }
 
     if (error) {
       console.error('Supabase query error:', error);
