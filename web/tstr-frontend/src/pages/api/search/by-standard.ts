@@ -42,8 +42,36 @@ export const GET: APIRoute = async ({ request }) => {
       }
     }
 
-    // Build the query to search by standard and optionally by location
-    let query = supabase
+    // --- Phase 1: Identification ---
+    // Fetch matching listing IDs based on standard and specifications
+    let capsQuery = supabase
+      .from('listing_capabilities')
+      .select('listing_id, specifications, verified, standard:standard_id!inner(id, code, name)')
+      .eq('standard.code', standard);
+
+    if (Object.keys(specs).length > 0) {
+      capsQuery = capsQuery.contains('specifications', specs);
+    }
+
+    const { data: capData, error: capError } = await capsQuery;
+
+    if (capError) {
+      console.error('Phase 1 (Capabilities) error:', capError);
+      return new Response(JSON.stringify({ error: 'Failed to identify capability matches', details: capError.message }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+    }
+
+    if (!capData || capData.length === 0) {
+      return new Response(
+        JSON.stringify({ standard, category: category || 'all', location: location || null, specs, count: 0, results: [] }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const listingIds = Array.from(new Set(capData.map((c: any) => c.listing_id)));
+
+    // --- Phase 2: Hydration ---
+    // Fetch full business and location details for identified IDs
+    let listQuery = supabase
       .from('listings')
       .select(`
         id,
@@ -51,6 +79,7 @@ export const GET: APIRoute = async ({ request }) => {
         website,
         address,
         verified,
+        category_id,
         location:location_id (
           id,
           name,
@@ -65,38 +94,30 @@ export const GET: APIRoute = async ({ request }) => {
               level
             )
           )
-        ),
-        listing_capabilities!inner(
-          standard:standard_id!inner(
-            id,
-            code,
-            name
-          ),
-          specifications,
-          verified
         )
       `)
       .eq('status', 'active')
-      .eq('listing_capabilities.standard.code', standard)
+      .in('id', listingIds);
 
-    // Add category filter if provided
     if (category) {
-      query = query.eq('category_id', category)
+      listQuery = listQuery.eq('category_id', category);
     }
 
-    // Add specifications filter if provided
-    if (Object.keys(specs).length > 0) {
-      query = query.contains('listing_capabilities.specifications', specs)
-    }
-
-    let { data, error } = await query
+    let { data: listingsData, error: listError } = await listQuery
       .order('is_featured', { ascending: false })
-      .order('created_at', { ascending: false })
+      .order('created_at', { ascending: false });
+
+    if (listError) {
+      console.error('Phase 2 (Hydration) error:', listError);
+      return new Response(JSON.stringify({ error: 'Database query failed (Phase 2)', details: listError.message }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+    }
+
+    let filteredData = listingsData || [];
 
     // Manual JS filtering for location since Supabase OR across embedded resources is problematic
-    if (location && data) {
+    if (location && filteredData.length > 0) {
       const locLower = location.toLowerCase();
-      data = data.filter((item: any) => {
+      filteredData = filteredData.filter((item: any) => {
         const addressMatch = (item.address?.toLowerCase() || '').includes(locLower);
         const nameMatch = (item.location?.name?.toLowerCase() || '').includes(locLower);
         const parentMatch = (item.location?.parent?.name?.toLowerCase() || '').includes(locLower);
@@ -106,31 +127,21 @@ export const GET: APIRoute = async ({ request }) => {
       });
     }
 
-    if (error) {
-      console.error('Supabase query error:', error);
-      return new Response(
-        JSON.stringify({
-          error: 'Database query failed',
-          details: error.message
-        }),
-        {
-          status: 500,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
-    }
-
-    // Transform the results to match the expected format
-    const transformedResults = data?.map(item => ({
-      listing_id: item.id,
-      business_name: item.business_name,
-      website: item.website,
-      address: item.address,
-      verified: item.verified,
-      standard_code: item.listing_capabilities[0]?.standard?.code || standard,
-      standard_name: item.listing_capabilities[0]?.standard?.name || '',
-      specifications: item.listing_capabilities[0]?.specifications || {}
-    })) || []
+    // Map capability data back to listings for the response
+    const transformedResults = filteredData.map((listing: any) => {
+      // Find the relevant capability for this standard for the specific listing
+      const cap = capData.find((c: any) => c.listing_id === listing.id);
+      return {
+        listing_id: listing.id,
+        business_name: listing.business_name,
+        website: listing.website,
+        address: listing.address,
+        verified: listing.verified || cap?.verified,
+        standard_code: cap?.standard?.code || standard,
+        standard_name: cap?.standard?.name || '',
+        specifications: cap?.specifications || {}
+      };
+    });
 
     // Return results
     return new Response(

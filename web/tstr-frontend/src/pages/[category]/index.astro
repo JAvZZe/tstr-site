@@ -14,9 +14,11 @@ const { category } = Astro.params;
 // Fetch category metadata
 const { data: categoryData, error: catError } = await supabase
   .from('categories')
-  .select('id, name, slug, description')
+  .select('id, name, slug, description, min_tier_required')
   .eq('slug', category)
   .single();
+
+const requiredTier = categoryData?.min_tier_required || 'free';
 
 if (catError || !categoryData) {
   return Astro.redirect('/404');
@@ -115,8 +117,13 @@ const pageDescription = formatDescription(
 
       <!-- Page Header -->
       <div class="mb-12">
-        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight flex items-center gap-3">
           {categoryData.name}
+          {requiredTier !== 'free' && (
+            <span class="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-1 rounded inline-flex items-center gap-1">
+              🔒 {requiredTier.toUpperCase()} TIED
+            </span>
+          )}
         </h1>
         {categoryData.description && (
           <p class="text-xl text-gray-600 max-w-3xl leading-relaxed">
@@ -149,86 +156,107 @@ const pageDescription = formatDescription(
       )}
 
       <!-- Content Grid: Regions OR Flat Listing List (if filtered) -->
-      {totalListings > 0 && (
-        <div>
-          {isFiltered ? (
-            <div class="grid gap-6">
-              {filteredListings?.map((listing) => (
-                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition">
-                  <div class="flex justify-between items-start">
-                    <div>
-                      <h3 class="text-xl font-bold text-blue-900">
-                        {listing.business_name}
-                      </h3>
-                      <div class="text-sm text-gray-500 mt-1 flex flex-wrap gap-3">
-                        <span>📍 {listing.location?.name || listing.region?.toUpperCase()}</span>
-                        {listing.featured && (
-                          <span class="text-yellow-600 font-semibold">⭐ Featured</span>
-                        )}
-                        {listing.verified && (
-                          <span class="text-green-600 font-semibold">✓ Verified</span>
+      <div id="category-content-gate" data-required-tier={requiredTier} class="relative">
+        {totalListings > 0 && (
+          <div id="listings-data-container">
+            {isFiltered ? (
+              <div class="grid gap-6">
+                {filteredListings?.map((listing) => (
+                  <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition">
+                    <div class="flex justify-between items-start">
+                      <div>
+                        <h3 class="text-xl font-bold text-blue-900">
+                          {listing.business_name}
+                        </h3>
+                        <div class="text-sm text-gray-500 mt-1 flex flex-wrap gap-3">
+                          <span>📍 {listing.location?.name || listing.region?.toUpperCase()}</span>
+                          {listing.featured && (
+                            <span class="text-yellow-600 font-semibold">⭐ Featured</span>
+                          )}
+                          {listing.verified && (
+                            <span class="text-green-600 font-semibold">✓ Verified</span>
+                          )}
+                        </div>
+                        {listing.description && (
+                          <p class="text-gray-700 mt-3 text-sm line-clamp-2">
+                            {listing.description}
+                          </p>
                         )}
                       </div>
-                      {listing.description && (
-                        <p class="text-gray-700 mt-3 text-sm line-clamp-2">
-                          {listing.description}
-                        </p>
+                      {listing.website && (
+                        <a
+                          href={getRedirectUrl(listing.website, listing.id)}
+                          target="_blank"
+                          rel="nofollow noopener noreferrer"
+                          class="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-blue-700 transition whitespace-nowrap"
+                        >
+                          Visit Website
+                        </a>
                       )}
                     </div>
-                    {listing.website && (
-                      <a
-                        href={getRedirectUrl(listing.website, listing.id)}
-                        target="_blank"
-                        rel="nofollow noopener noreferrer"
-                        class="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-blue-700 transition whitespace-nowrap"
-                      >
-                        Visit Website
-                      </a>
-                    )}
                   </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {sortedRegions.map(([region, regionListings]) => {
-                const featuredCount = regionListings.filter(l => l.featured).length;
-                const verifiedCount = regionListings.filter(l => l.verified).length;
+                ))}
+              </div>
+            ) : (
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {sortedRegions.map(([region, regionListings]) => {
+                  const featuredCount = regionListings.filter(l => l.featured).length;
+                  const verifiedCount = regionListings.filter(l => l.verified).length;
 
-                return (
-                  <a
-                    href={`/${category}/${region.toLowerCase()}`}
-                    class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-blue-400 transition group"
-                  >
-                    <div class="flex justify-between items-start mb-2">
-                      <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600">
-                        {region.toUpperCase()}
-                      </h3>
-                      <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-2.5 py-0.5 rounded">
-                        {regionListings.length}
-                      </span>
-                    </div>
+                  return (
+                    <a
+                      href={`/${category}/${region.toLowerCase()}`}
+                      class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-blue-400 transition group"
+                    >
+                      <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600">
+                          {region.toUpperCase()}
+                        </h3>
+                        <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-2.5 py-0.5 rounded">
+                          {regionListings.length}
+                        </span>
+                      </div>
 
-                    <div class="text-sm text-gray-600 space-y-1">
-                      <p>{regionListings.length} {regionListings.length === 1 ? 'provider' : 'providers'}</p>
-                      {featuredCount > 0 && (
-                        <p class="text-yellow-600">⭐ {featuredCount} featured</p>
-                      )}
-                      {verifiedCount > 0 && (
-                        <p class="text-green-600">✓ {verifiedCount} verified</p>
-                      )}
-                    </div>
+                      <div class="text-sm text-gray-600 space-y-1">
+                        <p>{regionListings.length} {regionListings.length === 1 ? 'provider' : 'providers'}</p>
+                        {featuredCount > 0 && (
+                          <p class="text-yellow-600">⭐ {featuredCount} featured</p>
+                        )}
+                        {verifiedCount > 0 && (
+                          <p class="text-green-600">✓ {verifiedCount} verified</p>
+                        )}
+                      </div>
 
-                    <div class="mt-4 text-blue-600 text-sm font-medium group-hover:underline">
-                      View all →
-                    </div>
-                  </a>
-                );
-              })}
-            </div>
-          )}
+                      <div class="mt-4 text-blue-600 text-sm font-medium group-hover:underline">
+                        View all →
+                      </div>
+                    </a>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
+        <!-- Paywall Overlay -->
+        <div id="paywall-overlay" class="hidden absolute inset-0 z-40 bg-gray-50/95 backdrop-blur-sm flex flex-col items-center justify-center text-center p-8 rounded-xl border border-blue-100">
+           <div class="bg-white p-8 rounded-2xl shadow-2xl border border-gray-100 max-w-md w-full">
+              <div class="text-5xl mb-6">🔒</div>
+              <h2 class="text-2xl font-bold text-gray-900 mb-2">{requiredTier.toUpperCase()} Access Required</h2>
+              <p class="text-gray-600 mb-8">
+                The <strong>{categoryData.name}</strong> directory is reserved for Professional & Premium members.
+              </p>
+              <div class="flex flex-col gap-3">
+                <a href="/pricing" class="bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">
+                  View Upgrade Options
+                </a>
+                <a href={`/login?redirect_to=${encodeURIComponent(Astro.url.pathname)}`} class="text-blue-600 font-semibold hover:underline">
+                  Already a member? Sign in
+                </a>
+              </div>
+           </div>
         </div>
-      )}
+      </div>
 
       {totalListings === 0 && (
         <div class="text-center py-16 bg-white rounded-lg border-2 border-dashed border-gray-300">
@@ -263,5 +291,51 @@ const pageDescription = formatDescription(
 
     <!-- Footer -->
     <Footer />
+
+    <script>
+      import { supabaseBrowser } from '../../lib/supabase-browser'
+
+      async function checkTierGate() {
+        const gate = document.getElementById('category-content-gate')
+        const overlay = document.getElementById('paywall-overlay')
+        const dataContainer = document.getElementById('listings-data-container')
+        
+        if (!gate || !overlay) return
+
+        const requiredTier = gate.dataset.requiredTier || 'free'
+        if (requiredTier === 'free') return
+
+        // Check session
+        const { data: { session } } = await supabaseBrowser.auth.getSession()
+        let userTier = 'free'
+
+        if (session) {
+          const { data: profile } = await supabaseBrowser
+            .from('user_profiles')
+            .select('subscription_tier')
+            .eq('id', session.user.id)
+            .maybeSingle()
+          
+          if (profile) userTier = profile.subscription_tier
+        }
+
+        const tierRank = {
+          'free': 0,
+          'basic': 1,
+          'professional': 2,
+          'premium': 3,
+          'enterprise': 4
+        }
+
+        if (tierRank[userTier] < tierRank[requiredTier]) {
+          overlay.classList.remove('hidden')
+          if (dataContainer) {
+            dataContainer.classList.add('opacity-10', 'pointer-events-none', 'blur-sm')
+          }
+        }
+      }
+
+      checkTierGate()
+    </script>
   </body>
 </html>

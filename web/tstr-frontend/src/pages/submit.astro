@@ -140,6 +140,12 @@ export const prerender = true
       color: #555;
       font-size: 0.95rem;
     }
+
+    option:disabled {
+      color: #999;
+      background-color: #f9f9f9;
+      font-style: italic;
+    }
   </style>
   <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
   o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
@@ -172,12 +178,7 @@ export const prerender = true
         <div class="form-group">
           <label for="category">Category <span class="required">*</span></label>
              <select id="category" name="category" required>
-               <option value="">Select a category</option>
-               <option value="Biopharma & Life Sciences Testers">Biopharma & Life Sciences Testers</option>
-               <option value="Environmental Testers">Environmental Testers</option>
-               <option value="Materials Testers">Materials Testers</option>
-               <option value="Oil & Gas Testers">Oil & Gas Testers</option>
-               <option value="Hydrogen Infrastructure Testers">Hydrogen Infrastructure Testers</option>
+               <option value="">Loading categories...</option>
              </select>
         </div>
 
@@ -232,8 +233,70 @@ export const prerender = true
     const supabaseKey = 'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO'
     const supabase = createClient(supabaseUrl, supabaseKey)
 
+    const categorySelect = document.getElementById('category')
     const form = document.getElementById('submitForm')
     const submitButton = form.querySelector('.submit-button')
+
+    async function loadFormContext() {
+      try {
+        // 1. Get User Session and Profile
+        const { data: { session } } = await supabase.auth.getSession()
+        let userTier = 'free'
+        
+        if (session) {
+          const { data: profile } = await supabase
+            .from('user_profiles')
+            .select('subscription_tier')
+            .eq('id', session.user.id)
+            .maybeSingle()
+          
+          if (profile) userTier = profile.subscription_tier
+        }
+
+        // 2. Load Categories
+        const { data: categories, error } = await supabase
+          .from('categories')
+          .select('id, name, min_tier_required')
+          .order('name')
+
+        if (error) throw error
+
+        // 3. Populate Dropdown
+        categorySelect.innerHTML = '<option value="">Select a category</option>'
+        const tierRank = {
+          'free': 0,
+          'basic': 1,
+          'professional': 2,
+          'premium': 3,
+          'enterprise': 4
+        }
+
+        categories.forEach(cat => {
+          const option = document.createElement('option')
+          option.value = cat.name // Keep name as value since the submission logic expects it
+          
+          const requiredTier = cat.min_tier_required || 'free'
+          const isLocked = tierRank[userTier] < tierRank[requiredTier]
+          
+          if (isLocked) {
+            option.textContent = `🔒 ${cat.name} (${requiredTier.charAt(0).toUpperCase() + requiredTier.slice(1)} Tier Required)`
+            option.disabled = true
+            option.title = `You need a ${requiredTier} subscription to list in this category.`
+          } else {
+            option.textContent = cat.name
+          }
+          
+          categorySelect.appendChild(option)
+        })
+
+      } catch (err) {
+        console.error('Error loading form context:', err)
+        categorySelect.innerHTML = '<option value="">Error loading categories</option>'
+      }
+    }
+
+    // Initial load
+    loadFormContext()
 
     form.addEventListener('submit', async function(e) {
       e.preventDefault()

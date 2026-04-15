@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-04-15 14:11 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-04-15 18:48 UTC
+> **Updated By**: Antigravity
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
 > **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
 > **Maintenance**: See `docs/MAINTENANCE_LOG.md` for security/linting updates.
@@ -320,40 +320,30 @@ Last Scrape:      February 11, 2026 02:31 UTC
 
 ## 🐛 ACTIVE BUGS
 
-### ✅ FIXED: Search API Location Filter Broken (2026-04-15)
+### ✅ FIXED: Search API Location Filter Robustness (2026-04-15)
 
-**Severity**: High - Breaks standard search with location filter
+**Severity**: High - Required for stable standard-based search.
 
-**Affected Endpoint**: `/api/search/by-standard?standard=X&location=Y`
+**Resolution**: Fully transitioned the `/api/search/by-standard` endpoint to a two-phase retrieval pattern. 
+1. **Identification**: Fetch listing IDs from `listing_capabilities` based on standard and specifications. 
+2. **Hydration**: Fetch full business and location details for identified IDs. 
+3. **Location Processing**: JS-side filtering for location hierarchy ensures flexibility and avoids PostgREST recursion errors.
 
-**Error**:
-
-```
-"failed to parse logic tree ((location.name.ilike.%United States%,...))"
-```
-
-**Root Cause**: Supabase `.or()` clause conflicts with nested `listing_capabilities!inner` join in SELECT statement.
-
-**File**: `web/tstr-frontend/src/pages/api/search/by-standard.ts`
-
-**Attempts Made**:
-
-1. `.or()` with string concat - Failed
-2. `.or()` chaining - Failed
-3. Single `.or()` - Failed
-4. `.ilike('address', ...)` only - Code ready but Cloudflare not rebuilding
-
-**Recommended Fixes** (pick one):
-
-1. **Two-phase approach**: Fetch listings by standard, filter by location in JS
-2. **Create Supabase RPC function**: Handle complex filtering server-side
-3. **Simplify**: Use address field only for location (current code ready to deploy)
-
-**Test URL**: `curl "https://tstr.directory/api/search/by-standard?standard=ISO%2014687&location=United%20States"`
+**Status**: ✅ VERIFIED (v2.9.16) - Passes all Playwright tests.
 
 ---
 
 ## 📊 VERSION HISTORY (LATEST)
+
+### **v2.9.16** - 2026-04-15 - **Search API Two-Phase Shift & Repo Cleanup** (antigravity)
+
+- **Search API**: Fully transitioned `by-standard.ts` to a two-phase retrieval pattern (Identification -> Hydration). This eliminates complex nested join conflicts and ensures robustness for standard-based searches.
+- **Cleanup**: Resolved repository "detachment" by pruning redundant `opencode/jolly-river` worktrees and deleting already-merged branches.
+- **Verification**: Verified zero regressions in Search API behavior via Playwright.
+
+### **v2.9.15** - 2026-04-15 - **Search API Location Filter Verification** (antigravity)
+- **Verification**: Executed Playwright tests to confirm the JS-side filtering fix for the Search API.
+- **Status**: Update status to "Verified".
 
 ### **v2.9.14** - 2026-04-15 - **Search API Bug Fix** (antigravity)
 
@@ -1075,7 +1065,14 @@ _(See `docs/REFERENCE_STATUS.md` for older versions)_
      - `terms.astro` & `privacy.astro`: Updated contact boxes.
      - `account/subscription.astro`: 4 points in management dashboard.
      - `press.astro`: Media enquiry link.
-   - **Next Step**: Verify form auto-selection via `/contact?inquiry=sales`.
+   - **Completed**: Verified form auto-selection via `/contact?inquiry=sales` and Playwright tests.
+
+
+10. **v2.9.15: Search API Location Filter Verification (Playwright)**
+    - **Problem**: Conflicting PostgREST query clauses caused location filter 500 errors.
+    - **Fix Verified**: Two-phase search (DB fetch by standard -> Manual JS filter by location) in `/api/search/by-standard`.
+    - **Verification**: Created `web/tstr-frontend/tests/search-api.spec.ts` with 5 Playwright test cases covering baseline search, location filtering, error handling, and UI interactions.
+    - **Status**: ✅ All tests PASSED. Feature robust and crash-free.
 
 ### Key Finding
 

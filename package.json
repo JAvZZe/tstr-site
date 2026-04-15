@@ -12,6 +12,7 @@
     "wrangler": "^4.43.0"
   },
   "dependencies": {
+    "astro": "^6.1.6",
     "axios": "^1.12.2"
   },
   "scripts": {
@@ -19,6 +20,12 @@
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
     "lint:js": "eslint . --ext .js,.ts,.jsx,.tsx",
-    "lint:css": "prettier --check ."
-  }
+    "lint:css": "prettier --check .",
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "type": "module"
 }
