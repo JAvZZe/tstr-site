@@ -1,1080 +1,187 @@
-# 📊 TSTR.DIRECTORY - CENTRALIZED PROJECT STATUS
+# 📊 TSTR.DIRECTORY - PROJECT STATUS
 
-> **SINGLE SOURCE OF TRUTH** - All agents update this document
-> **Last Updated**: 2026-04-15 19:30 UTC
-> **Updated By**: JAvZZe
+> **SINGLE SOURCE OF TRUTH** - Executive summary for agents
+> **Last Updated**: 2026-04-16 17:40 UTC
+> **Updated By**: opencode (Documentation Split)
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
-> **Reference**: See `docs/REFERENCE_STATUS.md` for history and details.
-> **Maintenance**: See `docs/MAINTENANCE_LOG.md` for security/linting updates.
-
----
-
-## 💳 PAYMENT SYSTEM STATUS (CRITICAL PATH TO REVENUE)
-
-### Current State
-
-- ✅ **PayPal code COMPLETE** (v2.5.0) - Edge Functions, frontend, database migration written
-  - Features: Subscription, Webhook, Cancellation
-- ✅ **Configuration COMPLETE** - All secrets (Client, Secret, Webhook, Plans) configured in Supabase & Local
-- ✅ **DEPLOYMENT COMPLETE** - Database migration applied, Functions deployed.
-- ✅ **SANDBOX VERIFIED** (2026-01-12):
-  - Subscription Flow: Login → Subscribe → Payment → Database Update (Verified)
-  - Webhook: Public access enabled, processes activations correctly (Verified)
-  - ✅ **CANCELLATION VERIFIED** (2026-01-16): Robust handling for environment mismatches (404/422). Reset to 'free' tier functional.
-- ✅ **MANUAL PAYMENTS VERIFIED** (2026-01-16):
-  - **EFT Flow**: Modal instructions + Email instructions (Verified)
-  - **Bitcoin Flow**: Modal QR Code + Email instructions (Verified)
-  - **Auth**: Redirect to login for unauthenticated users (Verified)
-- 📊 **Alternative evaluated**: Upmind.com (decision: use later at scale)
-- ✅ **LIVE MODE ACTIVE** (2026-02-23): `PAYPAL_MODE=live`, production Plan IDs configured. PayPal endpoint using `api-m.paypal.com`.
-
-### Go-Live Checklist ✅ COMPLETE
-
-1. [x] Create PayPal subscription plans in Dashboard ($295/mo, $795/mo)
-2. [x] Configure webhook URL: `https://haimjeaetrsaauitrhfy.supabase.co/functions/v1/paypal-webhook`
-3. [x] Set secrets with Plan IDs and Webhook ID
-4. [x] Deploy (`supabase functions deploy`)
-5. [x] Test end-to-end in sandbox mode
-6. [x] **LIVE MODE**: `PAYPAL_MODE` set to `live`, production Plan IDs active (confirmed 2026-02-23)
-
-### Reference Documents
-
-- `HANDOFF_PAYPAL_INTEGRATION_COMPLETE.md` - Full deployment checklist
-- `PAYMENT_PLATFORM_ANALYSIS.md` - PayPal vs Upmind comparison
-- `QWEN3_PAYPAL_INSTRUCTIONS.md` - Complete implementation guide
-- `PROJECT_IMPROVEMENTS_REPORT.md` - Comprehensive improvements and progress tracking
-
----
-
-## 📧 EMAIL SYSTEM STATUS
-
-- ✅ **Shared Service**: `src/services/email.ts` implemented for centralized sending.
-- ✅ **Contact Form FIXED** (v2.5.3): Refactored to use shared service, ensuring valid JSON responses and proper error handling.
-- ✅ **Infrastructure Update**: Transitioned to subdomains (e.g., `mg.tstr.directory`) via Cloudflare for improved deliverability and organization.
-- ✅ **Verification**: Manual tests confirm contact messages are sent and received successfully.
-
----
-
-## 📊 ANALYTICS & TRACKING STATUS
-
-- ✅ **Apollo Website Tracker Deployed** (v2.5.5) - Deployed site-wide across 40+ pages.
-- ✅ **Apollo Form Enrichment Deployed** (v2.5.6) - Deployed on `/submit` page.
-- ✅ **Script Placement**: In `<head>` section, async/defer/defer loading for zero performance impact.
-- ✅ **Enrichment App ID**: `697aec66d25c8100195c344a`
-- ✅ **Features**: Auto-enrichment of company data for listing submissions, loading spinner overlay during processing.
-- ✅ **Verification**: Build confirmed successful; script presence verified in built HTML files.
 
 ---
 
 ## 🎯 PROJECT OVERVIEW
 
-**Name**: TSTR.DIRECTORY
-**Type**: Testers & Testing Services Directory Platform
-**Stack**: Astro 5.14.4 + React 18.3.1 + Supabase + Python Scrapers
-**Deployment**: OCI (Scrapers) + Cloudflare Pages (Frontend)
-**Status**: ✅ LIVE - 579 active listings
+| Field | Value |
+|-------|-------|
+| **Name** | TSTR.directory |
+| **Type** | Testing Services Directory Platform |
+| **Stack** | Astro 5.x + React 18 + Supabase + Python Scrapers |
+| **Deployment** | Cloudflare Pages (Frontend) + OCI (Scrapers) |
+| **Listings** | 579+ active |
+| **Categories** | 30+ specialized |
+| **Standards** | 55+ |
 
 ---
 
----
+## 📈 COMPONENT STATUS
 
-## 📰 BLOG & NEWSROOM STATUS
-
-- ✅ **Blog System COMPLETE** (v2.7.0): `blog_posts` schema, SSG listing and post pages.
-- ✅ **Newsroom COMPLETE**: Press release section implemented at `/press`.
-- ✅ **Content Seeded**: Initial announcements and industry articles populated.
-- ✅ **SEO**: Integrated into sitemap, meta tags active.
-
----
-
-## 🤝 MARKETPLACE PHASE 1 (LEAD CAPTURE)
-
-- ✅ **RFQ System COMPLETE**: `leads_rfq` schema and enhanced `user_profiles` implemented.
-- ✅ **Lead Capture UI**: `ContactLabModal` integrated across 100% of listing pages.
-- ✅ **Automated Notifications**: `/api/leads` integrated with Resend for lab owner notification.
-- ✅ **Verified**: End-to-end lead flow verified (Form submission -> DB Tracking -> Notified Lab flag).
-
----
-
-## 🏗️ NICHE LOCALIZATION & TRUST ARCHITECTURE (IN PROGRESS)
-
-- 📄 **Strategy Document**: `tstr-architecture-plan.md` (located in project root)
-- 🎯 **Status**: ✅ **IMPLEMENTATION COMPLETE** (Merged to main)
-- 🛠️ **Key Components**:
-  - **Dynamic SSR PSEO**: Transition from static routes to dynamic Category/Standard/Region intersections.
-  - **Edge Caching**: Cloudflare `Cache-Control` optimization to protect Supabase.
-  - **3-Tier Trust Funnel**: verified status levels (Aggregated -> Claimed -> TSTR Verified).
-  - **Group Hierarchy**: Parent/Branch database structure and branch aggregation views.
-- 📅 **Planned By**: Gemini CLI (Architecture v3)
-- 🤖 **Assigned Agents**: Gemini (Implementation), Next Agent (Category Page Testing)
-
----
-
-## 📈 CURRENT STATUS DASHBOARD
-
-```text
+```
 ┌─────────────────────────────────────────────┐
 │  COMPONENT STATUS                           │
 ├─────────────────────────────────────────────┤
 │  ✅ Database (Supabase)        OPERATIONAL  │
 │  ✅ URL Validation             LIVE         │
-│  ✅ Click Tracking             DEPLOYED ✨  │
-│  ✅ OCI Scrapers               DEPLOYED     │
-│  ✅ Local Heavy Scrapers       ACTIVE       │
-│  ✅ Frontend (Cloudflare)      LIVE         │
-│  ✅ Analytics (Apollo)         ACTIVE 🎯    │
+│  ✅ Click Tracking             DEPLOYED     │
+│  ✅ OCI Scrapers              DEPLOYED     │
+│  ✅ Local Heavy Scrapers      ACTIVE       │
+│  ✅ Frontend (Cloudflare)     LIVE         │
+│  ✅ Analytics (Apollo)        ACTIVE       │
 └─────────────────────────────────────────────┘
 
-Listings:         239 verified (Calibration & Hydraulic Expansion)
-Data Quality:     95%+ (URL validation active)
-Automation:       100% (cron daily 2 AM GMT)
 Cost/Month:       $0.00 (Oracle Always Free Tier)
-OCI Uptime:       15 days continuous
-Last Scrape:      February 11, 2026 02:31 UTC
+Automation:       100% (cron daily 2 AM GMT)
 ```
 
 ---
 
-## ✅ VERIFICATION REPORT (Phase 1 & 2 Implementation)
+## 🌐 PSEO ARCHITECTURE (PSEO 2.0)
 
-**Verification Date**: 2025-12-22
-**Verification Method**: Automated testing + manual inspection
-**Certainty Level**: 97-98%
+### Routes & Templates
 
-### **Phase 1: Core Listing Management** ✅ VERIFIED
+| Route | Purpose | File |
+|-------|---------|------|
+| `/testing/[industry]/[slug]` | Standard + Industry + Region | `src/pages/testing/[industry]/[slug].astro` |
+| `/[category]/[region]/index` | Category + Region | `src/pages/[category]/[region]/index.astro` |
+| `/[category]/index` | Category Overview | `src/pages/[category]/index.astro` |
+| `/standards/[slug]` | Standard Overview | `src/pages/standards/[slug].astro` |
 
-- **Edit Functionality**: `/account/listing/[id]/edit` - Route exists, loads correctly
-- **API Endpoint**: `/api/listing/update` - Returns proper auth errors (401)
-- **Dashboard Integration**: Edit buttons present in account dashboard HTML
-- **Security**: Owner verification logic implemented in code
-- **Build Status**: Compiles without errors
+### Schema Implementations
 
-### **Phase 2: Advanced Features** ✅ VERIFIED
+- **FAQPage Schema**: Auto-generated from database standard metadata
+- **ItemList Schema**: Dynamic listing arrays for rich results
+- **Organization Schema**: Homepage and category pages
 
-- **Analytics Dashboard**: `/account/analytics.astro` - Loads and has proper structure
-- **Lead Management**: `/account/leads.astro` - Status management UI implemented
-- **Bulk Management**: `/account/bulk.astro` - Selection and action controls present
-- **Lead APIs**: Both create/update endpoints respond appropriately (400/401)
-- **Lead Tracking**: `trackContactAccess` function present in listing page HTML
-- **Database Migration**: `20251222000001_create_leads_management.sql` applied
-- **Navigation**: All new buttons added to account dashboard
+### PSEO Infrastructure
 
-### **Test Results Summary**
+- **IndexNow Integration**: `src/lib/indexnow.ts`
+  - Notifies Bing, Yandex on listing updates
+  - URL matrix generation per listing
+- **Edge Caching**: `Cache-Control: s-maxage=86400, stale-while-revalidate=3600`
 
-| Component      | Status     | Response | Notes                            |
-| -------------- | ---------- | -------- | -------------------------------- |
-| Account Pages  | ✅ Working | 200      | Proper authentication protection |
-| Edit Page      | ✅ Working | 200      | Dynamic routing functional       |
-| Analytics Page | ✅ Working | 200      | Dashboard structure complete     |
-| Leads Page     | ✅ Working | 200      | Management interface ready       |
-| Bulk Page      | ✅ Working | 200      | Selection tools implemented      |
-| APIs           | ✅ Working | 400/401  | Proper validation/auth           |
-| Lead Tracking  | ✅ Working | Present  | JavaScript integrated            |
-| Build Process  | ✅ Working | Success  | No compilation errors            |
+### URL Matrix Pattern
 
-### **Security Verification** ✅ PASSED
+Each listing generates URLs for:
+- `/company/[slug]` - Main profile
+- `/[category]/[region]/[slug]` - Category + Region permutations
+- `/testing/[industry]/[standard]-[region]/[slug]` - PSEO pages
 
-- Authentication protection active on all routes
-- Owner verification implemented in database queries
-- Input validation working on API endpoints
-- RLS policies configured for data security
-- Audit logging implemented for changes
+### Standards with PSEO Pages
+
+Query database to identify active standards with linked listings:
+- Core NDT: iso-17025, asme-section-iii, api-510/570/653
+- Hydrogen: iso-19880-1, iec-62282-3-100
+- Aerospace: mil-std-810h, ams-2644
+- [Full list in database - query needed]
+
+### Known PSEO Issues
+
+1. **Category pages showing empty** - Listings may not be linked to `listing_categories`
+2. **Testing industry pages empty** - Requires `listing_capabilities` + `listing_categories` linkage
+3. **URL slug generation** - Standards need proper slugs (verified for iso-ts-15916-2026)
+
+---
+
+## 💳 PAYMENT SYSTEM
+
+- ✅ **PayPal LIVE** - Professional ($295/mo), Premium ($795/mo)
+- ✅ **Manual Payments** - EFT, Bitcoin
+- ✅ **Webhook Processing** - Production active
+
+---
+
+## 📧 EMAIL SYSTEM
+
+- ✅ **Shared Service**: `src/services/email.ts`
+- ✅ **Subdomains**: Via Cloudflare (e.g., `mg.tstr.directory`)
+- ✅ **Resend Integration**: Claim verification, payment notifications
 
 ---
 
 ## 🛠️ DEPLOYED INFRASTRUCTURE
 
-### **Dashboard Enhancements**
-
-- **Scraper Monitoring**: <https://tstr.directory/admin/dashboard> (Real-time status)
-- **Project Organization**: ✅ CLEAN (Archive cleanup complete)
-
-### **Oracle Cloud Infrastructure (OCI)**
-
-- **Instance**: 84.8.139.90 (Oracle Linux 9, Python 3.9.21)
-- **Status**: ✅ OPERATIONAL (Free Tier)
-- **Scrapers**: `run_scraper.py` (Daily 2 AM GMT)
-- **SSH Access**: ✅ VERIFIED (Key: `/media/al/69AD-FC41/AI_PROJECTS_ARCHIVE/Oracle_Cloud_Machines/avz_Oracle_Linux_9_pvt_ssh-key-2025-10-25.key`)
-- **Last Run**: December 20, 2025 02:29 UTC (106 listings, 66 contacts)
-
-### **Database (Supabase)**
-
-- **URL**: <https://haimjeaetrsaauitrhfy.supabase.co>
-- **Tables**: `listings`, `custom_fields`, `pending_research`, `clicks`
+### Database (Supabase)
+- **URL**: https://haimjeaetrsaauitrhfy.supabase.co
+- **Tables**: `listings`, `listing_categories`, `listing_capabilities`, `standards`, `clicks`, `leads_rfq`
 - **Status**: ✅ OPERATIONAL
 
-### **Frontend (Cloudflare Pages)**
+### Oracle Cloud (OCI)
+- **Instance**: 84.8.139.90 (Oracle Linux 9)
+- **Scrapers**: Daily 2 AM GMT
+- **Status**: ✅ OPERATIONAL (Free Tier)
 
-- **URL**: <https://tstr.directory>
-- **Stack**: Astro 5.16.6 + React 18.3.1 + Tailwind CSS
-- **Features**: Category filters, Click tracking, Admin dashboard, LinkedIn OAuth
-- **Status**: ✅ LIVE (Upgraded to latest secure versions)
-
----
-
-## 📝 PENDING TASKS
-
-### **High Priority**
-
-- [x] **Claim Button Visibility Enhancement**: Make claim buttons visible to all users on unclaimed listings (Lead Magnet Strategy) ✅ COMPLETED
-- [x] **OCI SSH Access Fix**: Located correct SSH key path and verified scraper functionality ✅ COMPLETED
-- [x] **Environmental Testing Expansion**: ✅ COMPLETED - Expanded to 200+ listings across 5 subcategories (Air Quality, Water Quality, Soil Testing, Noise/Vibration, ESG/Sustainability). Subcategory pages live, scraper operational with API key resolved.
-- [x] **PayPal Integration**: ✅ COMPLETED - Full PayPal subscription system implemented with Professional ($295/mo) and Premium ($795/mo) tiers, including database schema, Edge Functions, and frontend integration
-- [x] **Claim Form Email Functionality**: ✅ COMPLETED - Implemented complete Resend email system with draft save and verification emails. Requires user acceptance testing.
-- [x] **Claim Form Email Testing**: Execute comprehensive testing plan in `docs/active/CLAIM_FORM_EMAIL_TESTING_PLAN.md` to verify end-to-end email functionality ✅ COMPLETED
-- [ ] **Oil & Gas Scraper**: Deploy locally (Already local)
-- [x] **Agent File Standardization**: Fixed incorrect paths and removed stale implementation notes from all major agent docs ✅ COMPLETED
-- [x] **System Improvement Advisory**: Analyzed system and created execution plan for bootstrap/DB enhancements ✅ COMPLETED
-
-### **Medium Priority**
-
-- [ ] Add more geographic regions (Asia, Europe, Middle East)
-- [x] Create admin dashboard for monitoring scraper health ✅ ENHANCED
-- [ ] Setup error alerting (email/Slack for scraper failures)
-
-### **Login & Listing Management (Phase 1 & 2 Complete - High Priority)**
-
-- [x] **Phase 1: Core Listing Management** ✅ COMPLETE
-  - [x] Create `/account/listing/[id]/edit` page for owners to update listing details
-  - [x] Build `/api/listing/update` endpoint with owner verification and audit logging
-  - [x] Enhance account dashboard with edit buttons and listing management actions
-- [x] **Phase 2: Advanced Features** ✅ COMPLETE
-  - [x] Implement lead/contact management system for listing inquiries
-  - [x] Add owner analytics dashboard (views, clicks, leads per listing)
-  - [x] Create bulk management tools for multiple listings
-- [ ] **Phase 3: Enterprise Features** (Future)
-  - [ ] Team management for multi-user listing access
-  - [ ] Advanced verification methods and re-verification workflows
-  - [ ] API access for integrations and automation
-- [ ] **Phase 2: Advanced Features**
-  - [ ] Implement lead/contact management system for listing inquiries
-  - [ ] Add owner analytics dashboard (views, clicks, leads per listing)
-  - [ ] Create bulk management tools for multiple listings
-- [ ] **Phase 3: Enterprise Features**
-  - [ ] Add team/role management for multi-user listing access
-  - [ ] Implement advanced verification methods and re-verification workflows
-
-### **Authentication & Rights Management** ✅ COMPLETE
-
-- [x] LinkedIn OAuth UI & Database Schema
-- [x] Domain Verification Logic & Claim API
-- [x] Account Dashboard & Owner Dashboard
-- [x] **Subscription Management**: `/account/subscription` created
-- [x] **Payment Integration**: PayPal subscription system implemented
+### Frontend (Cloudflare Pages)
+- **URL**: https://tstr.directory
+- **Stack**: Astro 5.x + React 18 + Tailwind CSS
+- **Status**: ✅ LIVE
 
 ---
 
 ## 🚨 KNOWN ISSUES
 
-### **Current**
+1. **Category pages showing empty** - Investigate `listing_categories` linkage
+2. **Apollo Tracking** - Not verified working (needs test)
+3. **PSEO pages empty** - May need `listing_capabilities` data
 
-1. **Biotech & Oil/Gas Categories**: Not yet deployed (0 listings). Plan: Deploy scrapers.
-2. **Invalid URLs**: 17 URLs failed validation. Action: Manual research.
-3. **Custom Fields**: Missing specialized data. Fix: Enhance extraction logic.
-4. **Submit Page**: ✅ FIXED - Replaced Footer component import with inline HTML. Prerenders successfully now.
-5. **Claim Form Email Functionality**: ✅ FIXED - Implemented complete Resend email system with draft save and verification emails. See v2.4.7 release notes.
-6. **PayPal Subscription Flow Issue**: ✅ FIXED - Implemented server-side subscription state management to resolve Chrome bounce tracking and OAuth redirect issues. Users now reliably return to pricing page and auto-trigger PayPal payments.
+### Fixed Issues
 
-### **Security & Database Fixes** ✅ COMPLETE
-
-1. **RLS Policy Fixes**: ✅ Successfully corrected column name issues in Row Level Security policies
-2. **Migration Applied**: `20251203000001_fix_rls_policies_column_names.sql` deployed and version-controlled
-3. **Hybrid Fix Approach**: ✅ Supabase agent applied immediate fixes + version-controlled migrations completed
-
-### **Account Dashboard UI Fix** ✅ COMPLETE
-
-1. **Issue**: Astro's scoped CSS wasn't applying to runtime-injected HTML content via `innerHTML`
-2. **Solution**: Updated all CSS selectors in `account.astro` to include `:global()` counterparts
-3. **Result**: All layout elements (grid, cards, info rows, buttons, listings) now properly styled
-4. **Documentation**: See `HANDOFF_ACCOUNT_DASHBOARD_UI_FIX_COMPLETE.md` for complete implementation details
-
-### **PayPal Subscription Flow & Cancellation** ✅ FIXED (2026-01-16)
-
-1. **Status**: PRODUCTION READY.
-2. **Resolution**:
-   - **Subscription Creation**: Uses `userId` in body + Anon Key + Service Role validation.
-   - **Cancellation**: Fully robust. Handles 204, 404, and 422 as effective cancellations to ensure Tier reset and clear ID.
-   - **Frontend**: Verified UI auto-updates on reload.
-3. **Next Steps**: Live user testing. Verify Webhook processing (already deployed).
-
-### **PayPal Implementation Learnings**
-
-1. **Auth Pattern**: Standard Supabase `getUser()` fails with 3rd-party auth or certain Gateway configs. Reliable pattern is: Frontend sends `userId` + Anon Key -> Edge Function uses `SERVICE_ROLE_KEY` to look up user in DB. DO NOT rely on `Authorization` header validation in Edge Function for this stack.
-2. **Astro Imports**: Variables imported in Frontmatter are NOT available in `<script>` tags. Must be re-imported.
-3. **API-Created Plans**: Successfully created PayPal subscription plans programmatically via REST API instead of dashboard
-4. **Webhook Setup**: Created webhooks via API with proper event subscriptions (BILLING.SUBSCRIPTION._, PAYMENT.SALE._)
-5. **Authentication Flow**: Supabase auth integration works, but OAuth redirect handling needs refinement
-6. **Environment Management**: Secrets properly configured across local, Supabase, and Bruno environments
-7. **Cancellation Error Handling**: Treatment of 404 (Not Found) and 422 (Unprocessable) as success paths is CRITICAL for payment providers with multiple environments. It ensures local DB state remains consistent with the user's intent even if the provider's API returns "missing" or "duplicate" errors.
+- ✅ Search API Location Filter (2026-04-15)
+- ✅ PayPal Subscription Flow (2026-01-16)
+- ✅ Account Dashboard UI (2026-01-02)
+- ✅ JSON-LD Parsing Error (2026-01-01)
 
 ---
 
-## 🌐 DOMAIN MIGRATION STATUS ✅ COMPLETE
-
-- ✅ **Main Domain**: <https://tstr.directory>
-- ⚠️ **Old Domain**: `tstr.site` (No longer owned/active)
-- ✅ **Code Migration**: All 50+ instances of `tstr.site` in functional code, automation scripts, and active docs have been updated to `tstr.directory`.
-- ✅ **Verification**: Global audit confirms no functional code paths reference the old domain.
-
----
-
-## 🐛 ACTIVE BUGS
-
-### ✅ FIXED: Search API Location Filter Robustness (2026-04-15)
-
-**Severity**: High - Required for stable standard-based search.
-
-**Resolution**: Fully transitioned the `/api/search/by-standard` endpoint to a two-phase retrieval pattern. 
-1. **Identification**: Fetch listing IDs from `listing_capabilities` based on standard and specifications. 
-2. **Hydration**: Fetch full business and location details for identified IDs. 
-3. **Location Processing**: JS-side filtering for location hierarchy ensures flexibility and avoids PostgREST recursion errors.
-
-**Status**: ✅ VERIFIED (v2.9.16) - Passes all Playwright tests.
-
----
-
-## 📊 VERSION HISTORY (LATEST)
-
-### **v2.9.16** - 2026-04-15 - **Search API Two-Phase Shift & Repo Cleanup** (antigravity)
-
-- **Search API**: Fully transitioned `by-standard.ts` to a two-phase retrieval pattern (Identification -> Hydration). This eliminates complex nested join conflicts and ensures robustness for standard-based searches.
-- **Cleanup**: Resolved repository "detachment" by pruning redundant `opencode/jolly-river` worktrees and deleting already-merged branches.
-- **Verification**: Verified zero regressions in Search API behavior via Playwright.
-
-### **v2.9.15** - 2026-04-15 - **Search API Location Filter Verification** (antigravity)
-- **Verification**: Executed Playwright tests to confirm the JS-side filtering fix for the Search API.
-- **Status**: Update status to "Verified".
-
-### **v2.9.14** - 2026-04-15 - **Search API Bug Fix** (antigravity)
-
-- **Bug Fix**: Resolved critical Search API location filter `.or()` clause conflict in `by-standard.ts`.
-- **Implementation**: Bypassed PostgREST error by rewriting query to use two-phase fetch (fetching data, filtering nested objects via local Javascript). Search locally on location hierarchy and address.
-
-### **v2.9.13** - 2026-04-09 - **Niche Specialization: Calibration & Hydraulic Testing** (gemini-2.5-pro)
-
-- **Database**: Created specialized categories `Calibration & Metrology Services` and `Hydraulic & Pneumatic Testing`.
-- **Standards**: Added 5 specialized standards (**ISO 9001**, **ANSI/ASHRAE 199**, **ISO 15001**, **NIST Traceable**, etc.).
-- **Listings**: Added **Trescal**, **Transcat**, **Parker Hannifin**, and **Swagelok** with detailed high-fidelity profiles.
-- **Taxonomy**: Mapped listings to specialized tags for Dimensional Metrology, Hydrostatic Testing, and Cleanroom Assembly.
-
-### **v2.9.12** - 2026-04-09 - **Niche Specialization: Battery Fire Safety & EMC/Wireless** (gemini-2.5-pro)
-
-- **Database**: Created specialized categories `Battery Fire & Thermal Abuse Testing` and `Product Safety, EMC & Wireless`.
-- **Standards**: Added 6 core standards (**UL 1973**, **IEEE 1547**, **FCC Part 15**, **CISPR 32**, etc.).
-- **Listings**: Added **DNV BEST Test Center**, **CSA Group**, **Eurofins MET Labs**, and **TÜV SÜD America**; expanded **UL Solutions** and **SGS** with specialized safety/EMC context.
-- **Taxonomy**: Mapped listings to specialized tags for Thermal Runaway, Anechoic Chambers, and NRTL Safety Listings.
-
-### **v2.9.11** - 2026-04-09 - **Niche Specialization: Subsea Integrity & Acoustics** (gemini-2.5-pro)
-
-- **Database**: Created specialized categories `Subsea Pipeline & Asset Integrity` and `Acoustics, Vibration & Seismic Testing`.
-- **Standards**: Added 5 core standards (**ISO 3744**, **IEC 60980**, **DNV-RP-F116**, **IMCA D 006**, etc.).
-- **Listings**: Added **DeepOcean**, **i-Tech 7**, **HBK**, and **Sopemea**; expanded **Oceaneering** and **Element** with specialized subsea/acoustic context.
-- **Taxonomy**: Mapped listings to specialized tags for Through-Coating Inspection (ART), Seismic Qualification, and NVH Analysis.
-
-### **v2.9.10** - 2026-04-09 - **Sector Specialization: Defense & Ballistics Testing** (gemini-2.5-pro)
-
-- **Database**: Created specialized category `Defense & Ballistics Testing`.
-- **Standards**: Added 6 core defense standards (**MIL-STD-810H**, **MIL-DTL-901E**, **NIJ 0101.06**, **STANAG 4569**, etc.).
-- **Listings**: Added **Element U.S. Space & Defense**, **QinetiQ**, **Dayton T. Brown**, and **Oregon Ballistic Laboratories**.
-- **Taxonomy**: Mapped listings to specialized tags for Ballistics & Ordnance, Heavyweight Shock, and Armor Validation.
-
-### **v2.9.9** - 2026-04-09 - **Sector Specialization: Forensics & Semiconductors** (gemini-2.5-pro)
-
-- **Database**: Created specialized categories `Forensic Engineering & Failure Analysis` and `Advanced Semiconductor & Materials Characterization`.
-- **Standards**: Added 5 specialized standards (**ASTM E2332**, **NFPA 921**, **SEMI E54**, **ISO 18115**, **JEDEC JESD22**).
-- **Listings**: Added **Exponent** and **Jensen Hughes**; expanded **EAG Laboratories** with semiconductor/materials characterization context.
-- **Taxonomy**: Mapped listings to specialized tags for Failure Analysis, Fire Investigation, Surface Analysis, and FIB-SEM.
-
-### **v2.9.8** - 2026-04-08 - **Sector Specialization: Building Science & Mining** (gemini-2.5-pro)
-
-- **Database**: Created specialized categories `Building & Construction Testing` and `Mining & Geochemistry Testing`.
-- **Standards**: Added 7 core standards (**NFPA 285**, **ASTM E331/E1105**, **NI 43-101**, **JORC Code**, etc.).
-- **Listings**: Added **ALS Minerals** and **Element Building Science**; expanded **UL**, **SGS**, **BV**, and **Intertek** with building envelope and geochemical context.
-- **Taxonomy**: Mapped listings to specialized tags for Fire Safety, Facade Testing, and Geochemical Assaying.
-
-### **v2.9.7** - 2026-04-08 - **Sector Specialization: Nuclear & Consumer Goods Testing** (gemini-2.5-pro)
-
-- **Database**: Created specialized categories `Nuclear Energy Testing & Inspection` and `Consumer Goods & Textile Testing`.
-- **Standards**: Added 8 core standards (**ASME Section III**, **RSE-M**, **AATCC TM61**, **ASTM F963**, etc.).
-- **Listings**: Added **Westinghouse**, **Framatome**, **Orano**, and **QIMA**; expanded **Bureau Veritas** and **Intertek** with specialized consumer lab context.
-- **Taxonomy**: Mapped listings to specialized tags for Fuel Validation, In-Service Inspection (ISI), and Ethical Audits.
-
-### **v2.9.6** - 2026-04-08 - **Niche Specialization: Carbon MRV & 5G Validation** (gemini-2.5-pro)
-
-- **Database**: Created specialized categories `Carbon Sequestration & MRV` and `Telecommunications & 5G Testing`.
-- **Standards**: Added 6 core standards (**ISO 14064-1**, **Verra VM0042**, **DNV-RP-A203**, **3GPP Rel-17**, etc.).
-- **Listings**: Added **Yard Stick PBC**, **Aker Carbon Capture**, **Keysight**, **Rohde & Schwarz**, and **Spirent**; expanded **DNV** and **SGS** with CCUS validation context.
-- **Taxonomy**: Mapped listings to specialized tags for Soil Carbon Mapping, O-RAN Interop, and 6G Research.
-
-### **v2.9.5** - 2026-04-08 - **Sector Specialization: Cybersecurity & Food Safety** (gemini-2.5-pro)
-
-- **Database**: Created specialized categories `Cybersecurity & Software Testing` and `Food Safety & Agricultural Testing`.
-- **Standards**: Added 8 core standards (**ISO 27001**, **SOC 2**, **FSSC 22000**, **HACCP**, etc.).
-- **Listings**: Added **NCC Group**, **Mérieux NutriSciences**, and **ALS Global**; expanded 6 global heavyweights (**UL**, **SGS**, **Eurofins**, etc.) with Cyber/Food capabilities.
-- **Taxonomy**: Mapped listings to specialized tags for Red Teaming, Pentesting, Food Fraud, and Microbiology.
-
-### **v2.9.4** - 2026-04-08 - **Sector Specialization: Railway & Medical Device Testing** (gemini-2.5-pro)
-
-- **Database**: Created specialized categories `Railway & Rolling Stock Testing` and `Medical Device & Healthcare Testing`.
-- **Standards**: Added 6 core standards (**EN 50126/45545**, **ISO 22163**, **IEC 60601**, **ISO 11135/11137**).
-- **Listings**: Added **TÜV SÜD Rail**, **Ricardo Rail**, **Nelson Labs**, **Charles River**, and **NAMSA**; batch-updated **52 Eurofins** locations with medical device capabilities.
-- **Taxonomy**: Mapped listings to specialized service tags for signaling, biocompatibility, and sterilization validation.
-
-### **v2.9.3** - 2026-04-08 - **Niche Specialization: Subsea & EV Battery Safety** (gemini-2.5-pro)
-
-- **Database**: Created specialized categories `Subsea & Offshore Testing` and `EV & Battery Safety Testing`.
-- **Standards**: Added 5 core niche standards (**DNV-ST-F101**, **API 17D**, **UN 38.3**, **ECE R100**, **SAE J2464**).
-- **Listings**: Added **Oceaneering**, **FEV**, **UTAC Millbrook**, and **Ricardo**; updated **AVL** and **HORIBA** with specialized propulsion and abuse tags.
-- **Taxonomy**: Implemented cross-category linkage for maritime and automotive electrification.
-
-### **v2.9.2** - 2026-04-08 - **Renewable Energy Expansion: Wind, Solar & BESS** (gemini-2.5-pro)
-
-- **Database**: Created new category `Renewable Energy Testing & Certification` (Slug: `renewable-energy-testing`).
-- **Standards**: Added 5 core renewable standards (**IEC 61400 series**, **IEC 61215**, **UL 9540A**, **VDE-AR-N 4105**).
-- **Listings**: Added **TÜV Rheinland**, **Fraunhofer ISE**, **Fraunhofer IWES**, and **VDE Renewables**; expanded **UL Solutions** with high-fidelity profiles.
-- **Taxonomy**: Mapped listings to specialized service tags for Wind, Solar, and Battery Storage safety.
-
-### **v2.9.1** - 2026-04-08 - **Heading Refinement & Aerospace Integration** (gemini-2.5-pro)
-
-- **UI/UX**: Refined business headings by separating service descriptors into "Service Tags" (badges).
-- **Architecture**: Repurposed `listing_capabilities` to act as high-visibility tags (AIM, H2-SAFETY, etc.).
-- **Aerospace**: Added specialized NDT listings for **Magnaflux**, **Waygate Technologies**, and **Eddyfi Technologies**.
-- **Standards**: Integrated aerospace codes (**AMS 2644**, **AMS 3041**, **ASTM E3022**).
-
-### **v2.9.0** - 2026-04-08 - **Asset Integrity Expansion: DNV, DEKRA & LRQA** (gemini-2.5-pro)
-
-- **Listings**: Expanded **DNV** and **DEKRA**, and added **LRQA** with high-fidelity profiles. Highlights include DNV's **Synergi/Veracity** ecosystem, DEKRA's industrial safety diagnostics, and LRQA's specialized **MAUT** and maritime integrity services.
-- **Standards**: Added pipeline and maritime standards (**API RP 1173**, **ISO 10426**).
-- **Taxonomy**: Synchronized listings across NDT, Materials, Oil & Gas, Engineering, and Hydrogen categories.
-
-### **v2.8.9** - 2026-04-08 - **Asset Integrity Expansion: Intertek, BV & TÜV SÜD** (gemini-2.5-pro)
-
-- **Listings**: Expanded **Intertek**, **Bureau Veritas**, and **TÜV SÜD** with high-fidelity profiles highlighting proprietary software (**Aware™ suite**, **Veristar AIM 3D**, **T-REMS**) and advanced NDT/FFS services.
-- **Standards**: Added core compliance and safety standards (**API 579**, **ASME Section XI**, **ISO 45001**).
-- **Taxonomy**: Synchronized listings across NDT, Materials, Oil & Gas, Engineering, and Hydrogen categories.
-
-### **v2.8.8** - 2026-04-08 - **Asset Integrity Expansion: Applus+ & SGS** (gemini-2.5-pro)
-
-- **Listings**: Expanded **Applus+** and **SGS** with high-fidelity profiles highlighting proprietary software (**IDMS**, **Traza+**, **SGS MIMS**, **IMS Suite**) and advanced NDT tech (**IWEX**, **UT FAST**).
-- **Standards**: Added 4 new Asset Management and RBI standards (**API 580/581**, **ISO 19011**, **ISO 55001**).
-- **Capabilities**: Linked both companies to core NDT and compliance standards with technical specs.
-- **Taxonomy**: Synchronized both listings across NDT, Materials, Oil & Gas, Engineering, and Hydrogen categories.
-
-### **v2.8.7** - 2026-04-08 - **NDT Context & Mistras Group Integration** (gemini-2.5-pro)
-
-- **Database**: Created new category `Non-Destructive Testing (NDT) & Asset Integrity` (Slug: `ndt-testing-inspection`).
-- **Standards**: Added 10 core NDT and API standards (ASNT SNT-TC-1A, NAS 410, ASTM E1417/E1444/E1742/E569, API 510/570/653, ISO 9712).
-- **Listing**: Added **MISTRAS Group, Inc.** (NYSE: MG) as a Gold Standard listing with detailed profile and capabilities.
-- **Taxonomy**: Associated Mistras Group with 5 categories (NDT, Materials, Oil & Gas, Engineering, Hydrogen).
-- **Template**: Established NDT/Asset Integrity profile template for future industry peers (Applus, SGS, etc.).
-
-### **v2.8.6** - 2026-03-27 - **Mass RLS Policy Hardening** (claude-sonnet-thinking)
-
-- **Security**: Fixed 9x "RLS Policy Always True" warnings across 7 tables.
-- `claims` INSERT: enforces `provider_name`, `contact_name`, `business_email` NOT NULL + `status = 'pending'`.
-- `clicks` INSERT: enforces `url IS NOT NULL`; SELECT restricted to `service_role` only.
-- `newsletter_subscribers` INSERT: enforces `email IS NOT NULL AND length(trim(email)) > 3`.
-- `leads_rfq` INSERT: enforces `buyer_name`, `buyer_email`, `message` NOT NULL.
-- `rfq_leads` INSERT: consolidated 2 duplicate policies into 1; enforces `buyer_email IS NOT NULL`.
-- `waitlist` INSERT: enforces `email IS NOT NULL AND length(trim(email)) > 3`; SELECT restricted to `service_role` only.
-- `payment_history` INSERT: **CRITICAL FIX** — restricted from `public` role to `service_role` only (prevented public fake payment injection).
-- `pending_research` ALL: restricted from `authenticated` (all) to `service_role` only.
-- **⚠️ Manual Action Required**: Leaked Password Protection (#10) requires Pro plan. Check Supabase Dashboard → Authentication → Security.
-
-### **v2.8.5** - 2026-03-27 - **Search Path Security Hardening** (gemini-3-flash)
-
-- **Security**: Hardened `public.calculate_trust_score` function by pinning `search_path=''` and schema-qualifying all references to prevent search path manipulation attacks (Supabase lint 0011).
-
-### **v2.8.4** - 2026-03-27 - **RLS Security Hardening** (gemini-3-flash)
-
-- **Security**: Enabled Row Level Security on `public.schema_migrations` to prevent internet exposure via PostgREST API (Default Deny posture).
-- **Compliance**: Addressed Supabase advisor lint `0013_rls_disabled_in_public`.
-
-### **v2.8.3** - 2026-03-19 - **Hydrogen Standards Expansion** (opencode)
-
-- **Added**: 15 new hydrogen testing standards from Google Sheets analysis
-- **Key Additions**: ASTM G142, ASTM F1459-06, ASME B31.12, IEC 62282-3-100, ISO 22734, ISO 16110-1, ISO 16111, ISO 17268, ISO/TS 19870:2023, CSA CHMC 1/2, CSA HPIT 1, NFPA 2, ISO 19880-1
-- **Source**: Curated top 20% from 60+ standards using Pareto principle
-- **Migration**: Created `20260319000001_add_hydrogen_standards.sql`
-- **Database**: Standards expanded from 40 to 55
-- **⚠️ KNOWN ISSUE**: Search API location filter broken - see BUGS section
-
-### **v2.8.0** - 2026-03-08 - **Hydrogen Taxonomy & Certification Filters** (antigravity)
-
-- **Database**: Implemented "Amazon-style" browse nodes for Hydrogen category. Added 5 sub-categories (Valve/Fitting, Hose/Seal, etc.).
-- **Standards**: Corrected linkage for 9+ H2 standards and added 5 new certifications (ISO/TS 15916:2026, TÜV H2-Ready, etc.).
-- **UX**: Implemented dynamic browse node cards and a premium certification filter panel in `[category]/index.astro`.
-- **SEO**: Transitioned certification filters to use SEO-friendly slugs/codes in the URL (e.g., `?standard=ISO+19880-3`).
-- **Privacy**: Restricted certification filter visibility strictly to the Hydrogen category as per niche requirements.
-
-### **v2.6.2** - 2026-02-23 - **PayPal Live Mode Confirmed & Docs Fixed** (antigravity)
-
-- **Status Fix**: Corrected stale `[ ]` TODO for PayPal live switch — user confirmed live mode is ACTIVE.
-- **Docs**: Updated Payment System section to reflect `PAYPAL_MODE=live` and production Plan IDs.
-- **Next**: Live payment flow browser test to verify end-to-end. See task next steps.
-
-### **v2.6.1** - 2026-02-22 - **Alternate Gemini API Key Integration** (antigravity)
-
-- **AI Integration**: Added a second Gemini API key (`GEMINI_API_KEY_ALT`) as a failover for rate limits.
-- **Credentials**: Updated `docs/credentials/TSTR_CREDENTIALS_MASTER.md` as the single source of truth.
-- **Environment**: Configured `web/tstr-frontend/.env` and `web/tstr-automation/.env`.
-- **API Testing**: Integrated the new key into Bruno environment files (`production.bru`, `local.bru`).
-
-### **v2.6.0** - 2026-02-12 - **Security Redaction & Repository Cleanup** (antigravity)
-
-- **Security**: Redacted exposed `sb_secret_*` and `sbp_*` Service Role and Management API keys across `CLAUDE.md`, `OPENCODE.md`, `AGENTS.md`, and automation scripts.
-- **Organization**: Moved ~60 historical docs and handoff files to `_ARCHIVE/` to reduce agent context noise.
-- **Git Compliance**: Removed a 120MB backup ZIP that was blocking GitHub pushes (>100MB limit).
-- **Maintenance**: Consolidated identical agent start scripts into symbolic links to `start-agent.sh`.
-- **Infrastructure**: Updated global agent paths to reflect `/media/al/AI_DATA/AI_PROJECTS_SPACE/` partition.
-
-### **v2.5.5** - 2026-01-28 - **Apollo Tracking Site-Wide** (antigravity)
-
-- **Feature**: Implemented Apollo.io visitor tracking site-wide.
-- **Implementation**: Automated injection into 40+ Astro pages with custom `<head>` sections.
-- **Verification**: Verified script presence in built HTML output (minified).
-- **Optimization**: Used async/defer for zero performance impact.
-- This is not working, we need to test it. How do we do that?
-
-### **v2.5.4** - 2026-01-28 - **Domain Reference Migration** (antigravity)
-
-- **Cleanup**: Updated all references of `tstr.site` to `tstr.directory` across automation scripts, Bruno tests, and active documentation.
-- **Verification**: Verified zero remaining functional references via global grep.
-- **Continuity**: Recorded domain migration learning in project database.
-
-### **v2.5.3** - 2026-01-22 - **Infrastructure & Contact Fix Finalization** (gemini)
-
-- **Infrastructure**: User added subdomains for email sending at Cloudflare.
-- **Bug Fix**: Finalized contact API fix ensuring robust JSON responses and shared service usage.
-- **Handoff**: Prepared documentation for next agent.
-
-### **v2.5.2** - 2026-01-16 - **Manual Payment Flows & Debugging** (gemini)
-
-- **Feature**: Implemented Bank Transfer (EFT) and Bitcoin manual payment flows.
-- **UI**: Added instructions modals and QR codes for offline payments.
-- **Backend**: Added API endpoints and email templates for payment instructions via Resend.
-- **Bug Fix**: Resolved `CONTACTS is not defined` ReferenceError in pricing script by hardcoding sales email for reliability.
-- **Bug Fix**: Restored `createEFTPaymentEmail` function in email library after accidental deletion.
-- **Bug Fix**: Corrected EFT flow to target the proper `/api/subscription/eft` endpoint.
-
-### **v2.5.1** - 2026-01-16 - **Robust Subscription Cancellation Fix** (gemini)
-
-- **Bug Fix**: Resolved issue where subscription tier failed to reset to 'free' after cancellation.
-- **Robustness**: Updated Edge Function to treat PayPal 404/422 errors as soft successes, ensuring database sync.
-- **Verification**: Confirmed with user that UI now updates correctly and plan reverts to Free.
-
-### **v2.5.0** - 2026-01-15 - **PayPal Integration Live Readiness** (opencode)
-
-- **Deployment**: Finalized PayPal production configuration.
-- **UI**: Added "Cancel Subscription" logic and confirmed Sandbox stability.
-- **UI Consistency**: Updated subscription page to match account page design patterns
-- **Header Enhancement**: Added TSTR logo and consistent breadcrumb navigation
-- **Button Improvements**: Applied gradient backgrounds, hover effects, and icon additions to all buttons
-- **Section Headers**: Replaced emoji icons with gradient accent bars for professional appearance
-- **Visual Polish**: Enhanced spacing, shadows, and transitions throughout the page
-- **Responsive Design**: Maintained mobile compatibility with improved touch targets
-- **Build Verification**: Confirmed successful compilation and deployment
-
-### **v2.4.26** - 2026-01-13 - **Server-Side Subscription State Management**: Chrome Bounce Tracking Fix (opencode)
-
-- **Root Cause**: Chrome bounce tracking deletes client-side state during OAuth redirects
-- **Solution**: Implemented server-side storage for pending subscriptions with secure token system
-- **Database Changes**: Added pending_subscription_data, pending_subscription_token, pending_subscription_expires_at columns
-- **API Endpoints**: Created save/resume/clear endpoints for pending subscription management
-- **Edge Function**: Updated paypal-create-subscription to handle pending tokens
-- **Frontend**: Modified pricing/account pages to use server-side state instead of sessionStorage
-- **Security**: Token-based access with 30-minute expiration and automatic cleanup
-- **Result**: Subscription flow now survives OAuth interruptions and bounce tracking
-
-### **v2.4.25** - 2026-01-11 - **PayPal Integration Success**: Final Auth & Schema Fixes (gemini)
-
-- **JWT Resolution**: Identified and fixed Gateway rejection by switching from public Publishable Key to valid Anon JWT via Supabase CLI.
-- **Schema Alignment**: Resolved `column user_profiles.email does not exist` by mapping to correct `billing_email` column in Edge Function.
-- **Resilient Logic**: Changed database lookup to `.maybeSingle()` to handle first-time subscribers without crashing the function.
-- **Sandbox Verified**: Confirmed redirect to PayPal Sandbox works with "Pay with Card" and Guest Checkout flows.
-
-### **v2.4.24** - 2026-01-11 - **PayPal Fixes**: Resolved "Invalid JWT" (Init) and added Redirect Safety Net (gemini)
-
-- **Jwt Fix**: Updated `pricing.astro` to use Supabase Anon Key for Edge Function calls.
-  - **Why**: Bypasses Supabase Gateway's strict JWT validation (which was failing with "Invalid JWT") while preserving signature verification.
-  - **Security**: Edge Function internally validates users via `userId` lookup using Service Role key.
-- **Safety Net**: Added logic to `account.astro` to auto-redirect users back to `/pricing` if they land on dashboard with a pending subscription.
-  - **Fixes**: The OAuth flow interruption where users got stuck on the account page.
-
-### **v2.4.23** - 2026-01-09 - **PayPal JWT Validation Fix**: Add token expiry checks and auto-refresh (opencode)
-
-- **Root Cause**: Supabase Edge Functions require valid, non-expired JWT tokens at infrastructure level
-- **Solution**: Validate token expiry and auto-refresh sessions before Edge Function calls
-- **Security**: Ensures only authenticated users with valid sessions can access Edge Functions
-- **Error Prevention**: Clear error messages for expired sessions with automatic refresh
-- **Root Cause**: Users exist in auth.users but not user_profiles table
-- **Solution**: Edge Function now auto-creates user_profiles when missing
-- **Security**: Validates user exists in auth before creating profile
-- **Fallback**: Comprehensive error handling for all user validation scenarios
-- **Root Cause**: Syntax errors in pricing.astro (duplicate variables, malformed try-catch, duplicate error handling)
-- **Resolution**: Cleaned up JavaScript code, build now passes successfully
-- **Impact**: GitHub workflows will now deploy successfully with PayPal JWT bypass fixes
-- Added detailed request/response logging in both frontend and Edge Function
-- Removed JWT entirely, using anon key for Edge Function authentication
-- Version tracking implemented to verify code deployment
-- Testing Supabase Edge Function authentication requirements
-- **Root Cause**: supabase.functions.invoke() automatically injects JWT in Authorization header, causing validation conflicts despite Edge Function changes
-- **Solution**: Use direct fetch() with explicit Authorization header control to bypass automatic JWT injection
-- **Security**: Maintained by validating userId via database lookup in Edge Function
-- **Debugging**: Added comprehensive logging to track request/response flow and version verification
-- Removed JWT validation from Edge Function entirely
-- Frontend now passes authenticated userId directly to Edge Function
-- Edge Function validates user via database lookup using service role key
-- Maintains security while avoiding Supabase JWT validation complexities
-
-### **v2.4.17** - 2026-01-09 - **PayPal JWT Fix**: Corrected Supabase client configuration and session validation (opencode)
-
-- Fixed Edge Function to use proper Supabase client with Authorization header
-- Added comprehensive JWT debugging with expiration, claims, and timing info
-- Enhanced frontend session validation before Edge Function calls
-- Separated auth client from database operations client for security
-
-### **v2.4.16** - 2026-01-09 - **PayPal JWT Debugging**: Implemented direct JWT validation and enhanced session handling (opencode)
-
-- Added direct Supabase Auth API calls for JWT validation in Edge Function
-- Enhanced frontend session debugging before PayPal calls
-- Improved error messages with detailed JWT and session information
-- Multiple retry attempts for session establishment after OAuth redirect
-
-### **v2.4.15** - 2026-01-09 - **Payment Methods Expansion**: Added EFT and Bitcoin payment options, enhanced PayPal debugging (opencode)
-
-- Added bank transfer (EFT) and Bitcoin cryptocurrency payment options for Professional and Premium tiers
-- Enhanced PayPal Edge Function with detailed authentication and Plan ID debugging
-- Updated pricing page UI to support multiple payment methods per tier
-- Improved error handling and user feedback for subscription flows
-- Updated FAQ section to reflect new payment method availability
-
-### **v2.4.14** - 2026-01-09 - **Brand Colors Update**: Changed gradient from royal blue/green to navy blue/lime green across entire site (opencode)
-
-- Updated all gradient backgrounds from #2563EB (royal blue) to #000080 (navy blue)
-- Updated all gradient backgrounds from #059669 (green) to #32CD32 (lime green)
-- Applied consistently across homepage, templates, buttons, blocks, headers, footers, and all pages
-- Maintained visual hierarchy and accessibility while refreshing brand appearance
-
-### **v2.4.13** - 2026-01-09 - **SEO Enhancement**: Added comprehensive sitemap page and footer link (opencode)
-
-- Created `/sitemap` page with organized sections for all main pages, categories, standards, and account features
-- Added sitemap link to footer navigation among other links
-- Enhanced site navigation and SEO with user-friendly sitemap structure
-- XML sitemap already existed at `/sitemap.xml` for search engines
-
-### **v2.4.12** - 2026-01-07 - **Infrastructure**: System-wide bootstrap refactor & tool access fixes (Gemini Pro)
-
-### **v2.4.11** - 2026-01-07 - **Cleanup**: Standardized agent files, enforced status protocol (Gemini Pro)
-
-- 🛠️ **Agent File Standardization**:
-  - Fixed incorrect `/home/al/AI_PROJECTS_SPACE` paths to `/media/al/AI_DATA/AI_PROJECTS_SPACE` in all agent docs.
-  - Removed stale "Recent Implementation Notes" from 5 agent files to enforce `PROJECT_STATUS.md` as single source of truth.
-  - Standardized bootstrap protocol requirements.
-- 💡 **System Advisory**: Created `HANDOFF_TO_GEMINI_3_FLASH.md` with a plan for bootstrap centralization and `db_utils.py` enhancements.
-
-### **v2.4.10** - January 6, 2026
-
-- 🎨 **Favicon Updated**: Created favicon from site logo (TSTR-Logo-60px.png) for consistent branding
-  - Generated favicon.ico with 16x16 and 32x32 sizes using ImageMagick
-  - Created favicon-32x32.png from logo
-  - Updated favicon.svg to match logo
-  - Added missing favicon links to admin pages (claims, dashboard, failed-urls) for site-wide consistency
-
-### **v2.4.9** - January 6, 2026
-
-- 🔧 **PayPal Subscription Flow Fixed**: Resolved OAuth redirect losing tier parameter
-  - Fixed query param name mismatch (`redirect` → `redirect_to`)
-  - Added URL-encoding for nested query params in redirect URL
-  - Added `DOMContentLoaded` auto-trigger logic on pricing page
-- 🔐 **Supabase Auth Stabilization**:
-  - Updated hardcoded Supabase Anon Key from outdated JWT format to new `sb_publishable_` format in `supabase-browser.ts`
-  - This likely addresses potential 401 Unauthorized issues during edge function invocation
-
-### **v2.4.8** - January 5, 2026 (CURRENT)
-
-- ✅ **Claim Form Email Testing Complete**: Executed comprehensive testing plan for email functionality
-  - **Template Tests**: Verified email template generation and formatting ✅ PASSED
-  - **API Integration Tests**: Confirmed Resend API integration and email sending ✅ PASSED
-  - **End-to-End Testing**: Validated draft save and verification email workflows ✅ PASSED
-  - **Error Handling**: Tested graceful degradation when email service fails ✅ PASSED
-  - **User Acceptance**: Email system ready for production use with monitoring
-
-### **v2.4.7** - January 3, 2026
-
-- 📧 **Claim Form Email Functionality Complete**: Implemented complete Resend email system for claim forms
-  - **Resend Integration**: Added Resend email service with API key configuration
-  - **Draft Save Emails**: Users now receive resume links with 30-day expiration for saved claim drafts
-  - **Verification Emails**: Secure 6-character verification codes sent for claim approvals
-  - **Professional Templates**: Branded HTML email templates with clear instructions and expiration notices
-  - **Error Handling**: Graceful degradation - claims succeed even if emails fail
-  - **Security**: Server-side API key protection, no client-side exposure
-  - **Testing**: End-to-end email functionality verified with successful test sends
-
-### **v2.4.6** - January 2, 2026
-
-- 🎨 **UX Phase 2 Complete**: Implemented advanced responsive design and refined brand identity
-  - **Royal Blue Gradient**: Updated brand gradient from soft blue (#667eea) to royal blue (#2563EB) for stronger visual impact
-  - **Responsive Header**: Implemented mobile-first navigation with hamburger menu for screens <768px
-  - **Universal Auth Access**: Account/Login button now accessible on all screen sizes through responsive navigation
-  - **Professional Layout**: Header now uses flexbox layout preventing mobile overlap issues
-- ✅ **CI Pipeline Fixed**: Resolved persistent red cross issue by replacing complex Playwright tests with reliable build check
-  - **Green Checkmark**: Workflow now passes consistently with simple build validation
-  - **Fast Execution**: 2-3 minute runtime vs previous 10+ minute failures
-  - **Reliable Deployment**: Ensures code builds successfully before Cloudflare deployment
-
-### **v2.4.4** - January 2, 2026
-
-- 🛠️ **Account Dashboard UI Fix**: Resolved broken layout caused by Astro's scoped CSS not applying to runtime-injected HTML
-  - Updated all CSS selectors in account.astro to include :global() counterparts
-  - Fixed grid, card, info row, button, and listing layouts that were broken
-  - All dashboard elements now properly styled for both static and dynamic content
-
-### **v2.4.3** - January 1, 2026
-
-- 🛠️ **Domain References Fixed**: Updated OAuth and API test scripts to use correct tstr.directory domain
-  - Fixed test_oauth_apis.js to reference <https://tstr.directory> instead of <https://tstr.directory>
-  - Fixed test_claim_api.mjs to reference correct production domain
-  - Updated console log messages to use TSTR.directory branding
-  - Ensures LinkedIn OAuth and other auth flows use correct domain
-
-### **v2.4.2** - January 1, 2026
-
-- 🛠️ **Sales Email Updated**: Changed sales contact from <tstr.directory1@gmail.com> to <sales@tstr.directory> across all pages
-  - Updated CONTACTS object in contacts.ts to use new sales email
-  - Updated browse.astro, privacy.astro, terms.astro to use centralized contact system
-  - Updated category/region pages to use sales email for concierge search
-  - Updated documentation to reflect new email configuration
-- 🛠️ **JSON-LD Parsing Error Fixed**: Resolved Google Search Console error for missing '}' or object member name
-  - Changed from double curly braces {{ to Astro's set:html directive with JSON.stringify() in index.astro
-  - Fixes schema.org markup validation and improves SEO compliance
-  - Resolves parsing error that was affecting rich results
-
-### **v2.4.1** - January 1, 2026
-
-- 🛠️ **JSON-LD Structured Data Added**: Implemented proper JSON-LD markup on authentication pages
-  - Added structured data to login.astro and signup.astro using set:html directive with JSON.stringify()
-  - Ensures consistent SEO compliance across all critical pages
-  - Follows same pattern as index.astro to prevent parsing errors
-
-### **v2.4.0** - December 29, 2025
-
-- 💳 **PayPal Integration Complete**: Full subscription system implemented with Professional ($295/mo) and Premium ($795/mo) tiers
-  - Created database migration for payment tracking fields and history table
-  - Implemented Supabase Edge Functions: paypal-create-subscription, paypal-webhook, paypal-cancel-subscription
-  - Added checkout success and cancel pages with professional UI
-  - Updated pricing page with PayPal subscription buttons
-  - Enhanced account/subscription page with PayPal functionality
-  - Configured PayPal sandbox credentials in environment
-  - Implemented secure payment flow with proper authentication and RLS policies
-
-### **v2.3.20** - December 27, 2025
-
-- 🎨 **Homepage Logo Updated**: Replaced old SVG with new narrower SVG logo in Header component
-  - Updated inline SVG with new viewBox and paths
-  - Maintained 90px height and side-by-side layout
-
-### **v2.3.19** - December 27, 2025
-
-- 🎨 **Homepage Logo Updated**: Replaced PNG logo with inlined SVG logo in Header component
-  - Changed img src to inline SVG with 90px height
-  - Maintained side-by-side layout with "TSTR hub" text
-
-### **v2.3.18** - December 27, 2025
-
-- 🎨 **Homepage Logo Updated**: Replaced SVG logo with new PNG T-logo in Header component
-  - Created Header.astro component with larger T-logo (TSTR-Logo-New.png)
-  - Resized logo to 90px height to match "TSTR hub" text block
-  - Adjusted container to inline-flex with auto width and 2rem padding
-  - Updated index.astro to use Header component instead of inline header
-  - Removed unused CSS styles from index.astro
-
-### **v2.3.17** - December 27, 2025
-
-- 🎨 **Homepage Logo Updated**: Replaced favicon logo with updated SVG logo placed next to "TSTR hub" text
-  - Removed img element from header h1.logo
-  - Changed flex-direction from column to row for side-by-side layout
-  - Inlined updated SVG logo with new design (taller top bar, adjusted positioning)
-  - Updated TSTR Grey Logo.svg file with new SVG content
-  - Logo now appears next to text instead of above it
-
-### **v2.3.16** - December 23, 2025
-
-- 🔧 **OCI SSH Access Fully Verified**: Resolved key permission issues preventing access
-  - Identified external drive filesystem limitations preventing chmod operations
-  - Implemented workaround: copy SSH key to /tmp/oci-key.pem with 600 permissions
-  - Verified cron schedule active (daily 2 AM GMT) and scraper execution successful
-  - Confirmed scraper operational: processed 107 listings today with 67 contacts
-  - Updated documentation with corrected access procedure
-- 📚 **Documentation Updates**: Synchronized SSH access procedures across all docs
-  - Updated TSTR.md with permission fix requirements
-  - Added learning: External drive SSH keys require local copy for proper permissions
-  - Ensured single source of truth for infrastructure access
-
-### **v2.3.16** - December 23, 2025 (CURRENT)
-
-- 🔧 **OCI SSH Access Fully Verified**: Resolved key permission issues preventing access
-  - Identified external drive filesystem limitations preventing chmod operations
-  - Implemented workaround: copy SSH key to /tmp/oci-key.pem with 600 permissions
-  - Verified cron schedule active (daily 2 AM GMT) and scraper execution successful
-  - Confirmed scraper operational: processed 107 listings today with 67 contacts
-  - Updated documentation with corrected access procedure
-- 🎯 **Unified Claim System Complete**: Implemented comprehensive claim system with save/resume functionality
-  - Created unified `/api/claim.ts` endpoint replacing separate authenticated/anonymous APIs
-  - Applied 100% domain verification for all claims (auto-approve matches, manual review others)
-  - Added database migration with draft_data, resume_token, draft_expires_at columns and RLS policies
-  - Implemented auto-save every 30 seconds and email resume functionality
-  - Enhanced claim page with save draft button and improved UX
-  - Updated browse page redirects to use new unified system
-  - Build successful, dev server running, system ready for testing
-
-### **v2.3.15** - December 22, 2025
-
-- 📝 **Phase 1: Core Listing Management Complete**: Implemented full listing edit functionality for verified owners
-  - Created `/account/listing/[id]/edit.astro` with comprehensive form validation
-  - Built `/api/listing/update.ts` with owner verification and audit logging
-  - Enhanced account dashboard with edit buttons for verified owners
-  - Added security controls, input sanitization, and proper error handling
-  - Integrated with existing authentication and database systems
-- 🔒 **Security Enhancements**: Strengthened listing management with proper access controls
-  - Owner verification required for all edit operations
-  - Audit logging for all listing changes
-  - Input validation and sanitization on all form fields
-  - Rate limiting and session validation implemented
-- 🎯 **Phase 2: Advanced Features Complete**: Implemented comprehensive lead management and analytics system
-  - **Owner Analytics Dashboard**: Created `/account/analytics.astro` showing clicks, views, and performance metrics per listing
-  - **Lead Management System**: Built complete lead tracking with `/account/leads.astro` for managing contact inquiries
-  - **Lead Tracking**: Added automatic lead creation when visitors access contact information on listings
-  - **Bulk Management Tools**: Created `/account/bulk.astro` for managing multiple listings with bulk edit and export features
-  - **Database Schema**: Added leads table, tracking functions, and RLS policies for secure lead management
-- ✅ **Migration Applied**: `20251222000001_create_leads_management.sql` successfully deployed - leads table and functions active
-- ✅ **Build & Testing Complete**: All Phase 2 features build successfully and dev server running without errors
-- 📊 **Enhanced Account Dashboard**: Added navigation links to analytics, leads, and bulk management features
-
-### **v2.3.13** - December 21, 2025
-
-- 👥 **Admin Dashboard Enhanced**: Added comprehensive user and claims management
-  - Integrated claims overview and recent claims display in main dashboard
-  - Created dedicated /admin/claims page for claim approval/rejection
-  - Added claim status update API endpoint (/api/claim-status)
-  - Updated admin index with claims management link
-  - Enhanced scraper monitoring dashboard with user management section
-- 📋 **Login & Listing Management Plan**: Comprehensive roadmap created for completing owner listing management
-  - 3-phase implementation plan covering core editing, advanced features, and enterprise capabilities
-  - Security best practices and user experience guidelines established
-  - Priority set to Phase 1: Core listing edit functionality
-- 🔧 **Bootstrap System Fixes**: Corrected outdated file paths and symlinks
-  - Fixed /home/al/AI_PROJECTS_SPACE/ paths to /media/al/AI_DATA/AI_PROJECTS_SPACE/
-  - Recreated broken bootstrap.sh and Link_to_bootstrap_agent.sh symlinks
-  - Updated documentation to reflect current directory structure
-- 🔍 **SEO Optimization**: Enhanced homepage search engine optimization
-  - Added dynamic meta description with listing count
-  - Implemented Open Graph tags for social sharing
-  - Added structured data (JSON-LD) for search engines
-  - Included relevant keywords for testing services
-- 📋 **Documentation Updates**: Synchronized project status across all docs
-  - Updated TSTR.md and START_HERE.md with current live status
-  - Fixed GitHub workflow blocking by committing all changes
-  - Maintained single source of truth in PROJECT_STATUS.md
-- ✅ **Playwright CI Fixed**: Updated workflow and tests for green checkmark
-  - Added environment variables to GitHub Actions workflow
-  - Skipped unimplemented claim tests to match current functionality
-  - CI should now pass with working authentication and database access
-
----
-
-## 🤖 AI AGENT UTILIZATION
-
-### Current Agent Capabilities
-
-- **Claude Sonnet 4.5**: Complex reasoning, architecture, review, decisions
-- **Gemini 2.5 Pro**: Continuation when Claude depleted, medium complexity (FREE)
-- **OpenRouter**: Batch processing, simple tasks, free tier models
-- **Qwen3-Coder**: Cost-effective bulk processing and repetitive tasks ($0.45/1M input, $1.50/1M output)
-  - Specialized in: Generating multiple similar components, repetitive code tasks, bulk operations
-  - Recommended for: Creating multiple category pages, standard API endpoints, consistent UI patterns
-
-### Agent Selection Guidelines
-
-- **Architecture decisions**: Use Claude
-- **Continuation work**: Use Gemini when Claude tokens are limited
-- **Bulk operations**: Use Qwen3-Coder for cost-effective processing
-- **Simple queries**: Use OpenRouter for free tier models
-
----
-
-### **v2.3.8** - December 16, 2025
-
-- 🔒 **Security Hardening Deployed**: All 12 functions now have secure search_path=pg_catalog, public (verified via SQL query)
-- 🛡️ **View Security Fixed**: potential_dead_links view set to security_invoker
-- 📊 **Performance Monitoring**: pg_stat_statements extension enabled for query analysis
-- ✅ **Vulnerability Resolved**: Eliminated function shadowing attack vector
-
-### **v2.3.7** - December 16, 2025
-
-- 🔒 **Critical Security Fix**: Removed SUPABASE_SERVICE_ROLE_KEY from frontend .env to prevent client-side exposure
-- 📊 **Observability Enhancement**: Created migration to enable pg_stat_statements extension for performance monitoring
-- 📋 **Manual Deployment**: Created MANUAL_MIGRATION_DEPLOYMENT.md due to CLI sync issues
-- ✅ **Security Verification**: Confirmed no schema errors and proper key isolation between frontend/backend
-
-### **v2.3.6** - December 4, 2025
-
-- 📋 **Claim Button Visibility Project Plan**: Comprehensive plan created for making claim buttons visible to all users as lead magnets
-- 🎯 **First Principles Strategy**: Adopted "Lead Magnet" approach - claim buttons drive user registrations and verified listings
-- 🛠️ **Implementation Roadmap**: 5-phase plan covering browse page buttons, auth routing, login redirects, and testing
-
-### **v2.3.5** - December 3, 2025
-
-- ✅ **System Health Verification Complete** - Phase 1 verification passed (93/100 health score)
-- ✅ **Listing Count Updated** - Corrected from 163 to 191 verified listings
-- ✅ **Build Process Verified** - Frontend builds successfully with Cloudflare adapter
-- ✅ **Site Functionality Confirmed** - All core features operational (browse, search, categories)
-- ✅ **Admin Dashboard Active** - Scraper monitoring and analytics accessible
-- 🔄 **Supabase API Keys** - Legacy keys disabled; need new publishable/secret keys for build prerendering
-- 🔄 **Database Count Verification** - Dashboard shows 0 listings (query bug); site shows 191
-- ✅ **Infrastructure Operational** - OCI scrapers active, Cloudflare Pages live
-
-_(See `docs/REFERENCE_STATUS.md` for older versions)_
-
----
-
-## 💰 COST BREAKDOWN (SUMMARY)
-
-**Total**: $0.00/mo (Oracle Free Tier + Supabase Free + Cloudflare Free)
-**Domain**: ~$12/year
+## 📝 PENDING TASKS
+
+### High Priority
+- [ ] Verify PSEO pages render correctly
+- [ ] Test category page listing visibility
+- [ ] Query database for active standards with PSEO pages
+
+### Medium Priority
+- [ ] Add more geographic regions (Asia, Europe, Middle East)
+- [ ] Setup error alerting for scraper failures
+- [ ] Deploy Oil & Gas scraper
+
+### Phase 3 (Future)
+- [ ] Team management for multi-user listing access
+- [ ] Advanced verification methods
+- [ ] API access for integrations
 
 ---
 
 ## 🔗 IMPORTANT LINKS
 
-- **Live Site**: <https://tstr.directory>
-- **GitHub**: <https://github.com/JAvZZe/tstr-site>
-- **AI Agent Guidelines**: See `START_HERE.md` for agent selection guide
-- **Supabase**: <https://supabase.com/dashboard/project/haimjeaetrsaauitrhfy>
+- **Live Site**: https://tstr.directory
+- **GitHub**: https://github.com/JAvZZe/tstr-site
+- **Supabase**: https://supabase.com/dashboard/project/haimjeaetrsaauitrhfy
 - **OCI SSH**: `ssh -i /tmp/oci-key.pem opc@84.8.139.90`
 
-## 🔧 DATABASE MIGRATION RESOLUTION (2026-02-02)
+---
 
-### Issue Resolved
+## 📚 DOCUMENTATION STRUCTURE
 
-- **Problem**: Unable to execute SQL migration directly due to network restrictions on port 5432
-- **Root Cause**: Migration tracking system was out of sync with actual database state; duplicate migration files with identical version numbers
-- **Resolution**: Used Supabase CLI authenticated connection to repair migration tracking
+| Document | Purpose |
+|----------|---------|
+| `PROJECT_STATUS.md` | This file - Executive summary |
+| `docs/VERSION_HISTORY.md` | Full changelog archive (v2.3.5+) |
+| `docs/CURRENT_WORK.md` | Active sprints, agent assignments |
+| `docs/REFERENCE_STATUS.md` | Historical versions pre-v2.3.5 |
+| `docs/MAINTENANCE_LOG.md` | Security/linting updates |
 
-### Actions Taken
+---
 
-1. Updated Supabase CLI to latest version (2.72.7)
-2. Authenticated with Supabase account and linked to project haimjeaetrsaauitrhfy
-3. Removed duplicate migration file (2.72.7) with identical version number
-4. Repaired migration tracking for all 37 migrations using \`supabase migration repair\`
-5. Verified all migrations are now properly synchronized
+## 🤖 AGENT UTILIZATION
 
-### Verification
-
-- Database is now up to date with all migrations properly tracked
-- Created Bruno collection for ongoing migration status monitoring
-- No direct connection to port 5432 required - using authenticated Supabase CLI connection
-
-### Files Updated
-
-- Removed duplicate migration: \`supabase/migrations/20251216000001_enable_stat_statements.sql\`
-- Added monitoring: \`bruno/supabase/migrations/migration-status.bru\`
-- Added documentation: \`bruno/supabase/migrations/MIGRATION_RESOLUTION_DOCS.md\`
-
-### Status
-
-- ✅ **RESOLVED** - All migrations properly tracked
-- ✅ **DATABASE HEALTH** - Verified and operational
-- ✅ **CONTINUITY** - Future migrations can proceed normally via Supabase CLI
-
-## 🔧 SCHEMA UPDATE: MULTI-CATEGORY & LOCATION (2026-02-03)
-
-### Status: ✅ COMPLETED
-
-### Changes Implemented
-
-1. **Schema**:
-   - Created `listing_categories` table for M:N relationship (Listings <-> Categories).
-   - Updated `listings` table with `parent_listing_id` (Hierarchy) and `billing_tier` columns.
-   - Added RLS policies for public read / service write.
-2. **Data Migration**:
-   - **Backfilled** 457 associations from legacy `category_id` column to new `listing_categories` table.
-   - Verified data integrity via API check.
-3. **Frontend**:
-   - Updated `src/pages/[category]/index.astro` to filter using joined `listing_categories`.
-   - Updated `src/pages/[category]/[region]/index.astro` to filter using joined `listing_categories`.
-4. **Admin Advisory**:
-   - **Note**: Admin dashboard still uses legacy `category_id` for editing. Needs UI update in future sprint to support multi-category selection.
-
-### Technical Notes
-
-- **Supabase Cache Issue**: The REST API schema cache got stuck (`PGRST205`) despite multiple reload attempts.
-- **Workaround**: Data backfill was executed via SQL migration (`db push`) to bypass the API cache layer.
-- **Service Key**: A new Service Role key was obtained and verified working for future backend operations.
-
-## 💰 SCHEMA UPDATE: PRICING LOGIC (2026-02-03)
-
-### Status: ✅ COMPLETED / 🚧 INTEGRATION PENDING
-
-### Changes Implemented
-
-1. **Database Logic**:
-   - Create `calculate_listing_billing` function (Migration `20260203160000_add_billing_function.sql`).
-   - Calculates dynamic tier/price based on category usage (+$150/mo per extra category).
-2. **Type Safety**:
-   - strict `Database` typing implemented in `supabase.ts` and Edge Functions.
-3. **Frontend**:
-   - `pricing.astro` updated with dynamic pricing notes.
-
-### ⏭️ Next Steps (Do Next)
-
-1. **Enforce Limits**:
-   - Stop users from adding >1 category without upgrading.
-2. **Dynamic Payments**:
-   - Update PayPal flow to handle variable amounts.
-3. **Admin Visibility**:
-   - Show calculated billing tier in Dashboard.
-
-## 🔗 SEO & BROKEN LINK FIXES (2026-03-20)
-
-### Status: ✅ PARTIALLY COMPLETE / 🔜 PENDING (Email Exposure Fixes)
-
-### Completed This Session (Antigravity)
-
-1. **ISO Standard Slug Fixed** ✅
-   - **Standard**: `ISO/TS 15916:2026`
-   - **Problem**: `slug` was `NULL` in Supabase `standards` table, causing 404s on `/standards/iso-ts-15916-2026`.
-   - **Fix**: Updated `slug` to `iso-ts-15916-2026` using the Service Role key via Node.js script.
-   - **Route**: Dynamic route `src/pages/standards/[slug].astro` will now generate this page on next build.
-   - **Note**: Requires a Cloudflare Pages redeploy to go live (triggers static regeneration).
-
-### Analysis & Implementation Completed (Antigravity - 2026-04-03)
-
-1. **Search API Location Filter Fixed** ✅
-   - **Problem**: Complex `.or()` clauses on joined tables caused PostgREST parser errors.
-   - **Fix**: Simplified query to use `.ilike('address', ...)` on the main `listings` table.
-   - **File**: `web/tstr-frontend/src/pages/api/search/by-standard.ts`
-   - **Note**: Restores critical search functionality; regional hierarchy search deferred to Phase 2.
-
-2. **Email Exposure Remediation Complete** ✅
-   - **Problem**: Raw `@tstr.directory` emails triggered Cloudflare protection 404s.
-   - **Fix**: Replaced all `mailto:` links and raw text with `/contact?inquiry=...` redirects.
-   - **Files Updated**:
-     - `pricing.astro`: 11+ points (including EFT/BTC modals and client-side JS).
-     - `contact.astro`: Removed info grid, added `inquiry` query param handler.
-     - `terms.astro` & `privacy.astro`: Updated contact boxes.
-     - `account/subscription.astro`: 4 points in management dashboard.
-     - `press.astro`: Media enquiry link.
-   - **Completed**: Verified form auto-selection via `/contact?inquiry=sales` and Playwright tests.
-
-
-10. **v2.9.15: Search API Location Filter Verification (Playwright)**
-    - **Problem**: Conflicting PostgREST query clauses caused location filter 500 errors.
-    - **Fix Verified**: Two-phase search (DB fetch by standard -> Manual JS filter by location) in `/api/search/by-standard`.
-    - **Verification**: Created `web/tstr-frontend/tests/search-api.spec.ts` with 5 Playwright test cases covering baseline search, location filtering, error handling, and UI interactions.
-    - **Status**: ✅ All tests PASSED. Feature robust and crash-free.
-
-### Key Finding
-
-The `supabase db query` and `supabase db execute` CLI commands remain **non-functional**; direct Node.js scripts using the Service Role key are mandatory for DB operations.
-
+- **Claude Sonnet 4.5**: Complex reasoning, architecture
+- **Gemini 2.5 Pro**: Continuation, medium complexity (FREE)
+- **Gemini Flash**: Quick tasks, PSEO optimization (FREE)
+- **Qwen3-Coder**: Bulk operations, cost-effective ($0.45/1M input)
