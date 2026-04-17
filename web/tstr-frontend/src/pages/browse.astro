@@ -70,6 +70,7 @@ const locationOptions = Array.from(locationsMap.values()).sort((a, b) => a.displ
 
 const urlParams = new URLSearchParams(Astro.url.search)
 const categoryDisplayName = urlParams.get('category')?.replace(/%20/g, ' ')
+const totalListings = listings?.length || 0
 ---
 
 <style is:global>
@@ -270,6 +271,7 @@ const categoryDisplayName = urlParams.get('category')?.replace(/%20/g, ' ')
                         IS THIS YOU? CLAIM LISTING
                       </a>
                   </div>
+                </div>
               </div>
             )
           })}
