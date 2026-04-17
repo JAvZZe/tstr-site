@@ -63,6 +63,11 @@
    - Handoff notes for next agent
    - Next actions identified
 
+### **7. Cleanup & Archiving Protocol (MANDATORY)**
+   - **Delete Interim Files**: HANDOFF_*.md, implementation_plan.md, etc. after completion.
+   - **Archive Documents**: Move non-active historical context to `_ARCHIVE/`.
+   - **Check Archives**: Refer to `_ARCHIVE/` before starting "retry" tasks.
+
 ---
 
 ## 🚨 CRITICAL RULES (Never Break These)

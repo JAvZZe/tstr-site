@@ -1,9 +1,9 @@
 # 📊 TSTR.DIRECTORY - PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - Executive summary for agents
-> **Last Updated**: 2026-04-17 04:53 UTC
-> **Updated By**: JAvZZe
-> **Status**: ✅ PRODUCTION - Live at <https://tstr.directory> (PSEO 2.0 Overhaul Complete)
+> **Last Updated**: 2026-04-17 05:25 UTC
+> **Updated By**: Gemini
+> **Status**: ✅ PRODUCTION - Live at <https://tstr.directory> (PSEO 2.0 Hardened & System Hardening Complete)
 
 ---
 
@@ -15,7 +15,8 @@
 | **Type** | Testing Services Directory Platform |
 | **Stack** | Astro 5.x + React 18 + Supabase + Python Scrapers |
 | **Deployment** | Cloudflare Pages (Frontend) + OCI (Scrapers) |
-| **Listings** | 579+ active |
+| **Protocol** | ✅ Cleanup & Archiving (Mandatory for all agents) |
+| **Listings** | 596+ active |
 | **Categories** | 30+ specialized |
 | **Standards** | 55+ |
 

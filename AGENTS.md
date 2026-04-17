@@ -94,7 +94,8 @@ This loads:
 ---
 
 ## 📝 PENDING TASKS
- PROTOCOL (MANDATORY)
+
+## 📊 PROJECT STATUS PROTOCOL (MANDATORY)
 
 **CRITICAL**: All agents MUST read and update `PROJECT_STATUS.md` before & after any work:
 
@@ -108,6 +109,15 @@ This loads:
    - Content updates
    - Link changes
    - Any successful change affecting tstr.directory
+
+### **Cleanup & Archiving Protocol (MANDATORY)**
+
+To maintain a clean environment and reduce token clutter:
+1. **Delete Interim Files**: Once work is merged/completed, delete redundant files like `HANDOFF_*.md`, `implementation_plan.md`, or temporary reports.
+2. **Archive Historical Context**: If a document (e.g., an old project plan or complex analysis) has historical value but is no longer "active," move it to the `_ARCHIVE/` directory instead of leaving it in the root.
+3. **Reference Archives**: Before starting a task that feels like a "retry" or "resumption," proactively search the `_ARCHIVE/` folder for previous context or "forgotten" history.
+
+---
 
 ### **Protocol Requirements**:
 - ✅ **ALWAYS** update PROJECT_STATUS.md after successful changes

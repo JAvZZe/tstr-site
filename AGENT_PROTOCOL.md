@@ -16,6 +16,10 @@ Every agent must:
 2. ✅ Make changes (If DB: run `supabase db diff` check)
 3. ✅ Update `PROJECT_STATUS.md` AFTER
 4. ✅ Log session in `handoff_core.md`
+5. ✅ Cleanup & Archiving Protocol (MANDATORY)
+   └─ Delete redundant files upon task completion
+   └─ Move non-active docs to _ARCHIVE/
+   └─ Reference archives before starting "retry" tasks
 
 ---
 
@@ -360,8 +364,11 @@ gcloud functions logs read [name]
 ### **Monthly** (Agent Update)
 
 - Update cost actual vs projected
-- Review and archive old session logs
-- Clean up temporary files
+- **Review and archive old session logs**: Move to `_ARCHIVE/` if no longer active.
+- **Cleanup & Archiving Protocol (MANDATORY)**: 
+    - Delete redundant files like `HANDOFF_*.md` or `implementation_plan.md` once work is complete.
+    - Archive historical context to `_ARCHIVE/`.
+    - Proactively search the `_ARCHIVE/` folder before starting "retry" tasks.
 - Update projections
 
 ---
