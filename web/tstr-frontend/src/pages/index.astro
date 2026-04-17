@@ -1,7 +1,6 @@
 ---
 import { supabase } from '../lib/supabase'
-import Footer from '../components/Footer.astro'
-import Header from '../components/Header.astro'
+import BaseLayout from '../layouts/BaseLayout.astro'
 import { formatTitle, formatDescription } from '../lib/seo';
 
 // Fetch total active listings count
@@ -24,31 +23,31 @@ const { data: categoryData } = await supabase
   .order('name');
 
 const PILLARS_CONFIG = {
-  'hydrogen-infrastructure-testing': { icon: '⚡', color: '#0066cc' },
-  'materials-testing': { icon: '🔬', color: '#166534' },
-  'environmental-testing': { icon: '🌿', color: '#065f46' },
-  'pharmaceutical-testing': { icon: '🧬', color: '#6b21a8' },
-  'oil-gas-testing': { icon: '🛢️', color: '#b45309' },
-  'biotech-testing': { icon: '🧫', color: '#be185d' },
-  'aerospace-testing': { icon: '🚀', color: '#1e40af' },
-  'ev-battery-testing': { icon: '🔋', color: '#15803d' },
-  'railway-testing': { icon: '🚆', color: '#4338ca' },
-  'cybersecurity-testing': { icon: '🛡️', color: '#334155' },
-  'telecom-5g-testing': { icon: '📶', color: '#7c3aed' },
-  'nuclear-testing': { icon: '☢️', color: '#ca8a04' },
-  'building-construction-testing': { icon: '🏗️', color: '#b91c1c' },
-  'mining-geochemistry-testing': { icon: '⛏️', color: '#4d7c0f' },
-  'defense-ballistics-testing': { icon: '🎯', color: '#111827' },
-  'acoustics-vibration-testing': { icon: '🔊', color: '#0891b2' },
-  'product-safety-emc-testing': { icon: '🔌', color: '#ea580c' },
-  'calibration-metrology-services': { icon: '📏', color: '#475569' }
+  'hydrogen-infrastructure-testing': { icon: '⚡', color: '#60a5fa' }, // Blue
+  'materials-testing': { icon: '🔬', color: '#34d399' }, // Emerald
+  'environmental-testing': { icon: '🌿', color: '#10b981' }, 
+  'pharmaceutical-testing': { icon: '🧬', color: '#a78bfa' },
+  'oil-gas-testing': { icon: '🛢️', color: '#fbbf24' },
+  'biotech-testing': { icon: '🧫', color: '#f472b6' },
+  'aerospace-testing': { icon: '🚀', color: '#60a5fa' },
+  'ev-battery-testing': { icon: '🔋', color: '#34d399' },
+  'railway-testing': { icon: '🚆', color: '#818cf8' },
+  'cybersecurity-testing': { icon: '🛡️', color: '#94a3b8' },
+  'telecom-5g-testing': { icon: '📶', color: '#a78bfa' },
+  'nuclear-testing': { icon: '☢️', color: '#facc15' },
+  'building-construction-testing': { icon: '🏗️', color: '#f87171' },
+  'mining-geochemistry-testing': { icon: '⛏️', color: '#a3e635' },
+  'defense-ballistics-testing': { icon: '🎯', color: '#475569' },
+  'acoustics-vibration-testing': { icon: '🔊', color: '#22d3ee' },
+  'product-safety-emc-testing': { icon: '🔌', color: '#fb923c' },
+  'calibration-metrology-services': { icon: '📏', color: '#94a3b8' }
 };
 
 const pillars = categoryData?.map(cat => ({
   slug: cat.slug,
   label: cat.name.replace(' Testers', '').replace(' Testing', '').replace(' Services', ''),
   icon: PILLARS_CONFIG[cat.slug]?.icon || '🔬',
-  color: PILLARS_CONFIG[cat.slug]?.color || '#475569',
+  color: PILLARS_CONFIG[cat.slug]?.color || '#94a3b8',
   description: cat.description?.split('.')[0] + '.',
   count: cat.listings?.[0]?.count || 0
 })).filter(p => p.count > 0) || [];
@@ -68,179 +67,110 @@ const pageTitle = formatTitle(['Specialist Testing Services Directory'], true);
 const pageDescription = formatDescription(
   `Find and compare ${totalListings || 200} verified testing laboratories and certification bodies worldwide. AI-powered search for materials, environmental, and hydrogen testing.`
 );
-
-
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{pageTitle}</title>
-  <meta name="description" content={pageDescription} />
-  <meta property="og:title" content={pageTitle} />
-  <meta property="og:description" content={pageDescription} />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://tstr.directory" />
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      line-height: 1.6;
-      color: #1e293b;
-      background: #f8fafc;
-    }
-    main { width: 100%; }
-    
-    .pillar-card {
-      background: white;
-      border-radius: 16px;
-      padding: 2rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
-    .pillar-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    }
-    
-    .cta-button {
-      display: inline-block;
-      background: #000080;
-      color: white;
-      padding: 0.875rem 2rem;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 700;
-      transition: all 0.2s;
-    }
-    .cta-button:hover {
-      background: #32CD32;
-      transform: translateY(-2px);
-    }
-
-    #search-results a:last-child { border-bottom: none; }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    #search-results {
-      animation: fadeIn 0.2s ease-out;
-    }
-  </style>
-</head>
-<body>
-  <Header showHero={false} />
-
-  <main>
-    <!-- HERO: AI Search Section -->
-    <section id="hero-search" style="background: linear-gradient(135deg, #000033 0%, #000080 100%); padding: 6rem 1.5rem 5rem; text-align: center; position: relative; overflow: hidden;">
-      <!-- Subtle background decoration -->
-      <div style="position: absolute; top: -10%; right: -5%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(50, 205, 50, 0.15) 0%, transparent 70%); border-radius: 50%;"></div>
-      <div style="position: absolute; bottom: -10%; left: -5%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(0, 102, 204, 0.2) 0%, transparent 70%); border-radius: 50%;"></div>
-
-      <div style="position: relative; z-index: 10; max-width: 900px; margin: 0 auto;">
-        <h1 style="color: white; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 900; margin-bottom: 1.5rem; line-height: 1.1; letter-spacing: -0.02em;">
-          The global directory for<br/>specialist testing
-        </h1>
-        <p style="color: rgba(255,255,255,0.85); font-size: 1.25rem; margin-bottom: 3rem; font-weight: 500;">
-          Find and compare {totalListings || 200}+ verified laboratories internationally
-        </p>
-        
-        <!-- Search bar UI -->
-        <div id="search-container" style="position: relative; max-width: 750px; margin: 0 auto;">
-          <div style="display: flex; gap: 8px; background: rgba(255,255,255,0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 8px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
-            <div style="flex: 1; background: white; border-radius: 14px; display: flex; align-items: center; padding: 0 16px;">
-              <span style="font-size: 1.4rem; opacity: 0.5;">🔍</span>
-              <input
-                type="text"
-                id="ai-search-input"
-                placeholder="Searching for labs..."
-                autocomplete="off"
-                style="width: 100%; border: none; outline: none; font-size: 1.15rem; padding: 1.1rem 0.75rem; border-radius: 10px; font-family: inherit; font-weight: 500;"
-              />
-            </div>
-            <button id="ai-search-btn" style="background: #32CD32; color: white; border: none; border-radius: 14px; padding: 0 2rem; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: all 0.2s;">
-              Search
-            </button>
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <!-- HERO: AI Search Section -->
+  <section id="hero-search" class="relative pt-32 pb-24 px-6 text-center overflow-hidden">
+    <div class="relative z-10 max-w-4xl mx-auto animate-fade-up">
+      <h1 class="text-white text-5xl md:text-7xl font-black mb-6 tracking-tight leading-[0.9]">
+        The global directory for<br/>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">specialist testing</span>
+      </h1>
+      <p class="text-slate-400 text-xl md:text-2xl mb-12 font-medium max-w-2xl mx-auto">
+        Find and compare {totalListings || 200}+ verified laboratories internationally
+      </p>
+      
+      <!-- Search bar UI -->
+      <div id="search-container" class="relative max-w-2xl mx-auto">
+        <div class="flex gap-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-2 shadow-2xl shadow-blue-500/10">
+          <div class="flex-1 bg-white/[0.03] rounded-xl flex items-center px-4 border border-white/5">
+            <span class="text-2xl opacity-50 mr-3">🔍</span>
+            <input
+              type="text"
+              id="ai-search-input"
+              placeholder="Searching for labs..."
+              autocomplete="off"
+              class="w-full bg-transparent border-none outline-none text-white text-lg py-4 font-medium placeholder:text-slate-600"
+            />
           </div>
-          
-          <!-- Results dropdown -->
-          <div id="search-results" style="display: none; position: absolute; top: calc(100% + 12px); left: 0; right: 0; background: white; border-radius: 20px; box-shadow: 0 30px 60px -12px rgba(0,0,0,0.3); z-index: 1000; max-height: 480px; overflow-y: auto; text-align: left; border: 1px solid #e2e8f0;">
-          </div>
+          <button id="ai-search-btn" class="bg-blue-600 hover:bg-blue-500 text-white px-8 rounded-xl font-black text-lg transition-all active:scale-95 shadow-lg shadow-blue-600/20">
+            Search
+          </button>
         </div>
         
-        <!-- Rotating placeholder examples -->
-        <p id="example-query" style="color: rgba(255,255,255,0.5); font-size: 0.95rem; margin-top: 1.5rem; font-weight: 500; min-height: 1.5em;"></p>
-      </div>
-    </section>
-
-    <!-- PILLARS: Industry Sectors -->
-    <section style="padding: 5rem 1.5rem; max-width: 1240px; margin: 0 auto;">
-      <div style="text-align: center; margin-bottom: 4rem;">
-        <h2 style="font-size: 2.25rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem;">Browse by sector</h2>
-        <div style="width: 60px; height: 4px; background: #32CD32; margin: 0 auto; border-radius: 2px;"></div>
-      </div>
-
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem;">
-        {pillars.map(p => (
-          <a href={`/browse?category=${p.slug}`} style="text-decoration: none; color: inherit;">
-            <div class="pillar-card" style={`border-top: 6px solid ${p.color};`}>
-              <div style="font-size: 2.5rem; margin-bottom: 1.5rem;">{p.icon}</div>
-              <h3 style="font-size: 1.5rem; font-weight: 800; color: #1e293b; margin-bottom: 0.5rem;">{p.label}</h3>
-              <p style="color: #64748b; font-size: 1rem; margin-bottom: 1.5rem; flex-grow: 1;">{p.description}</p>
-              <div style={`display: flex; align-items: center; gap: 8px; font-weight: 700; color: ${p.color}; font-size: 0.95rem;`}>
-                <span>{p.count} laboratories</span>
-                <span>→</span>
-              </div>
-            </div>
-          </a>
-        ))}
-      </div>
-    </section>
-
-    <!-- RECENTLY VERIFIED STRIP -->
-    {featuredLabs && featuredLabs.length > 0 && (
-      <section style="background: #0f172a; color: white; padding: 4rem 1.5rem;">
-        <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2rem;">
-          <div style="max-width: 400px;">
-            <h2 style="color: white; border: none; font-size: 1.8rem; margin-bottom: 0.5rem;">Top Verified Labs</h2>
-            <p style="color: #94a3b8; font-size: 1rem;">Directly certified and high-trust laboratories added this month.</p>
-          </div>
-          <div style="flex: 1; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem;">
-            {featuredLabs.map(lab => (
-              <a href={`/listing/${lab.slug}`} style="text-decoration: none; color: inherit; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.25rem; transition: background 0.2s;">
-                <div style="font-weight: 700; color: #32CD32; font-size: 0.85rem; margin-bottom: 0.5rem;">★ TRUSTED</div>
-                <div style="font-weight: 600; font-size: 1.05rem; margin-bottom: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{lab.business_name}</div>
-                <div style="color: #94a3b8; font-size: 0.85rem;">{lab.region}</div>
-              </a>
-            ))}
-          </div>
+        <!-- Results dropdown -->
+        <div id="search-results" class="hidden absolute top-full left-0 right-0 mt-4 glass-panel rounded-2xl shadow-3xl z-[100] max-height-[480px] overflow-y-auto text-left">
         </div>
-      </section>
-    )}
-
-    <!-- FINAL CTAs -->
-    <section style="padding: 6rem 1.5rem; text-align: center; background: white;">
-      <h2 style="border: none; font-size: 2.5rem; margin-bottom: 3rem;">Ready to start?</h2>
-      <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
-        <a href="/submit" class="cta-button" style="padding: 1.25rem 3rem; font-size: 1.2rem;">List Your Lab Free</a>
-        <a href="/search/standards" class="cta-button" style="padding: 1.25rem 3rem; font-size: 1.2rem; background: #0f172a;">Search by ISO Standard</a>
       </div>
-      <p style="margin-top: 2rem; color: #64748b; font-weight: 500;">Join {totalListings || 200}+ specialist laboratories on TSTR.directory</p>
-    </section>
-  </main>
+      
+      <!-- Rotating placeholder examples -->
+      <p id="example-query" class="text-slate-500 text-sm mt-6 font-mono transition-opacity duration-500"></p>
+    </div>
+  </section>
 
-  <Footer />
+  <!-- PILLARS: Industry Sectors -->
+  <section class="py-24 px-6 max-w-7xl mx-auto relative">
+    <div class="text-center mb-16 animate-fade-up delay-100">
+      <h2 class="text-3xl md:text-4xl font-black text-white mb-4 tracking-tight">Browse by Sector</h2>
+      <div class="w-12 h-1 bg-blue-500 mx-auto rounded-full"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {pillars.map((p, i) => (
+        <a href={`/browse?category=${p.slug}`} class={`animate-fade-up`} style={`animation-delay: ${150 + (i * 50)}ms`}>
+          <div class="glass-card glass-card-hover h-full p-8 group relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br opacity-0 group-hover:opacity-10 transition-opacity duration-500" style={`from-transparent to-[${p.color}]`}></div>
+            <div class="text-4xl mb-6 transform group-hover:scale-110 transition-transform duration-300">{p.icon}</div>
+            <h3 class="text-xl font-black text-white mb-2 tracking-tight group-hover:text-glow-blue transition-all" style={`color: ${p.color}`}>{p.label}</h3>
+            <p class="text-slate-400 text-sm mb-6 leading-relaxed flex-grow">{p.description}</p>
+            <div class="flex items-center gap-2 font-bold text-xs uppercase tracking-widest opacity-60 group-hover:opacity-100 transition-opacity" style={`color: ${p.color}`}>
+              <span>{p.count} Laboratories</span>
+              <span class="transform group-hover:translate-x-1 transition-transform">→</span>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- RECENTLY VERIFIED STRIP -->
+  {featuredLabs && featuredLabs.length > 0 && (
+    <section class="glass-panel py-16 px-6">
+      <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12">
+        <div class="max-w-md text-center lg:text-left">
+          <h2 class="text-2xl font-black text-white mb-2 tracking-tight">Top Verified Labs</h2>
+          <p class="text-slate-500 font-medium">Directly certified and high-trust laboratories added this month.</p>
+        </div>
+        <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+          {featuredLabs.map(lab => (
+            <a href={`/listing/${lab.slug}`} class="glass-card p-5 group hover:bg-white/[0.05] border-white/5 transition-all">
+              <div class="text-[10px] font-black text-emerald-400 mb-2 tracking-widest uppercase">Verified</div>
+              <div class="font-bold text-white text-sm mb-1 truncate group-hover:text-blue-400 transition-colors">{lab.business_name}</div>
+              <div class="text-slate-500 text-xs font-medium">{lab.region}</div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- FINAL CTAs -->
+  <section class="py-32 px-6 text-center relative overflow-hidden">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-blue-600/5 blur-[120px] rounded-full z-0"></div>
+    <div class="relative z-10 animate-fade-up">
+      <h2 class="text-4xl md:text-5xl font-black text-white mb-12 tracking-tighter">Ready to Start?</h2>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="/submit" class="bg-blue-600 hover:bg-blue-500 text-white px-10 py-5 rounded-2xl font-black text-xl transition-all shadow-xl shadow-blue-600/20 active:scale-95">
+          List Your Lab Free
+        </a>
+        <a href="/search/standards" class="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-10 py-5 rounded-2xl font-black text-xl transition-all active:scale-95">
+          Search by ISO Standard
+        </a>
+      </div>
+      <p class="mt-8 text-slate-500 font-bold uppercase tracking-widest text-xs">Join {totalListings || 200}+ specialist laboratories on TSTR.directory</p>
+    </div>
+  </section>
 
   <script>
     // --- AI SEARCH WIDGET ---

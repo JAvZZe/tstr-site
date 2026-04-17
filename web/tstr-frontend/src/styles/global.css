@@ -2,6 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    @apply bg-[#020203] text-slate-300 selection:bg-blue-500/30 selection:text-white;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-2xl transition-all duration-300;
+  }
+  
+  .glass-card-hover {
+    @apply hover:bg-white/[0.05] hover:border-white/20 hover:shadow-2xl hover:shadow-blue-500/10;
+  }
+
+  .glass-panel {
+    @apply bg-[#0a0a0b]/80 backdrop-blur-xl border-y border-white/5;
+  }
+}
+
 @layer utilities {
   .animate-fade-up {
     animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -10,6 +31,12 @@
   .animate-glow {
     animation: glow 3s ease-in-out infinite alternate;
   }
+
+  .bg-obsidian { background-color: #020203; }
+  .bg-obsidian-surface { background-color: #0a0a0b; }
+
+  .text-glow-blue { text-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+  .text-glow-emerald { text-shadow: 0 0 20px rgba(16, 185, 129, 0.5); }
 
   .delay-100 { animation-delay: 100ms; }
   .delay-200 { animation-delay: 200ms; }

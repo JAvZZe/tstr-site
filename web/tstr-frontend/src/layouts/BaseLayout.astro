@@ -1,28 +1,60 @@
 ---
 import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
 import '../styles/global.css'
-const { title = "TSTR Hub - Specialist Testing Services, Products and Solutions Directory", description = "Find and compare verified testing laboratories and certification bodies worldwide. ISO 17025 accredited labs for materials testing, environmental analysis, biotech, hydrogen infrastructure, and more." } = Astro.props;
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { 
+  title = "TSTR Hub - Specialist Testing Services, Products and Solutions Directory", 
+  description = "Find and compare verified testing laboratories and certification bodies worldwide. ISO 17025 accredited labs for materials testing, environmental analysis, biotech, hydrogen infrastructure, and more." 
+} = Astro.props;
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="bg-[#020203]">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{title}</title>
   <meta name="description" content={description} />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
      crossorigin="anonymous"></script>
-  <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
 </head>
-<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; padding-bottom: 4rem;">
-  <Header />
-  <slot />
+<body class="font-sans antialiased selection:bg-blue-500/30 selection:text-white min-h-screen relative overflow-x-hidden">
+  <!-- Ambient background glow -->
+  <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+    <div class="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-blue-500/10 blur-[120px] rounded-full"></div>
+    <div class="absolute top-[20%] -right-[10%] w-[35%] h-[35%] bg-emerald-500/5 blur-[120px] rounded-full"></div>
+    <div class="absolute bottom-[-10%] left-[20%] w-[30%] h-[30%] bg-blue-600/5 blur-[120px] rounded-full"></div>
+  </div>
+
+  <Header showHero={false} />
+  <main class="relative z-10">
+    <slot />
+  </main>
+  <Footer />
+
+  <script>
+    function initApollo(){
+      var n=Math.random().toString(36).substring(7),o=document.createElement("script");
+      o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
+      o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
+      document.head.appendChild(o)
+    }
+    initApollo();
+  </script>
 </body>
 </html>

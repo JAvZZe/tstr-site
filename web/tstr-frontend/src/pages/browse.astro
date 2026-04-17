@@ -1,46 +1,24 @@
 ---
 import { supabase } from '../lib/supabase'
-import { CONTENT, CONTACTS, MAILTO_LINKS } from '../lib/contacts'
-import Footer from '../components/Footer.astro'
+import { CONTENT, MAILTO_LINKS } from '../lib/contacts'
 import { getRedirectUrl } from '../lib/redirect'
 import BaseLayout from '../layouts/BaseLayout.astro'
 
 // Fetch all active listings with location hierarchy, category, and capabilities
-const { data: listings, error } = await supabase
+const { data: listings } = await supabase
   .from('listings')
   .select(`
     *,
-    category:category_id (
-      id,
-      name,
-      slug
-    ),
+    category:category_id (id, name, slug),
     location:location_id (
-      id,
-      name,
-      slug,
-      level,
+      id, name, slug, level,
       parent:parent_id (
-        id,
-        name,
-        slug,
-        level,
-        parent:parent_id (
-          id,
-          name,
-          slug,
-          level
-        )
+        id, name, slug, level,
+        parent:parent_id (id, name, slug, level)
       )
     ),
     listing_capabilities(
-      standard:standard_id(
-        id,
-        code,
-        name,
-        issuing_body,
-        standard_type
-      )
+      standard:standard_id(id, code, name, issuing_body, standard_type)
     )
   `)
   .eq('status', 'active')
@@ -49,770 +27,286 @@ const { data: listings, error } = await supabase
 // Fetch categories with active listings only for filter dropdown
 const { data: categoriesData } = await supabase
   .from('categories')
-  .select(`
-    id,
-    name,
-    slug,
-    listings:listings!category_id(count)
-  `)
+  .select(`id, name, slug, listings:listings!category_id(count)`)
   .order('name', { ascending: true })
 
-// Filter to only categories with active listings
 const allCategories = (categoriesData || [])
   .filter(cat => cat.listings && cat.listings[0]?.count > 0)
   .map(cat => ({ id: cat.id, name: cat.name, slug: cat.slug }))
 
-// Fetch all active standards for filter dropdown
-const { data: standardsData } = await supabase
-  .from('standards')
-  .select(`
-    id,
-    code,
-    name,
-    issuing_body,
-    standard_type,
-    category_id
-  `)
-  .eq('is_active', true)
-  .order('issuing_body', { ascending: true })
-  .order('code', { ascending: true })
-
 // Extract unique standards from listings capabilities
 const standardsMap = new Map()
 listings?.forEach(listing => {
-  if (listing.listing_capabilities) {
-    listing.listing_capabilities.forEach(capability => {
-      if (capability.standard) {
-        const standard = capability.standard
-        const key = `${standard.code} - ${standard.name}`
-        if (!standardsMap.has(key)) {
-          standardsMap.set(key, {
-            id: standard.id,
-            code: standard.code,
-            name: standard.name,
-            issuing_body: standard.issuing_body,
-            standard_type: standard.standard_type,
-            displayName: `${standard.code} - ${standard.name}`
-          })
-        }
+  listing.listing_capabilities?.forEach(capability => {
+    if (capability.standard) {
+      const standard = capability.standard
+      const key = `${standard.code} - ${standard.name}`
+      if (!standardsMap.has(key)) {
+        standardsMap.set(key, { ...standard, displayName: key })
       }
-    })
-  }
+    }
+  })
 })
 
 const allStandards = Array.from(standardsMap.values()).sort((a, b) => {
-  // Sort by issuing body first, then by code
   const bodyCompare = (a.issuing_body || '').localeCompare(b.issuing_body || '')
   if (bodyCompare !== 0) return bodyCompare
   return a.code.localeCompare(b.code)
 })
 
-// Extract unique countries and cities from location hierarchy and address
-const getCountryFromLocation = (location) => {
-  if (!location) return null
-  if (location.level === 'country') return { name: location.name, slug: location.name.toLowerCase().replace(/\s+/g, '-') }
-  if (location.parent?.level === 'country') return { name: location.parent.name, slug: location.parent.name.toLowerCase().replace(/\s+/g, '-') }
-  if (location.parent?.parent?.level === 'country') return { name: location.parent.parent.name, slug: location.parent.parent.name.toLowerCase().replace(/\s+/g, '-') }
-  return null
-}
+// Location Helpers
+const extractCountry = (address) => address ? address.split(',').map(p => p.trim()).pop() || '' : ''
+const extractCity = (address) => address ? address.split(',').map(p => p.trim())[0] || '' : ''
 
-const getCityFromLocation = (location) => {
-  if (!location) return null
-  if (location.level === 'city') return { name: location.name, slug: location.name.toLowerCase().replace(/\s+/g, '-') }
-  return null
-}
-
-const extractCountry = (address) => {
-  if (!address) return ''
-  const parts = address.split(',').map(p => p.trim())
-  return parts[parts.length - 1] || ''
-}
-
-const extractCity = (address) => {
-  if (!address) return ''
-  const parts = address.split(',').map(p => p.trim())
-  return parts[0] || ''
-}
-
-// Known countries list for validation
-const knownCountries = new Set([
-  'United States', 'Canada', 'United Kingdom', 'Germany', 'Netherlands',
-  'Singapore', 'Thailand', 'Kuwait', 'UAE', 'UK', 'USA'
-])
-
-const countryMap = new Map()
-const cityMap = new Map()
-
-listings?.forEach(listing => {
-  // From location hierarchy
-  const country = getCountryFromLocation(listing.location)
-  if (country) countryMap.set(country.slug, country.name)
-
-  const city = getCityFromLocation(listing.location)
-  if (city) cityMap.set(city.slug, city.name)
-
-  // From address field as fallback - only if it looks like a real country/city
-  const addressCountry = extractCountry(listing.address)
-  if (addressCountry && knownCountries.has(addressCountry) && !countryMap.has(addressCountry.toLowerCase().replace(/\s+/g, '-'))) {
-    countryMap.set(addressCountry.toLowerCase().replace(/\s+/g, '-'), addressCountry)
-  }
-
-  const addressCity = extractCity(listing.address)
-  // Only add if it doesn't look like a street address (no numbers, reasonable length)
-  if (addressCity &&
-      !/\d/.test(addressCity) &&
-      addressCity.length > 2 &&
-      addressCity.length < 30 &&
-      !cityMap.has(addressCity.toLowerCase().replace(/\s+/g, '-'))) {
-    cityMap.set(addressCity.toLowerCase().replace(/\s+/g, '-'), addressCity)
-  }
+// Build location options for autocomplete
+const locationsMap = new Map()
+listings?.forEach(lab => {
+  const country = extractCountry(lab.address)
+  const city = extractCity(lab.address)
+  if (country) locationsMap.set(`${country} (Country)`, { displayName: `${country} (Country)`, value: country })
+  if (city) locationsMap.set(`${city} (City)`, { displayName: `${city} (City)`, value: city })
 })
+const locationOptions = Array.from(locationsMap.values()).sort((a, b) => a.displayName.localeCompare(b.displayName))
 
-// Create combined location options for fuzzy search
-const locationOptions = []
-countryMap.forEach((name, slug) => {
-  locationOptions.push({ name, type: 'country', displayName: `${name} (Country)` })
-})
-cityMap.forEach((name, slug) => {
-  locationOptions.push({ name, type: 'city', displayName: `${name} (City)` })
-})
-
-const totalListings = listings?.length || 0
-
-// Get category from URL parameter for dynamic heading
 const urlParams = new URLSearchParams(Astro.url.search)
-const categoryParam = urlParams.get('category')
-const getCategoryDisplayName = (categorySlug) => {
-  if (!categorySlug) return null
-  return categorySlug.replace(/%20/g, ' ')
-}
-const categoryDisplayName = getCategoryDisplayName(categoryParam)
-
-// Helper functions for filtering are defined in the frontmatter
+const categoryDisplayName = urlParams.get('category')?.replace(/%20/g, ' ')
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{categoryDisplayName ? `${categoryDisplayName} | TSTR Hub` : 'Browse Testing Laboratories | TSTR Hub'}</title>
-  <meta name="description" content="Browse {totalListings} verified testing service providers by country, city, and specialty. Oil & Gas, Pharmaceutical, Environmental testing labs worldwide.">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
-     crossorigin="anonymous"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<style is:global>
+  .autocomplete-option {
+    @apply px-4 py-3 cursor-pointer transition-colors border-b border-white/5 text-slate-300;
+  }
+  .autocomplete-option:last-child {
+    @apply border-b-0;
+  }
+  .autocomplete-option:hover, .autocomplete-option.selected, .autocomplete-option.highlighted {
+    @apply bg-white/5 text-white;
+  }
+  .autocomplete-match {
+    @apply text-emerald-400 font-bold;
+  }
+  .autocomplete-no-results {
+    @apply px-4 py-3 text-slate-500 italic text-sm;
+  }
+  .autocomplete-clear.visible {
+    @apply opacity-100;
+  }
+</style>
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #f5f5f5;
-    }
-
-    header {
-      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
-      color: white;
-      padding: 2rem;
-      text-align: center;
-    }
-
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-    }
-
-    .breadcrumb {
-      margin-top: 1rem;
-      opacity: 0.9;
-    }
-
-    .breadcrumb a {
-      color: white;
-      text-decoration: none;
-    }
-
-    .breadcrumb a:hover {
-      text-decoration: underline;
-    }
-
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 3rem 2rem;
-    }
-
-    .filters {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      margin-bottom: 2rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .filter-group {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .filter-group label {
-      font-weight: 600;
-      color: #000080;
-      margin-bottom: 0.5rem;
-    }
-
-    .filter-group select {
-      padding: 0.75rem;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: border-color 0.3s ease;
-    }
-
-    .filter-group select:focus {
-      outline: none;
-      border-color: #000080;
-    }
-
-    .results-count {
-      background: white;
-      padding: 1rem 2rem;
-      border-radius: 8px;
-      margin-bottom: 1.5rem;
-      text-align: center;
-      font-weight: 600;
-      color: #000080;
-    }
-
-    .listings-grid {
-      display: grid;
-      gap: 1.5rem;
-    }
-
-    .listing-card {
-      background: white;
-      border: 2px solid #e0e0e0;
-      border-radius: 12px;
-      padding: 2rem;
-      transition: all 0.3s ease;
-    }
-
-    .listing-card:hover {
-      border-color: #000080;
-      box-shadow: 0 4px 12px rgba(102,126,234,0.2);
-      transform: translateY(-2px);
-    }
-
-    .listing-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: start;
-      margin-bottom: 1rem;
-    }
-
-    .listing-title {
-      color: #000080;
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-    }
-
-    .listing-title a {
-      color: #000080;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .listing-title a:hover {
-      color: #32CD32;
-    }
-
-    .category-badge {
-      background: #f0f0f0;
-      padding: 0.25rem 0.75rem;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      color: #555;
-      display: inline-block;
-    }
-
-    .verified-badge {
-      background: #4caf50;
-      color: white;
-      padding: 0.25rem 0.75rem;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    .listing-description {
-      color: #666;
-      margin-bottom: 1rem;
-      line-height: 1.6;
-    }
-
-    .listing-details {
-      display: grid;
-      gap: 0.5rem;
-      color: #555;
-      font-size: 0.95rem;
-    }
-
-    .listing-actions {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1rem;
-      align-items: center;
-    }
-
-    .visit-btn {
-      background: #000080;
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
-      display: inline-block;
-    }
-
-    .visit-btn:hover {
-      background: #32CD32;
-      transform: translateY(-1px);
-      box-shadow: 0 2px 4px rgba(102,126,234,0.3);
-    }
-
-    .claim-link {
-      color: #000080;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.9rem;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid transparent;
-      transition: all 0.3s ease;
-    }
-
-    .claim-link:hover {
-      color: #32CD32;
-      border-bottom-color: #32CD32;
-    }
-
-    .detail-item {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .detail-icon {
-      color: #000080;
-      font-weight: 600;
-    }
-
-    .detail-item a {
-      color: #000080;
-      text-decoration: none;
-    }
-
-    .detail-item a:hover {
-      text-decoration: underline;
-    }
-
-    .no-results {
-      background: white;
-      padding: 3rem;
-      border-radius: 12px;
-      text-align: center;
-      color: #666;
-    }
-
-    footer {
-      background: #333;
-      color: white;
-      text-align: center;
-      padding: 2rem;
-      margin-top: 3rem;
-    }
-
-    footer a {
-      color: white;
-      text-decoration: none;
-      margin: 0 1rem;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    /* Autocomplete Dropdown Styles */
-    .autocomplete-container {
-      position: relative;
-      width: 100%;
-    }
-
-    .autocomplete-input {
-      width: 100%;
-      padding: 0.75rem 2.5rem 0.75rem 0.75rem;
-      border: 2px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 1rem;
-      background: white;
-      cursor: text;
-      transition: border-color 0.2s ease;
-    }
-
-    .autocomplete-input:focus {
-      outline: none;
-      border-color: #000080;
-      box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
-    }
-
-    .autocomplete-input::placeholder {
-      color: #a0aec0;
-    }
-
-    .autocomplete-clear {
-      position: absolute;
-      right: 0.75rem;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: #a0aec0;
-      cursor: pointer;
-      padding: 0.25rem;
-      border-radius: 4px;
-      font-size: 1.2rem;
-      line-height: 1;
-      opacity: 0;
-      transition: opacity 0.2s ease, color 0.2s ease;
-    }
-
-    .autocomplete-clear:hover {
-      color: #4a5568;
-      background: #f7fafc;
-    }
-
-    .autocomplete-clear.visible {
-      opacity: 1;
-    }
-
-    .autocomplete-dropdown {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: white;
-      border: 2px solid #e2e8f0;
-      border-top: none;
-      border-radius: 0 0 8px 8px;
-      max-height: 200px;
-      overflow-y: auto;
-      z-index: 1000;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-
-    .autocomplete-option {
-      padding: 0.75rem;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-      border-bottom: 1px solid #f7fafc;
-    }
-
-    .autocomplete-option:last-child {
-      border-bottom: none;
-    }
-
-    .autocomplete-option:hover,
-    .autocomplete-option.selected {
-      background-color: #f7fafc;
-    }
-
-    .autocomplete-option.highlighted {
-      background-color: #edf2f7;
-    }
-
-    .autocomplete-no-results {
-      padding: 0.75rem;
-      color: #a0aec0;
-      font-style: italic;
-    }
-
-    .autocomplete-match {
-      font-weight: 600;
-      color: #000080;
-    }
-
-    .certification-disclaimer {
-      background: linear-gradient(135deg, #fff9e6 0%, #ffe8cc 100%);
-      border: 2px solid #ffc107;
-      border-radius: 8px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-    }
-
-    .disclaimer-icon {
-      font-size: 1.5rem;
-      flex-shrink: 0;
-      margin-top: 0.25rem;
-    }
-
-    .disclaimer-content {
-      flex: 1;
-    }
-
-    .disclaimer-content p {
-      margin: 0;
-      font-size: 0.95rem;
-      color: #333;
-      line-height: 1.5;
-    }
-
-    @media (max-width: 768px) {
-      .certification-disclaimer {
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-
-      .disclaimer-icon {
-        margin-top: 0;
-      }
-    }
-  </style>
-  <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
-</head>
-<body>
-  <header>
-    <h1>{categoryDisplayName ? `Browse ${categoryDisplayName}` : 'Browse Testing Laboratories'}</h1>
-    <p class="breadcrumb">
-      <a href="/">Home</a> / {categoryDisplayName ? `${categoryDisplayName} | ` : ''}Browse All Listings | <a href="/search/standards">🔬 Search by Standard</a>
-    </p>
-  </header>
-
-  <main>
-    <div class="filters">
-      <div class="filter-group">
-        <label for="location-filter">Location</label>
-        <div class="autocomplete-container">
-          <input
-            type="text"
-            id="location-filter"
-            class="autocomplete-input"
-            placeholder="Type to search cities or countries..."
-            autocomplete="off"
-            role="combobox"
-            aria-expanded="false"
-            aria-autocomplete="list"
-            aria-label="Location"
-          >
-          <button type="button" class="autocomplete-clear" aria-label="Clear selection">×</button>
-          <div class="autocomplete-dropdown hidden" role="listbox"></div>
-        </div>
-      </div>
-
-      <div class="filter-group">
-        <label for="category-filter">Category</label>
-        <div class="autocomplete-container">
-          <input 
-            type="text" 
-            id="category-filter" 
-            class="autocomplete-input" 
-            placeholder="Type to search categories..."
-            autocomplete="off"
-            role="combobox"
-            aria-expanded="false"
-            aria-autocomplete="list"
-            aria-label="Category"
-          >
-          <button type="button" class="autocomplete-clear" aria-label="Clear selection">×</button>
-          <div class="autocomplete-dropdown hidden" role="listbox"></div>
-        </div>
-      </div>
-
-      <div class="filter-group">
-        <label for="standard-filter">Standard or Certification</label>
-        <div class="autocomplete-container">
-          <input 
-            type="text" 
-            id="standard-filter" 
-            class="autocomplete-input" 
-            placeholder="Type to search standards..."
-            autocomplete="off"
-            role="combobox"
-            aria-expanded="false"
-            aria-autocomplete="list"
-            aria-label="Standard or Certification"
-          >
-          <button type="button" class="autocomplete-clear" aria-label="Clear selection">×</button>
-          <div class="autocomplete-dropdown hidden" role="listbox"></div>
-        </div>
-      </div>
+<BaseLayout 
+  title={categoryDisplayName ? `${categoryDisplayName} | TSTR Hub` : 'Browse Testing Laboratories | TSTR Hub'}
+  description={`Browse ${totalListings} verified testing service providers by country, city, and specialty. Oil & Gas, Pharmaceutical, Environmental testing labs worldwide.`}
+>
+  <div class="max-w-7xl mx-auto px-6 py-12">
+    <!-- Page Header -->
+    <div class="mb-12 text-center md:text-left">
+      <nav class="flex items-center gap-2 text-sm font-medium text-slate-500 mb-6 overflow-x-auto whitespace-nowrap pb-2 no-scrollbar">
+        <a href="/" class="hover:text-emerald-400 decoration-none">Home</a>
+        <span class="text-slate-700">/</span>
+        {categoryDisplayName && (
+          <>
+            <span class="text-slate-400">{categoryDisplayName}</span>
+            <span class="text-slate-700">/</span>
+          </>
+        )}
+        <span class="text-white">Browse Listings</span>
+        <span class="text-slate-700">/</span>
+        <a href="/search/standards" class="text-blue-400 hover:text-blue-300 decoration-none">🔬 Search by Standard</a>
+      </nav>
+      <h1 class="text-4xl md:text-5xl font-black text-white mb-4">
+        {categoryDisplayName ? `Browse ${categoryDisplayName}` : 'Browse Laboratories'}
+      </h1>
+      <p class="text-slate-400 text-lg max-w-3xl">
+        Discover verified specialist testing services across global infrastructure industries.
+      </p>
     </div>
 
-    <div class="results-count" id="results-count">
-      Showing {totalListings} listings
-    </div>
-
-    <div class="certification-disclaimer">
-      <div class="disclaimer-icon">⚠️</div>
-      <div class="disclaimer-content">
-        <p>{CONTENT.disclaimer}</p>
-        <p style="margin-top: 0.75rem;">
-          <strong><a href={CONTENT.disclaimerLink.href}>{CONTENT.disclaimerLink.text}</a></strong>
-        </p>
-      </div>
-    </div>
-
-    <div class="listings-grid" id="listings-grid">
-      {listings && listings.map((lab) => {
-        const country = extractCountry(lab.address)
-        const city = extractCity(lab.address)
-        const categoryName = lab.category?.name || ''
-        
-        // Extract standards from capabilities
-        const standards = lab.listing_capabilities?.map(cap => cap.standard).filter(Boolean) || []
-        const standardsDisplay = standards.map(s => `${s.code} - ${s.name}`).join(', ')
-
-        return (
-          <div class="listing-card" data-country={country} data-city={city} data-category={categoryName} data-standards={standardsDisplay}>
-            <div class="listing-header">
-              <div>
-                <h3 class="listing-title">
-                  <a href={`/listing/${lab.slug}`}>{lab.business_name}</a>
-                </h3>
-                {categoryName && <span class="category-badge">{categoryName}</span>}
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <!-- Filters Sidebar -->
+      <aside class="lg:col-span-1 space-y-6">
+        <div class="glass-card p-6 sticky top-24">
+          <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+            Refine Search
+          </h2>
+          
+          <div class="space-y-6">
+            <div class="filter-group">
+              <label class="block text-sm font-semibold text-slate-300 mb-2">Location</label>
+              <div class="relative">
+                <input type="text" id="location-filter" class="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20" placeholder="City or Country...">
+                <button class="autocomplete-clear absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white p-1 opacity-0 transition-opacity">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <div class="autocomplete-dropdown hidden absolute z-50 w-full mt-2 glass-card border border-white/10 max-h-60 overflow-y-auto no-scrollbar shadow-2xl"></div>
               </div>
-              {lab.website_verified && (
-                <span class="verified-badge">✓ Verified</span>
-              )}
             </div>
 
-            {lab.description && (
-              <p class="listing-description">{lab.description}</p>
-            )}
+            <div class="filter-group">
+              <label class="block text-sm font-semibold text-slate-300 mb-2">Industry Sector</label>
+              <div class="relative">
+                <input type="text" id="category-filter" class="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20" placeholder="Select Industry...">
+                <button class="autocomplete-clear absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white p-1 opacity-0 transition-opacity">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <div class="autocomplete-dropdown hidden absolute z-50 w-full mt-2 glass-card border border-white/10 max-h-60 overflow-y-auto no-scrollbar shadow-2xl"></div>
+              </div>
+            </div>
 
-            {standards.length > 0 && (
-              <div class="listing-standards" style="margin-bottom: 1rem;">
-                <div class="detail-item">
-                  <span class="detail-icon">🔬</span>
-                  <span style="font-size: 0.9rem; color: #555;">
-                    {standards.slice(0, 3).map(s => `${s.code}`).join(', ')}
-                    {standards.length > 3 && ` +${standards.length - 3} more`}
-                  </span>
+            <div class="filter-group">
+              <label class="block text-sm font-semibold text-slate-300 mb-2">Technical Standard</label>
+              <div class="relative">
+                <input type="text" id="standard-filter" class="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20" placeholder="ASTM, ISO, etc...">
+                <button class="autocomplete-clear absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white p-1 opacity-0 transition-opacity">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <div class="autocomplete-dropdown hidden absolute z-50 w-full mt-2 glass-card border border-white/10 max-h-60 overflow-y-auto no-scrollbar shadow-2xl"></div>
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-white/5">
+              <div id="results-count" class="text-sm font-medium text-emerald-400/80 bg-emerald-500/5 border border-emerald-500/10 rounded-lg px-4 py-2 text-center">
+                Showing {totalListings} listings
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="lg:col-span-3 space-y-8">
+        <!-- Disclaimer -->
+        <div class="glass-card bg-amber-500/[0.03] border-amber-500/20 p-6 flex flex-col md:flex-row gap-4">
+          <div class="p-3 bg-amber-500/10 rounded-xl h-fit">
+            <svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+          </div>
+          <div>
+            <p class="text-amber-100/90 text-sm leading-relaxed mb-3">
+              {CONTENT.disclaimer}
+            </p>
+            <a href={CONTENT.disclaimerLink.href} class="text-amber-500 text-sm font-bold hover:underline decoration-none">
+              {CONTENT.disclaimerLink.text}
+            </a>
+          </div>
+        </div>
+
+        <!-- Listings Grid -->
+        <div id="listings-grid" class="flex flex-col gap-6">
+          {listings && listings.map((lab) => {
+            const country = extractCountry(lab.address)
+            const city = extractCity(lab.address)
+            const categoryName = lab.category?.name || ''
+            const standards = lab.listing_capabilities?.map(cap => cap.standard).filter(Boolean) || []
+            const standardsDisplay = standards.map(s => `${s.code} - ${s.name}`).join(', ')
+
+            return (
+              <div class="glass-card glass-card-hover p-8 group relative overflow-hidden listing-card" 
+                   data-country={country} data-city={city} data-category={categoryName} data-standards={standardsDisplay}>
+                <div class="absolute inset-0 bg-gradient-to-br from-blue-500/0 via-transparent to-blue-500/[0.02] pointer-events-none"></div>
+                
+                <div class="flex flex-col md:flex-row justify-between items-start gap-6 relative z-10">
+                  <div class="flex-1">
+                    <div class="flex flex-wrap items-center gap-3 mb-4">
+                      <h3 class="text-2xl font-bold text-white tracking-tight">
+                        <a href={`/listing/${lab.slug}`} class="hover:text-emerald-400 transition-colors decoration-none">
+                          {lab.business_name}
+                        </a>
+                      </h3>
+                      {lab.website_verified && (
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                          ✓ Verified
+                        </span>
+                      )}
+                      {categoryName && (
+                        <span class="px-2 py-1 rounded-md text-[11px] font-black uppercase tracking-wider bg-white/5 text-slate-400 border border-white/5">
+                          {categoryName}
+                        </span>
+                      )}
+                    </div>
+
+                    {lab.description && (
+                      <p class="text-slate-400 mb-6 line-clamp-2 text-sm leading-relaxed">
+                        {lab.description}
+                      </p>
+                    )}
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      {lab.address && (
+                        <div class="flex items-start gap-2">
+                          <span class="text-emerald-400 text-base">📍</span>
+                          <span class="text-slate-400">{lab.address}</span>
+                        </div>
+                      )}
+                      {standards.length > 0 && (
+                        <div class="flex items-start gap-2">
+                          <span class="text-blue-400 text-base">🔬</span>
+                          <div class="flex flex-wrap gap-1.5">
+                            {standards.slice(0, 3).map(s => (
+                              <span class="text-xs font-semibold px-2 py-0.5 bg-blue-500/10 text-blue-300 rounded border border-blue-500/10">
+                                {s.code}
+                              </span>
+                            ))}
+                            {standards.length > 3 && (
+                              <span class="text-[10px] text-slate-500 self-center font-bold">+{standards.length - 3}</span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div class="flex flex-col gap-3 w-full md:w-auto">
+                    {lab.website && (
+                      <a href={getRedirectUrl(lab.website, lab.id)} 
+                         class="px-6 py-3 rounded-full font-bold text-white bg-gradient-to-r from-blue-600 to-emerald-500 transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] text-center no-underline whitespace-nowrap"
+                         target="_blank" rel="noopener noreferrer">
+                        Visit Website
+                      </a>
+                    )}
+                      <a href={`/claim?listing_id=${lab.id}`} 
+                         data-listing-id={lab.id} 
+                         data-listing-name={lab.business_name}
+                         class="text-xs font-bold text-slate-500 hover:text-emerald-400 transition-colors py-2 text-center no-underline claim-link">
+                        IS THIS YOU? CLAIM LISTING
+                      </a>
+                  </div>
                 </div>
               </div>
-            )}
+        </div>
 
-             <div class="listing-details">
-               {lab.address && (
-                 <div class="detail-item">
-                   <span class="detail-icon">📍</span>
-                   <span>{lab.address}</span>
-                 </div>
-               )}
-               {lab.phone && (
-                 <div class="detail-item">
-                   <span class="detail-icon">📞</span>
-                   <span>{lab.phone}</span>
-                 </div>
-               )}
-               {lab.email && (
-                 <div class="detail-item">
-                   <span class="detail-icon">✉️</span>
-                   <a href={`mailto:${lab.email}`}>{lab.email}</a>
-                 </div>
-               )}
-               {lab.website && (
-                 <div class="detail-item">
-                   <span class="detail-icon">🌐</span>
-                   <a href={getRedirectUrl(lab.website, lab.id)} target="_blank" rel="noopener noreferrer">{lab.website}</a>
-                 </div>
-               )}
-             </div>
-
-             <div class="listing-actions">
-               {lab.website && (
-                 <a href={getRedirectUrl(lab.website, lab.id)} class="visit-btn" target="_blank" rel="noopener noreferrer">
-                   Visit Website
-                 </a>
-               )}
-                <a href="/claim" class="claim-link" target="_blank">
-                  Is this you? Claim
-                </a>
-             </div>
+        <!-- Low Density Fallback (Concierge) -->
+        <div id="low-density-fallback" class="hidden glass-card p-8 border-emerald-500/20 bg-emerald-500/[0.02]">
+          <div class="flex flex-col md:flex-row items-center gap-8">
+            <div class="w-20 h-20 bg-emerald-500/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+              <svg class="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-white mb-2">Need a specific provider?</h3>
+              <p class="text-slate-400 mb-4 max-w-2xl">
+                We're currently expanding our directory. If you haven't found what you're looking for, our team can conduct a free manual search for you.
+              </p>
+              <a id="concierge-link" href="/contact?inquiry=sales" class="inline-flex items-center gap-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-full transition-all hover:scale-105 no-underline">
+                Request Free Concierge Search
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              </a>
+            </div>
           </div>
-        )
-      })}
-    </div>
+        </div>
 
-    <!-- Low Density Fallback - Shown when < 5 results via JS -->
-    <div class="low-density-fallback hidden" id="low-density-fallback" style="
-      background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
-      border: 2px solid #93c5fd;
-      border-radius: 12px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(102,126,234,0.15);
-    ">
-      <div style="max-width: 600px; margin: 0 auto;">
-        <h3 style="font-size: 1.75rem; font-weight: 700; color: #1e3a8a; margin-bottom: 1rem;">
-          Can't find the specific test you need?
-        </h3>
-        <p style="color: #1e40af; font-size: 1.1rem; margin-bottom: 1.5rem; line-height: 1.6;">
-          Our engineering team manually sources ISO 17025 accredited laboratories for specialized requirements.
-          We'll find the perfect testing partner for your needs—at no cost to you.
-        </p>
-        <a
-          href={MAILTO_LINKS.enterprisePlan}
-          id="concierge-link"
-          style="
-            display: inline-block;
-            background: #000080;
-            color: white;
-            font-weight: 700;
-            font-size: 1.1rem;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(102,126,234,0.3);
-          "
-          onmouseover="this.style.background='#32CD32'; this.style.transform='scale(1.05)'"
-          onmouseout="this.style.background='#000080'; this.style.transform='scale(1)'"
-        >
-          Request Free Concierge Search →
-        </a>
-        <p style="color: #000080; font-size: 0.9rem; margin-top: 1rem; font-weight: 600;">
-          ⚡ Average response time: 24 hours
-        </p>
+        <div id="no-results" class="hidden glass-card p-12 text-center border-dashed border-white/10">
+          <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg class="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </div>
+          <h2 class="text-2xl font-bold text-white mb-3">No listings matches found</h2>
+          <p class="text-slate-400 mb-8">Try adjusting your filters or search terms to broaden your results.</p>
+          <button onclick="location.reload()" class="px-8 py-3 bg-white/10 hover:bg-white/20 text-white font-bold rounded-full transition-all">
+            Reset All Filters
+          </button>
+        </div>
       </div>
     </div>
-
-    <div class="no-results hidden" id="no-results">
-      <h2>No listings found</h2>
-      <p>Try adjusting your filters to see more results.</p>
-    </div>
-  </main>
-
-  <Footer />
+  </div>
+</BaseLayout>
 
     <script define:vars={{ locationOptions, allCategories, allStandards }}>
     // Data for autocomplete dropdowns
