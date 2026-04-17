@@ -270,8 +270,9 @@ const categoryDisplayName = urlParams.get('category')?.replace(/%20/g, ' ')
                         IS THIS YOU? CLAIM LISTING
                       </a>
                   </div>
-                </div>
               </div>
+            )
+          })}
         </div>
 
         <!-- Low Density Fallback (Concierge) -->
@@ -306,383 +307,381 @@ const categoryDisplayName = urlParams.get('category')?.replace(/%20/g, ' ')
       </div>
     </div>
   </div>
-</BaseLayout>
 
-    <script define:vars={{ locationOptions, allCategories, allStandards }}>
-    // Data for autocomplete dropdowns
-    const locationData = JSON.parse(JSON.stringify(locationOptions || []))
-    const categoriesData = JSON.parse(JSON.stringify(allCategories || []))
-    const standardsData = JSON.parse(JSON.stringify(allStandards))
+  <script define:vars={{ locationOptions, allCategories, allStandards }}>
+  // Data for autocomplete dropdowns
+  const locationData = JSON.parse(JSON.stringify(locationOptions || []))
+  const categoriesData = JSON.parse(JSON.stringify(allCategories || []))
+  const standardsData = JSON.parse(JSON.stringify(allStandards))
 
-    // Filter functionality
-    const locationFilter = document.getElementById('location-filter')
-    const categoryFilter = document.getElementById('category-filter')
-    const standardFilter = document.getElementById('standard-filter')
-    const listingsGrid = document.getElementById('listings-grid')
-    const resultsCount = document.getElementById('results-count')
-    const noResults = document.getElementById('no-results')
-    const lowDensityFallback = document.getElementById('low-density-fallback')
-    const conciergeLink = document.getElementById('concierge-link')
-    const listings = document.querySelectorAll('.listing-card')
+  // Filter functionality
+  const locationFilter = document.getElementById('location-filter')
+  const categoryFilter = document.getElementById('category-filter')
+  const standardFilter = document.getElementById('standard-filter')
+  const listingsGrid = document.getElementById('listings-grid')
+  const resultsCount = document.getElementById('results-count')
+  const noResults = document.getElementById('no-results')
+  const lowDensityFallback = document.getElementById('low-density-fallback')
+  const conciergeLink = document.getElementById('concierge-link')
+  const listings = document.querySelectorAll('.listing-card')
 
-    // Autocomplete class for intelligent dropdowns
-    class AutocompleteDropdown {
-      constructor(inputElement, options, displayField = 'name') {
-        this.input = inputElement
-        this.options = options
-        this.displayField = displayField
-        this.container = inputElement.parentElement
-        this.dropdown = this.container.querySelector('.autocomplete-dropdown')
-        this.clearBtn = this.container.querySelector('.autocomplete-clear')
-        this.filteredOptions = []
-        this.selectedIndex = -1
-        this.isExpanded = false
-        
-        this.init()
-      }
-
-      init() {
-        // Input event listeners
-        this.input.addEventListener('input', this.debounce(() => this.handleInput(), 150))
-        this.input.addEventListener('focus', () => this.showDropdown())
-        this.input.addEventListener('keydown', (e) => this.handleKeydown(e))
-        this.input.addEventListener('blur', () => {
-          setTimeout(() => this.hideDropdown(), 200) // Delay to allow option click
-        })
-
-        // Clear button
-        this.clearBtn.addEventListener('click', () => this.clearSelection())
-
-        // Click outside to close
-        document.addEventListener('click', (e) => {
-          if (!this.container.contains(e.target)) {
-            this.hideDropdown()
-          }
-        })
-      }
-
-      debounce(func, wait) {
-        let timeout
-        return function executedFunction(...args) {
-          const later = () => {
-            clearTimeout(timeout)
-            func(...args)
-          }
-          clearTimeout(timeout)
-          timeout = setTimeout(later, wait)
-        }
-      }
-
-      handleInput() {
-        const query = this.input.value.toLowerCase().trim()
-        
-        if (query === '') {
-          this.filteredOptions = [...this.options]
-        } else {
-          this.filteredOptions = this.options.filter(option => {
-            const text = this.getDisplayText(option).toLowerCase()
-            return this.fuzzyMatch(query, text)
-          }).sort((a, b) => {
-            const scoreA = this.getMatchScore(query, this.getDisplayText(a).toLowerCase())
-            const scoreB = this.getMatchScore(query, this.getDisplayText(b).toLowerCase())
-            return scoreB - scoreA
-          })
-        }
-
-        this.selectedIndex = -1
-        this.renderOptions()
-        this.showDropdown()
-        this.updateClearButton()
-        filterListings() // Trigger filtering
-      }
-
-      escapeRegex(string) {
-        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-      }
-
-      fuzzyMatch(query, text) {
-        if (query.length === 0) return true
-        if (text.length === 0) return false
-
-        // Convert to lowercase for case-insensitive matching
-        const lowerQuery = query.toLowerCase()
-        const lowerText = text.toLowerCase()
-
-        // Check if query matches from the beginning
-        if (lowerText.startsWith(lowerQuery)) return true
-
-        // Check if query matches as a word (preceded by space, dash, or start)
-        const wordRegex = new RegExp(`(?:^|[\\s\\-])(${this.escapeRegex(lowerQuery)})`, 'i')
-        return wordRegex.test(lowerText)
-      }
-
-      getMatchScore(query, text) {
-        const lowerQuery = query.toLowerCase()
-        const lowerText = text.toLowerCase()
-
-        // Exact match gets highest score
-        if (lowerQuery === lowerText) return 100
-
-        // Starts with query gets high score
-        if (lowerText.startsWith(lowerQuery)) return 80
-
-        // Word match gets medium score
-        const wordRegex = new RegExp(`(?:^|[\\s\\-])(${this.escapeRegex(lowerQuery)})`, 'i')
-        if (wordRegex.test(lowerText)) return 60
-
-        // Contains query gets lower score
-        if (lowerText.includes(lowerQuery)) return 40
-
-        return 0
-      }
-
-      getDisplayText(option) {
-        return option[this.displayField] || option.name || option.displayName || ''
-      }
-
-      renderOptions() {
-        this.dropdown.innerHTML = ''
-
-        if (this.filteredOptions.length === 0) {
-          this.dropdown.innerHTML = '<div class="autocomplete-no-results">No matches found</div>'
-          return
-        }
-
-        this.filteredOptions.forEach((option, index) => {
-          const optionElement = document.createElement('div')
-          optionElement.className = 'autocomplete-option'
-          optionElement.setAttribute('role', 'option')
-          optionElement.setAttribute('data-index', index)
-          
-          const displayText = this.getDisplayText(option)
-          const highlightedText = this.highlightMatch(this.input.value.toLowerCase(), displayText)
-          optionElement.innerHTML = highlightedText
-
-          optionElement.addEventListener('click', () => this.selectOption(option))
-          optionElement.addEventListener('mouseenter', () => this.selectIndex(index))
-          
-          this.dropdown.appendChild(optionElement)
-        })
-      }
-
-      highlightMatch(query, text) {
-        if (!query) return text
-        
-        const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
-        return text.replace(regex, '<span class="autocomplete-match">$1</span>')
-      }
-
-      handleKeydown(e) {
-        if (!this.isExpanded) {
-          if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter') {
-            e.preventDefault()
-            this.showDropdown()
-          }
-          return
-        }
-
-        switch (e.key) {
-          case 'ArrowDown':
-            e.preventDefault()
-            this.selectIndex(Math.min(this.selectedIndex + 1, this.filteredOptions.length - 1))
-            break
-          case 'ArrowUp':
-            e.preventDefault()
-            this.selectIndex(Math.max(this.selectedIndex - 1, -1))
-            break
-          case 'Enter':
-            e.preventDefault()
-            if (this.selectedIndex >= 0) {
-              this.selectOption(this.filteredOptions[this.selectedIndex])
-            }
-            break
-          case 'Escape':
-            this.hideDropdown()
-            this.input.focus()
-            break
-        }
-      }
-
-      selectIndex(index) {
-        this.selectedIndex = index
-        const options = this.dropdown.querySelectorAll('.autocomplete-option')
-        
-        options.forEach((option, i) => {
-          option.classList.toggle('selected', i === index)
-          option.classList.toggle('highlighted', i === index)
-        })
-
-        // Scroll into view if needed
-        if (index >= 0 && options[index]) {
-          options[index].scrollIntoView({ block: 'nearest' })
-        }
-      }
-
-      selectOption(option) {
-        const displayText = this.getDisplayText(option)
-        this.input.value = displayText
-        this.input.setAttribute('data-selected-value', displayText)
-        this.hideDropdown()
-        this.updateClearButton()
-        filterListings() // Trigger filtering
-      }
-
-      clearSelection() {
-        this.input.value = ''
-        this.input.removeAttribute('data-selected-value')
-        this.hideDropdown()
-        this.updateClearButton()
-        filterListings() // Trigger filtering
-      }
-
-      updateClearButton() {
-        this.clearBtn.classList.toggle('visible', this.input.value.length > 0)
-      }
-
-      showDropdown() {
-        if (this.filteredOptions.length === 0 && this.input.value === '') {
-          this.hideDropdown()
-          return
-        }
-        
-        this.dropdown.classList.remove('hidden')
-        this.input.setAttribute('aria-expanded', 'true')
-        this.isExpanded = true
-      }
-
-      hideDropdown() {
-        this.dropdown.classList.add('hidden')
-        this.input.setAttribute('aria-expanded', 'false')
-        this.isExpanded = false
-        this.selectedIndex = -1
-      }
-
-      getValue() {
-        return this.input.getAttribute('data-selected-value') || this.input.value
-      }
+  // Autocomplete class for intelligent dropdowns
+  class AutocompleteDropdown {
+    constructor(inputElement, options, displayField = 'name') {
+      this.input = inputElement
+      this.options = options
+      this.displayField = displayField
+      this.container = inputElement.parentElement
+      this.dropdown = this.container.querySelector('.autocomplete-dropdown')
+      this.clearBtn = this.container.querySelector('.autocomplete-clear')
+      this.filteredOptions = []
+      this.selectedIndex = -1
+      this.isExpanded = false
+      
+      this.init()
     }
 
-    // Initialize autocomplete dropdowns
-    const locationAutocomplete = new AutocompleteDropdown(locationFilter, locationData, 'displayName')
-    const categoryAutocomplete = new AutocompleteDropdown(categoryFilter, categoriesData, 'name')
-    const standardAutocomplete = new AutocompleteDropdown(standardFilter, standardsData, 'displayName')
-
-    function filterListings() {
-      const selectedLocation = locationAutocomplete.getValue().toLowerCase()
-      const selectedCategory = categoryAutocomplete.getValue().toLowerCase()
-      const selectedStandard = standardAutocomplete.getValue().toLowerCase()
-
-      let visibleCount = 0
-
-      listings.forEach(listing => {
-        const country = (listing.dataset.country || '').toLowerCase()
-        const city = (listing.dataset.city || '').toLowerCase()
-        const category = (listing.dataset.category || '').toLowerCase()
-        const standards = (listing.dataset.standards || '').toLowerCase()
-
-        // Location matching: check both country and city fields
-        const matchesLocation = !selectedLocation ||
-          country === selectedLocation ||
-          city === selectedLocation
-
-        const matchesCategory = !selectedCategory || category === selectedCategory
-        const matchesStandard = !selectedStandard || standards.includes(selectedStandard)
-
-        if (matchesLocation && matchesCategory && matchesStandard) {
-          listing.classList.remove('hidden')
-          visibleCount++
-        } else {
-          listing.classList.add('hidden')
-        }
+    init() {
+      // Input event listeners
+      this.input.addEventListener('input', this.debounce(() => this.handleInput(), 150))
+      this.input.addEventListener('focus', () => this.showDropdown())
+      this.input.addEventListener('keydown', (e) => this.handleKeydown(e))
+      this.input.addEventListener('blur', () => {
+        setTimeout(() => this.hideDropdown(), 200) // Delay to allow option click
       })
 
-      // Update results count
-      resultsCount.textContent = `Showing ${visibleCount} listing${visibleCount !== 1 ? 's' : ''}`
+      // Clear button
+      this.clearBtn.addEventListener('click', () => this.clearSelection())
 
-      // Show/hide no results message
-      if (visibleCount === 0) {
-        listingsGrid.classList.add('hidden')
-        noResults.classList.remove('hidden')
-        lowDensityFallback.classList.add('hidden')
-      } else {
-        listingsGrid.classList.remove('hidden')
-        noResults.classList.add('hidden')
-
-        // Show low-density fallback for < 5 results
-        if (visibleCount < 5) {
-          lowDensityFallback.classList.remove('hidden')
-
-          // Update mailto link with filter context in subject
-          let subject = 'Request Free Concierge Search'
-          const contextParts = []
-          if (categoryAutocomplete.getValue()) contextParts.push(categoryAutocomplete.getValue())
-          if (locationAutocomplete.getValue()) {
-            // Extract location name without type suffix
-            const locationName = locationAutocomplete.getValue().replace(/\s*\([^)]*\)$/, '')
-            contextParts.push(locationName)
-          }
-          if (standardAutocomplete.getValue()) contextParts.push(standardAutocomplete.getValue())
-          if (contextParts.length > 0) {
-            subject += ' - ' + contextParts.join(', ')
-          }
-          conciergeLink.href = `/contact?inquiry=sales&subject=Concierge%20Search%20Request&body=${encodeURIComponent(subject)}`
-        } else {
-          lowDensityFallback.classList.add('hidden')
+      // Click outside to close
+      document.addEventListener('click', (e) => {
+        if (!this.container.contains(e.target)) {
+          this.hideDropdown()
         }
+      })
+    }
+
+    debounce(func, wait) {
+      let timeout
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout)
+          func(...args)
+        }
+        clearTimeout(timeout)
+        timeout = setTimeout(later, wait)
       }
     }
 
-    // Check URL parameters for pre-filtering
-    const urlParams = new URLSearchParams(window.location.search)
-
-    function setAutocompleteValue(autocomplete, value) {
-      if (value) {
-        autocomplete.input.value = value
-        autocomplete.input.setAttribute('data-selected-value', value)
-        autocomplete.updateClearButton()
-      }
-    }
-
-    // Handle legacy URL parameters for backward compatibility
-    if (urlParams.has('country')) {
-      const countryValue = urlParams.get('country')
-      setAutocompleteValue(locationAutocomplete, `${countryValue} (Country)`)
-    }
-    if (urlParams.has('city')) {
-      const cityValue = urlParams.get('city')
-      setAutocompleteValue(locationAutocomplete, `${cityValue} (City)`)
-    }
-    if (urlParams.has('location')) {
-      setAutocompleteValue(locationAutocomplete, urlParams.get('location'))
-    }
-    if (urlParams.has('category')) {
-      setAutocompleteValue(categoryAutocomplete, urlParams.get('category'))
-    }
-    if (urlParams.has('standard')) {
-      setAutocompleteValue(standardAutocomplete, urlParams.get('standard'))
-    }
-
-    // Initial filter if URL params exist
-    if (urlParams.toString()) {
-      filterListings()
-    }
-
-    // Claim button functionality
-    document.addEventListener('DOMContentLoaded', () => {
-      const claimLinks = document.querySelectorAll('.claim-link')
-
-      claimLinks.forEach(link => {
-        link.addEventListener('click', async (e) => {
-          e.preventDefault()
-
-          const listingId = link.getAttribute('data-listing-id')
-          const listingName = link.getAttribute('data-listing-name')
-
-          // For now, always redirect to claim page (simplified for testing)
-          window.location.href = `/claim?id=${listingId}&provider=${encodeURIComponent(listingName)}`
+    handleInput() {
+      const query = this.input.value.toLowerCase().trim()
+      
+      if (query === '') {
+        this.filteredOptions = [...this.options]
+      } else {
+        this.filteredOptions = this.options.filter(option => {
+          const text = this.getDisplayText(option).toLowerCase()
+          return this.fuzzyMatch(query, text)
+        }).sort((a, b) => {
+          const scoreA = this.getMatchScore(query, this.getDisplayText(a).toLowerCase())
+          const scoreB = this.getMatchScore(query, this.getDisplayText(b).toLowerCase())
+          return scoreB - scoreA
         })
+      }
+
+      this.selectedIndex = -1
+      this.renderOptions()
+      this.showDropdown()
+      this.updateClearButton()
+      filterListings() // Trigger filtering
+    }
+
+    escapeRegex(string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    }
+
+    fuzzyMatch(query, text) {
+      if (query.length === 0) return true
+      if (text.length === 0) return false
+
+      // Convert to lowercase for case-insensitive matching
+      const lowerQuery = query.toLowerCase()
+      const lowerText = text.toLowerCase()
+
+      // Check if query matches from the beginning
+      if (lowerText.startsWith(lowerQuery)) return true
+
+      // Check if query matches as a word (preceded by space, dash, or start)
+      const wordRegex = new RegExp(`(?:^|[\\s\\-])(${this.escapeRegex(lowerQuery)})`, 'i')
+      return wordRegex.test(lowerText)
+    }
+
+    getMatchScore(query, text) {
+      const lowerQuery = query.toLowerCase()
+      const lowerText = text.toLowerCase()
+
+      // Exact match gets highest score
+      if (lowerQuery === lowerText) return 100
+
+      // Starts with query gets high score
+      if (lowerText.startsWith(lowerQuery)) return 80
+
+      // Word match gets medium score
+      const wordRegex = new RegExp(`(?:^|[\\s\\-])(${this.escapeRegex(lowerQuery)})`, 'i')
+      if (wordRegex.test(lowerText)) return 60
+
+      // Contains query gets lower score
+      if (lowerText.includes(lowerQuery)) return 40
+
+      return 0
+    }
+
+    getDisplayText(option) {
+      return option[this.displayField] || option.name || option.displayName || ''
+    }
+
+    renderOptions() {
+      this.dropdown.innerHTML = ''
+
+      if (this.filteredOptions.length === 0) {
+        this.dropdown.innerHTML = '<div class="autocomplete-no-results">No matches found</div>'
+        return
+      }
+
+      this.filteredOptions.forEach((option, index) => {
+        const optionElement = document.createElement('div')
+        optionElement.className = 'autocomplete-option'
+        optionElement.setAttribute('role', 'option')
+        optionElement.setAttribute('data-index', index)
+        
+        const displayText = this.getDisplayText(option)
+        const highlightedText = this.highlightMatch(this.input.value.toLowerCase(), displayText)
+        optionElement.innerHTML = highlightedText
+
+        optionElement.addEventListener('click', () => this.selectOption(option))
+        optionElement.addEventListener('mouseenter', () => this.selectIndex(index))
+        
+        this.dropdown.appendChild(optionElement)
+      })
+    }
+
+    highlightMatch(query, text) {
+      if (!query) return text
+      
+      const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
+      return text.replace(regex, '<span class="autocomplete-match">$1</span>')
+    }
+
+    handleKeydown(e) {
+      if (!this.isExpanded) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter') {
+          e.preventDefault()
+          this.showDropdown()
+        }
+        return
+      }
+
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault()
+          this.selectIndex(Math.min(this.selectedIndex + 1, this.filteredOptions.length - 1))
+          break
+        case 'ArrowUp':
+          e.preventDefault()
+          this.selectIndex(Math.max(this.selectedIndex - 1, -1))
+          break
+        case 'Enter':
+          e.preventDefault()
+          if (this.selectedIndex >= 0) {
+            this.selectOption(this.filteredOptions[this.selectedIndex])
+          }
+          break
+        case 'Escape':
+          this.hideDropdown()
+          this.input.focus()
+          break
+      }
+    }
+
+    selectIndex(index) {
+      this.selectedIndex = index
+      const options = this.dropdown.querySelectorAll('.autocomplete-option')
+      
+      options.forEach((option, i) => {
+        option.classList.toggle('selected', i === index)
+        option.classList.toggle('highlighted', i === index)
+      })
+
+      // Scroll into view if needed
+      if (index >= 0 && options[index]) {
+        options[index].scrollIntoView({ block: 'nearest' })
+      }
+    }
+
+    selectOption(option) {
+      const displayText = this.getDisplayText(option)
+      this.input.value = displayText
+      this.input.setAttribute('data-selected-value', displayText)
+      this.hideDropdown()
+      this.updateClearButton()
+      filterListings() // Trigger filtering
+    }
+
+    clearSelection() {
+      this.input.value = ''
+      this.input.removeAttribute('data-selected-value')
+      this.hideDropdown()
+      this.updateClearButton()
+      filterListings() // Trigger filtering
+    }
+
+    updateClearButton() {
+      this.clearBtn.classList.toggle('visible', this.input.value.length > 0)
+    }
+
+    showDropdown() {
+      if (this.filteredOptions.length === 0 && this.input.value === '') {
+        this.hideDropdown()
+        return
+      }
+      
+      this.dropdown.classList.remove('hidden')
+      this.input.setAttribute('aria-expanded', 'true')
+      this.isExpanded = true
+    }
+
+    hideDropdown() {
+      this.dropdown.classList.add('hidden')
+      this.input.setAttribute('aria-expanded', 'false')
+      this.isExpanded = false
+      this.selectedIndex = -1
+    }
+
+    getValue() {
+      return this.input.getAttribute('data-selected-value') || this.input.value
+    }
+  }
+
+  // Initialize autocomplete dropdowns
+  const locationAutocomplete = new AutocompleteDropdown(locationFilter, locationData, 'displayName')
+  const categoryAutocomplete = new AutocompleteDropdown(categoryFilter, categoriesData, 'name')
+  const standardAutocomplete = new AutocompleteDropdown(standardFilter, standardsData, 'displayName')
+
+  function filterListings() {
+    const selectedLocation = locationAutocomplete.getValue().toLowerCase()
+    const selectedCategory = categoryAutocomplete.getValue().toLowerCase()
+    const selectedStandard = standardAutocomplete.getValue().toLowerCase()
+
+    let visibleCount = 0
+
+    listings.forEach(listing => {
+      const country = (listing.dataset.country || '').toLowerCase()
+      const city = (listing.dataset.city || '').toLowerCase()
+      const category = (listing.dataset.category || '').toLowerCase()
+      const standards = (listing.dataset.standards || '').toLowerCase()
+
+      // Location matching: check both country and city fields
+      const matchesLocation = !selectedLocation ||
+        country === selectedLocation ||
+        city === selectedLocation
+
+      const matchesCategory = !selectedCategory || category === selectedCategory
+      const matchesStandard = !selectedStandard || standards.includes(selectedStandard)
+
+      if (matchesLocation && matchesCategory && matchesStandard) {
+        listing.classList.remove('hidden')
+        visibleCount++
+      } else {
+        listing.classList.add('hidden')
+      }
+    })
+
+    // Update results count
+    resultsCount.textContent = `Showing ${visibleCount} listing${visibleCount !== 1 ? 's' : ''}`
+
+    // Show/hide no results message
+    if (visibleCount === 0) {
+      listingsGrid.classList.add('hidden')
+      noResults.classList.remove('hidden')
+      lowDensityFallback.classList.add('hidden')
+    } else {
+      listingsGrid.classList.remove('hidden')
+      noResults.classList.add('hidden')
+
+      // Show low-density fallback for < 5 results
+      if (visibleCount < 5) {
+        lowDensityFallback.classList.remove('hidden')
+
+        // Update mailto link with filter context in subject
+        let subject = 'Request Free Concierge Search'
+        const contextParts = []
+        if (categoryAutocomplete.getValue()) contextParts.push(categoryAutocomplete.getValue())
+        if (locationAutocomplete.getValue()) {
+          // Extract location name without type suffix
+          const locationName = locationAutocomplete.getValue().replace(/\s*\([^)]*\)$/, '')
+          contextParts.push(locationName)
+        }
+        if (standardAutocomplete.getValue()) contextParts.push(standardAutocomplete.getValue())
+        if (contextParts.length > 0) {
+          subject += ' - ' + contextParts.join(', ')
+        }
+        conciergeLink.href = `/contact?inquiry=sales&subject=Concierge%20Search%20Request&body=${encodeURIComponent(subject)}`
+      } else {
+        lowDensityFallback.classList.add('hidden')
+      }
+    }
+  }
+
+  // Check URL parameters for pre-filtering
+  const urlParams = new URLSearchParams(window.location.search)
+
+  function setAutocompleteValue(autocomplete, value) {
+    if (value) {
+      autocomplete.input.value = value
+      autocomplete.input.setAttribute('data-selected-value', value)
+      autocomplete.updateClearButton()
+    }
+  }
+
+  // Handle legacy URL parameters for backward compatibility
+  if (urlParams.has('country')) {
+    const countryValue = urlParams.get('country')
+    setAutocompleteValue(locationAutocomplete, `${countryValue} (Country)`)
+  }
+  if (urlParams.has('city')) {
+    const cityValue = urlParams.get('city')
+    setAutocompleteValue(locationAutocomplete, `${cityValue} (City)`)
+  }
+  if (urlParams.has('location')) {
+    setAutocompleteValue(locationAutocomplete, urlParams.get('location'))
+  }
+  if (urlParams.has('category')) {
+    setAutocompleteValue(categoryAutocomplete, urlParams.get('category'))
+  }
+  if (urlParams.has('standard')) {
+    setAutocompleteValue(standardAutocomplete, urlParams.get('standard'))
+  }
+
+  // Initial filter if URL params exist
+  if (urlParams.toString()) {
+    filterListings()
+  }
+
+  // Claim button functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const claimLinks = document.querySelectorAll('.claim-link')
+
+    claimLinks.forEach(link => {
+      link.addEventListener('click', async (e) => {
+        e.preventDefault()
+
+        const listingId = link.getAttribute('data-listing-id')
+        const listingName = link.getAttribute('data-listing-name')
+
+        // For now, always redirect to claim page (simplified for testing)
+        window.location.href = `/claim?id=${listingId}&provider=${encodeURIComponent(listingName)}`
       })
     })
-  </script>
-</body>
-</html>
+  })
+</script>
+</BaseLayout>
