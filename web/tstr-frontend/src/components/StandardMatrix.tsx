@@ -28,7 +28,7 @@ const StandardMatrix: React.FC<StandardMatrixProps> = ({ standards, labs }) => {
             </th>
             {labs.map((lab) => (
               <th key={lab.id} className="p-6 text-center min-w-[100px] max-w-[120px]">
-                <div className="text-sm font-black uppercase tracking-[0.1em] text-white leading-tight break-words">
+                <div className="text-[13px] font-black uppercase tracking-[0.1em] text-white leading-tight break-words">
                   {lab.business_name}
                 </div>
               </th>
