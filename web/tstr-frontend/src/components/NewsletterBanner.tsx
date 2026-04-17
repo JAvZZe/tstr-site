@@ -51,13 +51,16 @@ export default function NewsletterBanner() {
   return (
     <div className="bg-orange-500 text-white py-1 px-4 shadow-md transition-all duration-300 overflow-hidden">
       <div className="max-w-6xl mx-auto flex flex-col xl:flex-row items-center justify-between gap-1 xl:gap-4">
-        <div className="flex-shrink-0 text-center xl:text-left max-w-[300px] xl:max-w-none">
-          <p className="font-bold text-[13px] md:text-sm tracking-tight">
-            JOIN OUR NEWSLETTER <span className="hidden xl:inline mx-1">|</span> 
-            <span className="block xl:inline font-normal text-[11px] md:text-xs text-white opacity-90 leading-tight">
+        <div className="flex-shrink-0 text-center xl:text-left max-w-[240px] xl:max-w-none">
+          <div className="flex flex-col xl:flex-row xl:items-center gap-0 xl:gap-2">
+            <span className="font-black text-[13px] md:text-sm tracking-tighter uppercase leading-none">
+              Join Our Newsletter
+            </span>
+            <span className="hidden xl:inline text-white/40">|</span>
+            <span className="font-medium text-[11px] md:text-xs text-white/90 tracking-tight leading-none mt-0.5 xl:mt-0">
               Get the latest industry testing updates
             </span>
-          </p>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-1.5 w-full xl:w-auto mt-1 xl:mt-0">
