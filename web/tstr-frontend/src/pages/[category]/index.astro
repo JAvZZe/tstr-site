@@ -2,68 +2,7 @@
 // src/pages/[category]/index.astro
 import { supabase } from '../../lib/supabase';
 import NewsletterBanner from '../../components/NewsletterBanner';
-import Footer from '../../components/Footer.astro';
-import { MAILTO_LINKS } from '../../lib/contacts';
-import { getRedirectUrl } from '../../lib/redirect';
-
-// SSR rendering (output: 'server' in astro.config)
-
-// 1. Params and Data fetching
-const { category } = Astro.params;
-
-// Fetch category metadata
-const { data: categoryData, error: catError } = await supabase
-  .from('categories')
-  .select('id, name, slug, description, min_tier_required')
-  .eq('slug', category)
-  .single();
-
-const requiredTier = categoryData?.min_tier_required || 'free';
-
-if (catError || !categoryData) {
-  return Astro.redirect('/404');
-}
-
-// Check for search filters
-const url = new URL(Astro.request.url);
-const regionFilter = url.searchParams.get('region');
-const isFiltered = !!regionFilter;
-
-// Fetch ALL active listings for this category
-const { data: allListings, error: listingsError } = await supabase
-  .from('listings')
-  .select(`
-    *,
-    location:location_id (
-      id,
-      name,
-      slug
-    ),
-    listing_categories!inner (
-      category_id
-    )
-  `)
-  .eq('status', 'active')
-  .eq('listing_categories.category_id', categoryData.id)
-  .order('priority_rank', { ascending: false })
-  .order('created_at', { ascending: false });
-
-// Group by region OR filter
-const filteredListings = isFiltered 
-  ? allListings?.filter(l => l.region?.toLowerCase() === regionFilter?.toLowerCase())
-  : allListings;
-
-const listingsByRegion = !isFiltered && allListings ? allListings.reduce((acc, listing) => {
-  const reg = listing.region || 'GLOBAL';
-  if (!acc[reg]) acc[reg] = [];
-  acc[reg].push(listing);
-  return acc;
-}, {} as Record<string, any[]>) : {};
-
-const sortedRegions = Object.entries(listingsByRegion).sort((a, b) => b[1].length - a[1].length);
-const totalListings = allListings?.length || 0;
-
-import { formatTitle, formatDescription } from '../../lib/seo';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 
 // Optimized SEO parts
 const pageTitle = formatTitle([categoryData.name, 'Regional Directory']);
@@ -72,225 +11,234 @@ const pageDescription = formatDescription(
 );
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{pageTitle}</title>
-    <meta name="description" content={pageDescription} />
-    <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={pageDescription} />
-    <script is:inline set:html={`
-      function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-      o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-      o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-      document.head.appendChild(o)}initApollo();
-    `}></script>
-  </head>
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <script is:inline slot="head" set:html={`
+    function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
+    o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
+    o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
+    document.head.appendChild(o)}initApollo();
+  `}></script>
 
-  <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
-
-    <!-- Navigation -->
-    <NewsletterBanner client:only="react" />
-    <nav class="bg-white shadow-sm p-4">
-      <div class="max-w-6xl mx-auto flex justify-between items-center">
-        <a href="/" class="font-bold text-xl hover:text-blue-600 transition">
-          TSTR<span class="text-blue-600">.directory</span>
-        </a>
-        <div class="flex gap-4">
-          <a href="/browse" class="text-gray-600 hover:text-blue-600 font-medium">Browse All</a>
-          <a href="/pricing" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 transition">List Your Lab</a>
-        </div>
-      </div>
+  <main class="max-w-7xl mx-auto px-6 py-12">
+    <!-- Navigation Breadcrumbs -->
+    <nav class="flex items-center gap-2 text-sm font-medium text-slate-500 mb-8 overflow-x-auto whitespace-nowrap pb-2 no-scrollbar">
+      <a href="/" class="hover:text-emerald-400 transition-colors">Home</a>
+      <span class="text-slate-700">/</span>
+      <span class="text-white">{categoryData.name}</span>
     </nav>
 
-    <!-- Main Content -->
-    <main class="max-w-6xl mx-auto p-6">
 
-      <!-- Breadcrumbs -->
-      <div class="text-sm text-gray-500 mb-4">
-        <a href="/" class="hover:underline">Home</a>
-        <span class="mx-2">›</span>
-        <span class="text-gray-900 font-medium">{categoryData.name}</span>
-      </div>
-
-      <!-- Page Header -->
-      <div class="mb-12">
-        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight flex items-center gap-3">
-          {categoryData.name}
-          {requiredTier !== 'free' && (
-            <span class="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-1 rounded inline-flex items-center gap-1">
-              🔒 {requiredTier.toUpperCase()} TIED
-            </span>
-          )}
-        </h1>
-        {categoryData.description && (
-          <p class="text-xl text-gray-600 max-w-3xl leading-relaxed">
-            {categoryData.description}
-          </p>
-        )}
-      </div>
-
-      <!-- Error Handling -->
-      {listingsError && (
-        <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-8 rounded-r-lg">
-          <div class="flex items-center">
-            <span class="text-red-400 text-xl mr-3">⚠️</span>
-            <p class="text-red-800 font-medium">
-              We encountered an error loading the directory. Our engineers have been notified.
-            </p>
-          </div>
-        </div>
-      )}
-
-      <!-- Filter Active Indicator -->
-      {isFiltered && (
-        <div class="mb-8 flex items-center gap-3">
-          <span class="text-gray-600">Showing results for:</span>
-          <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-bold text-sm uppercase tracking-wide">
-            📍 {regionFilter}
+    <!-- Page Header -->
+    <div class="mb-12">
+      <h1 class="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight flex items-center gap-4">
+        {categoryData.name}
+        {requiredTier !== 'free' && (
+          <span class="bg-amber-500/10 text-amber-500 text-xs font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-amber-500/20">
+            🔒 {requiredTier}
           </span>
-          <a href={`/${category}`} class="text-blue-600 text-sm hover:underline ml-2">Clear filter</a>
-        </div>
+        )}
+      </h1>
+      {categoryData.description && (
+        <p class="text-xl text-slate-400 max-w-3xl leading-relaxed">
+          {categoryData.description}
+        </p>
       )}
+    </div>
+
+    <!-- Error Handling -->
+    {listingsError && (
+      <div class="glass-card bg-red-500/5 border-red-500/20 p-6 mb-8 flex items-center gap-4">
+        <span class="text-red-500 text-2xl">⚠️</span>
+        <p class="text-red-200/80 font-medium">
+          Error loading directory. Our engineers have been notified.
+        </p>
+      </div>
+    )}
+
+
+    <!-- Filter Active Indicator -->
+    {isFiltered && (
+      <div class="mb-8 flex items-center gap-3">
+        <span class="text-slate-400">Showing results for:</span>
+        <span class="bg-emerald-500/10 text-emerald-400 px-4 py-1.5 rounded-full font-black text-xs uppercase tracking-widest border border-emerald-500/20">
+          📍 {regionFilter}
+        </span>
+        <a href={`/${category}`} class="text-blue-400 text-sm font-bold hover:text-blue-300 ml-2 transition-colors">Clear filter</a>
+      </div>
+    )}
+
 
       <!-- Content Grid: Regions OR Flat Listing List (if filtered) -->
       <div id="category-content-gate" data-required-tier={requiredTier} class="relative">
         {totalListings > 0 && (
           <div id="listings-data-container">
-            {isFiltered ? (
-              <div class="grid gap-6">
-                {filteredListings?.map((listing) => (
-                  <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition">
-                    <div class="flex justify-between items-start">
-                      <div>
-                        <h3 class="text-xl font-bold text-blue-900">
-                          {listing.business_name}
+          {isFiltered ? (
+            <div class="grid gap-6">
+              {filteredListings?.map((listing) => (
+                <div class="glass-card glass-card-hover p-8 relative overflow-hidden group">
+                  <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/0 via-transparent to-emerald-500/[0.02] pointer-events-none"></div>
+                  <div class="flex flex-col md:flex-row justify-between items-start gap-6 relative z-10">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-3 mb-4">
+                        <h3 class="text-2xl font-bold text-white tracking-tight">
+                          <a href={`/listing/${listing.slug}`} class="hover:text-emerald-400 transition-colors">
+                            {listing.business_name}
+                          </a>
                         </h3>
-                        <div class="text-sm text-gray-500 mt-1 flex flex-wrap gap-3">
-                          <span>📍 {listing.location?.name || listing.region?.toUpperCase()}</span>
-                          {listing.featured && (
-                            <span class="text-yellow-600 font-semibold">⭐ Featured</span>
-                          )}
-                          {listing.verified && (
-                            <span class="text-green-600 font-semibold">✓ Verified</span>
-                          )}
-                        </div>
-                        {listing.description && (
-                          <p class="text-gray-700 mt-3 text-sm line-clamp-2">
-                            {listing.description}
-                          </p>
+                        {listing.verified && (
+                          <span class="bg-emerald-500/10 text-emerald-400 text-[10px] font-black uppercase tracking-tighter px-2 py-0.5 rounded border border-emerald-500/20">
+                            ✓ Verified
+                          </span>
+                        )}
+                        {listing.featured && (
+                          <span class="bg-amber-500/10 text-amber-500 text-[10px] font-black uppercase tracking-tighter px-2 py-0.5 rounded border border-amber-500/20">
+                            ⭐ Featured
+                          </span>
                         )}
                       </div>
-                      {listing.website && (
-                        <a
-                          href={getRedirectUrl(listing.website, listing.id)}
-                          target="_blank"
-                          rel="nofollow noopener noreferrer"
-                          class="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-blue-700 transition whitespace-nowrap"
-                        >
-                          Visit Website
-                        </a>
+                      <div class="flex flex-wrap gap-4 text-sm text-slate-400 mb-6">
+                        <span class="flex items-center gap-1.5">
+                          <span class="text-emerald-400">📍</span>
+                          {listing.location?.name || listing.region?.toUpperCase()}
+                        </span>
+                      </div>
+                      {listing.description && (
+                        <p class="text-slate-400 text-sm leading-relaxed line-clamp-2 italic">
+                          "{listing.description}"
+                        </p>
                       )}
                     </div>
+                    {listing.website && (
+                      <a
+                        href={getRedirectUrl(listing.website, listing.id)}
+                        target="_blank"
+                        rel="nofollow noopener noreferrer"
+                        class="px-8 py-3 rounded-full font-black text-white bg-gradient-to-r from-blue-600 to-emerald-500 transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] text-center whitespace-nowrap"
+                      >
+                        Visit Website
+                      </a>
+                    )}
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {sortedRegions.map(([region, regionListings]) => {
-                  const featuredCount = regionListings.filter(l => l.featured).length;
-                  const verifiedCount = regionListings.filter(l => l.verified).length;
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sortedRegions.map(([region, regionListings]) => {
+                const featuredCount = regionListings.filter(l => l.featured).length;
+                const verifiedCount = regionListings.filter(l => l.verified).length;
 
-                  return (
-                    <a
-                      href={`/${category}/${region.toLowerCase()}`}
-                      class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-blue-400 transition group"
-                    >
-                      <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600">
+                return (
+                  <a
+                    href={`/${category}/${region.toLowerCase()}`}
+                    class="glass-card glass-card-hover p-8 group flex flex-col justify-between"
+                  >
+                    <div>
+                      <div class="flex justify-between items-start mb-6">
+                        <h3 class="text-2xl font-black text-white group-hover:text-emerald-400 transition-colors tracking-tight">
                           {region.toUpperCase()}
                         </h3>
-                        <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-2.5 py-0.5 rounded">
+                        <span class="bg-white/5 text-slate-300 text-xs font-black px-3 py-1 rounded-full border border-white/10 group-hover:bg-emerald-500/10 group-hover:text-emerald-400 transition-colors">
                           {regionListings.length}
                         </span>
                       </div>
 
-                      <div class="text-sm text-gray-600 space-y-1">
-                        <p>{regionListings.length} {regionListings.length === 1 ? 'provider' : 'providers'}</p>
+                      <div class="space-y-3">
+                        <div class="flex items-center justify-between text-sm">
+                          <span class="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Providers</span>
+                          <span class="text-slate-300 font-mono">{regionListings.length}</span>
+                        </div>
                         {featuredCount > 0 && (
-                          <p class="text-yellow-600">⭐ {featuredCount} featured</p>
+                          <div class="flex items-center justify-between text-sm">
+                            <span class="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Featured</span>
+                            <span class="text-amber-500 font-mono">{featuredCount}</span>
+                          </div>
                         )}
                         {verifiedCount > 0 && (
-                          <p class="text-green-600">✓ {verifiedCount} verified</p>
+                          <div class="flex items-center justify-between text-sm">
+                            <span class="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Verified</span>
+                            <span class="text-emerald-400 font-mono">{verifiedCount}</span>
+                          </div>
                         )}
                       </div>
+                    </div>
 
-                      <div class="mt-4 text-blue-600 text-sm font-medium group-hover:underline">
-                        View all →
-                      </div>
-                    </a>
-                  );
-                })}
-              </div>
-            )}
+                    <div class="mt-8 pt-6 border-t border-white/5 flex items-center justify-between group-hover:text-emerald-400 transition-colors">
+                      <span class="text-xs font-black uppercase tracking-widest">Explore Directory</span>
+                      <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
+          )}
+
           </div>
         )}
 
-        <!-- Paywall Overlay -->
-        <div id="paywall-overlay" class="hidden absolute inset-0 z-40 bg-gray-50/95 backdrop-blur-sm flex flex-col items-center justify-center text-center p-8 rounded-xl border border-blue-100">
-           <div class="bg-white p-8 rounded-2xl shadow-2xl border border-gray-100 max-w-md w-full">
-              <div class="text-5xl mb-6">🔒</div>
-              <h2 class="text-2xl font-bold text-gray-900 mb-2">{requiredTier.toUpperCase()} Access Required</h2>
-              <p class="text-gray-600 mb-8">
-                The <strong>{categoryData.name}</strong> directory is reserved for Professional & Premium members.
-              </p>
-              <div class="flex flex-col gap-3">
-                <a href="/pricing" class="bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">
-                  View Upgrade Options
-                </a>
-                <a href={`/login?redirect_to=${encodeURIComponent(Astro.url.pathname)}`} class="text-blue-600 font-semibold hover:underline">
-                  Already a member? Sign in
-                </a>
-              </div>
-           </div>
-        </div>
+    <!-- Paywall Overlay -->
+    <div id="paywall-overlay" class="hidden absolute inset-0 z-40 bg-slate-950/80 backdrop-blur-md flex flex-col items-center justify-start text-center p-8 rounded-3xl border border-white/10 mt-24">
+       <div class="glass-card p-12 max-w-lg w-full shadow-2xl relative overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-t from-blue-500/10 to-transparent pointer-events-none"></div>
+          <div class="relative z-10">
+            <div class="w-20 h-20 bg-amber-500/10 rounded-3xl flex items-center justify-center mx-auto mb-8 border border-amber-500/20">
+              <span class="text-4xl">🔒</span>
+            </div>
+            <h2 class="text-3xl font-black text-white mb-4 tracking-tight uppercase tracking-widest">{requiredTier} Access Required</h2>
+            <p class="text-slate-400 mb-10 text-lg leading-relaxed">
+              The premium <strong class="text-white">{categoryData.name}</strong> directory is reserved for Professional members.
+            </p>
+            <div class="flex flex-col gap-4">
+              <a href="/pricing" class="px-8 py-4 bg-white text-black font-black uppercase tracking-widest rounded-full hover:bg-emerald-400 transition-all hover:scale-105">
+                Upgrade My Membership
+              </a>
+              <a href={`/login?redirect_to=${encodeURIComponent(Astro.url.pathname)}`} class="text-slate-500 font-bold hover:text-white transition-colors py-2">
+                Already a member? Sign in
+              </a>
+            </div>
+          </div>
+       </div>
+    </div>
+
       </div>
 
-      {totalListings === 0 && (
-        <div class="text-center py-16 bg-white rounded-lg border-2 border-dashed border-gray-300">
-          <p class="text-gray-500 text-lg mb-2">
-            No {categoryData.name.toLowerCase()} listed yet.
-          </p>
-          <a href="/contact" class="text-blue-600 font-bold hover:underline">
-            Be the first to list here →
+    {totalListings === 0 && (
+      <div class="text-center py-24 glass-card border-dashed border-white/10">
+        <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg class="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </div>
+        <p class="text-slate-400 text-lg font-medium mb-6">
+          No {categoryData.name.toLowerCase()} providers listed yet.
+        </p>
+        <a href="/contact" class="inline-flex items-center gap-2 px-8 py-3 bg-white/5 hover:bg-white/10 text-white font-bold rounded-full transition-all border border-white/10">
+          Be the first to list here
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </a>
+      </div>
+    )}
+
+
+    <!-- CTA Section -->
+    {totalListings > 0 && (
+      <div class="mt-20 glass-card p-10 border-blue-500/20 bg-gradient-to-r from-blue-600/10 to-emerald-500/10 relative overflow-hidden group">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] rounded-full -mr-32 -mt-32"></div>
+        <div class="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+          <div class="text-center md:text-left">
+            <h2 class="text-3xl font-black text-white mb-3">List Your Lab in {categoryData.name}</h2>
+            <p class="text-slate-400 text-lg">Reach high-intent buyers specifically searching for {categoryData.name.toLowerCase()} services.</p>
+          </div>
+          <a 
+            href="/pricing" 
+            class="px-10 py-4 bg-white text-black font-black uppercase tracking-widest rounded-full hover:bg-emerald-400 transition-all hover:scale-110 shadow-xl"
+          >
+            Get Listed Now
           </a>
         </div>
-      )}
+      </div>
+    )}
+  </main>
+</BaseLayout>
 
-      <!-- CTA Section -->
-      {totalListings > 0 && (
-        <div class="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
-          <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div class="text-center md:text-left">
-              <h2 class="text-2xl font-bold text-blue-900 mb-1">List Your Lab in this Category</h2>
-              <p class="text-blue-800">Reach buyers specifically searching for {categoryData.name.toLowerCase()}.</p>
-            </div>
-            <a 
-              href="/pricing" 
-              class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
-            >
-              Get Listed
-            </a>
-          </div>
-        </div>
-      )}
-
-    </main>
-
-    <!-- Footer -->
-    <Footer />
 
     <script>
       import { supabaseBrowser } from '../../lib/supabase-browser'
