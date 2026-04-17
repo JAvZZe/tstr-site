@@ -55,8 +55,8 @@ const StandardMatrix: React.FC<StandardMatrixProps> = ({ standards, labs }) => {
                         </svg>
                       </div>
                     ) : (
-                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/5 text-slate-800">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/10 text-slate-500">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M18 12H6" />
                         </svg>
                       </div>
