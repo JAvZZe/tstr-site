@@ -4,70 +4,54 @@ const { showHero = true } = Astro.props;
 ---
 
 <NewsletterBanner client:load />
-<header style="background: linear-gradient(135deg, #000080 0%, #32CD32 100%); color: white; padding: 3rem 2rem; position: relative;">
-  <div class="header-content" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
+<header class="glass-panel sticky top-0 z-50 py-4 px-6 md:px-12 transition-all duration-300">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
     <!-- Logo Section -->
     <div class="logo">
-      <a href="/" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
-        <img src="/TSTR-Logo-60px.png" alt="TSTR Logo" style="height: 60px; width: auto; margin-right: 1.5rem;"/>
-        <div>
-          <span style="font-size: 2.2rem; line-height: 1; margin-bottom: -0.2rem; letter-spacing: 0.1em; display: block;">TSTR</span>
-          <span style="font-size: 2.8rem; line-height: 1; letter-spacing: 0.05em; display: block;">hub</span>
+      <a href="/" class="flex items-center no-underline text-white group">
+        <img src="/TSTR-Logo-60px.png" alt="TSTR Logo" class="h-12 w-auto mr-4 transition-transform duration-300 group-hover:scale-110"/>
+        <div class="flex flex-col">
+          <span class="text-xl md:text-2xl font-black tracking-widest leading-none">TSTR</span>
+          <span class="text-2xl md:text-3xl font-light tracking-tighter leading-none text-emerald-400">hub</span>
         </div>
       </a>
     </div>
 
     <!-- Desktop Navigation -->
-    <nav id="desktop-nav" class="desktop-nav" style="display: flex; gap: 1rem; align-items: center;">
+    <nav id="desktop-nav" class="desktop-nav hidden md:flex gap-4 items-center">
       <!-- Navigation will be populated by JavaScript -->
     </nav>
 
     <!-- Mobile Hamburger Menu -->
-    <button id="hamburger-btn" class="hamburger-btn" style="display: none; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; padding: 0.5rem;">
+    <button id="hamburger-btn" class="hamburger-btn md:hidden bg-transparent border-none text-white text-2xl cursor-pointer p-2">
       ☰
     </button>
   </div>
 
   {showHero && (
-    <>
-      <!-- Hero Content -->
-      <div style="text-align: center; margin-top: 2rem;">
-        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; font-weight: 700;">
-          Specialist Testing Services, Products and Solutions Directory
-        </h1>
-        <p style="font-size: 1rem; margin-top: 0.5rem; opacity: 0.85;">
-          Oil & Gas • Biopharma & Life Sciences • Environmental • Materials Testing
-        </p>
-      </div>
-    </>
+    <div class="max-w-4xl mx-auto text-center mt-12 mb-8 animate-fade-up">
+      <h1 class="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight text-white leading-tight">
+        Specialist Testing <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Services & Solutions</span>
+      </h1>
+      <p class="text-lg md:text-xl text-slate-400 font-medium">
+        Oil & Gas • Biopharma • Environmental • Materials Testing
+      </p>
+    </div>
   )}
 
   <!-- Mobile Menu Overlay -->
-  <div id="mobile-menu" class="mobile-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; padding-top: 5rem;">
-    <div style="background: linear-gradient(135deg, #000080 0%, #32CD32 100%); margin: 2rem; border-radius: 12px; padding: 2rem; text-align: center;">
-      <button id="close-menu-btn" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: white; font-size: 2rem; cursor: pointer;">×</button>
-      <nav id="mobile-nav" style="display: flex; flex-direction: column; gap: 1rem;">
+  <div id="mobile-menu" class="mobile-menu hidden fixed inset-0 bg-[#020203]/95 backdrop-blur-xl z-[60] p-8">
+    <div class="flex flex-col h-full">
+      <div class="flex justify-between items-center mb-12">
+        <span class="text-2xl font-bold tracking-widest">TSTR <span class="text-emerald-400">hub</span></span>
+        <button id="close-menu-btn" class="bg-transparent border-none text-white text-4xl cursor-pointer">×</button>
+      </div>
+      <nav id="mobile-nav" class="flex flex-col gap-6">
         <!-- Mobile navigation will be populated by JavaScript -->
       </nav>
     </div>
   </div>
 </header>
-
-<style>
-  @media (max-width: 768px) {
-    .desktop-nav {
-      display: none !important;
-    }
-    .hamburger-btn {
-      display: block !important;
-    }
-  }
-  @media (min-width: 769px) {
-    .hamburger-btn {
-      display: none !important;
-    }
-  }
-</style>
 
 <script>
   import { supabaseBrowser } from '../lib/supabase-browser'
@@ -76,35 +60,13 @@ const { showHero = true } = Astro.props;
     const link = document.createElement('a')
     link.href = href
     link.textContent = text
-    link.style.cssText = isPrimary ? `
-      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      cursor: pointer;
-      display: block;
-      text-align: center;
-      margin-bottom: 0.5rem;
-    ` : `
-      background: white;
-      color: #000080;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      cursor: pointer;
-      display: block;
-      text-align: center;
-      margin-bottom: 0.5rem;
-    `
-    link.onmouseover = () => link.style.transform = 'translateY(-1px)'
-    link.onmouseout = () => link.style.transform = 'translateY(0)'
+    
+    if (isPrimary) {
+      link.className = "px-6 py-2.5 rounded-full font-bold text-white transition-all duration-300 text-center block md:inline-block bg-gradient-to-r from-blue-600 to-emerald-500 hover:scale-105 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] shadow-lg"
+    } else {
+      link.className = "px-4 py-2 rounded-lg font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-200 text-center block md:inline-block"
+    }
+    
     return link
   }
 
@@ -113,28 +75,31 @@ const { showHero = true } = Astro.props;
       const { data: { session } } = await supabaseBrowser.auth.getSession()
       const isLoggedIn = !!session?.user
 
+      // Navigation Items
+      const navItems = [
+        { href: '/browse', text: 'Browse', primary: false },
+        { href: '/blog', text: 'Blog', primary: false },
+        { href: '/pricing', text: 'Pricing', primary: false },
+        { href: '/contact', text: 'Contact', primary: false }
+      ]
+
       // Update desktop nav
       const desktopNav = document.getElementById('desktop-nav')
       if (desktopNav) {
         desktopNav.innerHTML = ''
 
-        const blogLink = createNavLink('/blog', 'Blog', false)
-        const pricingLink = createNavLink('/pricing', 'Pricing', false)
-        const contactLink = createNavLink('/contact', 'Contact', false)
-        const browseLink = createNavLink('/browse', 'Browse', false)
+        // Auth Link
+        const authLink = isLoggedIn 
+          ? createNavLink('/account', 'My Account', true)
+          : createNavLink('/login', 'Login', true)
+        
+        // Add auth link first on desktop
+        desktopNav.appendChild(authLink)
 
-        if (isLoggedIn) {
-          const accountLink = createNavLink('/account', 'My Account', true)
-          desktopNav.appendChild(accountLink)
-        } else {
-          const loginLink = createNavLink('/login', 'Login / Register', true)
-          desktopNav.appendChild(loginLink)
-        }
-
-        desktopNav.appendChild(browseLink)
-        desktopNav.appendChild(blogLink)
-        desktopNav.appendChild(pricingLink)
-        desktopNav.appendChild(contactLink)
+        // Add other nav items
+        navItems.forEach(item => {
+          desktopNav.appendChild(createNavLink(item.href, item.text, item.primary))
+        })
       }
 
       // Update mobile nav
@@ -142,23 +107,15 @@ const { showHero = true } = Astro.props;
       if (mobileNav) {
         mobileNav.innerHTML = ''
 
-        if (isLoggedIn) {
-          const accountLink = createNavLink('/account', 'My Account', true)
-          mobileNav.appendChild(accountLink)
-        } else {
-          const loginLink = createNavLink('/login', 'Login / Register', true)
-          mobileNav.appendChild(loginLink)
-        }
+        const authLink = isLoggedIn 
+          ? createNavLink('/account', 'My Account', true)
+          : createNavLink('/login', 'Login / Register', true)
+        
+        mobileNav.appendChild(authLink)
 
-        const browseLink = createNavLink('/browse', 'Browse Listings', false)
-        const blogLink = createNavLink('/blog', 'Blog', false)
-        const pricingLink = createNavLink('/pricing', 'Pricing', false)
-        const contactLink = createNavLink('/contact', 'Contact Us', false)
-
-        mobileNav.appendChild(browseLink)
-        mobileNav.appendChild(blogLink)
-        mobileNav.appendChild(pricingLink)
-        mobileNav.appendChild(contactLink)
+        navItems.forEach(item => {
+          mobileNav.appendChild(createNavLink(item.href, item.text, item.primary))
+        })
       }
     } catch (error) {
       console.error('Error updating navigation:', error)
@@ -173,19 +130,22 @@ const { showHero = true } = Astro.props;
 
     if (hamburgerBtn && mobileMenu) {
       hamburgerBtn.addEventListener('click', () => {
-        mobileMenu.style.display = 'block'
+        mobileMenu.classList.remove('hidden')
+        document.body.style.overflow = 'hidden'
       })
 
       if (closeBtn) {
         closeBtn.addEventListener('click', () => {
-          mobileMenu.style.display = 'none'
+          mobileMenu.classList.add('hidden')
+          document.body.style.overflow = ''
         })
       }
 
       // Close menu when clicking outside
       mobileMenu.addEventListener('click', (e) => {
         if (e.target === mobileMenu) {
-          mobileMenu.style.display = 'none'
+          mobileMenu.classList.add('hidden')
+          document.body.style.overflow = ''
         }
       })
     }
