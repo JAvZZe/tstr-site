@@ -23,12 +23,12 @@ const StandardMatrix: React.FC<StandardMatrixProps> = ({ standards, labs }) => {
       <table className="w-full border-collapse">
         <thead>
           <tr className="border-b border-white/5">
-            <th className="p-6 text-left text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 bg-white/5 sticky left-0 z-20">
+            <th className="p-6 text-left text-xs font-black uppercase tracking-[0.2em] text-slate-500 bg-white/5 sticky left-0 z-20">
               Testing Standard
             </th>
             {labs.map((lab) => (
-              <th key={lab.id} className="p-6 text-center min-w-[140px]">
-                <div className="text-[10px] font-black uppercase tracking-[0.1em] text-white whitespace-nowrap">
+              <th key={lab.id} className="p-6 text-center min-w-[160px]">
+                <div className="text-xs font-black uppercase tracking-[0.1em] text-white whitespace-nowrap">
                   {lab.business_name}
                 </div>
               </th>
@@ -40,8 +40,8 @@ const StandardMatrix: React.FC<StandardMatrixProps> = ({ standards, labs }) => {
             <tr key={std.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors group">
               <td className="p-6 sticky left-0 z-10 bg-[#0a0a0b] group-hover:bg-[#111112]">
                 <div className="flex flex-col">
-                  <span className="text-sm font-bold text-blue-400 font-mono tracking-tight">{std.code}</span>
-                  <span className="text-[10px] text-slate-500 font-medium leading-tight max-w-[200px] mt-1">{std.name}</span>
+                  <span className="text-base font-bold text-blue-400 font-mono tracking-tight">{std.code}</span>
+                  <span className="text-xs text-slate-400 font-medium leading-tight max-w-[240px] mt-1.5">{std.name}</span>
                 </div>
               </td>
               {labs.map((lab) => {
