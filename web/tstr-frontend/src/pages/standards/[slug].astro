@@ -28,41 +28,117 @@ const { data: listings } = await supabase
 ---
 
 <BaseLayout title={`${standard.code} Testing Labs | TSTR.directory`} description={standard.description || `Find laboratories certified for ${standard.code} testing.`}>
-  <div class="hero" style="background: linear-gradient(135deg, #000080 0%, #32CD32 100%); color: white; padding: 4rem 2rem; text-align: center;">
-    <div class="hero-content" style="max-width: 1200px; margin: 0 auto;">
-      <div class="breadcrumb" style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 1rem;">
-        <a href="/" style="color: white; text-decoration: none;">Home</a> / <a href="/standards" style="color: white; text-decoration: none;">Standards</a> / {standard.code}
-      </div>
-      <h1 style="font-size: 2.8rem; margin-bottom: 1rem; font-weight: 700;">{standard.code}: {standard.name}</h1>
-      <p style="font-size: 1.2rem; opacity: 0.95; margin-bottom: 2rem;">{standard.description}</p>
-      <p><strong>{listings?.length || 0}</strong> certified laboratories</p>
-    </div>
-  </div>
+  <main class="max-w-6xl mx-auto px-4 py-12">
+    <!-- Breadcrumbs -->
+    <nav class="flex items-center space-x-2 text-sm text-gray-400 mb-8" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-blue-400 transition-colors">Home</a>
+      <span class="text-gray-600">/</span>
+      <a href="/standards" class="hover:text-blue-400 transition-colors">Standards</a>
+      <span class="text-gray-600">/</span>
+      <span class="text-blue-400 font-medium">{standard.code}</span>
+    </nav>
 
-  <main style="max-width: 1200px; margin: 0 auto; padding: 3rem 2rem;">
-    <section class="section" style="background: white; padding: 2.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-      <h2 style="color: #000080; font-size: 2rem; margin-bottom: 1.5rem;">Labs certified for {standard.code}</h2>
-      
-      {listings && listings.length > 0 ? (
-        listings.map((item: any) => (
-          <div class="lab-card" style="background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; transition: all 0.3s ease;">
-            <div class="lab-name" style="color: #000080; font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem;">{item.listings.business_name}</div>
-            <div style="color: #666; margin-bottom: 1rem;">&#128205; {item.listings.region || 'Global'}</div>
-            <div style="color: #32CD32; font-weight: 600;">Trust Score: {item.listings.trust_score || 0}</div>
-            <a href={`/listing/${item.listings.id}`} style="display: inline-block; background: #000080; color: white; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; margin-top: 1rem;">View Profile</a>
-          </div>
-        ))
-      ) : (
-        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #000080;">
-          <p>No laboratories currently listed for this standard.</p>
+    <!-- Hero Section -->
+    <div class="glass-panel p-8 md:p-12 mb-12 relative overflow-hidden">
+      <!-- Ambient Glow -->
+      <div class="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 blur-3xl -mr-48 -mt-48"></div>
+      <div class="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 blur-3xl -ml-32 -mb-32"></div>
+
+      <div class="relative z-10 max-w-4xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold mb-6 uppercase tracking-widest">
+          Industry Standard
         </div>
-      )}
-    </section>
-  </main>
+        
+        <h1 class="text-4xl md:text-5xl lg:text-7xl font-black mb-6 tracking-tight text-white leading-tight">
+          {standard.code}: <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">{standard.name}</span>
+        </h1>
+        
+        <p class="text-xl text-gray-400 leading-relaxed mb-8">
+          {standard.description}
+        </p>
 
-  <style>
-    .lab-card:hover { border-color: #32CD32 !important; box-shadow: 0 4px 12px rgba(50,205,50,0.2) !important; transform: translateY(-2px); }
-  </style>
+        <div class="flex items-center gap-6">
+          <div class="flex flex-col">
+            <span class="text-3xl font-black text-white">{listings?.length || 0}</span>
+            <span class="text-[10px] uppercase font-bold text-gray-500 tracking-tighter">Certified Laboratories</span>
+          </div>
+          <div class="h-10 w-px bg-white/10"></div>
+          <div class="flex flex-col">
+             <span class="text-3xl font-black text-emerald-400">Verified</span>
+             <span class="text-[10px] uppercase font-bold text-gray-500 tracking-tighter">Compliance Data</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid lg:grid-cols-3 gap-12">
+      <div class="lg:col-span-2">
+        <h2 class="text-3xl font-black text-white mb-8 flex items-center gap-3">
+          Qualified <span class="text-blue-400">Labs</span>
+        </h2>
+        
+        {listings && listings.length > 0 ? (
+          <div class="space-y-6">
+            {listings.map((item: any) => (
+              <div class="glass-card group hover:scale-[1.01] transition-all duration-300">
+                <div class="flex items-center justify-between gap-6">
+                  <div>
+                    <h3 class="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors mb-2">
+                      {item.listings.business_name}
+                    </h3>
+                    <div class="flex items-center gap-4 text-sm text-gray-400">
+                      <span class="flex items-center gap-1.5">
+                        <span class="text-blue-400">📍</span>
+                        {item.listings.region || 'Global'}
+                      </span>
+                      <div class="flex items-center gap-2">
+                        <div class="w-24 h-2 bg-white/5 rounded-full overflow-hidden">
+                          <div class="h-full bg-emerald-500" style={`width: ${item.listings.trust_score || 0}%`}></div>
+                        </div>
+                        <span class="text-emerald-400 font-bold shrink-0">Trust Score: {item.listings.trust_score || 0}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <a 
+                    href={`/listing/${item.listings.id}`} 
+                    class="px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm transition-all shadow-lg shadow-blue-600/20 whitespace-nowrap"
+                  >
+                    View Profile
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div class="glass-panel py-12 text-center text-gray-500 border-dashed">
+            <p>No laboratories currently listed for this standard.</p>
+          </div>
+        )}
+      </div>
+
+      <aside class="space-y-8">
+        <div class="glass-panel p-6 border-blue-500/20">
+          <h4 class="text-white font-black uppercase text-xs tracking-widest mb-4">About This Standard</h4>
+          <p class="text-gray-400 text-sm leading-relaxed">
+            {standard.code} is a critical industry specification ensuring compliance and quality in technical testing and certification across global markets.
+          </p>
+        </div>
+
+        <div class="glass-panel p-6 border-emerald-500/20 relative overflow-hidden group">
+           <div class="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+           <h4 class="text-white font-black uppercase text-xs tracking-widest mb-4">Need Help?</h4>
+           <p class="text-gray-400 text-sm mb-6">
+             Can't find a lab specifically for your {standard.code} requirements? Our concierge team can manually source verified providers for you.
+           </p>
+           <a href="/contact" class="block w-full text-center py-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all uppercase tracking-widest">
+             Request Sourcing
+           </a>
+        </div>
+      </aside>
+    </div>
+  </main>
 
   <!-- JSON-LD -->
   <script type="application/ld+json" set:html={JSON.stringify({

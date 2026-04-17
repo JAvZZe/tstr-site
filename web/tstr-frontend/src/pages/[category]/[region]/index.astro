@@ -67,172 +67,188 @@ const pageDescription = formatDescription(
 );
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{pageTitle}</title>
-    <meta name="description" content={pageDescription} />
-    <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={pageDescription} />
-    <script is:inline set:html={`
-      function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-      o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-      o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-      document.head.appendChild(o)}initApollo();
-    `}></script>
-</head>
-
-  <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
-
-    <!-- Navigation -->
-    <NewsletterBanner client:only="react" />
-    <nav class="bg-white shadow-sm p-4">
-      <div class="max-w-6xl mx-auto">
-        <a href="/" class="font-bold text-xl hover:text-blue-600 transition">
-          TSTR<span class="text-blue-600">.directory</span>
-        </a>
-      </div>
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <main class="max-w-6xl mx-auto px-4 py-8 md:py-12">
+    <!-- Breadcrumbs -->
+    <nav class="flex items-center space-x-2 text-sm text-gray-400 mb-8" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-blue-400 transition-colors">Home</a>
+      <span class="text-gray-600">/</span>
+      <a href={`/${category}`} class="hover:text-blue-400 transition-colors">{titleCat}</a>
+      <span class="text-gray-600">/</span>
+      <span class="text-blue-400 font-medium">{titleReg}</span>
     </nav>
 
-    <!-- Main Content -->
-    <main class="max-w-4xl mx-auto p-6">
+    <!-- Page Header Section -->
+    <div class="glass-panel p-8 md:p-12 mb-12 relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 blur-3xl -mr-32 -mt-32"></div>
+      
+      <div class="relative z-10">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-white">
+          {titleCat} <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">in {titleReg}</span>
+        </h1>
+        
+        <h2 class="text-xl md:text-2xl font-semibold text-gray-300 mb-6 font-mono">
+          High-Value {testingServiceName} in {titleReg}
+        </h2>
 
-      <!-- Breadcrumbs -->
-      <div class="text-sm text-gray-500 mb-4">
-        <a href="/" class="hover:underline hover:text-blue-600">Home</a>
-        <span class="mx-2">›</span>
-        <a href={`/${category}`} class="hover:underline hover:text-blue-600">{titleCat}</a>
-        <span class="mx-2">›</span>
-        <span class="text-gray-900 font-medium">{titleReg}</span>
-      </div>
-
-      <!-- Page Header -->
-      <h1 class="text-3xl md:text-4xl font-bold mb-2">
-        {titleCat} in {titleReg}
-      </h1>
-
-      <!-- H2: SEO Payload (Hybrid Hook Strategy) -->
-      <h2 class="text-xl md:text-2xl font-semibold text-gray-700 mb-4">
-        High-Value {testingServiceName} in {titleReg}
-      </h2>
-
-      <!-- SEO-enhanced intro -->
-      <p class="text-gray-600 text-base mb-4">
-        Find verified <strong>{titleCat.toLowerCase()}</strong> and compare
-        <strong>{testingServiceName.toLowerCase()}</strong> from ISO 17025
-        accredited laboratories in {titleReg}.
-        {categoryData?.description && ` Expert providers for ${categoryData.description.toLowerCase()}.`}
-      </p>
-
-      <p class="text-gray-600 mb-8 text-lg">
-        {listingCount === 0 ? 'No' : listingCount} verified {listingCount === 1 ? 'laboratory' : 'laboratories'} and certification {listingCount === 1 ? 'body' : 'bodies'}.
-      </p>
-
-      <!-- Error Handling -->
-      {listingsError && (
-        <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
-          <p class="text-red-800 text-sm">
-            ⚠️ Error loading listings. Please try again later.
+        <div class="max-w-3xl">
+          <p class="text-lg text-gray-400 leading-relaxed mb-6">
+            Find verified <strong class="text-white">{titleCat.toLowerCase()}</strong> and compare
+            <strong class="text-white">{testingServiceName.toLowerCase()}</strong> from ISO 17025
+            accredited laboratories in {titleReg}.
+            {categoryData?.description && ` Expert providers for ${categoryData.description.toLowerCase()}.`}
           </p>
+          
+          <div class="flex items-center gap-4">
+            <div class="px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 font-bold text-sm">
+              {listingCount === 0 ? 'No' : listingCount} verified {listingCount === 1 ? 'laboratory' : 'laboratories'}
+            </div>
+          </div>
         </div>
-      )}
+      </div>
+    </div>
 
-      <!-- Listings Grid -->
-      {pageListings && pageListings.length > 0 && (
-        <div class="grid gap-6">
-          {pageListings.map((listing) => (
-            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition">
+    <!-- Error Handling -->
+    {listingsError && (
+      <div class="p-4 mb-8 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-center gap-3">
+        <span>⚠️</span>
+        <p class="text-sm font-medium">Error loading listings. Please try again later.</p>
+      </div>
+    )}
 
-              <div class="flex justify-between items-start">
-                <div>
-                  <h3 class="text-xl font-bold text-blue-900">
+    <!-- Listings Grid -->
+    {pageListings && pageListings.length > 0 ? (
+      <div class="grid gap-6">
+        {pageListings.map((listing) => (
+          <div class="glass-card group hover:scale-[1.01] transition-all duration-300">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                  <h3 class="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors">
                     {listing.business_name}
                   </h3>
-
-                  <div class="text-sm text-gray-500 mt-1 flex flex-wrap gap-3">
-                    <span>📍 {listing.location?.name || listing.region?.toUpperCase()}</span>
-                    {listing.featured && (
-                      <span class="text-yellow-600 font-semibold">⭐ Featured</span>
-                    )}
-                    {listing.verified && (
-                      <span class="text-green-600 font-semibold">✓ Verified</span>
-                    )}
-                  </div>
-
-                  {listing.description && (
-                    <p class="text-gray-700 mt-3 text-sm line-clamp-2">
-                      {listing.description}
-                    </p>
+                  {listing.verified && (
+                    <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                      Verified
+                    </span>
+                  )}
+                  {listing.featured && (
+                    <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                      Featured
+                    </span>
                   )}
                 </div>
 
+                <div class="flex flex-wrap items-center gap-4 text-sm text-gray-400 mb-4">
+                  <span class="flex items-center gap-1.5">
+                    <span class="text-blue-400">📍</span>
+                    {listing.location?.name || listing.region?.toUpperCase()}
+                  </span>
+                  {listing.trust_score && (
+                    <span class="flex items-center gap-1.5">
+                      <span class="text-amber-400">⭐</span>
+                      Trust Score: {listing.trust_score}
+                    </span>
+                  )}
+                </div>
+
+                {listing.description && (
+                  <p class="text-gray-400 text-sm line-clamp-2 max-w-2xl">
+                    {listing.description}
+                  </p>
+                )}
+              </div>
+
+              <div class="flex flex-col sm:flex-row md:flex-col gap-3 min-w-[180px]">
                 {listing.website && (
                   <a
                     href={getRedirectUrl(listing.website, listing.id)}
                     target="_blank"
                     rel="nofollow noopener noreferrer"
-                    class="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-blue-700 transition whitespace-nowrap"
+                    class="w-full text-center px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm transition-all shadow-lg shadow-blue-600/20"
                   >
                     Visit Website
                   </a>
                 )}
-              </div>
-
-              <!-- Claim Prompt for Unclaimed Listings -->
-              {!listing.claimed && (
-                <div class="mt-4 bg-yellow-50 border-l-4 border-yellow-400 p-3 text-xs text-yellow-800">
-                  ⚠️ Is this your lab?
-                  <a href="/claim" class="underline font-bold hover:text-yellow-900">
-                    Claim this profile
-                  </a>
-                  to manage your listing.
-                </div>
-              )}
-            </div>
-          ))}
-
-          {/* Low Density Fallback - Show when fewer than 5 results */}
-          {listingCount < 5 && (
-            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-8 mt-8 text-center shadow-sm hover:shadow-md transition-shadow">
-              <div class="max-w-2xl mx-auto">
-                <h3 class="text-2xl font-bold text-blue-900 mb-3">
-                  Can't find the right {titleCat.toLowerCase()} in {titleReg}?
-                </h3>
-                <p class="text-blue-800 text-lg mb-6 leading-relaxed">
-                  Our engineering team manually sources ISO 17025 accredited laboratories for specialized requirements.
-                  We'll find the perfect testing partner for your needs—at no cost to you.
-                </p>
                 <a
-                  href={`${MAILTO_LINKS.enterprisePlan}&body=Concierge Search Request for ${encodeURIComponent(titleCat)} in ${encodeURIComponent(titleReg)}`}
-                  class="inline-block bg-blue-600 text-white font-bold text-lg py-4 px-8 rounded-lg hover:bg-blue-700 hover:scale-105 transition-all shadow-md hover:shadow-lg"
+                  href={`/listing/${listing.slug}`}
+                  class="w-full text-center px-6 py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white border border-white/10 font-bold text-sm transition-all"
                 >
-                  Request Free Concierge Search →
+                  View Full Profile
                 </a>
-                <p class="text-sm text-blue-600 mt-4 font-medium">
-                  ⚡ Average response time: 24 hours
-                </p>
               </div>
             </div>
-          )}
+          </div>
+        ))}
+
+        {/* Low Density Fallback - Show when fewer than 5 results */}
+        {listingCount < 5 && (
+          <div class="mt-12 group relative">
+             <div class="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-emerald-600/20 blur-xl opacity-50 group-hover:opacity-100 transition-opacity"></div>
+             <div class="glass-panel p-8 md:p-12 relative border-blue-500/30">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                  <div>
+                    <h3 class="text-3xl font-black text-white mb-4">
+                      Request <span class="text-blue-400">Concierge Search</span>
+                    </h3>
+                    <p class="text-gray-400 text-lg leading-relaxed mb-8">
+                      Our engineering team manually sources ISO 17025 accredited laboratories for specialized requirements.
+                      We'll find the perfect testing partner for your needs—at no cost to you.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                      <a
+                        href={`${MAILTO_LINKS.enterprisePlan}&body=Concierge Search Request for ${encodeURIComponent(titleCat)} in ${encodeURIComponent(titleReg)}`}
+                        class="px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-black text-lg transition-all shadow-xl shadow-blue-600/20 flex items-center justify-center gap-2 group/btn"
+                      >
+                        Request Free Search
+                        <span class="group-hover/btn:translate-x-1 transition-transform">→</span>
+                      </a>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-6 font-mono">
+                      ⚡ Average response time: 24 hours
+                    </p>
+                  </div>
+                  
+                  <div class="hidden md:block">
+                     <div class="grid grid-cols-2 gap-4 text-white">
+                        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
+                          <div class="text-2xl font-black mb-1 group-hover:text-blue-400 transition-colors uppercase">24H</div>
+                          <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Response</div>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
+                          <div class="text-2xl font-black mb-1 group-hover:text-blue-400 transition-colors uppercase">100%</div>
+                          <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Verified</div>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
+                          <div class="text-2xl font-black mb-1 group-hover:text-blue-400 transition-colors uppercase">FREE</div>
+                          <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Service</div>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
+                          <div class="text-2xl font-black mb-1 group-hover:text-blue-400 transition-colors uppercase">ISO</div>
+                          <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Compliant</div>
+                        </div>
+                     </div>
+                  </div>
+                </div>
+             </div>
+          </div>
+        )}
+      </div>
+    ) : (
+      <div class="glass-panel py-20 text-center border-dashed">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/5 text-gray-500 mb-6 text-2xl">
+          🔍
         </div>
-      )}
-
-      {(!pageListings || pageListings.length === 0) && (
-        <div class="text-center py-16 bg-white rounded-lg border-2 border-dashed border-gray-300">
-          <p class="text-gray-500 text-lg mb-2">
-            No {titleCat.toLowerCase()} listed in {titleReg} yet.
-          </p>
-          <a href="/contact" class="text-blue-600 font-bold hover:underline">
-            Be the first to list here →
-          </a>
-        </div>
-      )}
-
-    </main>
-
-    <!-- Footer -->
-    <Footer />
-  </body>
-</html>
+        <p class="text-gray-400 text-xl mb-8">
+          No {titleCat.toLowerCase()} listed in {titleReg} yet.
+        </p>
+        <a 
+          href="/contact" 
+          class="inline-block px-8 py-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all shadow-lg shadow-blue-600/20"
+        >
+          Be the first to list here →
+        </a>
+      </div>
+    )}
+  </main>
+</BaseLayout>
