@@ -101,11 +101,15 @@ update_task(task_id, "completed", result="Result summary")
 PYEOF
 ```
 
-### 3. Session End or Handoff
-
 ```bash
 cd "/home/al/AI_PROJECTS_SPACE" && ./handoff.sh <agent> <reason>
 ```
+
+### 🧹 Housekeeping & Archiving (MANDATORY)
+To maintain a clean environment and minimize token usage:
+1. **Cleanup on Completion**: Always delete interim artifacts, temporary handoff files (`HANDOFF_*.md`), and one-off scripts before ending a session.
+2. **Use the Archive**: Move completed or historical documents to the project's `_ARCHIVE/` directory.
+3. **Consult History**: Reference the `_ARCHIVE/` folder when looking for "forgotten" context or previous implementation attempts.
 
 ---
 
