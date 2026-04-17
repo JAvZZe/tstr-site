@@ -49,18 +49,18 @@ export default function NewsletterBanner() {
   }
 
   return (
-    <div className="bg-orange-500 text-white py-2 px-4 shadow-md transition-all duration-300 overflow-hidden">
-      <div className="max-w-6xl mx-auto flex flex-col xl:flex-row items-center justify-between gap-4">
-        <div className="flex-shrink-0 text-center xl:text-left">
-          <p className="font-bold text-sm md:text-base tracking-wide">
-            JOIN OUR NEWSLETTER <span className="hidden xl:inline">|</span> 
-            <span className="block xl:inline xl:ml-2 font-normal text-xs md:text-sm text-white opacity-90">
+    <div className="bg-orange-500 text-white py-1 px-4 shadow-md transition-all duration-300 overflow-hidden">
+      <div className="max-w-6xl mx-auto flex flex-col xl:flex-row items-center justify-between gap-1 xl:gap-4">
+        <div className="flex-shrink-0 text-center xl:text-left max-w-[300px] xl:max-w-none">
+          <p className="font-bold text-[13px] md:text-sm tracking-tight">
+            JOIN OUR NEWSLETTER <span className="hidden xl:inline mx-1">|</span> 
+            <span className="block xl:inline font-normal text-[11px] md:text-xs text-white opacity-90 leading-tight">
               Get the latest industry testing updates
             </span>
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2 w-full xl:w-auto mt-2 xl:mt-0">
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-1.5 w-full xl:w-auto mt-1 xl:mt-0">
           <input
             required
             type="text"
