@@ -1,9 +1,9 @@
 # 📊 TSTR.DIRECTORY - PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - Executive summary for agents
-> **Last Updated**: 2026-04-16 18:33 UTC
-> **Updated By**: JAvZZe
-> **Status**: ✅ PRODUCTION - Live at <https://tstr.directory>
+> **Last Updated**: 2026-04-16 19:20 UTC
+> **Updated By**: Antigravity (Gemini Flash)
+> **Status**: ✅ PRODUCTION - Live at <https://tstr.directory> (PSEO 2.0 Overhaul Complete)
 
 ---
 
@@ -55,9 +55,14 @@ Automation:       100% (cron daily 2 AM GMT)
 
 ### Schema Implementations
 
-- **FAQPage Schema**: Auto-generated from database standard metadata
+- **FAQPage Schema**: Auto-generated from database standard metadata (Enriched for top 14 standards)
 - **ItemList Schema**: Dynamic listing arrays for rich results
 - **Organization Schema**: Homepage and category pages
+- **Conversion Optimization**:
+  - `LabManagerTeaser.tsx`: Glassmorphism CTA for B2B portal engagement.
+  - `Sticky Conversion Bar`: High-velocity hash-triggered (#rfq) RFQ routing.
+  - `ContactLabModal.tsx`: Hardened with global support and URL hash listening.
+  - `Animate-Fade-Up`: entrance animations for premium feel.
 
 ### PSEO Infrastructure
 
@@ -76,16 +81,13 @@ Each listing generates URLs for:
 ### Standards with PSEO Pages
 
 Query database to identify active standards with linked listings:
-- Core NDT: iso-17025, asme-section-iii, api-510/570/653
-- Hydrogen: iso-19880-1, iec-62282-3-100
-- Aerospace: mil-std-810h, ams-2644
-- [Full list in database - query needed]
+### Active PSEO Enrichment (2.0)
 
-### Known PSEO Issues
-
-1. **Category pages showing empty** - Listings may not be linked to `listing_categories`
-2. **Testing industry pages empty** - Requires `listing_capabilities` + `listing_categories` linkage
-3. **URL slug generation** - Standards need proper slugs (verified for iso-ts-15916-2026)
+- **Standards Backfilled**: 14 high-volume standards (ISO 17025, MIL-STD-810, etc.) with `description_long` and `issuing_body`.
+- **Indexing**: `trigger-indexnow.ts` script ready for manual/cron execution (Local Verified).
+- **Core NDT**: ISO-17025, ASME Section III, API-510/570/653
+- **Hydrogen**: ISO-19880-1, IEC-62282-3-100
+- **Aerospace**: MIL-STD-810H, AMS-2644
 
 ---
 

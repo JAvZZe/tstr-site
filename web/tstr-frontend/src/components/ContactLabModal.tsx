@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
 
 interface ContactLabModalProps {
-  listingId: string;
-  labName: string;
+  listingId?: string;
+  labName?: string;
+  preferredStandard?: string;
+  preferredIndustry?: string;
 }
 
-export default function ContactLabModal({ listingId, labName }: ContactLabModalProps) {
+export default function ContactLabModal({ 
+  listingId, 
+  labName = "Global Technical Registry", 
+  preferredStandard,
+  preferredIndustry 
+}: ContactLabModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -15,10 +22,36 @@ export default function ContactLabModal({ listingId, labName }: ContactLabModalP
     name: '',
     email: '',
     company: '',
-    industry: '',
+    industry: preferredIndustry || '',
     role: '',
-    message: `Hi ${labName},\n\nI am interested in your testing services. Could you please provide more information or a quote for our upcoming project?\n\nThank you.`
+    message: listingId 
+      ? `Hi ${labName},\n\nI found your facility on TSTR.directory and am interested in your ${preferredStandard ? preferredStandard + ' ' : ''}testing services.\n\nPlease provide a quote or technical contact for further discussion.\n\nThank you.`
+      : `Hi TSTR Team,\n\nI am looking for a qualified laboratory for ${preferredStandard ? preferredStandard + ' ' : 'technical'} testing within the ${preferredIndustry ? preferredIndustry : ''} industry.\n\nPlease help me identify verified facilities that meet these requirements.\n\nThank you.`
   });
+
+  // Handle URL Hash triggering (#rfq)
+  useEffect(() => {
+    const handleHashChange = () => {
+      if (window.location.hash === '#rfq') {
+        setIsOpen(true);
+      }
+    };
+
+    // Initial check
+    if (window.location.hash === '#rfq') {
+      setIsOpen(true);
+    }
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  // Update form if props change
+  useEffect(() => {
+    if (preferredIndustry) {
+      setFormData(prev => ({ ...prev, industry: preferredIndustry }));
+    }
+  }, [preferredIndustry]);
 
   const industries = [
     'Oil & Gas', 'Biopharma', 'Pharmaceutical', 'Environmental', 
