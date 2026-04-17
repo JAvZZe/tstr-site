@@ -130,6 +130,12 @@ python3 db_utils.py learning-add \
 ./checkpoint.sh "final state description"
 # OR if handing off to another agent
 ./handoff.sh <agent-name> <reason>
+
+### 🧹 Cleanup & Archiving Protocol (MANDATORY)
+To maintain a clean environment and minimize token usage:
+1. **Delete Interim Files**: Once work is merged/completed, delete redundant files like `HANDOFF_*.md`, `implementation_plan.md`, `task.md`, or temporary reports.
+2. **Archive Historical Context**: Move completed or historical documents to the project's `_ARCHIVE/` directory instead of leaving it in the root.
+3. **Consult History**: Reference the `_ARCHIVE/` folder when looking for "forgotten" context or previous implementation attempts.
 ```
 
 ## AI Agent Selection Guide
