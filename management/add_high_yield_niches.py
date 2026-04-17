@@ -5,7 +5,6 @@ Aligned with PSEO 2.0 architecture and URL matrix.
 """
 
 import requests
-import json
 
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
 SERVICE_ROLE_KEY = "sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2"

@@ -1,397 +1,243 @@
 ---
 import { supabase } from '../lib/supabase'
+import BaseLayout from '../layouts/BaseLayout.astro'
 import Footer from '../components/Footer.astro'
+import StandardMatrix from '../components/StandardMatrix'
+import ContactLabModal from '../components/ContactLabModal'
 
-// Fetch hydrogen-specific standards
-const { data: h2Standards, error } = await supabase
+// Hydrogen Category IDs
+const CATEGORY_IDS = [
+  '2817126e-65fa-4ddf-8ec6-dbedb021001a', // Hydrogen Infrastructure
+  'f29966a2-4753-451b-b354-d756c78a8d38', // Hydrogen Embrittlement
+  '508b108a-5563-4287-9078-0f8f1310951f'  // Hydrogen Purity
+];
+
+// Fetch all standards for these categories
+const { data: h2Standards, error: standardsError } = await supabase
   .from('standards')
-  .select('id, code, name, description')
-  .or('code.like.ISO 19880%,code.like.SAE J2%,code.eq.ISO 11114-4,code.eq.UN ECE R134,code.eq.CSA HGV 4.3')
+  .select('id, code, name, description, category_id')
+  .in('category_id', CATEGORY_IDS)
   .eq('is_active', true)
-  .order('code')
+  .order('code');
 
-// Get count of hydrogen-capable labs
-const { data: h2Labs, error: labsError } = await supabase
-  .from('listing_capabilities')
-  .select('listing_id, standard:standard_id(code)')
-  .in('standard.code', ['ISO 19880-3', 'SAE J2601', 'ISO 14687', 'ISO 19881'])
+// Primary Labs for the Matrix (to ensure a premium first look)
+const PRIMARY_LAB_IDS = [
+  'a837f837-5b02-4c04-a0e8-546316067587', // TÜV SÜD
+  'ca82073a-b4fa-4bcd-b7e4-750fe14b52dc', // Powertech Labs
+  'a302f6e3-4222-4dce-adcd-746dbb5dc4a2', // Element Materials Technology
+  '77f22044-a7f5-48e7-bc2d-c726dc3c4324', // Kiwa Technology
+  'e6a55e77-91ad-44ab-be5b-54c951861359', // SGS
+  'b0282601-6df0-48a8-9eaf-1feb7634195c'  // WHA International
+];
 
-const uniqueLabCount = new Set(h2Labs?.map(l => l.listing_id) || []).size
+// Fetch lab data and capabilities for the matrix
+const { data: labsData, error: labsError } = await supabase
+  .from('listings')
+  .select(`
+    id, 
+    business_name,
+    listing_capabilities(standard_id)
+  `)
+  .in('id', PRIMARY_LAB_IDS);
 
-const title = "ISO 19880-3 Testing Labs | Hydrogen Infrastructure Certification"
-const description = "Find laboratories certified for ISO 19880-3 hydrogen valve testing, 700 bar pressure testing, and H2 infrastructure compatibility. Specialized hydrogen testing facilities worldwide."
+const matrixLabs = labsData?.map(lab => ({
+  id: lab.id,
+  business_name: lab.business_name,
+  capabilities: lab.listing_capabilities.map(c => c.standard_id)
+})) || [];
+
+// Category stats
+const h2StandardIds = h2Standards?.map(s => s.id) || [];
+let uniqueLabCount = 0;
+if (h2StandardIds.length > 0) {
+  const { data: totalLabs, error: totalError } = await supabase
+    .from('listing_capabilities')
+    .select('listing_id')
+    .in('standard_id', h2StandardIds);
+  uniqueLabCount = new Set(totalLabs?.map(l => l.listing_id) || []).size;
+}
+
+const title = "Hydrogen Testing Hub | ISO 19880-3 & 700 Bar Certification";
+const description = "The global directory for hydrogen infrastructure testing. Compare labs for ISO 19880-3, SAE J2601, and material compatibility. High-pressure (700 bar) and cryogenic specialists.";
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{title}</title>
-  <meta name="description" content={description}>
-  
-  <!-- SEO for hydrogen niche -->
-  <meta name="keywords" content="ISO 19880-3, hydrogen valve testing, 700 bar testing, hydrogen embrittlement, H2 infrastructure, fuel cell testing, hydrogen compatibility">
-  <link rel="canonical" href="https://tstr.directory/hydrogen-testing">
-  
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
-     crossorigin="anonymous"></script>
-  
-  <!-- JSON-LD Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Hydrogen Testing Laboratory Directory",
-    "description": "Directory of laboratories certified for hydrogen infrastructure testing including ISO 19880-3 valve testing and 700 bar pressure testing",
-    "specialty": [
-      "ISO 19880-3 Valve Testing",
-      "Hydrogen Embrittlement Testing",
-      "700 Bar Pressure Testing",
-      "Cryogenic Hydrogen Testing"
-    ]
-  }
-  </script>
-  
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #f5f5f5;
-    }
-
-    .hero {
-      background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
-      color: white;
-      padding: 4rem 2rem;
-      text-align: center;
-    }
-
-    .hero h1 {
-      font-size: 2.8rem;
-      margin-bottom: 1rem;
-      font-weight: 700;
-    }
-
-    .hero .tagline {
-      font-size: 1.3rem;
-      opacity: 0.95;
-      margin-bottom: 0.5rem;
-    }
-
-    .hero .stats {
-      font-size: 1.1rem;
-      opacity: 0.9;
-      margin-top: 1.5rem;
-    }
-
-    .hero .cta-buttons {
-      margin-top: 2rem;
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      background: white;
-      color: #0066cc;
-      padding: 1rem 2rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      display: inline-block;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-
-    .btn.secondary {
-      background: transparent;
-      border: 2px solid white;
-      color: white;
-    }
-
-    .btn.secondary:hover {
-      background: white;
-      color: #0066cc;
-    }
-
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 3rem 2rem;
-    }
-
-    .section {
-      background: white;
-      padding: 2.5rem;
-      border-radius: 12px;
-      margin-bottom: 2rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .section h2 {
-      color: #0066cc;
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .section h3 {
-      color: #004d99;
-      font-size: 1.4rem;
-      margin-top: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .capabilities-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1.5rem;
-    }
-
-    .capability-card {
-      background: linear-gradient(135deg, #f0f7ff 0%, #e6f2ff 100%);
-      padding: 1.5rem;
-      border-radius: 8px;
-      border-left: 4px solid #0066cc;
-    }
-
-    .capability-card h4 {
-      color: #0066cc;
-      margin-bottom: 0.5rem;
-      font-size: 1.1rem;
-    }
-
-    .capability-card p {
-      color: #555;
-      font-size: 0.95rem;
-    }
-
-    .standards-list {
-      display: grid;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-
-    .standard-item {
-      background: #f8f9fa;
-      padding: 1.5rem;
-      border-radius: 8px;
-      border-left: 4px solid #0066cc;
-      transition: all 0.3s ease;
-    }
-
-    .standard-item:hover {
-      transform: translateX(5px);
-      box-shadow: 0 2px 8px rgba(0,102,204,0.2);
-    }
-
-    .standard-code {
-      font-weight: 700;
-      color: #0066cc;
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .standard-name {
-      color: #333;
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .standard-desc {
-      color: #666;
-      font-size: 0.9rem;
-      line-height: 1.5;
-    }
-
-    .why-section {
-      background: linear-gradient(135deg, #fff5e6 0%, #ffe6cc 100%);
-      border-left: 4px solid #ff9900;
-    }
-
-    .why-section h3 {
-      color: #cc7700;
-    }
-
-    ul {
-      margin-left: 1.5rem;
-      margin-top: 1rem;
-    }
-
-    li {
-      margin-bottom: 0.75rem;
-      line-height: 1.6;
-    }
-
-    strong {
-      color: #0066cc;
-    }
-
-    @media (max-width: 768px) {
-      .hero h1 {
-        font-size: 2rem;
-      }
-
-      .hero .tagline {
-        font-size: 1.1rem;
-      }
-
-      main {
-        padding: 2rem 1rem;
-      }
-
-      .section {
-        padding: 1.5rem;
-      }
-
-      .capabilities-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-  <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
-</head>
-<body>
-  <div class="hero">
-    <h1>🔬 Hydrogen Testing Laboratory Directory</h1>
-    <p class="tagline">ISO 19880-3 | 700 Bar Pressure | Hydrogen Embrittlement | Cryogenic Testing</p>
-    <p class="stats">
-      {uniqueLabCount} specialized hydrogen testing facilities | {h2Standards?.length || 10} critical H2 standards
-    </p>
-    <div class="cta-buttons">
-      <a href="/search/standards?filter=hydrogen" class="btn">Find H2-Certified Labs</a>
-      <a href="/submit" class="btn secondary">List Your Lab</a>
-    </div>
-  </div>
-
-  <main>
-    <!-- Why This Matters -->
-    <section class="section why-section">
-      <h2>⚡ Why Hydrogen Testing is Critical</h2>
-      <p style="font-size: 1.1rem; margin-bottom: 1rem;">
-        The hydrogen infrastructure industry is transitioning rapidly. Standard materials fail under hydrogen conditions due to <strong>embrittlement</strong>, <strong>permeation</strong>, and <strong>extreme pressures (700+ bar)</strong>.
-      </p>
-      
-      <h3>The Discovery Problem</h3>
-      <p>Engineers cannot find qualified labs because:</p>
-      <ul>
-        <li>Standard testing labs lack <strong>high-pressure equipment</strong> (700 bar / 10,000 psi)</li>
-        <li>Cryogenic hydrogen (-253°C) requires <strong>specialized facilities</strong></li>
-        <li>Discovery is broken—engineers search by <strong>ISO/SAE standard numbers</strong>, not company names</li>
-        <li>Certification delays cost months and millions in lost sales</li>
-      </ul>
-
-      <h3>The Equipment Moat</h3>
-      <p>H2 testing requires capital-intensive infrastructure:</p>
-      <ul>
-        <li><strong>Blast bunkers</strong> for catastrophic failure testing</li>
-        <li><strong>Cryogenic chambers</strong> for liquid hydrogen (-253°C)</li>
-        <li><strong>High-pressure autoclaves</strong> (up to 1000+ bar)</li>
-        <li><strong>Embrittlement test rigs</strong> for materials qualification</li>
-      </ul>
-    </section>
-
-    <!-- Key Testing Capabilities -->
-    <section class="section">
-      <h2>🔧 Critical Hydrogen Testing Capabilities</h2>
-      <p>Search our directory by these specialized capabilities:</p>
-      
-      <div class="capabilities-grid">
-        <div class="capability-card">
-          <h4>⚡ Pressure Ratings</h4>
-          <p><strong>350 bar (H35)</strong> - Light vehicles<br>
-          <strong>700 bar (H70)</strong> - Most fuel cell vehicles<br>
-          <strong>1000+ bar</strong> - Industrial / heavy duty</p>
-        </div>
-
-        <div class="capability-card">
-          <h4>❄️ State Testing</h4>
-          <p><strong>Gaseous (GH2)</strong> - Standard fueling<br>
-          <strong>Liquid (LH2)</strong> - Cryogenic -253°C<br>
-          <strong>Supercritical</strong> - High pressure liquid</p>
-        </div>
-
-        <div class="capability-card">
-          <h4>🔬 Failure Modes</h4>
-          <p><strong>Embrittlement</strong> - Material degradation<br>
-          <strong>Permeation</strong> - Hydrogen leakage<br>
-          <strong>Rapid decompression</strong> - Explosive failure</p>
-        </div>
-
-        <div class="capability-card">
-          <h4>🔩 Component Types</h4>
-          <p><strong>Valves & Fittings</strong> - ISO 19880-3<br>
-          <strong>Hoses & Seals</strong> - ISO 19880-5<br>
-          <strong>Type IV Tanks</strong> - UN ECE R134</p>
-        </div>
+<BaseLayout title={title} description={description}>
+  <div class="min-h-screen bg-[#020203] text-white selection:bg-blue-500/30 overflow-x-hidden">
+    <!-- Hero Section -->
+    <section class="relative pt-24 pb-20 px-6 overflow-hidden">
+      <div class="absolute inset-0 z-0 text-white">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-emerald-600/10 blur-[120px] rounded-full"></div>
       </div>
-    </section>
 
-    <!-- Standards Directory -->
-    <section class="section">
-      <h2>📋 Critical Hydrogen Standards</h2>
-      <p>Our directory is indexed by these essential hydrogen testing standards:</p>
-      
-      <div class="standards-list">
-        {h2Standards && h2Standards.map(std => (
-          <div class="standard-item">
-            <div class="standard-code">{std.code}</div>
-            <div class="standard-name">{std.name}</div>
-            {std.description && <div class="standard-desc">{std.description}</div>}
-            <div style="margin-top: 0.75rem;">
-              <a href={`/search/standards?standard=${encodeURIComponent(std.code)}`} style="color: #0066cc; text-decoration: none; font-weight: 600;">
-                Find Certified Labs →
-              </a>
-            </div>
+      <div class="max-w-7xl mx-auto relative z-10 text-center">
+        <div class="inline-flex items-center px-4 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-xs font-bold tracking-widest uppercase mb-8 animate-fade-up">
+          <span class="relative flex h-2 w-2 mr-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+          </span>
+          Technical Infrastructure Directory
+        </div>
+        
+        <h1 class="text-5xl md:text-7xl font-black mb-8 tracking-tighter leading-none animate-fade-up delay-100">
+          The <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Hydrogen Premium</span> Hub
+        </h1>
+        
+        <p class="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 font-medium mb-12 animate-fade-up delay-200">
+          Global access to high-velocity labs for ISO 19880-3, SAE J2601, and cryogenic hydrogen infrastructure certification.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-up delay-300">
+          <a href="#matrix" class="px-8 py-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all shadow-xl shadow-blue-900/20 active:scale-95">
+            Compare Laboratories
+          </a>
+          <a href="#rfq" class="px-8 py-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white font-bold transition-all active:scale-95">
+            Submit Technical RFQ
+          </a>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20 pt-10 border-t border-white/5 animate-fade-up delay-400">
+          <div>
+            <div class="text-3xl font-black text-white">{uniqueLabCount}</div>
+            <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Specialist Facilities</div>
           </div>
-        ))}
+          <div>
+            <div class="text-3xl font-black text-white">{h2Standards?.length || 15}</div>
+            <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">H2 Standards</div>
+          </div>
+          <div>
+            <div class="text-3xl font-black text-white">700</div>
+            <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Bar Capability</div>
+          </div>
+          <div>
+            <div class="text-3xl font-black text-white">-253</div>
+            <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">°C Liquid State</div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Target Industries -->
-    <section class="section">
-      <h2>🎯 Who Needs H2 Testing?</h2>
-      
-      <h3>Valve & Fitting Manufacturers</h3>
-      <p>Swagelok, Parker Hannifin, etc. need component certification for hydrogen compatibility.</p>
-      
-      <h3>Automotive OEMs</h3>
-      <p>Toyota, Hyundai, BMW require R&D testing for fuel cell vehicle development.</p>
-      
-      <h3>Energy Majors</h3>
-      <p>Shell, TotalEnergies, BP validate hydrogen fueling infrastructure.</p>
-      
-      <h3>Component Suppliers</h3>
-      <p>O-ring, seal, and gasket manufacturers proving materials resist embrittlement.</p>
+    <!-- Technical Matrix -->
+    <section id="matrix" class="py-24 px-6 relative">
+      <div class="max-w-7xl mx-auto">
+        <div class="mb-16">
+          <h2 class="text-3xl font-black mb-4">Technical Comparison Matrix</h2>
+          <p class="text-slate-400 max-w-xl">Mapping Tier-1 laboratories across mission-critical hydrogen infrastructure standards.</p>
+        </div>
+        
+        <div class="animate-fade-up delay-500">
+          <StandardMatrix client:load standards={h2Standards?.slice(0, 15) || []} labs={matrixLabs} />
+        </div>
+        
+        <p class="mt-8 text-xs text-slate-500 italic">
+          * Data based on verified laboratory accreditation and project history.
+        </p>
+      </div>
     </section>
 
-    <!-- CTA -->
-    <section class="section" style="text-align: center; background: linear-gradient(135deg, #f0f7ff 0%, #e6f2ff 100%);">
-      <h2>Find Your H2-Certified Laboratory</h2>
-      <p style="margin: 1rem 0 2rem; font-size: 1.1rem;">
-        Search by exact standard (ISO 19880-3, SAE J2601) and technical specifications
-      </p>
-      <a href="/search/standards" class="btn" style="margin-right: 1rem;">Search Laboratories</a>
-      <a href="/submit" class="btn" style="background: #0066cc; color: white;">List Your Lab</a>
-    </section>
-  </main>
+    <!-- Category Tree -->
+    <section class="py-24 px-6 bg-[#050507]">
+      <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Infrastructure -->
+          <div class="p-8 rounded-3xl border border-white/5 bg-white/5 backdrop-blur-sm group hover:border-blue-500/30 transition-all">
+            <div class="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-6">
+              <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-4">Hydrogen Infrastructure</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">Valve testing (ISO 19880-3), refueling standards (SAE J2601), and dispenser certification for 350/700 bar systems.</p>
+            <a href="/search/standards?category=Infrastructure" class="text-blue-400 text-sm font-bold flex items-center group-hover:gap-2 transition-all">
+              Browse Standards <span class="ml-1">→</span>
+            </a>
+          </div>
 
-  <Footer />
-</body>
-</html>
+          <!-- Embrittlement -->
+          <div class="p-8 rounded-3xl border border-white/5 bg-white/5 backdrop-blur-sm group hover:border-emerald-500/30 transition-all">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6">
+              <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-4">Material Compatibility</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">Analyzing hydrogen-assisted fatigue and embrittlement (ASTM G142, ISO 11114) for metals and composite storage tanks.</p>
+            <a href="/search/standards?category=Embrittlement" class="text-emerald-400 text-sm font-bold flex items-center group-hover:gap-2 transition-all">
+              Analyze Materials <span class="ml-1">→</span>
+            </a>
+          </div>
+
+          <!-- Purity -->
+          <div class="p-8 rounded-3xl border border-white/5 bg-white/5 backdrop-blur-sm group hover:border-purple-500/30 transition-all">
+            <div class="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-6">
+              <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.691.383a4 4 0 11-4.631-6.914l.117-.007a1 1 0 00.996-1.093l-.111-1.247a2 2 0 00-.734-1.267l-2.009-1.607a2 2 0 00-2.302-.192L3.5 4.857a2 2 0 00-1.023.547l-2.387.477a6 6 0 00-3.86-.517" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-4">Purity & Contamination</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">ISO 14687 compliance for fuel cells. Detecting trace impurities at parts-per-billion level for Grade D hydrogen and above.</p>
+            <a href="/search/standards?category=Purity" class="text-purple-400 text-sm font-bold flex items-center group-hover:gap-2 transition-all">
+              Verify Purity <span class="ml-1">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Content / Why Section -->
+    <section class="py-24 px-6 max-w-4xl mx-auto">
+      <div class="prose prose-invert prose-blue max-w-none">
+        <h2 class="text-3xl font-black mb-8">The Hydrogen Equipment Moat</h2>
+        <p class="text-slate-400 mb-6 font-medium leading-relaxed">
+          Standard testing facilities are fundamentally ill-equipped for hydrogen infrastructure. The unique molecular properties of diatomic hydrogen require a capital-intensive "moat" of specialized equipment:
+        </p>
+        <ul class="space-y-4 mb-12">
+          <li class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-[10px] font-black italic">1</div>
+            <span class="text-slate-300"><strong class="text-white">Blast Buffers & Remote Ops:</strong> High-pressure pneumatic testing (700-1000 bar) carries a significant failure energy potential, requiring reinforced bunkers.</span>
+          </li>
+          <li class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-[10px] font-black italic">2</div>
+            <span class="text-slate-300"><strong class="text-white">Cryogenic Gas Handling:</strong> Maintaining liquid hydrogen at -253°C requires specialized vacuum-jacketed lines and boil-off management.</span>
+          </li>
+          <li class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-[10px] font-black italic">3</div>
+            <span class="text-slate-300"><strong class="text-white">In-Situ Embrittlement Rigs:</strong> Tensile and fatigue testing must occur while the material is pre-charged or actively exposed to high-pressure H2.</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Sticky RFQ Bar -->
+    <div class="fixed bottom-0 left-0 right-0 z-[100] p-6 bg-gradient-to-t from-black to-transparent pointer-events-none">
+      <div class="max-w-4xl mx-auto pointer-events-auto">
+        <div class="bg-[#0a0a0b]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-2xl">
+          <div class="hidden sm:block">
+            <div class="text-sm font-bold text-white">Need Hydrogen Testing?</div>
+            <div class="text-xs text-slate-500">Connect with all {uniqueLabCount} labs in one request.</div>
+          </div>
+          <div class="flex gap-3 w-full sm:w-auto">
+            <a href="#rfq" class="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-white text-black text-sm font-black hover:bg-slate-200 transition-all text-center">
+              Submit Multiple RFQ
+            </a>
+            <a href="/search/standards?filter=hydrogen" class="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-white/10 text-white text-sm font-bold hover:bg-white/20 transition-all text-center">
+              View All Labs
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modals -->
+    <ContactLabModal client:only="react" />
+
+    <Footer />
+  </div>
+</BaseLayout>
+
+<style is:global>
+  /* BaseLayout color override to prevent flash */
+  body {
+    background: #020203 !important;
+  }
+</style>
