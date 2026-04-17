@@ -1,0 +1,424 @@
+---
+// src/pages/testing/[industry]/[slug].astro
+import { supabase } from '../../../lib/supabase';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Footer from '../../../components/Footer.astro';
+import TrustBadge from '../../../components/TrustBadge';
+import ContactLabModal from '../../../components/ContactLabModal';
+import LabManagerTeaser from '../../../components/LabManagerTeaser';
+import { formatTitle, formatDescription } from '../../../lib/seo';
+
+// 1. SSR Edge Caching for Performance
+Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=3600');
+
+const { industry, slug } = Astro.params;
+
+// Parse slug: expectation is "iso-17025-in-houston"
+const [standardSlug, regionSlug] = slug.split('-in-');
+
+if (!standardSlug || !regionSlug) {
+  return Astro.redirect('/404');
+}
+
+// 2. Fetch Aggregated Data
+const { data: pageData, error } = await supabase
+  .from('listings')
+  .select(`
+    id,
+    business_name,
+    slug,
+    description,
+    region,
+    verified,
+    claimed,
+    website,
+    listing_categories!inner (category:category_id!inner (name, slug)),
+    listing_capabilities!inner (
+      verified,
+      standard:standard_id!inner (code, slug, name)
+    )
+  `)
+  .eq('status', 'active')
+  .eq('listing_categories.category.slug', industry)
+  .eq('listing_capabilities.standard.slug', standardSlug)
+  .eq('region', regionSlug === 'global' ? undefined : regionSlug);
+
+// 2b. Fetch Global Alternatives
+const { data: globalAlternatives } = (pageData?.length === 0) ? await supabase
+  .from('listings')
+  .select(`
+    id, business_name, slug, description, region, verified, claimed, website,
+    listing_categories!inner (category:category_id!inner (name, slug)),
+    listing_capabilities!inner (standard:standard_id!inner (code, slug, name))
+  `)
+  .eq('status', 'active')
+  .eq('listing_categories.category.slug', industry)
+  .eq('listing_capabilities.standard.slug', standardSlug)
+  .limit(3) : { data: null };
+
+// Fetch other regions
+const { data: relatedRegions } = await supabase
+  .from('listings')
+  .select('region')
+  .eq('status', 'active')
+  .eq('listing_categories.category.slug', industry)
+  .eq('listing_capabilities.standard.slug', standardSlug)
+  .neq('region', regionSlug)
+  .limit(8);
+
+const uniqueRegions = [...new Set(relatedRegions?.map(r => r.region).filter(Boolean))];
+
+if (error) {
+  console.error('PSEO Query Error:', error);
+  return Astro.redirect('/404');
+}
+
+// 3. Fallback Info & Premium Metadata
+let categoryName = industry.charAt(0).toUpperCase() + industry.slice(1);
+let standardName = standardSlug.toUpperCase();
+let regionDisplay = regionSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+
+// Fetch full standard info
+const { data: stdInfo } = await supabase
+    .from('standards')
+    .select('code, name, description_long, issuing_body, url')
+    .eq('slug', standardSlug)
+    .single();
+
+if (stdInfo) {
+    standardName = stdInfo.code;
+}
+
+const stdDescription = stdInfo?.description_long || stdInfo?.description || `Standardized compliance testing for the ${categoryName} industry.`;
+const stdIssuer = stdInfo?.issuing_body || 'relevant accreditation bodies';
+const formalStandardName = stdInfo?.name || standardName;
+
+const pageTitle = formatTitle([`${standardName} ${categoryName} Labs`, regionDisplay]);
+const pageDescription = formatDescription(
+  `Find verified ${industry} testing labs in ${regionDisplay} certified for ${standardName} (${formalStandardName}). Compare providers and request quotes for industrial compliance.`
+);
+
+// 4. Enhanced FAQ Logic
+const faqItems = [
+  {
+    "@type": "Question",
+    "name": `What is ${standardName} testing?`,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": stdDescription
+    }
+  },
+  {
+    "@type": "Question",
+    "name": `Who issues the ${standardName} certification?`,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": `Accreditation and technical oversight for ${standardName} is typically managed by ${stdIssuer} or equivalent national bodies.`
+    }
+  },
+  {
+    "@type": "Question",
+    "name": `How many verified ${standardName} labs are in ${regionDisplay}?`,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": `There are currently ${pageData?.length || 0} verified ${categoryName} labs in ${regionDisplay} with documented ${standardName} capabilities.`
+    }
+  }
+];
+
+if (stdInfo?.typical_industries) {
+    faqItems.push({
+        "@type": "Question",
+        "name": `Which industries typically require ${standardName}?`,
+        "acceptedAnswer": {
+            "@type": "Answer",
+            "text": `Beyond ${categoryName}, ${standardName} is frequently utilized across the following sectors: ${stdInfo.typical_industries}.`
+        }
+    });
+}
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ItemList",
+      "name": `${standardName} Testing Services in ${regionDisplay}`,
+      "description": pageDescription,
+      "itemListElement": pageData?.map((l, i) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "url": `https://tstr.directory/company/${l.slug}`,
+        "name": l.business_name
+      })) || []
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": faqItems
+    }
+  ]
+};
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <div class="bg-[#050505] min-h-screen text-slate-300 font-sans selection:bg-blue-500/30 relative overflow-hidden flex flex-col">
+    <!-- Premium Ambient Mesh Gradients -->
+    <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/20 blur-[120px] rounded-full pointer-events-none -z-0"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-emerald-500/10 blur-[150px] rounded-full pointer-events-none -z-0"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-indigo-900/5 blur-[180px] rounded-full pointer-events-none -z-0"></div>
+
+    <main class="max-w-7xl mx-auto px-4 py-16 md:py-24 relative z-10 w-full flex-grow">
+      <div class="mb-20">
+        <nav class="flex mb-12 text-xs font-bold text-slate-500 uppercase tracking-[0.2em] overflow-x-auto whitespace-nowrap pb-2">
+          <a href="/" class="hover:text-blue-400 transition-colors">Home</a>
+          <span class="mx-3 text-slate-700">/</span>
+          <a href={`/${industry}`} class="hover:text-blue-400 transition-colors">{categoryName}</a>
+          <span class="mx-3 text-slate-700">/</span>
+          <span class="text-blue-500">{regionDisplay}</span>
+        </nav>
+        
+        <div class="max-w-5xl">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600/10 border border-blue-500/20 rounded-full text-blue-400 text-[10px] font-black uppercase tracking-[0.3em] mb-10 shadow-[0_0_20px_rgba(79,70,229,0.1)]">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                Global Standards Registry
+            </div>
+            <h1 class="text-6xl md:text-8xl font-black text-white mb-10 tracking-tighter leading-[0.9] uppercase overflow-visible animate-fade-up">
+                {standardName} <span class="text-transparent bg-clip-text bg-gradient-to-br from-blue-500 via-indigo-500 to-emerald-500">{categoryName}</span>
+            </h1>
+            <div class="flex flex-col md:flex-row md:items-center gap-8 md:gap-16 animate-fade-up delay-100">
+                <p class="text-xl md:text-3xl text-slate-400 leading-[1.2] font-medium max-w-2xl tracking-tight">
+                    Authoritative directory of <span class="text-white">{pageData?.length || 0}</span> verified facilities in <span class="text-white">{regionDisplay}</span> delivering technical precision.
+                </p>
+                {stdInfo && (
+                  <div class="flex-shrink-0 p-6 bg-white/[0.03] border border-white/10 rounded-3xl backdrop-blur-xl group hover:border-emerald-500/30 transition-all cursor-default">
+                    <p class="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-2">Authority</p>
+                    <p class="text-sm text-emerald-500 font-bold group-hover:text-emerald-400 transition-colors">{stdIssuer}</p>
+                  </div>
+                )}
+            </div>
+        </div>
+      </div>
+
+      <!-- Results Grid -->
+      <div class="grid gap-8 mb-32">
+        {pageData && pageData.length > 0 ? (
+          pageData.map((listing) => (
+            <div class="bg-white/[0.02] border border-white/10 p-8 md:p-12 rounded-[2.5rem] backdrop-blur-md hover:bg-white/[0.05] hover:border-blue-500/40 transition-all duration-700 group flex flex-col lg:flex-row justify-between items-start lg:items-center gap-10 relative overflow-hidden animate-fade-up">
+              <!-- Subtle card background glow on hover -->
+              <div class="absolute -inset-x-20 -inset-y-20 bg-gradient-to-br from-blue-600/0 via-indigo-600/0 to-emerald-600/0 group-hover:via-blue-600/5 group-hover:to-emerald-600/5 blur-3xl -z-10 transition-all duration-1000"></div>
+
+              <div class="flex-1">
+                <div class="flex items-start md:items-center flex-col md:flex-row gap-4 mb-6">
+                  <h3 class="text-3xl md:text-4xl font-black text-white group-hover:text-blue-400 transition-colors uppercase tracking-tighter">
+                    {listing.business_name}
+                  </h3>
+                  <TrustBadge level={listing.verified ? 'verified' : (listing.claimed ? 'claimed' : 'aggregated')} size="sm" />
+                </div>
+                <p class="text-slate-400 text-lg md:text-xl line-clamp-2 md:line-clamp-none max-w-3xl leading-relaxed mb-8 font-light italic">
+                  &ldquo;{listing.description || `Leading ${categoryName} provider in ${regionDisplay} specialized in high-velocity ${standardName} conformity assessments.`}&rdquo;
+                </p>
+                <div class="flex flex-wrap gap-4">
+                  <div class="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 text-emerald-400 text-[11px] font-black rounded-xl uppercase tracking-widest border border-emerald-500/20">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17L4 12" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    {standardName} Verified
+                  </div>
+                  <div class="px-4 py-2 bg-white/5 text-slate-400 text-[11px] font-black rounded-xl uppercase tracking-widest border border-white/10">
+                    {regionDisplay}
+                  </div>
+                </div>
+              </div>
+              
+              <div class="flex flex-col sm:flex-row lg:flex-col gap-4 w-full lg:w-72 shrink-0">
+                <a href={`/company/${listing.slug}`} class="flex-1 text-center px-8 py-5 bg-white text-black rounded-2xl font-black hover:bg-slate-200 transition-all uppercase text-sm tracking-widest shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                  Explore Profile
+                </a>
+                <a 
+                  href={`/company/${listing.slug}#rfq?standard=${standardName}&msg=${encodeURIComponent(`Hi ${listing.business_name},\n\nI found your facility on TSTR.directory and am interested in your ${standardName} testing services for the ${categoryName} industry in ${regionDisplay}.\n\nPlease provide a quote or technical contact for further discussion.\n\nThank you.`)}`} 
+                  class="flex-1 text-center px-8 py-5 border-2 border-indigo-500/50 text-indigo-400 hover:text-white hover:bg-indigo-600 hover:border-indigo-600 rounded-2xl font-black transition-all uppercase text-sm tracking-widest"
+                >
+                  Request Quote
+                </a>
+              </div>
+            </div>
+          ))
+        ) : (
+           <div class="p-20 border-2 border-dashed border-white/10 rounded-[3rem] text-center">
+              <p class="text-2xl font-black text-slate-500 uppercase tracking-widest">No Direct Matches in {regionDisplay}</p>
+              <p class="text-slate-600 mt-2">Try expanding your search parameters or view global verified labs below.</p>
+           </div>
+        )}
+      </div>
+
+      <!-- Lab Manager Portal Teaser -->
+      <div class="mb-32 animate-fade-up delay-300">
+        <LabManagerTeaser client:visible />
+      </div>
+
+      {pageData?.length === 0 && globalAlternatives && globalAlternatives.length > 0 && (
+        <div class="mb-32">
+          <div class="flex items-center gap-6 mb-12">
+            <h2 class="text-4xl font-black text-white uppercase tracking-tighter italic">Global Alternatives</h2>
+            <div class="h-px flex-1 bg-gradient-to-r from-blue-500/50 to-transparent"></div>
+          </div>
+          <div class="grid md:grid-cols-3 gap-8">
+            {globalAlternatives.map((listing) => (
+              <a href={`/company/${listing.slug}`} class="bg-white/[0.03] p-10 rounded-[2.5rem] border border-white/10 hover:border-blue-500/40 hover:bg-white/[0.06] transition-all duration-500 group relative">
+                <div class="text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-6">Verified Facility</div>
+                <h4 class="text-2xl font-black text-white group-hover:text-blue-400 mb-4 tracking-tighter leading-none">{listing.business_name}</h4>
+                <p class="text-slate-500 text-base line-clamp-3 mb-8 font-light">{listing.description || `Specialized ${standardName} provider.`}</p>
+                <div class="font-black text-[11px] text-slate-400 uppercase tracking-widest py-3 border-t border-white/5">{listing.region || 'International Operations'}</div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- Premium Dynamic Content Section (FAQ & Deep Tech Specs) -->
+      <div class="grid lg:grid-cols-3 gap-12 mb-32">
+          <section class="lg:col-span-2 bg-white/[0.02] border border-white/10 rounded-[3rem] p-10 md:p-16 relative overflow-hidden overflow-visible">
+              <div class="absolute top-0 right-0 p-8">
+                 <svg class="w-16 h-16 text-blue-500/10" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017V11H12.017V18C12.017 19.6569 13.3601 21 15.017 21H14.017ZM6.01704 21L6.01704 18C6.01704 16.8954 6.91247 16 8.01704 16H11.017V11H4.01704V18C4.01704 19.6569 5.36013 21 7.01704 21H6.01704Z" /></svg>
+              </div>
+
+              <h2 class="text-4xl font-black text-white mb-12 flex items-center gap-6 overflow-visible">
+                <span class="w-4 h-4 rounded-full bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]"></span>
+                Standard Intelligence
+              </h2>
+              
+              <div class="space-y-12">
+                  <div class="relative pl-8 border-l-2 border-emerald-500/20">
+                      <h3 class="text-xl font-black text-white mb-4 uppercase tracking-widest text-emerald-400">Technical Context</h3>
+                      <p class="text-slate-400 text-lg leading-relaxed font-light">{stdDescription}</p>
+                  </div>
+                  
+                  <div class="relative pl-8 border-l-2 border-blue-500/20">
+                      <h3 class="text-xl font-black text-white mb-4 uppercase tracking-widest text-blue-400">Regional Advantage</h3>
+                      <p class="text-slate-400 text-lg leading-relaxed font-light italic">
+                        By sourcing a {standardName} facility within the {regionDisplay} sector, procurement teams reduce sample chain-of-custody risks and leverage the established {categoryName} infrastructure of the region.
+                      </p>
+                  </div>
+
+                  <div class="grid md:grid-cols-2 gap-8 pt-6">
+                    <div class="p-8 bg-white/5 rounded-3xl border border-white/10">
+                       <h4 class="text-white font-black uppercase text-xs tracking-widest mb-4">Issuing Authority</h4>
+                       <p class="text-slate-300 font-bold">{stdIssuer}</p>
+                    </div>
+                    {stdInfo?.url && (
+                        <a href={stdInfo.url} target="_blank" class="p-8 bg-blue-500/5 rounded-3xl border border-blue-500/20 hover:bg-blue-500/10 transition-all block">
+                           <h4 class="text-blue-400 font-black uppercase text-xs tracking-widest mb-4">Official Documentation</h4>
+                           <p class="text-white font-bold flex items-center gap-2">
+                             Access Standards Registry
+                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                           </p>
+                        </a>
+                    )}
+                  </div>
+              </div>
+          </section>
+
+          <aside class="space-y-8">
+              <div class="p-10 bg-gradient-to-br from-indigo-900/20 to-blue-900/20 border border-indigo-500/30 rounded-[3rem] backdrop-blur-xl">
+                  <h3 class="text-2xl font-black text-white mb-6 uppercase tracking-tighter italic">FAQ Section</h3>
+                  <div class="space-y-6">
+                      {faqItems.map(faq => (
+                        <div>
+                           <h4 class="text-white font-bold mb-2 text-sm uppercase tracking-wider">{faq.name}</h4>
+                           <p class="text-slate-400 text-xs leading-relaxed font-light">{faq.acceptedAnswer.text}</p>
+                        </div>
+                      ))}
+                  </div>
+              </div>
+
+              {uniqueRegions.length > 0 && (
+                <div class="p-10 bg-white/[0.02] border border-white/10 rounded-[3rem]">
+                    <h3 class="text-xl font-black text-white mb-6 uppercase italic">Related Hubs</h3>
+                    <div class="flex flex-col gap-3">
+                        {uniqueRegions.map(region => (
+                            <a 
+                                href={`/testing/${industry}/${standardSlug}-in-${region.toLowerCase().replace(/\s+/g, '-')}`}
+                                class="px-5 py-3 bg-white/5 border border-white/10 rounded-2xl text-slate-400 font-medium hover:text-blue-400 hover:border-blue-500/40 transition-all text-xs flex justify-between items-center group"
+                            >
+                                {region}
+                                <svg class="w-3 h-3 translate-x-1 opacity-0 group-hover:opacity-100 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+                            </a>
+                        ))}
+                    </div>
+                </div>
+              )}
+          </aside>
+      </div>
+
+      <!-- Trust Pillars -->
+      <section class="border-t border-white/10 pt-32 mb-20">
+          <div class="grid md:grid-cols-4 gap-12">
+              <div class="space-y-4">
+                  <div class="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-400 border border-blue-500/20">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  </div>
+                  <h4 class="text-lg font-black text-white uppercase tracking-tighter">Verified Integrity</h4>
+                  <p class="text-slate-500 text-sm leading-relaxed">Direct certification cross-referencing with accreditation bodies ensures total transparency.</p>
+              </div>
+              <div class="space-y-4">
+                  <div class="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-400 border border-emerald-500/20">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                  </div>
+                  <h4 class="text-lg font-black text-white uppercase tracking-tighter">Velocity First</h4>
+                  <p class="text-slate-500 text-sm leading-relaxed">Contextual RFQ routing reduces the procurement cycle from weeks to minutes.</p>
+              </div>
+              <div class="space-y-4">
+                  <div class="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-400 border border-indigo-500/20">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                  </div>
+                  <h4 class="text-lg font-black text-white uppercase tracking-tighter">Edge Scale</h4>
+                  <p class="text-slate-500 text-sm leading-relaxed">Our static-edge architecture ensures sub-100ms load times for global technical teams.</p>
+              </div>
+              <div class="space-y-4">
+                  <div class="w-12 h-12 bg-slate-500/10 rounded-2xl flex items-center justify-center text-slate-400 border border-white/10">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                  </div>
+                  <h4 class="text-lg font-black text-white uppercase tracking-tighter">Encrypted Data</h4>
+                  <p class="text-slate-500 text-sm leading-relaxed">Client technical requirements are handled via TLS 1.3 encrypted direct channels to labs.</p>
+              </div>
+          </div>
+      </section>
+    </main>
+
+    <div class="mt-auto z-20 relative bg-[#050505] border-t border-white/10">
+      <Footer />
+    </div>
+
+    <!-- Sticky Conversion Bar -->
+    <div class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4 hidden md:block">
+      <div class="bg-black/80 backdrop-blur-2xl border border-white/10 p-2 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center justify-between gap-4">
+        <div class="pl-6">
+          <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Global Sourcing</p>
+          <p class="text-sm font-bold text-white whitespace-nowrap">Need multiple {standardName} quotes?</p>
+        </div>
+        <button 
+          onClick="window.location.hash = 'rfq'"
+          class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white text-xs font-black uppercase tracking-widest rounded-2xl transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)]"
+        >
+          Get Started
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Sticky CTA -->
+    <div class="fixed bottom-0 left-0 right-0 z-50 md:hidden p-4 bg-gradient-to-t from-black to-transparent">
+        <button 
+          onClick="window.location.hash = 'rfq'"
+          class="w-full py-5 bg-gradient-to-r from-indigo-600 to-blue-600 text-white text-sm font-black uppercase tracking-[0.2em] rounded-2xl shadow-2xl active:scale-[0.98] transition-all"
+        >
+          Request Custom RFQ
+        </button>
+    </div>
+
+    <ContactLabModal 
+      client:load 
+      preferredStandard={standardName}
+      preferredIndustry={industry}
+    />
+  </div>
+
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+</BaseLayout>
+
