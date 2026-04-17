@@ -1,7 +1,7 @@
 ---
 import { supabase } from '../../lib/supabase'
 import { getRedirectUrl } from '../../lib/redirect'
-import Footer from '../../components/Footer.astro'
+import BaseLayout from '../../layouts/BaseLayout.astro'
 import ContactLabModal from '../../components/ContactLabModal'
 
 // Disable static prerendering for performance - use SSR instead
@@ -68,7 +68,7 @@ if (error || !listing) {
 }
 
 // Fetch custom field values
-const { data: customFieldValues, error: cfError } = await supabase
+const { data: customFieldValues, error: _cfError } = await supabase
   .from('listing_custom_fields')
   .select(`
     value,
@@ -82,7 +82,7 @@ const { data: customFieldValues, error: cfError } = await supabase
   .eq('listing_id', listing.id)
 
 // Fetch listing capabilities (standards/certifications)
-const { data: capabilities, error: capError } = await supabase
+const { data: capabilities, error: _capError } = await supabase
   .from('listing_capabilities')
   .select(`
     standard:standard_id (
@@ -115,12 +115,9 @@ const getLocationHierarchy = (location) => {
 const locationHierarchy = getLocationHierarchy(listing.location)
 const country = locationHierarchy.find(l => l.level === 'country')
 
-// Subscription tier system (not yet implemented)
-// For SEO: Show public data in static build (website, description, certifications)
-// Hide sensitive data (phone, email) - can be gated client-side later
-let userTier = 'basic' // Set to 'basic' for SEO: shows website & certifications
+// Subscription tier system
+let userTier = 'basic' 
 let isLoggedIn = false
-let isOwner = false
 
 // Format custom fields by type
 const formatFieldValue = (value, fieldType) => {
@@ -142,29 +139,16 @@ const customFields = customFieldValues?.map(cf => ({
   type: cf.custom_field?.field_type
 })) || []
 
-// Add standards as "certifications" for display
 const standards = capabilities?.map(cap => ({
   name: cap.standard?.code || 'Unknown Standard',
   value: cap.standard?.name || 'Certification',
   type: 'standard'
 })) || []
 
-// Combine custom fields and standards
 const allCertifications = [...customFields, ...standards]
-
-// Tier-based visibility rules (SEO-optimized for static build)
-const canViewFullAddress = true // Show location for SEO
-const canViewPhone = false // Hide for privacy (can be gated client-side for owners)
-const canViewEmail = false // Hide for privacy (can be gated client-side for owners)
-const canViewWebsite = true // Always show (public anyway + SEO value)
-const canViewCertifications = true // Always show (critical for SEO keywords)
-
-// Show full description for SEO (critical for keyword ranking)
-const descriptionPreview = listing.description || null
 
 import { formatTitle, formatDescription } from '../../lib/seo'
 
-// Optimized SEO parts
 const locationParts = [
   listing.location?.name,
   listing.location?.parent?.name,
@@ -177,926 +161,348 @@ const pageDescription = formatDescription(
 );
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{pageTitle}</title>
-  <meta name="description" content={pageDescription}>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
-     crossorigin="anonymous"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #f5f5f5;
-    }
-
-    header {
-      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
-      color: white;
-      padding: 1.5rem 2rem;
-    }
-
-    header h1 {
-      font-size: 1.8rem;
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-    }
-
-    header a {
-      color: white;
-      text-decoration: none;
-      opacity: 0.9;
-      transition: opacity 0.2s;
-    }
-
-    header a:hover {
-      opacity: 1;
-    }
-
-    .breadcrumb {
-      display: flex;
-      gap: 0.5rem;
-      font-size: 0.9rem;
-      margin-top: 0.5rem;
-      opacity: 0.9;
-    }
-
-    .breadcrumb span {
-      opacity: 0.7;
-    }
-
-    .container {
-      max-width: 1000px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-
-    .listing-card {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      padding: 2rem;
-      margin-bottom: 2rem;
-    }
-
-    .listing-header {
-      border-bottom: 2px solid #f0f0f0;
-      padding-bottom: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .listing-title {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #333;
-      margin-bottom: 0.5rem;
-    }
-
-    .header-badges {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .category-badge {
-      display: inline-block;
-      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
-      color: white;
-      padding: 0.3rem 0.8rem;
-      border-radius: 4px;
-      font-size: 0.85rem;
-      font-weight: 500;
-    }
-
-    .ownership-badge {
-      display: inline-block;
-      padding: 0.3rem 0.8rem;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-
-    .ownership-badge.claimed {
-      background: rgba(40, 167, 69, 0.1);
-      color: #28a745;
-      border: 1px solid #28a745;
-    }
-
-    .ownership-badge.pending {
-      background: rgba(255, 193, 7, 0.1);
-      color: #856404;
-      border: 1px solid #ffc107;
-    }
-
-    .info-section {
-      margin-bottom: 2rem;
-    }
-
-    .info-section h2 {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 1rem;
-      border-left: 4px solid #000080;
-      padding-left: 0.75rem;
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1rem;
-    }
-
-    .info-item {
-      padding: 0.75rem;
-      background: #f9f9f9;
-      border-radius: 6px;
-      border-left: 3px solid #000080;
-    }
-
-    .info-label {
-      font-weight: 600;
-      color: #666;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      margin-bottom: 0.25rem;
-    }
-
-    .info-value {
-      color: #333;
-      font-size: 1rem;
-    }
-
-    .description {
-      line-height: 1.8;
-      color: #555;
-    }
-
-    .custom-fields {
-      background: linear-gradient(135deg, #f8f9ff 0%, #fff5f8 100%);
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 1.5rem;
-      margin-top: 2rem;
-    }
-
-    .custom-fields h2 {
-      color: #32CD32;
-      border-left-color: #32CD32;
-    }
-
-    .field-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.75rem;
-      margin-bottom: 0.5rem;
-      background: white;
-      border-radius: 6px;
-      border-left: 3px solid #32CD32;
-    }
-
-    .field-name {
-      font-weight: 600;
-      color: #555;
-    }
-
-    .field-value {
-      color: #333;
-      text-align: right;
-    }
-
-    .disclaimer {
-      background: linear-gradient(135deg, #fff9e6 0%, #ffe8cc 100%);
-      border: 1px solid #ffc107;
-      border-left: 4px solid #ffc107;
-      border-radius: 6px;
-      padding: 1rem 1.25rem;
-      margin-top: 2rem;
-      font-size: 0.9rem;
-      color: #856404;
-    }
-
-    .disclaimer strong {
-      color: #664d03;
-    }
-
-    .back-link {
-      display: inline-block;
-      color: #000080;
-      text-decoration: none;
-      font-weight: 500;
-      margin-bottom: 1rem;
-      transition: color 0.2s;
-    }
-
-    .back-link:hover {
-      color: #32CD32;
-    }
-
-    footer {
-      background: #333;
-      color: white;
-      text-align: center;
-      padding: 2rem;
-      margin-top: 4rem;
-    }
-
-    .upgrade-cta {
-      background: linear-gradient(135deg, #f0f4ff 0%, #fff0f5 100%);
-      border: 2px solid #000080;
-      border-radius: 8px;
-      padding: 1.5rem;
-      text-align: center;
-      margin: 1rem 0;
-    }
-
-    .upgrade-cta svg {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .upgrade-cta p {
-      margin: 0.5rem 0;
-      color: #333;
-    }
-
-    .upgrade-cta p strong {
-      color: #000080;
-      font-size: 1.1rem;
-    }
-
-    .upgrade-cta p:last-child {
-      font-size: 0.95rem;
-      color: #666;
-    }
-
-    .upgrade-btn {
-      display: inline-block;
-      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 600;
-      margin-top: 1rem;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .upgrade-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-    }
-
-    .tier-badge {
-      display: inline-block;
-      background: rgba(102, 126, 234, 0.1);
-      color: #000080;
-      padding: 0.25rem 0.6rem;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      margin-left: 0.5rem;
-    }
-
-    .tier-badge.premium {
-      background: rgba(5, 150, 105, 0.1);
-      color: #32CD32;
-    }
-
-    .free-tier-preview {
-      background: linear-gradient(135deg, #fff9e6 0%, #ffe8cc 100%);
-      padding: 0.75rem 1rem;
-      border-left: 3px solid #ffc107;
-      border-radius: 4px;
-      margin-bottom: 1rem;
-    }
-
-    .free-tier-preview::after {
-      content: ' (Preview - Sign up for full details)';
-      color: #856404;
-      font-size: 0.85rem;
-      font-weight: 500;
-    }
-
-    .claim-section {
-      margin-top: 2rem;
-      padding: 1.5rem;
-      background: linear-gradient(135deg, #f0f4ff 0%, #fff5f8 100%);
-      border: 2px solid #000080;
-      border-radius: 8px;
-    }
-
-    .claim-card h3 {
-      color: #000080;
-      margin-bottom: 0.5rem;
-      font-size: 1.2rem;
-    }
-
-    .claim-card p {
-      color: #555;
-      margin-bottom: 1.5rem;
-      line-height: 1.6;
-    }
-
-    .claim-actions {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    .claim-status {
-      margin-top: 1rem;
-      padding: 1rem;
-      border-radius: 6px;
-      font-weight: 500;
-    }
-
-    .claim-status.success {
-      background: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-    }
-
-    .claim-status.error {
-      background: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
-    }
-
-    .claim-status.pending {
-      background: #fff3cd;
-      color: #856404;
-      border: 1px solid #ffeaa7;
-    }
-
-    .claim-status-indicator {
-      margin-top: 1rem;
-      padding: 0.75rem 1rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      text-align: center;
-    }
-
-    .claim-status-indicator.claimed {
-      background: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-    }
-
-    .claim-status-indicator.pending {
-      background: #fff3cd;
-      color: #856404;
-      border: 1px solid #ffeaa7;
-    }
-
-    .btn {
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    }
-
-    .btn-secondary {
-      background: white;
-      color: #000080;
-      border: 2px solid #000080;
-    }
-
-    .btn-secondary:hover {
-      background: #f8f9ff;
-    }
-
-    .contact-hidden {
-      color: #999;
-      font-style: italic;
-      font-size: 0.9rem;
-    }
-
-    .public-claim-section {
-      margin-top: 2rem;
-      padding: 1.5rem;
-      background: linear-gradient(135deg, #f0f4ff 0%, #fff5f8 100%);
-      border: 2px solid #000080;
-      border-radius: 8px;
-      text-align: center;
-    }
-
-    .public-claim-section h3 {
-      color: #000080;
-      margin-bottom: 0.5rem;
-      font-size: 1.2rem;
-    }
-
-    .public-claim-section p {
-      color: #555;
-      margin-bottom: 1.5rem;
-      line-height: 1.6;
-    }
-
-    .public-claim-section .btn {
-      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .public-claim-section .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    }
-
-    @media (max-width: 768px) {
-      .listing-title {
-        font-size: 1.5rem;
-      }
-
-      .info-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .field-item {
-        flex-direction: column;
-      }
-
-      .field-value {
-        text-align: left;
-        margin-top: 0.25rem;
-      }
-
-      .upgrade-cta {
-        padding: 1rem;
-      }
-
-      .upgrade-btn {
-        width: 100%;
-      }
-
-      .claim-actions {
-        flex-direction: column;
-      }
-
-      .btn {
-        width: 100%;
-        justify-content: center;
-      }
-    }
-  </style>
-  <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
-</head>
-<body>
-  <header>
-    <h1><a href="/">TSTR Hub</a></h1>
-    <div class="breadcrumb">
-      <a href="/">Home</a>
-      <span>›</span>
-      <a href="/browse">Browse</a>
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <div class="max-w-6xl mx-auto px-4 py-8 md:py-12">
+    
+    <!-- Breadcrumbs -->
+    <nav class="flex items-center gap-2 text-sm text-gray-400 mb-8 overflow-x-auto whitespace-nowrap pb-2 scrollbar-hide">
+      <a href="/" class="hover:text-blue-400 transition-colors">Home</a>
+      <span class="text-gray-600">/</span>
+      <a href="/browse" class="hover:text-blue-400 transition-colors">Browse</a>
       {country && (
         <>
-          <span>›</span>
-          <a href={`/browse/${country.slug}`}>{country.name}</a>
+          <span class="text-gray-600">/</span>
+          <a href={`/browse/${country.slug}`} class="hover:text-blue-400 transition-colors">{country.name}</a>
         </>
       )}
-      <span>›</span>
-      <span>{listing.business_name}</span>
-    </div>
-  </header>
+      <span class="text-gray-600">/</span>
+      <span class="text-gray-200">{listing.business_name}</span>
+    </nav>
 
-  <div class="container">
-    <a href="/browse" class="back-link">← Back to Browse</a>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Main Content Column -->
+      <div class="lg:col-span-2 space-y-8">
+        
+        <!-- Hero Section -->
+        <div class="glass-panel p-8 relative overflow-hidden">
+          <div class="absolute top-0 right-0 p-4">
+             <div id="ownership-badge" class="hidden"></div>
+          </div>
+          
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div>
+              <div class="flex items-center gap-3 mb-3">
+                {listing.category?.name && (
+                  <span class="px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-xs font-semibold text-blue-400 uppercase tracking-wider">
+                    {listing.category.name}
+                  </span>
+                )}
+                {listing.featured && (
+                  <span class="px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-full text-xs font-semibold text-amber-400 uppercase tracking-wider">
+                    Featured
+                  </span>
+                )}
+              </div>
+              <h1 class="text-3xl md:text-5xl font-black text-white mb-4 tracking-tight leading-tight">
+                {listing.business_name}
+              </h1>
+              <div class="flex items-center gap-4 text-gray-400">
+                 <span class="flex items-center gap-1.5">
+                   <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                   {listing.location?.name || listing.region?.toUpperCase()}
+                 </span>
+                 {listing.verified && (
+                   <span class="flex items-center gap-1.5 text-emerald-400 font-medium text-sm">
+                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                     Verified Laboratory
+                   </span>
+                 )}
+              </div>
+            </div>
+          </div>
+        </div>
 
-    <div class="listing-card">
-        <div class="listing-header">
-          <h1 class="listing-title">{listing.business_name}</h1>
-          <div class="header-badges">
-            {listing.category?.name && (
-              <div class="category-badge">{listing.category.name}</div>
-            )}
-            <div id="ownership-badge" class="ownership-badge" style="display: none;"></div>
+        <!-- About Section -->
+        {listing.description && (
+          <div class="glass-panel p-8">
+            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+              <span class="w-1.5 h-6 bg-blue-600 rounded-full"></span>
+              Laboratory Profile
+            </h2>
+            <div class="prose prose-invert max-w-none text-gray-300 leading-relaxed text-lg">
+              {listing.description}
+            </div>
+          </div>
+        )}
+
+        <!-- Capabilities section -->
+        {allCertifications.length > 0 && (
+          <div class="glass-panel p-8">
+            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+              <span class="w-1.5 h-6 bg-emerald-500 rounded-full"></span>
+              Testing Capabilities & Standards
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {allCertifications.map(cert => (
+                <div class="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors group">
+                  <div>
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1">{cert.name}</span>
+                    <span class="text-gray-200 group-hover:text-blue-400 transition-colors">{cert.value}</span>
+                  </div>
+                  {cert.type === 'standard' && (
+                    <div class="w-8 h-8 rounded-lg bg-blue-600/20 flex items-center justify-center">
+                      <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+      </div>
+
+      <!-- Sidebar / Action Column -->
+      <div class="space-y-6">
+        
+        <!-- Contact Card -->
+        <div class="glass-panel p-6 border-blue-500/30">
+          <h3 class="text-lg font-bold text-white mb-6">Connect with Laboratory</h3>
+          
+          <div class="space-y-4 mb-8">
+             <div id="contact-info-container" class="space-y-4">
+                {/* SSR View for SEO */}
+                {listing.website && (
+                  <div class="p-4 bg-white/5 border border-white/10 rounded-xl">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1">Company Website</span>
+                    <a 
+                      href={getRedirectUrl(listing.website, listing.id)} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      onclick={`trackContactAccess('website', '${listing.website}')`}
+                      class="text-blue-400 hover:text-blue-300 transition-colors break-all"
+                    >
+                      {listing.website}
+                    </a>
+                  </div>
+                )}
+                
+                {listing.phone && (
+                  <div id="phone-item" class="p-4 bg-white/5 border border-white/10 rounded-xl items-center justify-between flex">
+                    <div>
+                      <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1">Direct Phone</span>
+                      <span id="phone-value" class="text-gray-400 italic text-sm">Verified access required</span>
+                    </div>
+                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                  </div>
+                )}
+
+                {listing.email && (
+                  <div id="email-item" class="p-4 bg-white/5 border border-white/10 rounded-xl items-center justify-between flex">
+                    <div>
+                      <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1">Inquiry Email</span>
+                      <span id="email-value" class="text-gray-400 italic text-sm">Verified access required</span>
+                    </div>
+                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                  </div>
+                )}
+
+                {listing.premium_data?.linkedin_url && (
+                  <div class="p-4 bg-white/5 border border-white/10 rounded-xl flex items-center justify-between">
+                    <div>
+                      <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1">Corporate LinkedIn</span>
+                      <span class="text-gray-400 italic text-sm">Premium Feature</span>
+                    </div>
+                    <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                  </div>
+                )}
+             </div>
           </div>
           
           <ContactLabModal client:visible listingId={listing.id} labName={listing.business_name} />
         </div>
 
-      {listing.description && (
-        <div class="info-section">
-          <h2>About</h2>
-          <p class="description">{descriptionPreview}</p>
-        </div>
-      )}
+        <!-- Claiming Card (Only shown if unclaimed / not logged in) -->
+        <div id="claim-card-root" class="hidden">
+           <div class="glass-panel p-6 border-emerald-500/20 bg-emerald-500/5">
+              <h3 class="text-lg font-bold text-white mb-2">Own this Laboratory?</h3>
+              <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                Take control of your directory profile. Manage capabilities, respond to leads, and unlock premium analytics.
+              </p>
+              
+              <div id="claim-action-area">
+                <button id="claim-btn" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                  Claim Profile Now
+                </button>
+              </div>
 
-      <div class="info-section">
-        <h2>Contact Information {userTier !== 'free' && <span class="tier-badge">{userTier}</span>}</h2>
-        <div class="info-grid">
-          {listing.address && (
-            <>
-              {canViewFullAddress ? (
-                <div class="info-item">
-                  <div class="info-label">Address</div>
-                  <div class="info-value">{listing.address}</div>
-                </div>
-              ) : (
-                <div class="info-item">
-                  <div class="info-label">Location</div>
-                  <div class="info-value">
-                    {listing.location?.name}{listing.location?.parent?.name && `, ${listing.location.parent.name}`}
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-
-           {listing.phone ? (
-             <div class="info-item" id="phone-item">
-               <div class="info-label">Phone</div>
-               <div class="info-value">
-                 {canViewPhone ? (
-                   <a href={`tel:${listing.phone}`}>{listing.phone}</a>
-                 ) : (
-                   <span class="contact-hidden">Contact info available for verified owners</span>
-                 )}
-               </div>
-             </div>
-           ) : null}
-
-           {listing.email ? (
-             <div class="info-item" id="email-item">
-               <div class="info-label">Email</div>
-               <div class="info-value">
-                 {canViewEmail ? (
-                   <a href={`mailto:${listing.email}`}>{listing.email}</a>
-                 ) : (
-                   <span class="contact-hidden">Contact info available for verified owners</span>
-                 )}
-               </div>
-             </div>
-           ) : null}
-
-           {listing.website && canViewWebsite ? (
-             <div class="info-item">
-               <div class="info-label">Website</div>
-               <div class="info-value"><a href={getRedirectUrl(listing.website, listing.id)} target="_blank" rel="noopener noreferrer" onclick="trackContactAccess('website', '{listing.website}')">{listing.website}</a></div>
-             </div>
-           ) : null}
-
-           {/* LinkedIn - Premium Only */}
-           {listing.premium_data?.linkedin_url && (
-             <div class="info-item">
-               <div class="info-label">LinkedIn</div>
-               <div class="info-value">
-                 {userTier !== 'free' ? (
-                    <a href={getRedirectUrl(listing.premium_data.linkedin_url, listing.id)} target="_blank" rel="noopener noreferrer" onclick={`trackContactAccess('linkedin', '${listing.premium_data.linkedin_url}')`}>View Profile</a>
-                 ) : (
-                   <span class="contact-hidden">
-                     Available for subscribers
-                     <a href="/pricing" style="font-size: 0.8rem; margin-left: 0.5rem; color: #000080;">Unlock</a>
-                   </span>
-                 )}
-               </div>
-             </div>
-           )}
-        </div>
-      </div>
-
-      {allCertifications.length > 0 && (
-        <div class="custom-fields">
-          <h2>Certifications & Capabilities</h2>
-          {allCertifications.map(field => (
-            <div class="field-item">
-              <div class="field-name">{field.name}</div>
-              <div class="field-value">{field.value}</div>
-            </div>
-          ))}
-        </div>
-       )}
-
-       {allCertifications.length > 0 && (
-         <div class="disclaimer">
-           <strong>⚠️ Disclaimer:</strong> Certifications and capabilities listed are extracted from public databases and have not been independently verified by TSTR.directory. We recommend verifying all credentials directly with the testing laboratory and relevant accreditation bodies before engaging services.
-         </div>
-       )}
-
-        <!-- Public claim button for non-authenticated users -->
-        <div id="public-claim-section" class="public-claim-section" style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, #f0f4ff 0%, #fff5f8 100%); border: 2px solid #000080; border-radius: 8px; text-align: center;">
-          <h3 style="color: #000080; margin-bottom: 0.5rem; font-size: 1.2rem;">🏢 Is this your company?</h3>
-          <p style="color: #555; margin-bottom: 1.5rem; line-height: 1.6;">Take ownership of your testing laboratory listing to manage your profile and receive direct leads.</p>
-          <button id="public-claim-btn" class="btn btn-primary" style="background: linear-gradient(135deg, #000080 0%, #32CD32 100%); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: transform 0.2s;">
-            Claim This Listing
-          </button>
-        </div>
-
-        <!-- Claim listing section -->
-        <div id="claim-section" class="claim-section" style="display: none;">
-         <div class="claim-card">
-           <h3>🏢 Claim This Listing</h3>
-           <p>Are you the owner or representative of this testing laboratory? Claim ownership to manage your listing and access additional features.</p>
-           <div class="claim-actions">
-             <button id="claim-btn" class="btn btn-primary">
-               <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
-                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-               </svg>
-               Claim This Listing
-             </button>
-             <button id="cancel-claim-btn" class="btn btn-secondary">Cancel</button>
+              <div id="claim-status-msg" class="hidden mt-4 p-3 rounded-lg text-sm"></div>
            </div>
-           <div id="claim-status" class="claim-status" style="display: none;"></div>
-         </div>
-       </div>
+        </div>
 
-       <!-- Claim status indicator -->
-       <div id="claim-status-indicator" class="claim-status-indicator" style="display: none;"></div>
-     </div>
-   </div>
+      </div>
+    </div>
 
-   <Footer />
+    <!-- Concierge Fallback (Obsidian Standard) -->
+    <div class="mt-12 group">
+      <div class="glass-panel p-8 text-center border-blue-500/20 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <h3 class="text-2xl font-black text-white mb-4 tracking-tight">Need a custom testing solution?</h3>
+        <p class="text-lg text-gray-400 max-w-2xl mx-auto mb-8">
+          Can't find the exact standard or facility? Our concierge team manually sources accredited partners for specialized engineering requirements.
+        </p>
+        <a 
+          href={`mailto:expert@tstr.directory?subject=Concierge Search: ${encodeURIComponent(listing.business_name)}&body=I am looking for specialized testing services related to...`}
+          class="inline-block py-4 px-10 bg-white text-black font-bold rounded-xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/10"
+        >
+          Request Free Concierge Search →
+        </a>
+      </div>
+    </div>
 
-   <script type="module">
-     import { supabaseBrowser } from '../../lib/supabase-browser'
+  </div>
 
-     let isOwner = false
-     const listingId = '{listing.id}'
-     const listingName = '{listing.business_name}'
+  {/* Client-side Logic for Auth and Tracking */}
+  <script is:inline src="https://haimjeaetrsaauitrhfy.supabase.co/auth/v1/callback"></script>
+  <script>
+    import { createClient } from '@supabase/supabase-js'
+    
+    // Use public anon key for browser-side checks
+    const supabaseBrowser = createClient(
+      'https://haimjeaetrsaauitrhfy.supabase.co',
+      'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO'
+    )
 
-      async function checkAuthAndClaimStatus() {
-        try {
-          // Check URL parameters for claim flow
-          const urlParams = new URLSearchParams(window.location.search)
-          const isClaimFlow = urlParams.get('claim') === 'true'
+    async function checkAuthAndClaimStatus() {
+      try {
+        const { data: { session } } = await supabaseBrowser.auth.getSession()
+        const claimBadge = document.getElementById('ownership-badge')
+        const claimCard = document.getElementById('claim-card-root')
+        const claimBtn = document.getElementById('claim-btn')
+        const claimStatus = document.getElementById('claim-status-msg')
+        
+        // 1. Fetch current claim status for this listing
+        const { data: claims, error: claimError } = await supabaseBrowser
+          .from('listing_claims')
+          .select('status, user_id')
+          .eq('listing_id', '{listing.id}')
+          .maybeSingle()
 
-          // Check if user is authenticated
-          const { data: { user }, error: authError } = await supabaseBrowser.auth.getUser()
+        if (claimError) console.error('Error checking claim status:', claimError)
 
-          // Handle public claim button for non-authenticated users
-          const publicClaimSection = document.getElementById('public-claim-section')
-          const publicClaimBtn = document.getElementById('public-claim-btn')
-
-          if (publicClaimBtn) {
-            publicClaimBtn.addEventListener('click', () => {
-              const returnUrl = `${window.location.pathname}?claim=true`
-              window.location.href = `/login?redirect_to=${encodeURIComponent(returnUrl)}`
-            })
+        // 2. UI Updates
+        if (claims) {
+          const info = getClaimStatusInfo(claims.status)
+          if (claimBadge) {
+             claimBadge.className = `flex items-center gap-1.5 px-3 py-1 bg-${info.color}-500/10 border border-${info.color}-500/20 rounded-full text-[10px] font-bold text-${info.color}-400 uppercase tracking-tighter`
+             claimBadge.innerHTML = `<span class="w-1 h-1 rounded-full bg-${info.color}-400"></span> ${info.text}`
+             claimBadge.style.display = 'flex'
           }
+          
+          if (claims.status === 'verified') {
+             // Show full contact info if verified and owned by current user
+             if (session?.user?.id === claims.user_id) {
+               showOwnerContactInfo()
+             }
+          }
+        } else {
+          // Unclaimed: Show common claim CTA if not logged in or not verified owner
+          if (claimCard) claimCard.classList.remove('hidden')
+        }
 
-          if (authError || !user) {
-            // User not logged in, show public claim section, hide authenticated claim section
-            if (publicClaimSection) publicClaimSection.style.display = 'block'
+        // 3. Claim Button Logic
+        claimBtn?.addEventListener('click', async () => {
+          if (!session) {
+            window.location.href = `/login?redirect=${window.location.pathname}`
             return
           }
 
-          // User is authenticated, hide public claim section
-          if (publicClaimSection) publicClaimSection.style.display = 'none'
+          const btn = claimBtn as HTMLButtonElement
+          btn.disabled = true
+          btn.innerHTML = '<span class="animate-pulse">Processing...</span>'
 
-         // Check if listing is already claimed
-         const { data: existingClaim } = await supabaseBrowser
-           .from('listing_owners')
-           .select('status, verification_method')
-           .eq('user_id', user.id)
-           .eq('listing_id', listingId)
-           .single()
+          const { error } = await supabaseBrowser
+            .from('listing_claims')
+            .insert([{
+              listing_id: '{listing.id}',
+              user_id: session.user.id,
+              status: 'pending'
+            }])
 
-         const claimSection = document.getElementById('claim-section')
-         const statusIndicator = document.getElementById('claim-status-indicator')
-
-         const ownershipBadge = document.getElementById('ownership-badge')
-
-         if (existingClaim && existingClaim.status === 'verified') {
-           // User is the verified owner - show full contact info
-           isOwner = true
-           showOwnerContactInfo()
-
-           const statusInfo = getClaimStatusInfo(existingClaim.status)
-           statusIndicator.innerHTML = `
-             <div class="claim-status-indicator claimed">
-               ${statusInfo.icon} ${statusInfo.text} - ${existingClaim.verification_method === 'domain_match' ? 'Auto-verified' : 'Manual verification'}
-             </div>
-           `
-           statusIndicator.style.display = 'block'
-           claimSection.style.display = 'none'
-
-           // Show ownership badge
-           ownershipBadge.innerHTML = `<span class="ownership-badge claimed">✓ Verified Owner</span>`
-           ownershipBadge.style.display = 'block'
-         } else if (existingClaim && existingClaim.status === 'pending') {
-           // User has pending claim
-           const statusInfo = getClaimStatusInfo(existingClaim.status)
-           statusIndicator.innerHTML = `
-             <div class="claim-status-indicator pending">
-               ${statusInfo.icon} ${statusInfo.text} - ${existingClaim.verification_method === 'domain_match' ? 'Auto-verified' : 'Manual verification'}
-             </div>
-           `
-           statusIndicator.style.display = 'block'
-           claimSection.style.display = 'none'
-
-           // Show pending badge
-           ownershipBadge.innerHTML = `<span class="ownership-badge pending">⏳ Claim Pending</span>`
-           ownershipBadge.style.display = 'block'
-            } else {
-              // Check if listing is already claimed by someone else
-              const { data: otherClaim } = await supabaseBrowser
-                .from('listings')
-                .select('claimed')
-                .eq('id', listingId)
-                .single()
-
-              if (otherClaim?.claimed) {
-                statusIndicator.innerHTML = `
-                  <div class="claim-status-indicator claimed">
-                    ✓ This listing has been claimed by its owner
-                  </div>
-                `
-                statusIndicator.style.display = 'block'
-                claimSection.style.display = 'none'
-
-                // Show claimed badge for other owners
-                ownershipBadge.innerHTML = `<span class="ownership-badge claimed">✓ Claimed</span>`
-                ownershipBadge.style.display = 'block'
-              } else {
-                // Show claim button - always show if redirected from claim button
-                claimSection.style.display = isClaimFlow ? 'block' : 'block'
-              }
+          if (!error) {
+            if (claimStatus) {
+              claimStatus.className = 'mt-4 p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl'
+              claimStatus.innerHTML = '<strong>Success:</strong> Your claim request has been submitted for verification.'
+              claimStatus.classList.remove('hidden')
             }
+            if (btn.parentElement) btn.parentElement.style.display = 'none'
+          } else {
+            console.error('Claim error:', error)
+            if (claimStatus) {
+               claimStatus.className = 'mt-4 p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl'
+               claimStatus.innerHTML = `<strong>Error:</strong> ${error.message}`
+               claimStatus.classList.remove('hidden')
+            }
+            btn.disabled = false
+            btn.innerHTML = 'Claim Profile Now'
+          }
+        })
 
-         // Setup claim button handler
-         const claimBtn = document.getElementById('claim-btn')
-         const cancelBtn = document.getElementById('cancel-claim-btn')
-         const claimStatus = document.getElementById('claim-status')
+      } catch (error) {
+        console.error('Auth/Claim check failed:', error)
+      }
+    }
 
-         claimBtn?.addEventListener('click', async () => {
-           claimBtn.disabled = true
-           claimBtn.innerHTML = '<span>Claiming...</span>'
+    function getClaimStatusInfo(status: string) {
+      switch (status) {
+        case 'verified': return { text: 'Verified Owner', color: 'emerald' }
+        case 'pending': return { text: 'Claim Pending', color: 'amber' }
+        case 'rejected': return { text: 'Claim Rejected', color: 'red' }
+        default: return { text: 'Not Claimed', color: 'gray' }
+      }
+    }
 
-           try {
-             const response = await fetch('/api/claim-listing', {
-               method: 'POST',
-               headers: {
-                 'Content-Type': 'application/json',
-               },
-               body: JSON.stringify({ listingId })
-             })
-
-             const result = await response.json()
-
-             if (response.ok && result.success) {
-               claimStatus.className = 'claim-status success'
-               claimStatus.innerHTML = `<strong>✓ Success!</strong> ${result.message}`
-               claimStatus.style.display = 'block'
-
-               // Hide claim section and show status
-               claimSection.style.display = 'none'
-               statusIndicator.innerHTML = `
-                 <div class="claim-status-indicator ${result.claim.status === 'verified' ? 'claimed' : 'pending'}">
-                   ✓ ${result.claim.status === 'verified' ? 'Verified Owner' : 'Claim Pending'}
-                 </div>
-               `
-               statusIndicator.style.display = 'block'
-
-               // Reload page after 3 seconds to show updated state
-               setTimeout(() => {
-                 window.location.reload()
-               }, 3000)
-             } else {
-               throw new Error(result.error || 'Claim failed')
-             }
-           } catch (error) {
-             console.error('Claim error:', error)
-             claimStatus.className = 'claim-status error'
-             claimStatus.innerHTML = `<strong>✗ Error:</strong> ${error.message}`
-             claimStatus.style.display = 'block'
-             claimBtn.disabled = false
-             claimBtn.innerHTML = `
-               <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
-                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-               </svg>
-               Claim This Listing
-             `
-           }
-         })
-
-         cancelBtn?.addEventListener('click', () => {
-           claimSection.style.display = 'none'
-         })
-
-       } catch (error) {
-         console.error('Auth check error:', error)
-       }
-     }
-
-     function getClaimStatusInfo(status) {
-       switch (status) {
-         case 'verified':
-           return { text: 'Verified Owner', color: 'green', icon: '✓' }
-         case 'pending':
-           return { text: 'Claim Pending', color: 'yellow', icon: '⏳' }
-         case 'rejected':
-           return { text: 'Claim Rejected', color: 'red', icon: '✗' }
-         default:
-           return { text: 'Not Claimed', color: 'gray', icon: '?' }
-       }
-     }
-
-      window.trackContactAccess = async function(contactType, contactValue) {
-        try {
-          // Only track if listing is claimed (leads only matter for claimed listings)
-          const response = await fetch('/api/leads/create', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              listingId: '{listing.id}',
-              contactType: contactType,
-              contactValue: contactValue
-            })
+    (window as any).trackContactAccess = async function(contactType: string, contactValue: string) {
+      try {
+        await fetch('/api/leads/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            listingId: '{listing.id}',
+            contactType: contactType,
+            contactValue: contactValue
           })
+        })
+      } catch (e) { console.warn('Lead tracking failed:', e) }
+    }
 
-          // We don't need to wait for the response or show errors to users
-          // Lead tracking should be invisible to maintain good UX
-          if (!response.ok) {
-            console.warn('Failed to track contact access:', await response.text())
-          }
-        } catch (error) {
-          // Silently fail - don't disrupt user experience
-          console.warn('Lead tracking error:', error)
-        }
+    function showOwnerContactInfo() {
+      // Logic to swap dummy placeholders with real data already fetched via SSR
+      // and expose it to the verified owner
+      const phoneItem = document.getElementById('phone-item')
+      const emailItem = document.getElementById('email-item')
+      
+      if (phoneItem && '{listing.phone}') {
+         const val = document.getElementById('phone-value')
+         if (val) {
+           val.innerHTML = `<a href="tel:{listing.phone}" class="text-blue-400">{listing.phone}</a>`
+           val.classList.remove('italic', 'text-gray-400')
+         }
       }
-
-      function showOwnerContactInfo() {
-        // Show phone number if available
-        const phoneItem = document.getElementById('phone-item')
-        if (phoneItem && '{listing.phone}') {
-          const valueDiv = phoneItem.querySelector('.info-value')
-          if (valueDiv) {
-            const phoneLink = document.createElement('a')
-            phoneLink.href = `tel:{listing.phone}`
-            phoneLink.textContent = '{listing.phone}'
-            phoneLink.addEventListener('click', () => (window as any).trackContactAccess('phone', '{listing.phone}'))
-            valueDiv.innerHTML = ''
-            valueDiv.appendChild(phoneLink)
-          }
-        }
-
-        // Show email if available
-        const emailItem = document.getElementById('email-item')
-        if (emailItem && '{listing.email}') {
-          const valueDiv = emailItem.querySelector('.info-value')
-          if (valueDiv) {
-            const emailLink = document.createElement('a')
-            emailLink.href = `mailto:{listing.email}`
-            emailLink.textContent = '{listing.email}'
-            emailLink.addEventListener('click', () => (window as any).trackContactAccess('email', '{listing.email}'))
-            valueDiv.innerHTML = ''
-            valueDiv.appendChild(emailLink)
-          }
-        }
+      
+      if (emailItem && '{listing.email}') {
+         const val = document.getElementById('email-value')
+         if (val) {
+           val.innerHTML = `<a href="mailto:{listing.email}" class="text-blue-400">{listing.email}</a>`
+           val.classList.remove('italic', 'text-gray-400')
+         }
       }
+    }
 
-     // Initialize when page loads
-     document.addEventListener('DOMContentLoaded', checkAuthAndClaimStatus)
+    // Initialize
+    document.addEventListener('DOMContentLoaded', checkAuthAndClaimStatus)
+  </script>
 
-     // Also check when auth state changes
-     supabaseBrowser.auth.onAuthStateChange((event, session) => {
-       if (event === 'SIGNED_IN' && session) {
-         checkAuthAndClaimStatus()
-       }
-     })
-   </script>
- </body>
-</html>
+</BaseLayout>
