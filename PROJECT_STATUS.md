@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - Executive summary for agents
-> **Last Updated**: 2026-04-16 19:20 UTC
-> **Updated By**: Antigravity (Gemini Flash)
+> **Last Updated**: 2026-04-17 03:58 UTC
+> **Updated By**: JAvZZe
 > **Status**: ✅ PRODUCTION - Live at <https://tstr.directory> (PSEO 2.0 Overhaul Complete)
 
 ---
@@ -138,6 +138,15 @@ Query database to identify active standards with linked listings:
 - ✅ PayPal Subscription Flow (2026-01-16)
 - ✅ Account Dashboard UI (2026-01-02)
 - ✅ JSON-LD Parsing Error (2026-01-01)
+
+---
+
+## 📊 DATA DEBT & STALE BRANCHES
+
+| Branch | Stale Since | Data/Purpose | Conflict Status |
+|--------|-------------|--------------|-----------------|
+| `hydrogen-standards` | 2026-03-19 | 15 Hydrogen Standards (ASTM G142) | ⚠️ HIGH - Do not merge. Manual extraction required. |
+| `feat/astro-6-migration` | 2026-03-24 | Platform Upgrade (Stats Fixes) | ℹ️ LOW - Staged for later phase. |
 
 ---
 

@@ -2,17 +2,25 @@
 
 ## 🚨 CRITICAL: MANDATORY FIRST STEP FOR ALL AGENTS
 
-**⚠️ ALWAYS RUN GLOBAL BOOTSTRAP BEFORE ANY PROJECT WORK:**
+**1. ALWAYS RUN GLOBAL BOOTSTRAP BEFORE ANY PROJECT WORK:**
 
 ```bash
 cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 ```
+
+**2. MANDATORY GIT & DATA AUDIT:**
+Before starting architectural or code work, ALWAYS perform a Git audit to identify stale branches or pending data migrations:
+```bash
+git branch -a --sort=-authordate
+```
+Check `PROJECT_STATUS.md` for "Data Debt" entries and ensure critical data in stale branches isn't orphaned.
 
 **This provides:**
 - Global system context and learnings
 - Cross-project task coordination
 - Agent handoff information
 - Learning system access for optimal decision making
+- **Visibility into orphaned feature branches and pending data enrichments**
 
 **Failure to bootstrap may result in:**
 - Missing critical context
@@ -76,7 +84,17 @@ This loads:
 - Check `ACCOUNT_BUTTON_IMPROVEMENTS_HANDOFF.md` for current status
 - Monitor: https://dash.cloudflare.com/pages → tstr-site → Deployments
 
-## 📊 PROJECT STATUS PROTOCOL (MANDATORY)
+## 📊 DATA DEBT & STALE BRANCHES
+
+| Branch | Stale Since | Data/Purpose | Conflict Status |
+|--------|-------------|--------------|-----------------|
+| `hydrogen-standards` | 2026-03-19 | 15 Hydrogen Standards (ASTM G142) | ⚠️ HIGH - Do not merge. Manual extraction required. |
+| `feat/astro-6-migration` | 2026-03-24 | Platform Upgrade (Stats Fixes) | ℹ️ LOW - Staged for later phase. |
+
+---
+
+## 📝 PENDING TASKS
+ PROTOCOL (MANDATORY)
 
 **CRITICAL**: All agents MUST read and update `PROJECT_STATUS.md` before & after any work:
 
