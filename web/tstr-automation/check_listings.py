@@ -1,14 +1,13 @@
-#!/usr/bin/env python3
-"""Check existing environmental testing listings and custom fields"""
-
+import os
+from dotenv import load_dotenv
 from supabase import create_client
 
-# Direct credentials (from .env)
-SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
-import os
-SUPABASE_SERVICE_ROLE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
-supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
+SUPABASE_KEY = os.environ.get("PUBLIC_SUPABASE_ANON_KEY")
+
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Get environmental testing category
 result = supabase.from_('categories').select('id').eq('slug', 'environmental-testing').execute()

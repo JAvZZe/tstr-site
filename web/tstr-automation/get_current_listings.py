@@ -1,8 +1,16 @@
+import os
 import requests
+from dotenv import load_dotenv
+
+load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
-import os
-SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+SUPABASE_KEY = os.environ.get("PUBLIC_SUPABASE_ANON_KEY")
+
+if SUPABASE_KEY:
+    print(f"DEBUG: Using ANON_KEY, prefix: {SUPABASE_KEY[:15]}...")
+else:
+    print("DEBUG: PUBLIC_SUPABASE_ANON_KEY NOT FOUND IN ENVIRONMENT")
 
 headers = {
     "apikey": SUPABASE_KEY,
