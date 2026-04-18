@@ -102,7 +102,7 @@ netlify login
 # Deploy
 netlify init
 netlify env:set PUBLIC_SUPABASE_URL "https://haimjeaetrsaauitrhfy.supabase.co"
-netlify env:set PUBLIC_SUPABASE_ANON_KEY "sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2"
+netlify env:set PUBLIC_SUPABASE_ANON_KEY "[REDACTED_SECRET]"
 netlify deploy --prod
 ```
 

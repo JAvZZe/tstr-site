@@ -94,7 +94,7 @@ This report provides a detailed analysis of the TSTR.directory codebase, identif
     ```env
     # .env
     SUPABASE_URL=https://haimjeaetrsaauitrhfy.supabase.co
-    SUPABASE_KEY=sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
+    SUPABASE_KEY=sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4
     ```
 
 ### 3.3 Error Handling & Logging

@@ -42,7 +42,7 @@
         "--project-ref=haimjeaetrsaauitrhfy"
       ],
       "env": {
-        "SUPABASE_ACCESS_TOKEN": "sbp_e290bc7ea1ba64ae4b0be38134b7b4a67ca24e04"
+        "SUPABASE_ACCESS_TOKEN": "[REDACTED_SECRET]"
       }
     }
   }

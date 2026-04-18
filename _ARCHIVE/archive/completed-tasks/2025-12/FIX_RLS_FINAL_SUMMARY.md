@@ -191,8 +191,8 @@ CREATE POLICY IF NOT EXISTS "Allow authenticated submissions"
 
 **Credentials**:
 - URL: `https://haimjeaetrsaauitrhfy.supabase.co`
-- Anon Key: `sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO`
-- Service Role: `sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2`
+- Anon Key: `sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4`
+- Service Role: `[REDACTED_SECRET]`
 
 ---
 

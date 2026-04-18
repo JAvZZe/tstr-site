@@ -127,5 +127,6 @@ export const CONTENT = {
     { href: '/submit', label: 'List Your Company' },
     { href: '/contact', label: 'Contact Us' },
     { href: 'https://linkedin.com/company/tstr-hub', label: 'LinkedIn', icon: 'linkedin' },
+    { href: 'https://x.com/TSTR_hub', label: 'X (Twitter)', icon: 'x' },
   ],
 } as const

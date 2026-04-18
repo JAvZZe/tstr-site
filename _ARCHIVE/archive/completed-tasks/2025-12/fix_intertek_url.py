@@ -19,7 +19,7 @@ def fix_intertek_url():
         "PUBLIC_SUPABASE_URL", "https://haimjeaetrsaauitrhfy.supabase.co"
     )
     supabase_key = os.getenv(
-        "SUPABASE_SERVICE_ROLE_KEY", "sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2"
+        "SUPABASE_SERVICE_ROLE_KEY", "[REDACTED_SECRET]"
     )
 
     supabase: Client = create_client(supabase_url, supabase_key)

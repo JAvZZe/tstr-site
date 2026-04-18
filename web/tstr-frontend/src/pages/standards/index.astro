@@ -1,6 +1,6 @@
 ---
 import { supabase } from '../../lib/supabase'
-import Footer from '../../components/Footer.astro'
+import BaseLayout from '../../layouts/BaseLayout.astro'
 
 // Fetch all standards grouped by category/issuing body
 const { data: standards, error } = await supabase
@@ -22,78 +22,46 @@ const title = "Testing Standards Directory | ISO, API, ASTM, EPA, SAE"
 const description = "Complete directory of testing standards for hydrogen, oil & gas, pharmaceutical, materials, and environmental testing laboratories."
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{title}</title>
-  <meta name="description" content={description}>
-  <meta name="keywords" content="testing standards, ISO standards, API standards, ASTM standards, EPA methods, hydrogen testing, materials testing">
-  <link rel="canonical" href="https://tstr.directory/standards">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966" crossorigin="anonymous"></script>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; color: #333; background: #f5f5f5; }
-    .hero { background: linear-gradient(135deg, #000080 0%, #32CD32 100%); color: white; padding: 4rem 2rem; text-align: center; }
-    .hero h1 { font-size: 2.8rem; margin-bottom: 1rem; font-weight: 700; }
-    .hero p { font-size: 1.2rem; opacity: 0.95; margin-bottom: 2rem; }
-    main { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
-    .section { background: white; padding: 2.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .section h2 { color: #000080; font-size: 2rem; margin-bottom: 1.5rem; }
-    .standards-group { margin-bottom: 2rem; }
-    .standards-group h3 { color: #32CD32; font-size: 1.5rem; margin-bottom: 1rem; }
-    .standards-list { display: grid; gap: 1rem; }
-    .standard-card { background: #f8f9fa; border-left: 4px solid #000080; padding: 1.5rem; border-radius: 8px; transition: all 0.3s ease; }
-    .standard-card:hover { transform: translateX(5px); box-shadow: 0 2px 8px rgba(102,126,234,0.2); }
-    .standard-code { font-weight: 700; color: #000080; font-size: 1.2rem; margin-bottom: 0.5rem; }
-    .standard-name { color: #333; font-size: 1rem; margin-bottom: 0.5rem; }
-    .standard-meta { font-size: 0.85rem; color: #666; }
-    .btn { display: inline-block; background: #000080; color: white; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; margin: 0.5rem; cursor: pointer; }
-    .btn:hover { background: #32CD32; transform: translateY(-2px); }
-    @media (max-width: 768px) { .hero h1 { font-size: 2rem; } main { padding: 2rem 1rem; } }
-  </style>
-  <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
-</head>
-<body>
+<BaseLayout title={title} description={description}>
   <div class="hero">
-    <h1>📋 Testing Standards Directory</h1>
-    <p>Search laboratories by specific certifications and technical standards</p>
-    <a href="/search/standards" class="btn">Search by Standard</a>
+    <div class="max-w-4xl mx-auto">
+      <h1>📋 Testing Standards Directory</h1>
+      <p>Search laboratories by specific certifications and technical standards</p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="/search/standards" class="btn">Search by Standard</a>
+      </div>
+    </div>
   </div>
 
   <main>
     <!-- Hydrogen Standards Highlight -->
-    <section class="section" style="background: linear-gradient(135deg, #e6f2ff 0%, #cce5ff 100%); border-left: 4px solid #0066cc;">
-      <h2 style="color: #0066cc;">⚡ Featured: Hydrogen Infrastructure Standards</h2>
-      <p style="margin-bottom: 1.5rem; font-size: 1.1rem;">
+    <section class="section highlight">
+      <h2>⚡ Featured: Hydrogen Infrastructure Standards</h2>
+      <p class="section-desc">
         Critical standards for hydrogen fueling stations, materials compatibility, and vehicle safety
       </p>
       <div class="standards-list">
-        <div class="standard-card" style="border-left-color: #0066cc;">
+        <div class="standard-card h2-card">
           <div class="standard-code">ISO 19880-3</div>
           <div class="standard-name">Hydrogen Fuelling Stations - Part 3: Valves</div>
           <div class="standard-meta">700 bar pressure testing | Materials compatibility | Safety certification</div>
-          <a href="/standards/iso-19880-3" style="color: #0066cc; text-decoration: none; font-weight: 600; margin-top: 0.5rem; display: inline-block;">
+          <a href="/standards/iso-19880-3" class="card-link h2-link">
             View Certified Labs →
           </a>
         </div>
-        <div class="standard-card" style="border-left-color: #0066cc;">
+        <div class="standard-card h2-card">
           <div class="standard-code">ISO 19880-5</div>
           <div class="standard-name">Hydrogen Fuelling Stations - Part 5: Hoses</div>
           <div class="standard-meta">Permeation testing | Pressure cycling | Flexible lines</div>
-          <a href="/standards/iso-19880-5" style="color: #0066cc; text-decoration: none; font-weight: 600; margin-top: 0.5rem; display: inline-block;">
+          <a href="/standards/iso-19880-5" class="card-link h2-link">
             View Certified Labs →
           </a>
         </div>
-        <div class="standard-card" style="border-left-color: #cc0066;">
+        <div class="standard-card embrittlement-card">
           <div class="standard-code">ISO 11114-4</div>
           <div class="standard-name">Test Methods for Hydrogen Embrittlement</div>
           <div class="standard-meta">Materials qualification | Metallurgical analysis | Failure prevention</div>
-          <a href="/standards/iso-11114-4" style="color: #cc0066; text-decoration: none; font-weight: 600; margin-top: 0.5rem; display: inline-block;">
+          <a href="/standards/iso-11114-4" class="card-link embrittlement-link">
             View Certified Labs →
           </a>
         </div>
@@ -103,7 +71,7 @@ const description = "Complete directory of testing standards for hydrogen, oil &
     <!-- All Standards -->
     <section class="section">
       <h2>All Testing Standards</h2>
-      <p style="margin-bottom: 2rem; color: #666;">
+      <p class="section-desc">
         Browse {standards?.length || 0} technical standards across all testing categories
       </p>
 
@@ -118,7 +86,7 @@ const description = "Complete directory of testing standards for hydrogen, oil &
                 {std.category && (
                   <div class="standard-meta">Category: {std.category.name}</div>
                 )}
-                <a href={`/search/standards?standard=${encodeURIComponent(std.code)}`} style="color: #000080; text-decoration: none; font-weight: 600; margin-top: 0.5rem; display: inline-block;">
+                <a href={`/search/standards?standard=${encodeURIComponent(std.code)}`} class="card-link">
                   Find Certified Labs →
                 </a>
               </div>
@@ -129,16 +97,110 @@ const description = "Complete directory of testing standards for hydrogen, oil &
     </section>
 
     <!-- CTA -->
-    <section class="section" style="text-align: center; background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);">
+    <section class="section cta">
       <h2>Find Your Testing Partner</h2>
-      <p style="margin: 1rem 0 2rem; font-size: 1.1rem;">
+      <p class="section-desc">
         Search laboratories by exact certification and technical specifications
       </p>
-      <a href="/search/standards" class="btn">Search by Standard</a>
-      <a href="/hydrogen-testing" class="btn" style="background: #0066cc;">Hydrogen Testing</a>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="/search/standards" class="btn">Search by Standard</a>
+        <a href="/hydrogen-testing" class="btn btn-h2">Hydrogen Testing</a>
+      </div>
     </section>
   </main>
+</BaseLayout>
 
-  <Footer />
-</body>
-</html>
+<style>
+  .hero { 
+    background: linear-gradient(135deg, rgba(0,0,128,0.8) 0%, rgba(50,205,50,0.8) 100%), url('/images/standards-bg.jpg'); 
+    background-size: cover;
+    background-position: center;
+    color: white; 
+    padding: 6rem 2rem; 
+    text-align: center; 
+    position: relative;
+  }
+  .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 1.5rem; font-weight: 800; tracking: tight; }
+  .hero p { font-size: 1.25rem; opacity: 0.9; margin-bottom: 2.5rem; max-width: 700px; margin-inline: auto; }
+  
+  main { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
+  
+  .section { 
+    background: rgba(255, 255, 255, 0.03); 
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 3rem; 
+    border-radius: 24px; 
+    margin-bottom: 3rem; 
+  }
+  .section h2 { color: white; font-size: 2.25rem; margin-bottom: 1rem; font-weight: 700; }
+  .section-desc { color: #94a3b8; font-size: 1.1rem; margin-bottom: 2.5rem; }
+  
+  .highlight { background: linear-gradient(135deg, rgba(30, 58, 138, 0.2) 0%, rgba(30, 64, 175, 0.1) 100%); border: 1px solid rgba(59, 130, 246, 0.2); }
+  .highlight h2 { color: #60a5fa; }
+  
+  .standards-group { margin-bottom: 3.5rem; }
+  .standards-group h3 { color: #10b981; font-size: 1.75rem; margin-bottom: 1.5rem; font-weight: 600; border-bottom: 1px solid rgba(16, 185, 129, 0.2); padding-bottom: 0.5rem; }
+  
+  .standards-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+  
+  .standard-card { 
+    background: rgba(255, 255, 255, 0.02); 
+    border: 1px solid rgba(255, 255, 255, 0.05); 
+    padding: 2rem; 
+    border-radius: 16px; 
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+    display: flex;
+    flex-direction: column;
+  }
+  .standard-card:hover { 
+    transform: translateY(-4px); 
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(59, 130, 246, 0.3);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  
+  .h2-card { border-left: 4px solid #3b82f6; }
+  .embrittlement-card { border-left: 4px solid #db2777; }
+  
+  .standard-code { font-weight: 800; color: white; font-size: 1.25rem; margin-bottom: 0.75rem; font-family: 'JetBrains Mono', monospace; }
+  .standard-name { color: #cbd5e1; font-size: 1rem; margin-bottom: 1rem; line-height: 1.5; flex-grow: 1; }
+  .standard-meta { font-size: 0.875rem; color: #64748b; margin-top: auto; }
+  
+  .card-link { 
+    color: #60a5fa; 
+    text-decoration: none; 
+    font-weight: 600; 
+    margin-top: 1.25rem; 
+    display: inline-flex; 
+    align-items: center;
+    transition: color 0.2s;
+  }
+  .card-link:hover { color: #93c5fd; }
+  .h2-link { color: #3b82f6; }
+  .embrittlement-link { color: #f472b6; }
+  
+  .btn { 
+    display: inline-flex; 
+    align-items: center;
+    background: #1e40af; 
+    color: white; 
+    padding: 1rem 2rem; 
+    border-radius: 12px; 
+    text-decoration: none; 
+    font-weight: 600; 
+    transition: all 0.3s; 
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+  .btn:hover { background: #1d4ed8; transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+  .btn-h2 { background: #2563eb; }
+  
+  .cta { text-align: center; background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%); }
+  
+  @media (max-width: 768px) { 
+    .hero { padding: 4rem 1.5rem; }
+    main { padding: 2rem 1.5rem; }
+    .section { padding: 2rem 1.5rem; }
+    .standards-list { grid-template-columns: 1fr; }
+  }
+</style>

@@ -4,8 +4,8 @@
 
 ### Issue 1: "Database error occurred"
 **Root Cause:** Invalid API key - was using incomplete JWT token
-- **Was:** `'sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2'` (only signature part)
-- **Now:** `'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDQzNjU4NSwiZXhwIjoyMDc2MDEyNTg1fQ.zd47WtS1G1XzjP1obmr_lxHU_xJWtlhhu4ktm9xC5hA'` (complete JWT)
+- **Was:** `'[REDACTED_SECRET]'` (only signature part)
+- **Now:** `'[REDACTED_SECRET]'` (complete JWT)
 
 **Fixed in:**
 - `web/tstr-frontend/src/pages/api/submit.ts`
@@ -77,23 +77,14 @@ Visit: https://tstr.site/waitlist
 
 ---
 
-## 🔍 Why the Old Key Was Wrong
-
-**JWT Structure:** `[header].[payload].[signature]`
-
-**Example:**
+## 🔍 Supabase Key Format
+**Current format:**
 ```
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9  ← header (base64)
-.
-eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyOTQ0ODQzNywiZXhwIjoyMDQ1MDI0NDM3fQ  ← payload (base64)
-.
-sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2  ← signature
+sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4  ← Anon/Publishable Key
+[REDACTED_SECRET]  ← Service Role Key
 ```
-
-**Old fallback:** Only had `sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2` (signature only)  
-**New fallback:** Complete JWT with all three parts
-
-Supabase requires the complete JWT to authenticate.
+Supabase no longer uses the long JWT format for API keys.
+Supabase requires the correct key format to authenticate.
 
 ---
 

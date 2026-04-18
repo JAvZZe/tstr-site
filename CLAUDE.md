@@ -167,13 +167,14 @@ To maintain a clean environment and reduce token clutter:
 **Scrapers**: `web/tstr-automation/` (Python, deployed on OCI)
 **Database**: Supabase (https://haimjeaetrsaauitrhfy.supabase.co)
 **API Keys**:
-- Publishable: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
-- Service Role: [REDACTED - stored in .env and Cloudflare dashboard]
+- Publishable: sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4
+- Service Role: [REDACTED_SECRET] (FOR AGENT USE ONLY)
+
 
 **MCP Server**: ✅ Configured in `web/tstr-automation/TSTR1.mcp.json`
 - Server: @supabase/mcp-server-supabase@latest
 - Project Ref: haimjeaetrsaauitrhfy
-- Access Token: sbp_e290bc7ea1ba64ae4b0be38134b7b4a67ca24e04
+- Access Token: [REDACTED_PAT]
 - Mode: Read-only
 
 **Website**: http://tstr.directory (LIVE - 194 listings as of 2026-02-11)

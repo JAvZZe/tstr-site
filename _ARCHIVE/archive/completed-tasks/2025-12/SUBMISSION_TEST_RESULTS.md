@@ -20,7 +20,7 @@
 ### Database Status
 
 - ✅ Database is accessible and responding
-- ✅ API keys working (`sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO`)
+- ✅ API keys working (`sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4`)
 - ✅ 175 total listings in database
 - ✅ Most recent entries from Nov 19, 2025 (scraper run)
 - ❌ **NO pending submissions exist**
@@ -117,7 +117,7 @@ Check if form is actually calling Supabase:
 
 ## Working API Key Found
 
-**Key**: `sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO`
+**Key**: `sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4`
 **Source**: `test_submit.js`
 **Status**: ✅ Working (verified with curl)
 
@@ -127,11 +127,11 @@ The following files have incorrect/old API keys:
 
 1. `bruno/environments/production.bru`
    - Current: Masked `***...***`
-   - Update to: `sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO`
+   - Update to: `sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4`
 
 2. `web/tstr-frontend/.env`
    - Current: `eyJhbGc...` (invalid)
-   - Update to: `sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO`
+   - Update to: `sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4`
 
 3. `web/tstr-automation/TSTR1.mcp.json`
    - Current: Has access token (different purpose)
@@ -155,8 +155,8 @@ The following files have incorrect/old API keys:
 
 ```bash
 curl -s "https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/listings?business_name=ilike.*Test%20Lab%20TSTR*&select=id,business_name,phone,email,status,created_at&order=created_at.desc" \
-  -H "apikey: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO" \
-  -H "Authorization: Bearer sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO" | jq .
+  -H "apikey: sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4" \
+  -H "Authorization: Bearer sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4" | jq .
 ```
 
 ### Option 2: Browser Console Test
@@ -170,7 +170,7 @@ curl -s "https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/listings?business_name
 const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
 const supabase = createClient(
   'https://haimjeaetrsaauitrhfy.supabase.co',
-  'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO'
+  'sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4'
 );
 
 // Try a simple read first

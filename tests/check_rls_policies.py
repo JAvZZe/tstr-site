@@ -1,3 +1,4 @@
+import os
 #!/usr/bin/env python3
 """
 Check current RLS policies on the listings table
@@ -6,7 +7,7 @@ Check current RLS policies on the listings table
 from supabase import create_client, Client
 
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
-SUPABASE_KEY = "sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2"
+SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
 
 
 def check_rls_policies():

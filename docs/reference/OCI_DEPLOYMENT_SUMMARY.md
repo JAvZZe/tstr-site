@@ -95,7 +95,7 @@ tail -50 scraper.log              # Last 50 lines of execution log
 ### Credentials (CONFIGURED ON OCI INSTANCE)
 ```bash
 SUPABASE_URL=https://haimjeaetrsaauitrhfy.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2
+SUPABASE_SERVICE_ROLE_KEY=[REDACTED_SECRET]
 ```
 
 ### Database Details

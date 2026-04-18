@@ -6,7 +6,7 @@
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = 'https://haimjeaetrsaauitrhfy.supabase.co';
-const supabaseKey = 'sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 

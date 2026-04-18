@@ -129,8 +129,8 @@ class OilGasScraper(BaseNicheScraper):
 
 **Supabase Project**: `haimjeaetrsaauitrhfy`
 - URL: https://haimjeaetrsaauitrhfy.supabase.co
-- Anon Key: `sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO`
-- Service Key: `sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2`
+- Anon Key: `sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4`
+- Service Key: `[REDACTED_SECRET]`
 - Dashboard: https://supabase.com/dashboard/project/haimjeaetrsaauitrhfy
 
 **Current Data**:

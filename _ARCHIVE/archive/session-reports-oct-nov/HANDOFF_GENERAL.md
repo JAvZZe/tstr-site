@@ -90,7 +90,7 @@
 - MCP Server: ✅ Configured in `web/tstr-automation/TSTR1.mcp.json`
   - Server: @supabase/mcp-server-supabase@latest
   - Project Ref: haimjeaetrsaauitrhfy
-  - Access Token: sbp_e290bc7ea1ba64ae4b0be38134b7b4a67ca24e04
+  - Access Token: [REDACTED_SECRET]
   - Mode: Read-only
 
 ### Scrapers (OCI)

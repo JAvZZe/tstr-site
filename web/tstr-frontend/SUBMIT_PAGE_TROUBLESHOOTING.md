@@ -6,7 +6,7 @@
 
 #### 1. **Supabase API Keys**
 - ✅ **Legacy Keys Disabled**: Supabase disabled old API keys on 2025-10-17
-- ✅ **Correct Keys in Code**: `sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO` hardcoded in submit.astro
+- ✅ **Correct Keys in Code**: `sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4` hardcoded in submit.astro
 - ✅ **API Connectivity**: Direct API calls to Supabase work with correct keys
 - ✅ **Cloudflare Environment**: User confirmed correct key is set in Cloudflare Pages
 

@@ -97,7 +97,7 @@ web/
 - **Solution**: Update Cloudflare environment variables
 - **Keys Ready**: 
   - `PUBLIC_SUPABASE_URL`: https://haimjeaetrsaauitrhfy.supabase.co
-  - `PUBLIC_SUPABASE_ANON_KEY`: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
+  - `PUBLIC_SUPABASE_ANON_KEY`: sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4
 - **Action Required**: User must update via Cloudflare dashboard
 
 ### P1 - HIGH

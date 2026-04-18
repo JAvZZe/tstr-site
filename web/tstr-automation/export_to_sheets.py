@@ -11,7 +11,8 @@ from supabase import create_client
 
 # Credentials
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
-SUPABASE_SERVICE_ROLE_KEY = "sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2"
+import os
+SUPABASE_SERVICE_ROLE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
 
 def export_to_csv(category_slug=None, output_file=None):
     """

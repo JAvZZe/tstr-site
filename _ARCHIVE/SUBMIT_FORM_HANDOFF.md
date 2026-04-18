@@ -56,8 +56,8 @@ The submit form was using **service role key** client-side instead of **anon key
 ## 🔑 Key Information
 
 ### **Correct Keys:**
-- **Anon Key**: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ1NDUzMTMsImV4cCI6MjA1MDEyMTMxM30.a4z9mqyKFiB-GgW_1sF5VcNlqjdMD-1h-RIu5WUwCos`
-- **Service Role Key**: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDQzNjU4NSwiZXhwIjoyMDc2MDEyNTg1fQ.zd47WtS1G1XzjP1obmr_lxHU_xJWtlhhu4ktm9xC5hA`
+- **Anon Key**: `sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4`
+- **Service Role Key**: `[REDACTED_SECRET]`
 
 ### **RLS Policies Created:**
 - Categories: Anonymous SELECT allowed

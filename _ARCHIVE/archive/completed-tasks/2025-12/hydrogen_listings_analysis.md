@@ -117,8 +117,8 @@ Current schema lacks fields for:
 ## API Key Updates Applied
 
 Updated all Bruno environment files with correct Supabase keys:
-- **Publishable**: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
-- **Secret**: sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2
+- **Publishable**: sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4
+- **Secret**: [REDACTED_SECRET]
 
 Old JWT keys deprecated and replaced in:
 - bruno/environments/local.bru

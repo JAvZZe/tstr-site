@@ -76,8 +76,8 @@ After successful submission, check if it's in the database:
 
 ```bash
 curl -s "https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/listings?business_name=ilike.*Test%20TSTR*&select=id,business_name,phone,status,created_at&order=created_at.desc&limit=5" \
-  -H "apikey: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO" \
-  -H "Authorization: Bearer sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO" | jq .
+  -H "apikey: sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4" \
+  -H "Authorization: Bearer sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4" | jq .
 ```
 
 **Note**: This might return `[]` (empty) because anon users can't SELECT pending listings. That's expected and correct (security feature).

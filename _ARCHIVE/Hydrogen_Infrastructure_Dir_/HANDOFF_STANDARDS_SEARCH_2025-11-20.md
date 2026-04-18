@@ -371,12 +371,12 @@ cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-work
 ```bash
 # Check standards count
 curl "https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/standards?select=count" \
-  -H "apikey: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO" \
+  -H "apikey: sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4" \
   -H "Prefer: count=exact"
 
 # List standards
 curl "https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/standards?select=code,name&order=code" \
-  -H "apikey: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO"
+  -H "apikey: sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4"
 ```
 
 ### Test Search Function

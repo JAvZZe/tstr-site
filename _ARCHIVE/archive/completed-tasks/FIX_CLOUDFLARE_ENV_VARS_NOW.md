@@ -67,7 +67,7 @@ PUBLIC_SUPABASE_ANON_KEY
 
 **Field 2 - Value:**
 ```
-sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
+sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4
 ```
 ↑ Copy exactly as shown (entire key, starts with "sb_")
 
@@ -198,7 +198,7 @@ Variable name    Value           Environment
 Variable name              Value                          Environment
 ─────────────────────────────────────────────────────────────────────
 PUBLIC_SUPABASE_URL        https://haimjeae...            Production
-PUBLIC_SUPABASE_ANON_KEY   sb_publishable_EFS...         Production
+PUBLIC_SUPABASE_ANON_KEY   sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4         Production
 ```
 
 ---
@@ -222,7 +222,7 @@ PUBLIC_SUPABASE_ANON_KEY
 
 **Variable 2 Value:**
 ```
-sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
+sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4
 ```
 
 ---

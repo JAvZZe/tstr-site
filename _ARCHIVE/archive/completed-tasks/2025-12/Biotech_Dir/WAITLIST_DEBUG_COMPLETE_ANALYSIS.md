@@ -24,7 +24,7 @@
 ### Attempt 2: Add Hardcoded Fallback (Commit a0eff1c)
 **What I did:**
 - Added hardcoded keys matching `lib/supabase.ts` pattern
-- Used incomplete JWT: `'sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2'`
+- Used incomplete JWT: `'[REDACTED_SECRET]'`
 
 **Why it failed:**
 - JWT was incomplete (only signature, missing header and payload)
@@ -34,7 +34,7 @@
 
 ### Attempt 3: Fix Incomplete JWT (Commit be16892)
 **What I did:**
-- Changed to complete JWT: `'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyOTQ0ODQzNywiZXhwIjoyMDQ1MDI0NDM3fQ.sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2'`
+- Changed to complete JWT: `'[REDACTED_SECRET]'`
 - Also fixed checkmark SVG sizing
 
 **Why it STILL fails:**
@@ -69,7 +69,7 @@ grep "supabaseKey =" web/tstr-frontend/src/pages/api/submit.ts
 ```typescript
 const supabaseKey = env?.SUPABASE_SERVICE_ROLE_KEY || 
                     import.meta.env.SUPABASE_SERVICE_ROLE_KEY ||
-                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';  // FULL JWT
+                    '[REDACTED_SECRET]';  // NEW FORMAT
 ```
 
 **Conclusion:** Secrets are being filtered/redacted between local file and git commit.
@@ -197,8 +197,8 @@ git show HEAD:web/tstr-frontend/src/lib/supabase.ts | grep "const supabaseKey ="
    - Add for "Production" environment:
      ```
      PUBLIC_SUPABASE_URL = https://haimjeaetrsaauitrhfy.supabase.co
-      PUBLIC_SUPABASE_ANON_KEY = sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2
-      SUPABASE_SERVICE_ROLE_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDQzNjU4NSwiZXhwIjoyMDc2MDEyNTg1fQ.zd47WtS1G1XzjP1obmr_lxHU_xJWtlhhu4ktm9xC5hA
+      PUBLIC_SUPABASE_ANON_KEY = [REDACTED_SECRET]
+      SUPABASE_SERVICE_ROLE_KEY = [REDACTED_SECRET]
      ```
    - Click "Save"
    - Trigger redeploy: Deployments → View build → Retry deployment

@@ -13,7 +13,7 @@ load_dotenv(
 )
 
 supabase_url = "https://haimjeaetrsaauitrhfy.supabase.co"
-supabase_key = "sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO"
+supabase_key = "sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4"
 
 supabase = create_client(supabase_url, supabase_key)
 

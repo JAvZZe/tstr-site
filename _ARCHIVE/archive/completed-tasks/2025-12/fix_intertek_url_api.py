@@ -18,7 +18,7 @@ def fix_intertek_url():
     # Supabase configuration
     supabase_url = "https://haimjeaetrsaauitrhfy.supabase.co"
     supabase_key = (
-        "sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2"  # Service role key for updates
+        "[REDACTED_SECRET]"  # Service role key for updates
     )
 
     headers = {

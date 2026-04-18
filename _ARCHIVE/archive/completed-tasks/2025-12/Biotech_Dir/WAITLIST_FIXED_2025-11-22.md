@@ -25,7 +25,7 @@ Your site already has hardcoded credentials as fallbacks in multiple places:
 1. **`lib/supabase.ts`** (Server-side SSG)
    ```typescript
    const supabaseKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY ||
-                       'sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2';
+                       '[REDACTED_SECRET]';
    ```
 
 2. **`pages/submit.astro`** (Client-side)

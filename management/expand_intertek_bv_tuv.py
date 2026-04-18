@@ -1,3 +1,4 @@
+import os
 #!/usr/bin/env python3
 """
 Expand Intertek, Bureau Veritas, and TÜV SÜD listings with detailed NDT/Asset Integrity data.
@@ -6,7 +7,7 @@ Expand Intertek, Bureau Veritas, and TÜV SÜD listings with detailed NDT/Asset 
 import requests
 
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
-SERVICE_ROLE_KEY = "sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2"
+SERVICE_ROLE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
 
 headers = {
     "apikey": SERVICE_ROLE_KEY,

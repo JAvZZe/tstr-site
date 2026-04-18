@@ -20,13 +20,13 @@
 **Files Updated:**
 ```typescript
 // OLD (broken anon key):
-'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNjAxNTksImV4cCI6MjA3NTYzNjE1OX0.1SoHZoMAeap4p2Fy4HxzHJ4IRZWZ78VamGd0JWQ0OqM'
+'[DEPRECATED_JWT_REMOVED]'
 
 // NEW (working anon key):
-'sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2'
+'[REDACTED_SECRET]'
 
 // Service Role Key (working):
-'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDQzNjU4NSwiZXhwIjoyMDc2MDEyNTg1fQ.zd47WtS1G1XzjP1obmr_lxHU_xJWtlhhu4ktm9xC5hA'
+'[REDACTED_SECRET]'
 ```
 
 **Fixed Files:**

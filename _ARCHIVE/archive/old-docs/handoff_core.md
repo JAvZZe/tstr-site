@@ -26,7 +26,7 @@
 1. **Frontend API Error** - "Invalid API key" on https://tstr.site
    - **Cause**: Cloudflare Pages using old/missing Supabase keys
    - **Solution**: Need to update environment variables in Cloudflare dashboard
-   - **Keys Ready**: `sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO`
+   - **Keys Ready**: `sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4`
 
 2. **Incomplete Data Import** - 114 listings skipped
    - **Cause**: CSV has location names ("New Jersey", "California") but DB needs city-level IDs
@@ -220,8 +220,8 @@ TSTR.site/
 **Supabase**
 - Project ID: haimjeaetrsaauitrhfy
 - URL: https://haimjeaetrsaauitrhfy.supabase.co
-- Publishable Key: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
-- Service Role Key: sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2 (in .env)
+- Publishable Key: sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4
+- Service Role Key: [REDACTED_SECRET] (in .env)
 - Dashboard: https://app.supabase.com/project/haimjeaetrsaauitrhfy
 - Status: ✅ Database operational, new keys working
 

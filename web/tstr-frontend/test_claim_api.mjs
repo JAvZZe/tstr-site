@@ -17,7 +17,7 @@ const API_URL = isLive
 
 // Supabase credentials (for direct DB verification)
 const SUPABASE_URL = 'https://haimjeaetrsaauitrhfy.supabase.co';
-const SUPABASE_KEY = 'sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2';
+const SUPABASE_KEY = '[REDACTED]';
 
 console.log('=== TSTR.directory Claims API Test ===\n');
 console.log(`Testing: ${isLive ? 'PRODUCTION' : 'LOCAL DEV'}`);

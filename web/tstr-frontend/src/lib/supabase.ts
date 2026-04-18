@@ -8,8 +8,11 @@ const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsa
 // The service role key is only used at build time and doesn't get exposed to clients
 // For CSR (Client Side Rendering), would use anon key instead
 const supabaseKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY ||
-    import.meta.env.PUBLIC_SUPABASE_SERVICE_ROLE_KEY ||
-    'sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2';  // Service role key for SSG
+    import.meta.env.PUBLIC_SUPABASE_SERVICE_ROLE_KEY;
+
+if (!supabaseKey) {
+  throw new Error('SUPABASE_SERVICE_ROLE_KEY is not defined in environment variables');
+}
 
 console.log('Supabase URL:', supabaseUrl);
 console.log('Supabase key:', supabaseKey ? 'present' : 'missing');

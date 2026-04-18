@@ -11,7 +11,7 @@ from typing import Dict, Optional, List
 
 # Supabase configuration
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
-SUPABASE_KEY = "sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO"
+SUPABASE_KEY = "sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4"
 
 
 def normalize_company_name(name: str) -> str:

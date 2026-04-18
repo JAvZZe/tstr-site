@@ -250,7 +250,7 @@ import os
 from supabase import create_client, Client
 
 os.environ["SUPABASE_URL"] = "https://haimjeaetrsaauitrhfy.supabase.co"
-os.environ["SUPABASE_KEY"] = "sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO"
+os.environ["SUPABASE_KEY"] = "sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4"
 
 supabase = create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_KEY"])
 

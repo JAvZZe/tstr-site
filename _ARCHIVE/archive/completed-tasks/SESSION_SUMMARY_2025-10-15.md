@@ -36,7 +36,7 @@
 - ✅ Retrieved new working Supabase keys from dashboard
 - ✅ Documented keys:
   - `PUBLIC_SUPABASE_URL`: `https://haimjeaetrsaauitrhfy.supabase.co`
-  - `PUBLIC_SUPABASE_ANON_KEY`: `sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO`
+  - `PUBLIC_SUPABASE_ANON_KEY`: `sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4`
 
 **Result**: Root cause identified, solution ready
 
@@ -186,8 +186,8 @@ c:\Users\alber\OneDrive\Documents\.WORK\TSTR.site\web\tstr-automation\
 
 ### Supabase (Database)
 **URL**: `https://haimjeaetrsaauitrhfy.supabase.co`  
-**Anon Key** (Frontend): `sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO`  
-**Service Role Key** (Backend): `sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2`
+**Anon Key** (Frontend): `sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4`  
+**Service Role Key** (Backend): `[REDACTED_SECRET]`
 
 **Status**: 
 - ✅ Backend uses service role key (.env files)

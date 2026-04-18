@@ -2,7 +2,7 @@ from supabase import create_client, Client
 
 # Initialize Supabase client
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyOTQ0ODQzNywiZXhwIjoyMDQ1MDI0NDM3fQ.sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2"
+SUPABASE_KEY = "[REDACTED_SECRET]"
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
