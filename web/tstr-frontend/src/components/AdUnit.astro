@@ -15,15 +15,21 @@ const {
   style = "display:block"
 } = Astro.props;
 
+// Fallback for AdSense ID if environment variable is missing in build pipeline
+const adsenseId = import.meta.env.PUBLIC_ADSENSE_ID || "ca-pub-7003918988204966";
+
+// Validation: AdSense slots MUST be numeric strings
+const isValidSlot = slot && /^\d+$/.test(slot);
+
 ---
 
 <div class={`ad-container my-8 overflow-hidden rounded-xl bg-white/5 border border-white/10 p-4 transition-all hover:border-white/20 ${className}`}>
   <div class="text-[10px] uppercase tracking-wider text-white/30 mb-2 text-center">Advertisement</div>
-  {slot ? (
+  {isValidSlot ? (
     <>
       <ins class="adsbygoogle"
            style={style}
-           data-ad-client={import.meta.env.PUBLIC_ADSENSE_ID}
+           data-ad-client={adsenseId}
            data-ad-slot={slot}
            data-ad-format={format}
            data-full-width-responsive={responsive ? "true" : "false"}></ins>
