@@ -94,7 +94,7 @@ Key: PUBLIC_SUPABASE_URL
 Value: https://haimjeaetrsaauitrhfy.supabase.co
 
 Key: PUBLIC_SUPABASE_ANON_KEY
-Value: sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2
+Value: [REDACTED_SECRET]
 ```
 
 3. Click **"Deploy site"**

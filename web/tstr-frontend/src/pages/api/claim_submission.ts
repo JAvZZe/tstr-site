@@ -12,8 +12,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       'https://haimjeaetrsaauitrhfy.supabase.co';
 
     const supabaseKey = env?.SUPABASE_SERVICE_ROLE_KEY ||
-      import.meta.env.SUPABASE_SERVICE_ROLE_KEY ||
-      'sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2';
+      import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 

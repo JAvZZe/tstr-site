@@ -10,7 +10,7 @@ from typing import Dict, List
 
 # Supabase configuration
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
-SUPABASE_KEY = "sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2"  # Service key for writes
+SUPABASE_KEY = "[REDACTED_SECRET]"  # Service key for writes
 
 
 def get_existing_listings() -> List[Dict]:

@@ -5,7 +5,7 @@ export const prerender = false;
 
 const GEMINI_API_KEY = import.meta.env.GEMINI_API_KEY;
 const SUPABASE_URL = (import.meta.env.SUPABASE_URL || import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co') as string;
-const SUPABASE_SERVICE_ROLE_KEY = (import.meta.env.SUPABASE_SERVICE_ROLE_KEY || 'sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2') as string;
+const SUPABASE_SERVICE_ROLE_KEY = import.meta.env.SUPABASE_SERVICE_ROLE_KEY as string;
 
 // Real category slugs from the DB — keep in sync with categories table
 const CATEGORY_CONTEXT = [

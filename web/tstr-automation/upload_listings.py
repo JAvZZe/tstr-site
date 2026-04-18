@@ -9,7 +9,7 @@ import re
 # CONFIG
 JSON_FILE = "insert_new_linkedin_companies.json"
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
-SUPABASE_KEY = "sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2" 
+SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") 
 
 def upload_listings():
     if not os.path.exists(JSON_FILE):

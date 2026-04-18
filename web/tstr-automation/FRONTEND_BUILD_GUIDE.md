@@ -93,7 +93,7 @@ You need two "keys" from Supabase to connect your website to your database.
 
    **B) Anon/Public Key**
    - It's a long string of random letters/numbers
-   - Looks like: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` (very long)
+   - Looks like: `sb_publishable_...` (long string)
    - Find the one labeled: "anon public"
    - Click the "Copy" button next to it
    - Paste in Notepad below your Project URL

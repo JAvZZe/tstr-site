@@ -16,14 +16,14 @@ https://supabase.com/dashboard/project/haimjeaetrsaauitrhfy/settings/api
 
 **Anon Public Key:**
 - Copy the value under "Project API keys" → "anon public"
-- Should start with `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
+- Current format: `sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4`
 
 **Service Role Key (IMPORTANT):**
 - Copy the value under "Project API keys" → "service_role" 
 - Click the "Reveal" button to show it
 - **This is the critical one that's likely wrong**
-- Should start with `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
-- Should be 200-300 characters long
+- Current format: `[REDACTED_SECRET]`
+- No longer starts with `eyJhbGci...`
 
 ### Step 3: Update Cloudflare Pages
 

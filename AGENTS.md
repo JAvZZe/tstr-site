@@ -67,13 +67,13 @@ This loads:
 ## 🔑 SUPABASE CONFIGURATION
 
 **URL**: https://haimjeaetrsaauitrhfy.supabase.co
-**Anon Key**: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
+**Anon Key**: [REDACTED - See TSTR_hub_Supabase_Keys.md]
 **Service Role Key**: [stored in .env and Cloudflare dashboard]
 
 **MCP Server**: ✅ Configured in `web/tstr-automation/TSTR1.mcp.json`
 - Server: @supabase/mcp-server-supabase@latest
 - Project Ref: haimjeaetrsaauitrhfy
-- Access Token: sbp_e290bc7ea1ba64ae4b0be38134b7b4a67ca24e04
+- Access Token: [REDACTED_PAT]
 - Mode: Read-only
 
 ## 🔄 DEPLOYMENT NOTES

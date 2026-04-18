@@ -14,7 +14,7 @@
 - Tested Supabase MCP configuration and authentication
 - User authenticated via `claude /mcp authenticates`
 - Discovered API keys were expired/invalid
-- Found working API key: `sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO`
+- Found working API key: `sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4`
 - Created comprehensive documentation
 
 **Documentation Created**:

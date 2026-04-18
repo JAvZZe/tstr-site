@@ -1,8 +1,9 @@
 ---
 import { supabase } from '../lib/supabase'
-import { CONTENT, MAILTO_LINKS } from '../lib/contacts'
+import { CONTENT } from '../lib/contacts'
 import { getRedirectUrl } from '../lib/redirect'
 import BaseLayout from '../layouts/BaseLayout.astro'
+import AdUnit from '../components/AdUnit.astro'
 
 // Fetch all active listings with location hierarchy, category, and capabilities
 const { data: listings } = await supabase
@@ -71,240 +72,234 @@ const locationOptions = Array.from(locationsMap.values()).sort((a, b) => a.displ
 const urlParams = new URLSearchParams(Astro.url.search)
 const categoryDisplayName = urlParams.get('category')?.replace(/%20/g, ' ')
 const totalListings = listings?.length || 0
+
+const title = categoryDisplayName ? `${categoryDisplayName} | TSTR Hub` : 'Browse Testing Laboratories | TSTR Hub'
+const description = `Browse ${totalListings} verified testing service providers by country, city, and specialty. Oil & Gas, Pharmaceutical, Environmental testing labs worldwide.`
 ---
 
-<style is:global>
-  .autocomplete-option {
-    @apply px-4 py-3 cursor-pointer transition-colors border-b border-white/5 text-slate-300;
-  }
-  .autocomplete-option:last-child {
-    @apply border-b-0;
-  }
-  .autocomplete-option:hover, .autocomplete-option.selected, .autocomplete-option.highlighted {
-    @apply bg-white/5 text-white;
-  }
-  .autocomplete-match {
-    @apply text-emerald-400 font-bold;
-  }
-  .autocomplete-no-results {
-    @apply px-4 py-3 text-slate-500 italic text-sm;
-  }
-  .autocomplete-clear.visible {
-    @apply opacity-100;
-  }
-</style>
-
-<BaseLayout 
-  title={categoryDisplayName ? `${categoryDisplayName} | TSTR Hub` : 'Browse Testing Laboratories | TSTR Hub'}
-  description={`Browse ${totalListings} verified testing service providers by country, city, and specialty. Oil & Gas, Pharmaceutical, Environmental testing labs worldwide.`}
->
-  <div class="max-w-7xl mx-auto px-6 py-12">
-    <!-- Page Header -->
-    <div class="mb-12 text-center md:text-left">
-      <nav class="flex items-center gap-2 text-sm font-medium text-slate-500 mb-6 overflow-x-auto whitespace-nowrap pb-2 no-scrollbar">
-        <a href="/" class="hover:text-emerald-400 decoration-none">Home</a>
-        <span class="text-slate-700">/</span>
+<BaseLayout title={title} description={description}>
+  <div class="min-h-screen text-white selection:bg-blue-500/30 overflow-x-hidden pt-24 pb-20">
+    <div class="max-w-7xl mx-auto px-6">
+      <!-- Breadcrumbs -->
+      <nav class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-8 animate-fade-up">
+        <a href="/" class="hover:text-blue-400 transition-colors">Home</a>
+        <span class="text-slate-800">/</span>
         {categoryDisplayName && (
           <>
             <span class="text-slate-400">{categoryDisplayName}</span>
-            <span class="text-slate-700">/</span>
+            <span class="text-slate-800">/</span>
           </>
         )}
-        <span class="text-white">Browse Listings</span>
-        <span class="text-slate-700">/</span>
-        <a href="/search/standards" class="text-blue-400 hover:text-blue-300 decoration-none">🔬 Search by Standard</a>
+        <span class="text-blue-500/80">Directory</span>
       </nav>
-      <h1 class="text-4xl md:text-5xl font-black text-white mb-4">
-        {categoryDisplayName ? `Browse ${categoryDisplayName}` : 'Browse Laboratories'}
-      </h1>
-      <p class="text-slate-400 text-lg max-w-3xl">
-        Discover verified specialist testing services across global infrastructure industries.
-      </p>
-    </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-      <!-- Filters Sidebar -->
-      <aside class="lg:col-span-1 space-y-6">
-        <div class="glass-card p-6 sticky top-24">
-          <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
-            Refine Search
-          </h2>
-          
-          <div class="space-y-6">
-            <div class="filter-group">
-              <label class="block text-sm font-semibold text-slate-300 mb-2">Location</label>
-              <div class="relative">
-                <input type="text" id="location-filter" class="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20" placeholder="City or Country...">
-                <button class="autocomplete-clear absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white p-1 opacity-0 transition-opacity">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-                <div class="autocomplete-dropdown hidden absolute z-50 w-full mt-2 glass-card border border-white/10 max-h-60 overflow-y-auto no-scrollbar shadow-2xl"></div>
-              </div>
-            </div>
+      <!-- Page Header -->
+      <div class="mb-16 relative">
+        <div class="absolute -top-24 -left-24 w-64 h-64 bg-blue-600/10 blur-[100px] rounded-full pointer-events-none"></div>
+        <h1 class="text-5xl md:text-6xl font-black mb-6 tracking-tighter animate-fade-up delay-100">
+          {categoryDisplayName ? `Browse ${categoryDisplayName}` : 'Global Directory'}
+        </h1>
+        <p class="text-slate-400 text-lg md:text-xl max-w-2xl font-medium animate-fade-up delay-200">
+          Connect with verified specialist labs across 33+ industrial sectors and 70+ technical standards.
+        </p>
+      </div>
 
-            <div class="filter-group">
-              <label class="block text-sm font-semibold text-slate-300 mb-2">Industry Sector</label>
-              <div class="relative">
-                <input type="text" id="category-filter" class="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20" placeholder="Select Industry...">
-                <button class="autocomplete-clear absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white p-1 opacity-0 transition-opacity">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-                <div class="autocomplete-dropdown hidden absolute z-50 w-full mt-2 glass-card border border-white/10 max-h-60 overflow-y-auto no-scrollbar shadow-2xl"></div>
-              </div>
-            </div>
-
-            <div class="filter-group">
-              <label class="block text-sm font-semibold text-slate-300 mb-2">Technical Standard</label>
-              <div class="relative">
-                <input type="text" id="standard-filter" class="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20" placeholder="ASTM, ISO, etc...">
-                <button class="autocomplete-clear absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white p-1 opacity-0 transition-opacity">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-                <div class="autocomplete-dropdown hidden absolute z-50 w-full mt-2 glass-card border border-white/10 max-h-60 overflow-y-auto no-scrollbar shadow-2xl"></div>
-              </div>
-            </div>
-
-            <div class="pt-4 border-t border-white/5">
-              <div id="results-count" class="text-sm font-medium text-emerald-400/80 bg-emerald-500/5 border border-emerald-500/10 rounded-lg px-4 py-2 text-center">
-                Showing {totalListings} listings
-              </div>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      <!-- Main Content -->
-      <div class="lg:col-span-3 space-y-8">
-        <!-- Disclaimer -->
-        <div class="glass-card bg-amber-500/[0.03] border-amber-500/20 p-6 flex flex-col md:flex-row gap-4">
-          <div class="p-3 bg-amber-500/10 rounded-xl h-fit">
-            <svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-          </div>
-          <div>
-            <p class="text-amber-100/90 text-sm leading-relaxed mb-3">
-              {CONTENT.disclaimer}
-            </p>
-            <a href={CONTENT.disclaimerLink.href} class="text-amber-500 text-sm font-bold hover:underline decoration-none">
-              {CONTENT.disclaimerLink.text}
-            </a>
-          </div>
-        </div>
-
-        <!-- Listings Grid -->
-        <div id="listings-grid" class="flex flex-col gap-6">
-          {listings && listings.map((lab) => {
-            const country = extractCountry(lab.address)
-            const city = extractCity(lab.address)
-            const categoryName = lab.category?.name || ''
-            const standards = lab.listing_capabilities?.map(cap => cap.standard).filter(Boolean) || []
-            const standardsDisplay = standards.map(s => `${s.code} - ${s.name}`).join(', ')
-
-            return (
-              <div class="glass-card glass-card-hover p-8 group relative overflow-hidden listing-card" 
-                   data-country={country} data-city={city} data-category={categoryName} data-standards={standardsDisplay}>
-                <div class="absolute inset-0 bg-gradient-to-br from-blue-500/0 via-transparent to-blue-500/[0.02] pointer-events-none"></div>
-                
-                <div class="flex flex-col md:flex-row justify-between items-start gap-6 relative z-10">
-                  <div class="flex-1">
-                    <div class="flex flex-wrap items-center gap-3 mb-4">
-                      <h3 class="text-2xl font-bold text-white tracking-tight">
-                        <a href={`/listing/${lab.slug}`} class="hover:text-emerald-400 transition-colors decoration-none">
-                          {lab.business_name}
-                        </a>
-                      </h3>
-                      {lab.website_verified && (
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                          ✓ Verified
-                        </span>
-                      )}
-                      {categoryName && (
-                        <span class="px-2 py-1 rounded-md text-[11px] font-black uppercase tracking-wider bg-white/5 text-slate-400 border border-white/5">
-                          {categoryName}
-                        </span>
-                      )}
-                    </div>
-
-                    {lab.description && (
-                      <p class="text-slate-400 mb-6 line-clamp-2 text-sm leading-relaxed">
-                        {lab.description}
-                      </p>
-                    )}
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                      {lab.address && (
-                        <div class="flex items-start gap-2">
-                          <span class="text-emerald-400 text-base">📍</span>
-                          <span class="text-slate-400">{lab.address}</span>
-                        </div>
-                      )}
-                      {standards.length > 0 && (
-                        <div class="flex items-start gap-2">
-                          <span class="text-blue-400 text-base">🔬</span>
-                          <div class="flex flex-wrap gap-1.5">
-                            {standards.slice(0, 3).map(s => (
-                              <span class="text-xs font-semibold px-2 py-0.5 bg-blue-500/10 text-blue-300 rounded border border-blue-500/10">
-                                {s.code}
-                              </span>
-                            ))}
-                            {standards.length > 3 && (
-                              <span class="text-[10px] text-slate-500 self-center font-bold">+{standards.length - 3}</span>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div class="flex flex-col gap-3 w-full md:w-auto">
-                    {lab.website && (
-                      <a href={getRedirectUrl(lab.website, lab.id)} 
-                         class="px-6 py-3 rounded-full font-bold text-white bg-gradient-to-r from-blue-600 to-emerald-500 transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] text-center no-underline whitespace-nowrap"
-                         target="_blank" rel="noopener noreferrer">
-                        Visit Website
-                      </a>
-                    )}
-                      <a href={`/claim?listing_id=${lab.id}`} 
-                         data-listing-id={lab.id} 
-                         data-listing-name={lab.business_name}
-                         class="text-xs font-bold text-slate-500 hover:text-emerald-400 transition-colors py-2 text-center no-underline claim-link">
-                        IS THIS YOU? CLAIM LISTING
-                      </a>
-                  </div>
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-12 items-start">
+        <!-- Filters Sidebar -->
+        <aside class="lg:col-span-1 space-y-8 sticky top-32 animate-fade-up delay-300">
+          <div class="glass-card p-8 border-white/5 bg-[#0a0a0b]/40">
+            <h2 class="text-sm font-black uppercase tracking-widest text-blue-400 mb-8 flex items-center gap-3">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+              Search Filter
+            </h2>
+            
+            <div class="space-y-8">
+              <div class="filter-group">
+                <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-3">Geography</label>
+                <div class="relative group">
+                  <input type="text" id="location-filter" 
+                         class="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.04] transition-all" 
+                         placeholder="City or Country...">
+                  <button class="autocomplete-clear absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white p-1 opacity-0 transition-opacity">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  </button>
+                  <div class="autocomplete-dropdown hidden absolute z-50 w-full mt-2 glass-card border border-white/10 max-h-64 overflow-y-auto no-scrollbar shadow-2xl bg-[#0a0a0b]/95 backdrop-blur-xl"></div>
                 </div>
               </div>
-            )
-          })}
-        </div>
 
-        <!-- Low Density Fallback (Concierge) -->
-        <div id="low-density-fallback" class="hidden glass-card p-8 border-emerald-500/20 bg-emerald-500/[0.02]">
-          <div class="flex flex-col md:flex-row items-center gap-8">
-            <div class="w-20 h-20 bg-emerald-500/10 rounded-2xl flex items-center justify-center flex-shrink-0">
-              <svg class="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              <div class="filter-group">
+                <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-3">Industry Sector</label>
+                <div class="relative group">
+                  <input type="text" id="category-filter" 
+                         class="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.04] transition-all" 
+                         placeholder="Select Sector...">
+                  <button class="autocomplete-clear absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white p-1 opacity-0 transition-opacity">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  </button>
+                  <div class="autocomplete-dropdown hidden absolute z-50 w-full mt-2 glass-card border border-white/10 max-h-64 overflow-y-auto no-scrollbar shadow-2xl bg-[#0a0a0b]/95 backdrop-blur-xl"></div>
+                </div>
+              </div>
+
+              <div class="filter-group">
+                <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-3">Technical Standard</label>
+                <div class="relative group">
+                  <input type="text" id="standard-filter" 
+                         class="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.04] transition-all" 
+                         placeholder="ASTM, ISO, etc...">
+                  <button class="autocomplete-clear absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white p-1 opacity-0 transition-opacity">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  </button>
+                  <div class="autocomplete-dropdown hidden absolute z-50 w-full mt-2 glass-card border border-white/10 max-h-64 overflow-y-auto no-scrollbar shadow-2xl bg-[#0a0a0b]/95 backdrop-blur-xl"></div>
+                </div>
+              </div>
+
+              <div class="pt-6 border-t border-white/5">
+                <div id="results-count" class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400/60 text-center">
+                  {totalListings} FACILITIES MAPPED
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sidebar Ad -->
+          <AdUnit format="vertical" className="hidden lg:block" />
+        </aside>
+
+        <!-- Main Content -->
+        <div class="lg:col-span-3 space-y-10">
+          <!-- Horizontal Ad -->
+          <AdUnit format="horizontal" className="mb-8 animate-fade-up delay-400" />
+
+          <!-- Disclaimer -->
+          <div class="glass-card bg-amber-500/[0.02] border-amber-500/10 p-6 flex items-start gap-4 animate-fade-up delay-500">
+            <div class="p-2.5 bg-amber-500/10 rounded-xl">
+              <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
             </div>
             <div>
-              <h3 class="text-xl font-bold text-white mb-2">Need a specific provider?</h3>
-              <p class="text-slate-400 mb-4 max-w-2xl">
-                We're currently expanding our directory. If you haven't found what you're looking for, our team can conduct a free manual search for you.
+              <p class="text-amber-100/70 text-xs leading-relaxed mb-2">
+                {CONTENT.disclaimer}
               </p>
-              <a id="concierge-link" href="/contact?inquiry=sales" class="inline-flex items-center gap-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-full transition-all hover:scale-105 no-underline">
-                Request Free Concierge Search
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              <a href={CONTENT.disclaimerLink.href} class="text-amber-500 text-[10px] font-black uppercase tracking-widest hover:text-amber-400 transition-colors">
+                {CONTENT.disclaimerLink.text}
               </a>
             </div>
           </div>
-        </div>
 
-        <div id="no-results" class="hidden glass-card p-12 text-center border-dashed border-white/10">
-          <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg class="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <!-- Listings Grid -->
+          <div id="listings-grid" class="grid grid-cols-1 gap-6 animate-fade-up delay-600">
+            {listings && listings.map((lab) => {
+              const country = extractCountry(lab.address)
+              const city = extractCity(lab.address)
+              const categoryName = lab.category?.name || ''
+              const standards = lab.listing_capabilities?.map(cap => cap.standard).filter(Boolean) || []
+              const standardsDisplay = standards.map(s => `${s.code} - ${s.name}`).join(', ')
+
+              return (
+                <div class="glass-card glass-card-hover p-8 relative overflow-hidden group listing-card border-white/5" 
+                     data-country={country} data-city={city} data-category={categoryName} data-standards={standardsDisplay}>
+                  <div class="absolute inset-0 bg-gradient-to-br from-blue-500/[0.01] to-emerald-500/[0.01] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  
+                  <div class="flex flex-col md:flex-row justify-between items-start gap-8 relative z-10">
+                    <div class="flex-1 min-w-0">
+                      <div class="flex flex-wrap items-center gap-3 mb-4">
+                        <h3 class="text-2xl font-black text-white tracking-tight group-hover:text-blue-400 transition-colors">
+                          <a href={`/listing/${lab.slug}`} class="decoration-none">
+                            {lab.business_name}
+                          </a>
+                        </h3>
+                        {lab.website_verified && (
+                          <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span class="text-[10px] font-black uppercase tracking-widest text-emerald-400">Verified</span>
+                          </div>
+                        )}
+                        {categoryName && (
+                          <span class="text-[10px] font-black uppercase tracking-widest text-slate-500 bg-white/5 px-3 py-1 rounded-md border border-white/5">
+                            {categoryName}
+                          </span>
+                        )}
+                      </div>
+
+                      {lab.description && (
+                        <p class="text-slate-400 mb-8 line-clamp-2 text-sm leading-relaxed font-medium">
+                          {lab.description}
+                        </p>
+                      )}
+
+                      <div class="flex flex-col sm:flex-row gap-6 text-[11px] font-bold uppercase tracking-widest">
+                        {lab.address && (
+                          <div class="flex items-center gap-2.5 text-slate-500">
+                            <span class="text-blue-500/50">LOCATION</span>
+                            <span class="text-slate-300">{lab.address}</span>
+                          </div>
+                        )}
+                        {standards.length > 0 && (
+                          <div class="flex items-center gap-2.5 text-slate-500">
+                            <span class="text-blue-500/50">STANDARDS</span>
+                            <div class="flex flex-wrap gap-2">
+                              {standards.slice(0, 3).map(s => (
+                                <span class="text-blue-400/80">{s.code}</span>
+                              ))}
+                              {standards.length > 3 && (
+                                <span class="text-slate-600">+{standards.length - 3}</span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div class="flex flex-col gap-3 w-full md:w-auto flex-shrink-0">
+                      {lab.website && (
+                        <a href={getRedirectUrl(lab.website, lab.id)} 
+                           class="px-8 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest text-white bg-blue-600 hover:bg-blue-500 transition-all text-center no-underline shadow-lg shadow-blue-900/20 active:scale-[0.98]"
+                           target="_blank" rel="noopener noreferrer">
+                          Visit Website
+                        </a>
+                      )}
+                      <a href={`/claim?listing_id=${lab.id}`} 
+                         data-listing-id={lab.id} 
+                         data-listing-name={lab.business_name}
+                         class="text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-white transition-colors py-2 text-center no-underline claim-link">
+                        Claim Listing
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
-          <h2 class="text-2xl font-bold text-white mb-3">No listings matches found</h2>
-          <p class="text-slate-400 mb-8">Try adjusting your filters or search terms to broaden your results.</p>
-          <button onclick="location.reload()" class="px-8 py-3 bg-white/10 hover:bg-white/20 text-white font-bold rounded-full transition-all">
-            Reset All Filters
-          </button>
+
+          <!-- Low Density Fallback (Concierge) -->
+          <div id="low-density-fallback" class="hidden glass-card p-10 border-blue-500/20 bg-blue-500/[0.02] animate-fade-up">
+            <div class="flex flex-col md:flex-row items-center gap-10">
+              <div class="w-20 h-20 bg-blue-500/10 rounded-3xl flex items-center justify-center flex-shrink-0 border border-blue-500/20">
+                <svg class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              </div>
+              <div>
+                <h3 class="text-2xl font-black text-white mb-3 tracking-tight">Need a specific provider?</h3>
+                <p class="text-slate-400 mb-6 text-sm font-medium max-w-xl leading-relaxed">
+                  We're currently expanding our directory. If you haven't found the specific technical capabilities required, our team will conduct a free manual market search.
+                </p>
+                <a id="concierge-link" href="/contact?inquiry=sales" class="inline-flex items-center gap-3 px-8 py-4 bg-white text-black text-xs font-black uppercase tracking-widest rounded-xl hover:bg-slate-200 transition-all no-underline active:scale-[0.98]">
+                  Request Concierge Search
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- No Results -->
+          <div id="no-results" class="hidden glass-card p-20 text-center border-dashed border-white/10 animate-fade-up">
+            <div class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-8 border border-white/5">
+              <svg class="w-10 h-10 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h2 class="text-3xl font-black text-white mb-4 tracking-tight">No Matching Facilities</h2>
+            <p class="text-slate-400 mb-10 text-sm font-medium">Try broadening your search parameters or adjusting technical filters.</p>
+            <button onclick="location.reload()" class="px-10 py-4 bg-white/5 hover:bg-white/10 text-white text-[10px] font-black uppercase tracking-widest rounded-xl border border-white/10 transition-all">
+              Reset All Filters
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -315,17 +310,6 @@ const totalListings = listings?.length || 0
   const locationData = JSON.parse(JSON.stringify(locationOptions || []))
   const categoriesData = JSON.parse(JSON.stringify(allCategories || []))
   const standardsData = JSON.parse(JSON.stringify(allStandards))
-
-  // Filter functionality
-  const locationFilter = document.getElementById('location-filter')
-  const categoryFilter = document.getElementById('category-filter')
-  const standardFilter = document.getElementById('standard-filter')
-  const listingsGrid = document.getElementById('listings-grid')
-  const resultsCount = document.getElementById('results-count')
-  const noResults = document.getElementById('no-results')
-  const lowDensityFallback = document.getElementById('low-density-fallback')
-  const conciergeLink = document.getElementById('concierge-link')
-  const listings = document.querySelectorAll('.listing-card')
 
   // Autocomplete class for intelligent dropdowns
   class AutocompleteDropdown {
@@ -344,18 +328,15 @@ const totalListings = listings?.length || 0
     }
 
     init() {
-      // Input event listeners
       this.input.addEventListener('input', this.debounce(() => this.handleInput(), 150))
       this.input.addEventListener('focus', () => this.showDropdown())
       this.input.addEventListener('keydown', (e) => this.handleKeydown(e))
       this.input.addEventListener('blur', () => {
-        setTimeout(() => this.hideDropdown(), 200) // Delay to allow option click
+        setTimeout(() => this.hideDropdown(), 200)
       })
 
-      // Clear button
       this.clearBtn.addEventListener('click', () => this.clearSelection())
 
-      // Click outside to close
       document.addEventListener('click', (e) => {
         if (!this.container.contains(e.target)) {
           this.hideDropdown()
@@ -395,7 +376,7 @@ const totalListings = listings?.length || 0
       this.renderOptions()
       this.showDropdown()
       this.updateClearButton()
-      filterListings() // Trigger filtering
+      window.filterListings()
     }
 
     escapeRegex(string) {
@@ -405,15 +386,9 @@ const totalListings = listings?.length || 0
     fuzzyMatch(query, text) {
       if (query.length === 0) return true
       if (text.length === 0) return false
-
-      // Convert to lowercase for case-insensitive matching
       const lowerQuery = query.toLowerCase()
       const lowerText = text.toLowerCase()
-
-      // Check if query matches from the beginning
       if (lowerText.startsWith(lowerQuery)) return true
-
-      // Check if query matches as a word (preceded by space, dash, or start)
       const wordRegex = new RegExp(`(?:^|[\\s\\-])(${this.escapeRegex(lowerQuery)})`, 'i')
       return wordRegex.test(lowerText)
     }
@@ -421,20 +396,11 @@ const totalListings = listings?.length || 0
     getMatchScore(query, text) {
       const lowerQuery = query.toLowerCase()
       const lowerText = text.toLowerCase()
-
-      // Exact match gets highest score
       if (lowerQuery === lowerText) return 100
-
-      // Starts with query gets high score
       if (lowerText.startsWith(lowerQuery)) return 80
-
-      // Word match gets medium score
       const wordRegex = new RegExp(`(?:^|[\\s\\-])(${this.escapeRegex(lowerQuery)})`, 'i')
       if (wordRegex.test(lowerText)) return 60
-
-      // Contains query gets lower score
       if (lowerText.includes(lowerQuery)) return 40
-
       return 0
     }
 
@@ -444,34 +410,25 @@ const totalListings = listings?.length || 0
 
     renderOptions() {
       this.dropdown.innerHTML = ''
-
       if (this.filteredOptions.length === 0) {
-        this.dropdown.innerHTML = '<div class="autocomplete-no-results">No matches found</div>'
+        this.dropdown.innerHTML = '<div class="px-4 py-3 text-slate-500 italic text-[10px] font-black uppercase tracking-widest">No Matches Found</div>'
         return
       }
 
       this.filteredOptions.forEach((option, index) => {
         const optionElement = document.createElement('div')
-        optionElement.className = 'autocomplete-option'
+        optionElement.className = 'px-4 py-3 cursor-pointer transition-colors border-b border-white/5 text-slate-300 text-[11px] font-bold uppercase tracking-widest hover:bg-blue-500/10 hover:text-white'
         optionElement.setAttribute('role', 'option')
         optionElement.setAttribute('data-index', index)
         
         const displayText = this.getDisplayText(option)
-        const highlightedText = this.highlightMatch(this.input.value.toLowerCase(), displayText)
-        optionElement.innerHTML = highlightedText
+        const regex = new RegExp(`(${this.input.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
+        optionElement.innerHTML = displayText.replace(regex, '<span class="text-blue-400">$1</span>')
 
         optionElement.addEventListener('click', () => this.selectOption(option))
         optionElement.addEventListener('mouseenter', () => this.selectIndex(index))
-        
         this.dropdown.appendChild(optionElement)
       })
-    }
-
-    highlightMatch(query, text) {
-      if (!query) return text
-      
-      const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
-      return text.replace(regex, '<span class="autocomplete-match">$1</span>')
     }
 
     handleKeydown(e) {
@@ -482,7 +439,6 @@ const totalListings = listings?.length || 0
         }
         return
       }
-
       switch (e.key) {
         case 'ArrowDown':
           e.preventDefault()
@@ -494,30 +450,21 @@ const totalListings = listings?.length || 0
           break
         case 'Enter':
           e.preventDefault()
-          if (this.selectedIndex >= 0) {
-            this.selectOption(this.filteredOptions[this.selectedIndex])
-          }
+          if (this.selectedIndex >= 0) this.selectOption(this.filteredOptions[this.selectedIndex])
           break
         case 'Escape':
           this.hideDropdown()
-          this.input.focus()
           break
       }
     }
 
     selectIndex(index) {
       this.selectedIndex = index
-      const options = this.dropdown.querySelectorAll('.autocomplete-option')
-      
+      const options = this.dropdown.querySelectorAll('div[role="option"]')
       options.forEach((option, i) => {
-        option.classList.toggle('selected', i === index)
-        option.classList.toggle('highlighted', i === index)
+        option.classList.toggle('bg-blue-500/10', i === index)
+        option.classList.toggle('text-white', i === index)
       })
-
-      // Scroll into view if needed
-      if (index >= 0 && options[index]) {
-        options[index].scrollIntoView({ block: 'nearest' })
-      }
     }
 
     selectOption(option) {
@@ -526,7 +473,7 @@ const totalListings = listings?.length || 0
       this.input.setAttribute('data-selected-value', displayText)
       this.hideDropdown()
       this.updateClearButton()
-      filterListings() // Trigger filtering
+      window.filterListings()
     }
 
     clearSelection() {
@@ -534,27 +481,24 @@ const totalListings = listings?.length || 0
       this.input.removeAttribute('data-selected-value')
       this.hideDropdown()
       this.updateClearButton()
-      filterListings() // Trigger filtering
+      window.filterListings()
     }
 
     updateClearButton() {
-      this.clearBtn.classList.toggle('visible', this.input.value.length > 0)
+      this.clearBtn.classList.toggle('opacity-100', this.input.value.length > 0)
     }
 
     showDropdown() {
       if (this.filteredOptions.length === 0 && this.input.value === '') {
-        this.hideDropdown()
-        return
+        this.filteredOptions = [...this.options]
+        this.renderOptions()
       }
-      
       this.dropdown.classList.remove('hidden')
-      this.input.setAttribute('aria-expanded', 'true')
       this.isExpanded = true
     }
 
     hideDropdown() {
       this.dropdown.classList.add('hidden')
-      this.input.setAttribute('aria-expanded', 'false')
       this.isExpanded = false
       this.selectedIndex = -1
     }
@@ -564,12 +508,22 @@ const totalListings = listings?.length || 0
     }
   }
 
-  // Initialize autocomplete dropdowns
+  // Initialize
+  const locationFilter = document.getElementById('location-filter')
+  const categoryFilter = document.getElementById('category-filter')
+  const standardFilter = document.getElementById('standard-filter')
+  const listingsGrid = document.getElementById('listings-grid')
+  const resultsCount = document.getElementById('results-count')
+  const noResults = document.getElementById('no-results')
+  const lowDensityFallback = document.getElementById('low-density-fallback')
+  const conciergeLink = document.getElementById('concierge-link')
+  const listings = document.querySelectorAll('.listing-card')
+
   const locationAutocomplete = new AutocompleteDropdown(locationFilter, locationData, 'displayName')
   const categoryAutocomplete = new AutocompleteDropdown(categoryFilter, categoriesData, 'name')
   const standardAutocomplete = new AutocompleteDropdown(standardFilter, standardsData, 'displayName')
 
-  function filterListings() {
+  window.filterListings = function() {
     const selectedLocation = locationAutocomplete.getValue().toLowerCase()
     const selectedCategory = categoryAutocomplete.getValue().toLowerCase()
     const selectedStandard = standardAutocomplete.getValue().toLowerCase()
@@ -582,11 +536,7 @@ const totalListings = listings?.length || 0
       const category = (listing.dataset.category || '').toLowerCase()
       const standards = (listing.dataset.standards || '').toLowerCase()
 
-      // Location matching: check both country and city fields
-      const matchesLocation = !selectedLocation ||
-        country === selectedLocation ||
-        city === selectedLocation
-
+      const matchesLocation = !selectedLocation || country === selectedLocation || city === selectedLocation
       const matchesCategory = !selectedCategory || category === selectedCategory
       const matchesStandard = !selectedStandard || standards.includes(selectedStandard)
 
@@ -598,10 +548,8 @@ const totalListings = listings?.length || 0
       }
     })
 
-    // Update results count
-    resultsCount.textContent = `Showing ${visibleCount} listing${visibleCount !== 1 ? 's' : ''}`
+    resultsCount.textContent = `${visibleCount} FACILITIES MAPPED`
 
-    // Show/hide no results message
     if (visibleCount === 0) {
       listingsGrid.classList.add('hidden')
       noResults.classList.remove('hidden')
@@ -609,81 +557,36 @@ const totalListings = listings?.length || 0
     } else {
       listingsGrid.classList.remove('hidden')
       noResults.classList.add('hidden')
-
-      // Show low-density fallback for < 5 results
+      lowDensityFallback.classList.toggle('hidden', visibleCount >= 5)
+      
       if (visibleCount < 5) {
-        lowDensityFallback.classList.remove('hidden')
-
-        // Update mailto link with filter context in subject
-        let subject = 'Request Free Concierge Search'
-        const contextParts = []
-        if (categoryAutocomplete.getValue()) contextParts.push(categoryAutocomplete.getValue())
-        if (locationAutocomplete.getValue()) {
-          // Extract location name without type suffix
-          const locationName = locationAutocomplete.getValue().replace(/\s*\([^)]*\)$/, '')
-          contextParts.push(locationName)
-        }
-        if (standardAutocomplete.getValue()) contextParts.push(standardAutocomplete.getValue())
-        if (contextParts.length > 0) {
-          subject += ' - ' + contextParts.join(', ')
-        }
-        conciergeLink.href = `/contact?inquiry=sales&subject=Concierge%20Search%20Request&body=${encodeURIComponent(subject)}`
-      } else {
-        lowDensityFallback.classList.add('hidden')
+        let subject = 'Concierge Search Request'
+        const context = [categoryAutocomplete.getValue(), locationAutocomplete.getValue().replace(/\s*\([^)]*\)$/, ''), standardAutocomplete.getValue()].filter(Boolean).join(', ')
+        if (context) subject += ` - ${context}`
+        conciergeLink.href = `/contact?inquiry=sales&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent('Requesting free concierge search for the following context: ' + subject)}`
       }
     }
   }
 
-  // Check URL parameters for pre-filtering
-  const urlParams = new URLSearchParams(window.location.search)
-
-  function setAutocompleteValue(autocomplete, value) {
-    if (value) {
-      autocomplete.input.value = value
-      autocomplete.input.setAttribute('data-selected-value', value)
-      autocomplete.updateClearButton()
-    }
+  // URL Params Handling
+  const params = new URLSearchParams(window.location.search)
+  if (params.has('location')) {
+    locationFilter.value = params.get('location')
+    locationAutocomplete.updateClearButton()
   }
-
-  // Handle legacy URL parameters for backward compatibility
-  if (urlParams.has('country')) {
-    const countryValue = urlParams.get('country')
-    setAutocompleteValue(locationAutocomplete, `${countryValue} (Country)`)
+  if (params.has('category')) {
+    categoryFilter.value = params.get('category')
+    categoryAutocomplete.updateClearButton()
   }
-  if (urlParams.has('city')) {
-    const cityValue = urlParams.get('city')
-    setAutocompleteValue(locationAutocomplete, `${cityValue} (City)`)
+  if (params.has('standard')) {
+    standardFilter.value = params.get('standard')
+    standardAutocomplete.updateClearButton()
   }
-  if (urlParams.has('location')) {
-    setAutocompleteValue(locationAutocomplete, urlParams.get('location'))
-  }
-  if (urlParams.has('category')) {
-    setAutocompleteValue(categoryAutocomplete, urlParams.get('category'))
-  }
-  if (urlParams.has('standard')) {
-    setAutocompleteValue(standardAutocomplete, urlParams.get('standard'))
-  }
-
-  // Initial filter if URL params exist
-  if (urlParams.toString()) {
-    filterListings()
-  }
-
-  // Claim button functionality
-  document.addEventListener('DOMContentLoaded', () => {
-    const claimLinks = document.querySelectorAll('.claim-link')
-
-    claimLinks.forEach(link => {
-      link.addEventListener('click', async (e) => {
-        e.preventDefault()
-
-        const listingId = link.getAttribute('data-listing-id')
-        const listingName = link.getAttribute('data-listing-name')
-
-        // For now, always redirect to claim page (simplified for testing)
-        window.location.href = `/claim?id=${listingId}&provider=${encodeURIComponent(listingName)}`
-      })
-    })
-  })
-</script>
+  if (params.toString()) window.filterListings()
+  </script>
 </BaseLayout>
+
+<style is:global>
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+</style>

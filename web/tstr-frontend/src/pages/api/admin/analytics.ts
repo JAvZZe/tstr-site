@@ -1,8 +1,12 @@
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = 'https://haimjeaetrsaauitrhfy.supabase.co';
-const SERVICE_KEY = 'sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2';
+const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co';
+const SERVICE_KEY = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!SERVICE_KEY) {
+    throw new Error('SUPABASE_SERVICE_ROLE_KEY is required');
+}
 
 const supabaseAdmin = createClient(SUPABASE_URL, SERVICE_KEY);
 

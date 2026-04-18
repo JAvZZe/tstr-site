@@ -175,7 +175,7 @@ If handing off:
 **Root Cause:** 
 - Claude (parallel session) migrated Supabase API keys to new format
 - Old format: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` (JWT, deprecated 2025-10-17)
-- New format: `sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2` (current)
+- New format: `[REDACTED_SECRET]` (current)
 - My created files still had old hardcoded fallback keys
 
 **Files Fixed:**

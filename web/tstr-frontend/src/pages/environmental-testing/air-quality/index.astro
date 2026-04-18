@@ -1,8 +1,9 @@
 ---
 // src/pages/environmental-testing/air-quality/index.astro
 import { supabase } from '../../../lib/supabase';
-import NewsletterBanner from '../../../components/NewsletterBanner';
-import Footer from '../../../components/Footer.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AdUnit from '../../../components/AdUnit.astro';
+import { formatTitle, formatDescription } from '../../../lib/seo';
 
 // Enable static prerendering at build time
 export const prerender = true;
@@ -80,168 +81,150 @@ const getTestingServiceName = (categoryName: string) => {
 };
 
 const testingServiceName = getTestingServiceName(categoryData.name);
+
+// Optimized SEO
+const pageTitle = formatTitle([subcategoryName, testingServiceName]);
+const pageDescription = formatDescription(
+  `Directory of ${totalListings} verified ${subcategoryName.toLowerCase()} and ${testingServiceName.toLowerCase()}. Compare ISO 17025 accredited air quality monitoring labs and emissions testing services.`
+);
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{subcategoryName} & {testingServiceName} | TSTR.directory</title>
-    <meta
-      name="description"
-      content={`Directory of ${totalListings} verified ${subcategoryName.toLowerCase()} and ${testingServiceName.toLowerCase()}. Compare ISO 17025 accredited air quality monitoring labs and emissions testing services. Get quotes from certified providers.`}
-    />
-    <meta property="og:title" content={`${subcategoryName} & ${testingServiceName}`} />
-    <meta property="og:description" content={`Find and compare verified ${subcategoryName.toLowerCase()}. ${subcategoryDescription} from ISO 17025 certified laboratories.`} />
-    <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
-</head>
-
-  <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
-
-    <!-- Navigation -->
-    <NewsletterBanner client:only="react" />
-    <nav class="bg-white shadow-sm p-4">
-      <div class="max-w-6xl mx-auto">
-        <a href="/" class="font-bold text-xl hover:text-blue-600 transition">
-          TSTR<span class="text-blue-600">.directory</span>
-        </a>
-      </div>
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <main class="max-w-7xl mx-auto px-6 py-12">
+    <!-- Breadcrumbs -->
+    <nav class="flex items-center gap-2 text-sm font-medium text-slate-500 mb-8 overflow-x-auto whitespace-nowrap pb-2 no-scrollbar">
+      <a href="/" class="hover:text-emerald-400 transition-colors">Home</a>
+      <span class="text-slate-700">/</span>
+      <a href="/environmental-testing" class="hover:text-emerald-400 transition-colors">{categoryData.name}</a>
+      <span class="text-slate-700">/</span>
+      <span class="text-white">{subcategoryName}</span>
     </nav>
 
-    <!-- Main Content -->
-    <main class="max-w-5xl mx-auto p-6">
-
-      <!-- Breadcrumbs -->
-      <div class="text-sm text-gray-500 mb-4">
-        <a href="/" class="hover:underline hover:text-blue-600">Home</a>
-        <span class="mx-2">›</span>
-        <a href="/environmental-testing" class="hover:underline hover:text-blue-600">{categoryData.name}</a>
-        <span class="mx-2">›</span>
-        <span class="text-gray-900 font-medium">{subcategoryName}</span>
+    <!-- Page Header -->
+    <div class="mb-12">
+      <div class="flex items-center gap-4 mb-6">
+        {categoryData.icon && (
+          <span class="text-4xl md:text-6xl">{categoryData.icon}</span>
+        )}
+        <h1 class="text-4xl md:text-6xl font-black text-white tracking-tight">
+          {subcategoryName}
+        </h1>
       </div>
 
-      <!-- Page Header -->
-      <div class="mb-8">
-        <div class="flex items-center gap-3 mb-3">
-          {categoryData.icon && (
-            <span class="text-4xl">{categoryData.icon}</span>
-          )}
-          <h1 class="text-3xl md:text-5xl font-bold">
-            {subcategoryName}
-          </h1>
+      <h2 class="text-xl md:text-2xl font-bold text-slate-300 mb-6 font-mono">
+        Professional Air Quality Monitoring & Emissions Testing Services
+      </h2>
+
+      <p class="text-lg text-slate-400 max-w-3xl leading-relaxed mb-8">
+        Find verified <strong class="text-white">air quality testing laboratories</strong> and
+        compare <strong class="text-white">emissions testing services</strong> from
+        ISO 17025 accredited laboratories worldwide.
+        {subcategoryDescription}
+      </p>
+
+      <div class="flex items-center gap-4">
+        <div class="px-6 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-black text-sm uppercase tracking-widest">
+          {totalListings} verified {totalListings === 1 ? 'provider' : 'providers'}
         </div>
-
-        <!-- H2: SEO Payload (Hybrid Hook Strategy) -->
-        <h2 class="text-xl md:text-2xl font-semibold text-gray-700 mb-4">
-          Professional Air Quality Monitoring & Emissions Testing Services
-        </h2>
-
-        <!-- SEO-enhanced intro text -->
-        <p class="text-gray-600 text-base mb-4">
-          Find verified <strong>air quality testing laboratories</strong> and
-          compare <strong>emissions testing services</strong> from
-          ISO 17025 accredited laboratories worldwide.
-          {subcategoryDescription}
-        </p>
-
-        <p class="text-gray-700">
-          <span class="font-bold text-2xl text-blue-600">{totalListings}</span>
-          {' '}verified air quality {totalListings === 1 ? 'provider' : 'providers'} across
-          {' '}<span class="font-semibold">{sortedRegions.length}</span> {sortedRegions.length === 1 ? 'region' : 'regions'}
-        </p>
+        <div class="px-6 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 font-black text-sm uppercase tracking-widest">
+          {sortedRegions.length} {sortedRegions.length === 1 ? 'region' : 'regions'}
+        </div>
       </div>
+    </div>
 
-      <!-- Error Handling -->
-      {listingsError && (
-        <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
-          <p class="text-red-800 text-sm">
-            ⚠️ Error loading listings. Please try again later.
-          </p>
-        </div>
-      )}
+    <AdUnit type="horizontal" class="mb-12" />
 
-      <!-- Regions Grid -->
-      {sortedRegions.length > 0 ? (
-        <>
-          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {sortedRegions.map(([region, regionListings]) => {
-              const featuredCount = regionListings.filter(l => l.featured).length;
-              const verifiedCount = regionListings.filter(l => l.verified).length;
+    <!-- Error Handling -->
+    {listingsError && (
+      <div class="glass-card bg-red-500/5 border-red-500/20 p-6 mb-8 flex items-center gap-4">
+        <span class="text-red-500 text-2xl">⚠️</span>
+        <p class="text-red-200/80 font-medium">Error loading directory. Our engineers have been notified.</p>
+      </div>
+    )}
 
-              return (
-                <a
-                  href={`/environmental-testing/${region.toLowerCase()}?filter=air-quality`}
-                  class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-blue-400 transition group"
-                >
-                  <div class="flex justify-between items-start mb-2">
-                    <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600">
-                      {region.toUpperCase()}
-                    </h3>
-                    <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-2.5 py-0.5 rounded">
-                      {regionListings.length}
-                    </span>
+    <!-- Regions Grid -->
+    {sortedRegions.length > 0 ? (
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {sortedRegions.map(([region, regionListings]) => {
+          const featuredCount = regionListings.filter(l => l.featured).length;
+          const verifiedCount = regionListings.filter(l => l.verified).length;
+
+          return (
+            <a
+              href={`/environmental-testing/${region.toLowerCase()}?filter=air-quality`}
+              class="glass-card glass-card-hover p-8 group flex flex-col justify-between"
+            >
+              <div>
+                <div class="flex justify-between items-start mb-6">
+                  <h3 class="text-2xl font-black text-white group-hover:text-emerald-400 transition-colors tracking-tight">
+                    {region.toUpperCase()}
+                  </h3>
+                  <span class="bg-white/5 text-slate-300 text-xs font-black px-3 py-1 rounded-full border border-white/10 group-hover:bg-emerald-500/10 group-hover:text-emerald-400 transition-colors">
+                    {regionListings.length}
+                  </span>
+                </div>
+
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Providers</span>
+                    <span class="text-slate-300 font-mono">{regionListings.length}</span>
                   </div>
+                  {featuredCount > 0 && (
+                    <div class="flex items-center justify-between text-sm">
+                      <span class="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Featured</span>
+                      <span class="text-amber-500 font-mono">{featuredCount}</span>
+                    </div>
+                  )}
+                  {verifiedCount > 0 && (
+                    <div class="flex items-center justify-between text-sm">
+                      <span class="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Verified</span>
+                      <span class="text-emerald-400 font-mono">{verifiedCount}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
 
-                  <div class="text-sm text-gray-600 space-y-1">
-                    <p>{regionListings.length} air quality {regionListings.length === 1 ? 'provider' : 'providers'}</p>
-                    {featuredCount > 0 && (
-                      <p class="text-yellow-600">⭐ {featuredCount} featured</p>
-                    )}
-                    {verifiedCount > 0 && (
-                      <p class="text-green-600">✓ {verifiedCount} verified</p>
-                    )}
-                  </div>
-
-                  <div class="mt-4 text-blue-600 text-sm font-medium group-hover:underline">
-                    View all →
-                  </div>
-                </a>
-              );
-            })}
-          </div>
-        </>
-      ) : (
-        <>
-          <!-- Empty State -->
-          <div class="text-center py-16 bg-white rounded-lg border-2 border-dashed border-gray-300">
-            <p class="text-gray-500 text-lg mb-2">
-              No air quality testing providers listed yet.
-            </p>
-            <p class="text-gray-400 text-sm mb-4">
-              We're working to add accredited air quality testing laboratories.
-            </p>
-            <a href="/contact" class="text-blue-600 font-bold hover:underline">
-              Be the first to list here →
+              <div class="mt-8 pt-6 border-t border-white/5 flex items-center justify-between group-hover:text-emerald-400 transition-colors">
+                <span class="text-xs font-black uppercase tracking-widest">Explore Directory</span>
+                <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+              </div>
             </a>
-          </div>
-        </>
-      )}
+          );
+        })}
+      </div>
+    ) : (
+      <div class="text-center py-24 glass-card border-dashed border-white/10">
+        <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg class="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+        <p class="text-slate-400 text-lg font-medium mb-6">No air quality testing providers listed yet.</p>
+        <a href="/contact" class="inline-flex items-center gap-2 px-8 py-3 bg-white/5 hover:bg-white/10 text-white font-bold rounded-full transition-all border border-white/10">
+          Be the first to list here
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+          </svg>
+        </a>
+      </div>
+    )}
 
-      <!-- CTA Section -->
-      {totalListings > 0 && (
-        <div class="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
-          <h2 class="text-xl font-bold text-blue-900 mb-2">
-            List Your Air Quality Testing Services
-          </h2>
-          <p class="text-gray-700 mb-4">
-            Reach thousands of customers searching for air quality monitoring and emissions testing services. Free basic listings available.
-          </p>
-          <a
-            href="/contact"
-            class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
-          >
-            Get Listed
+    <!-- CTA Section -->
+    {totalListings > 0 && (
+      <div class="mt-20 glass-card p-10 border-blue-500/20 bg-gradient-to-r from-blue-600/10 to-emerald-500/10 relative overflow-hidden group">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] rounded-full -mr-32 -mt-32"></div>
+        <div class="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+          <div class="text-center md:text-left">
+            <h2 class="text-3xl font-black text-white mb-3">List Your Air Quality Lab</h2>
+            <p class="text-slate-400 text-lg">Reach thousands of customers searching for air quality monitoring and emissions testing services.</p>
+          </div>
+          <a href="/pricing" class="px-10 py-4 bg-white text-black font-black uppercase tracking-widest rounded-full hover:bg-emerald-400 transition-all hover:scale-110 shadow-xl text-center whitespace-nowrap">
+            Get Listed Now
           </a>
         </div>
-      )}
-
-    </main>
-
-    <!-- Footer -->
-    <Footer />
-  </body>
-</html>
+      </div>
+    )}
+  </main>
+</BaseLayout>

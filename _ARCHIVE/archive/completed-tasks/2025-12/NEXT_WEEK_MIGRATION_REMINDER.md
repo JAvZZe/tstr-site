@@ -46,7 +46,7 @@
 - **Master file:** `/media/al/AI_DATA/AI_PROJECTS_SPACE/TSTR_CREDENTIALS_MASTER.md`
 - **Current keys:**
   - PUBLIC_SUPABASE_URL: https://haimjeaetrsaauitrhfy.supabase.co
-  - PUBLIC_SUPABASE_ANON_KEY: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
+  - PUBLIC_SUPABASE_ANON_KEY: sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4
 
 ---
 

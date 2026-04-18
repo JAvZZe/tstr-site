@@ -166,13 +166,13 @@ cd "/home/al/AI_PROJECTS_SPACE" && ./handoff.sh <agent> <reason>
 - **Backend**: `web/tstr-automation/` (Python scrapers, automation)
 - **Database**: Supabase (https://haimjeaetrsaauitrhfy.supabase.co)
 - **API Keys**:
-  - Publishable: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
-  - Service Role: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDQzNjU4NSwiZXhwIjoyMDc2MDEyNTg1fQ.zd47WtS1G1XzjP1obmr_lxHU_xJWtlhhu4ktm9xC5hA
+  - Publishable: sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4
+  - Service Role: [REDACTED_SECRET]
 
 - **MCP Server**: ✅ Configured in `web/tstr-automation/TSTR1.mcp.json`
   - Server: @supabase/mcp-server-supabase@latest
   - Project Ref: haimjeaetrsaauitrhfy
-  - Access Token: sbp_e290bc7ea1ba64ae4b0be38134b7b4a67ca24e04
+  - Access Token: [REDACTED_SECRET]
   - Mode: Read-only
 
 - **Website**: http://tstr.directory (LIVE - 163 listings as of 2025-11-17)

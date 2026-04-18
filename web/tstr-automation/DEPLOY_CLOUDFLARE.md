@@ -79,7 +79,7 @@ This is CRITICAL - your site needs to connect to Supabase!
 
 **Variable 2:**
 - Variable name: `PUBLIC_SUPABASE_ANON_KEY`
-- Value: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNjAxNTksImV4cCI6MjA3NTYzNjE1OX0.1SoHZoMAeap4p2Fy4HxzHJ4IRZWZ78VamGd0JWQ0OqM`
+- Value: `sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4`
 
 **IMPORTANT:** Make sure there are NO spaces before or after the values!
 

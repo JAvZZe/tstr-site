@@ -213,10 +213,8 @@ Added `flex-shrink-0` to prevent SVGs from stretching. This is deployed and work
 
 ### About the Supabase Key
 **The service role key:**
-- Is ~240 characters (JWT format)
-- Starts with `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9`
-- Contains claims: `{iss, ref, role, iat, exp}`
-- Has signature at end: `.sb_secret_...`
+- Current format: `[REDACTED_SECRET]`
+- No longer uses the old JWT format starting with `eyJhbGci...`
 - **Must match the Supabase project exactly**
 
 ### Verified Information

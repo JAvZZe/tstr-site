@@ -143,7 +143,7 @@ cd "/home/al/AI_PROJECTS_SPACE" && ./handoff.sh <agent> <reason>
 
 - Server: @supabase/mcp-server-supabase@latest
 - Project Ref: haimjeaetrsaauitrhfy
-- Access Token: sbp_e290bc7ea1ba64ae4b0be38134b7b4a67ca24e04
+- Access Token: [REDACTED_SECRET]
 - Mode: Read-only
 
 **Website**: <http://tstr.directory> (LIVE - 163 listings as of 2025-11-17)

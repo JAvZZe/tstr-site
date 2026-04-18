@@ -4,8 +4,8 @@ import httpx
 
 # Configuration
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
-# Service Key (from web/tstr-automation/.env)
-SUPABASE_KEY = "sb_secret_[REDACTED]" 
+import os
+SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") 
 
 HEADERS = {
     "apikey": SUPABASE_KEY,

@@ -10,8 +10,8 @@
 ### Supabase
 ```bash
 SUPABASE_URL=https://haimjeaetrsaauitrhfy.supabase.co
-SUPABASE_ANON_KEY=sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2
-SUPABASE_SERVICE_ROLE_KEY=sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2
+SUPABASE_ANON_KEY=[REDACTED_SECRET]
+SUPABASE_SERVICE_ROLE_KEY=[REDACTED_SECRET]
 ```
 
 ### Google Cloud
@@ -64,7 +64,7 @@ netlify deploy --prod
 
 # Set environment variables
 netlify env:set PUBLIC_SUPABASE_URL "https://haimjeaetrsaauitrhfy.supabase.co"
-netlify env:set PUBLIC_SUPABASE_ANON_KEY "sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2"
+netlify env:set PUBLIC_SUPABASE_ANON_KEY "[REDACTED_SECRET]"
 ```
 
 ### Google Cloud Scheduler

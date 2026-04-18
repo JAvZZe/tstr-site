@@ -25,7 +25,8 @@ def verify_migration():
     if not supabase_key:
         logging.error("SUPABASE_SERVICE_ROLE_KEY environment variable not set")
         logging.info("Using anon key for read-only verification")
-        supabase_key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg4NTA4NjEsImV4cCI6MjA0NDQyNjg2MX0.EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO'
+        import os
+        supabase_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
 
     logging.info(f"Connecting to Supabase: {supabase_url}")
     supabase = create_client(supabase_url, supabase_key)

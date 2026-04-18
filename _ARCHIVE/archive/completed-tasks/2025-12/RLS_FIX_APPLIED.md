@@ -151,8 +151,8 @@ fix: Remove .select() from form submission to work with RLS policy
 
 ```bash
 curl -s "https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/listings?status=eq.pending&select=id,business_name,phone,status,created_at&order=created_at.desc&limit=5" \
-  -H "apikey: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO" \
-  -H "Authorization: Bearer sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO"
+  -H "apikey: sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4" \
+  -H "Authorization: Bearer sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4"
 ```
 
 **Expected**: Should show pending submissions (but only with service role key, not anon key)

@@ -2,7 +2,7 @@ const { createClient } = require('@supabase/supabase-js');
 
 // Configuration
 const SUPABASE_URL = 'https://haimjeaetrsaauitrhfy.supabase.co';
-const SUPABASE_SERVICE_KEY = 'sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2';
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 

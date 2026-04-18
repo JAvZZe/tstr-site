@@ -83,7 +83,7 @@ Value: https://haimjeaetrsaauitrhfy.supabase.co
 **Variable 2:**
 ```
 Key:   PUBLIC_SUPABASE_ANON_KEY
-Value: sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2
+Value: [REDACTED_SECRET]
 ```
 
 ### 3d. Deploy!

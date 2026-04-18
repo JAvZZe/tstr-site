@@ -8,11 +8,11 @@ const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsa
 // Anon key - safe for client-side use (RLS policies protect data)
 // Safe key selection: Prefer env var ONLY if it matches new format (starts with sb_), otherwise use known good fallback
 const envKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-const fallbackKey = 'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO'
+const fallbackKey = 'sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4'
 export const supabaseAnonKey = (envKey && envKey.startsWith('sb_')) ? envKey : fallbackKey
 
-// Legacy JWT Anon Key - Required for Edge Function "Authorization: Bearer" header (Supabase Gateway requirement)
-export const supabaseAnonJwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MzY1ODUsImV4cCI6MjA3NjAxMjU4NX0.BIOfni1c1JPrVw-CbGsPWeqjvl94g4GuGAILHwNfVJ4'
+// Legacy JWT Anon Key - No longer needed as new sb_publishable_* keys work as Bearer tokens
+export const supabaseAnonJwt = 'sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4'
 
 export const supabaseBrowser = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {

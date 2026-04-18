@@ -33,13 +33,13 @@ These are undefined on the server, causing the Supabase client to fail.
    **Variable 2:**
    ```
    Key:   PUBLIC_SUPABASE_ANON_KEY
-    Value: sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2
+    Value: [REDACTED_SECRET]
    ```
 
    **Variable 3 (CRITICAL):**
    ```
    Key:   SUPABASE_SERVICE_ROLE_KEY
-   Value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyOTQ0ODQzNywiZXhwIjoyMDQ1MDI0NDM3fQ.sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2
+   Value: [REDACTED_SECRET]
    ```
 
 4. **Trigger Redeploy:**
@@ -147,9 +147,9 @@ Should show the test email.
 ```
 PUBLIC_SUPABASE_URL=https://haimjeaetrsaauitrhfy.supabase.co
 
-PUBLIC_SUPABASE_ANON_KEY=sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2
+PUBLIC_SUPABASE_ANON_KEY=[REDACTED_SECRET]
 
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDQzNjU4NSwiZXhwIjoyMDc2MDEyNTg1fQ.zd47WtS1G1XzjP1obmr_lxHU_xJWtlhhu4ktm9xC5hA
+SUPABASE_SERVICE_ROLE_KEY=[REDACTED_SECRET]
 ```
 
 **Note:** Some platforms allow you to paste this format directly. Others require you to add each variable individually.

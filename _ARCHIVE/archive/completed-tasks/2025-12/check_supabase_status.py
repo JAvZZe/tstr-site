@@ -9,7 +9,7 @@ from supabase import create_client, Client
 
 def main():
     supabase_url = os.getenv('PUBLIC_SUPABASE_URL', 'https://haimjeaetrsaauitrhfy.supabase.co')
-    anon_key = os.getenv('PUBLIC_SUPABASE_ANON_KEY', 'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO')
+    anon_key = os.getenv('PUBLIC_SUPABASE_ANON_KEY', 'sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4')
     
     print("🔍 Checking Supabase Status...")
     print(f"URL: {supabase_url}")

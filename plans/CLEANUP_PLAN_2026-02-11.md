@@ -374,7 +374,7 @@ The section (lines 152-154) should look like:
 
 ```markdown
 **API Keys**:
-- Publishable: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
+- Publishable: sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4
 - Service Role: [REDACTED - stored in .env and Cloudflare dashboard]
 ```
 

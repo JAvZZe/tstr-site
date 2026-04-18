@@ -49,13 +49,13 @@ This loads:
 ## 🔑 SUPABASE CONFIGURATION
 
 **URL**: https://haimjeaetrsaauitrhfy.supabase.co
-**Anon Key**: sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO
-**Service Role Key**: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDQzNjU4NSwiZXhwIjoyMDc2MDEyNTg1fQ.zd47WtS1G1XzjP1obmr_lxHU_xJWtlhhu4ktm9xC5hA
+**Anon Key**: sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4
+**Service Role Key**: [REDACTED_SECRET]
 
 **MCP Server**: ✅ Configured in `web/tstr-automation/TSTR1.mcp.json`
 - Server: @supabase/mcp-server-supabase@latest
 - Project Ref: haimjeaetrsaauitrhfy
-- Access Token: sbp_e290bc7ea1ba64ae4b0be38134b7b4a67ca24e04
+- Access Token: [REDACTED_SECRET]
 - Mode: Read-only
 
 ## 🔄 DEPLOYMENT NOTES

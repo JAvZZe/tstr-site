@@ -8,7 +8,7 @@ import sys
 
 # Supabase project details
 PROJECT_REF = "haimjeaetrsaauitrhfy"
-SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhaW1qZWFldHJzYWF1aXRyaGZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyOTc2OTI1NywiZXhwIjoyMDQ1MzQ1MjU3fQ.dR_zMUZlxkxZ-wrApS9XkV5maCBNdm-5HB5Mj0CnFRk"
+SERVICE_ROLE_KEY = "[REDACTED_SECRET]"
 
 # Read migration file
 with open("supabase/migrations/20251120000001_add_standards_and_capabilities.sql", "r") as f:

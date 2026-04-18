@@ -8,7 +8,7 @@ const https = require('https');
 const url = 'https://haimjeaetrsaauitrhfy.supabase.co/functions/v1/paypal-create-subscription';
 
 // Mock JWT token (this won't work for real auth, but let's see what error we get)
-const mockAuthToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+const mockAuthToken = 'sb_secret_MOCK_TOKEN_FOR_TESTING_PURPOSES_ONLY';
 
 const postData = JSON.stringify({
   tier: 'professional',
@@ -22,7 +22,7 @@ const options = {
     'Content-Type': 'application/json',
     'Content-Length': Buffer.byteLength(postData),
     'Authorization': `Bearer ${mockAuthToken}`,
-    'apikey': 'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO'
+    'apikey': 'sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4'
   }
 };
 

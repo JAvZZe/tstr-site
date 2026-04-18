@@ -3,6 +3,61 @@
 import { supabase } from '../../lib/supabase';
 import NewsletterBanner from '../../components/NewsletterBanner';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatTitle, formatDescription } from '../../lib/seo';
+import { getRedirectUrl } from '../../lib/redirect';
+import AdUnit from '../../components/AdUnit.astro';
+
+// 1. SSR Edge Caching for Performance
+Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=3600');
+
+const { category } = Astro.params;
+
+// 2. Fetch Category Metadata
+const { data: categoryData, error: categoryError } = await supabase
+  .from('categories')
+  .select('id, name, slug, description, min_tier_required')
+  .eq('slug', category)
+  .single();
+
+if (categoryError || !categoryData) {
+  return Astro.redirect('/404');
+}
+
+// 3. Fetch Listings for this Category
+const { data: listings, error: listingsError } = await supabase
+  .from('listings')
+  .select(`
+    *,
+    location:location_id (
+      id,
+      name,
+      slug
+    )
+  `)
+  .eq('status', 'active')
+  .eq('category_id', categoryData.id)
+  .order('priority_rank', { ascending: false })
+  .order('created_at', { ascending: false });
+
+const totalListings = listings?.length || 0;
+const requiredTier = categoryData.min_tier_required || 'free';
+
+// 4. Group by Region for the Regional Directory
+const groupedByRegion = (listings || []).reduce((acc, listing) => {
+  const region = listing.region || 'global';
+  if (!acc[region]) acc[region] = [];
+  acc[region].push(listing);
+  return acc;
+}, {} as Record<string, any[]>);
+
+const sortedRegions = Object.entries(groupedByRegion).sort((a, b) => b[1].length - a[1].length);
+
+// 5. Filter Handling
+const regionFilter = Astro.url.searchParams.get('region');
+const isFiltered = !!regionFilter;
+const filteredListings = isFiltered 
+  ? listings?.filter(l => l.region?.toLowerCase() === regionFilter?.toLowerCase()) 
+  : listings;
 
 // Optimized SEO parts
 const pageTitle = formatTitle([categoryData.name, 'Regional Directory']);
@@ -12,13 +67,6 @@ const pageDescription = formatDescription(
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
-  <script is:inline slot="head" set:html={`
-    function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-    o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-    o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-    document.head.appendChild(o)}initApollo();
-  `}></script>
-
   <main class="max-w-7xl mx-auto px-6 py-12">
     <!-- Navigation Breadcrumbs -->
     <nav class="flex items-center gap-2 text-sm font-medium text-slate-500 mb-8 overflow-x-auto whitespace-nowrap pb-2 no-scrollbar">
@@ -44,6 +92,8 @@ const pageDescription = formatDescription(
         </p>
       )}
     </div>
+
+    <AdUnit type="horizontal" class="mb-12" />
 
     <!-- Error Handling -->
     {listingsError && (
@@ -237,52 +287,4 @@ const pageDescription = formatDescription(
       </div>
     )}
   </main>
-</BaseLayout>
-
-
-    <script>
-      import { supabaseBrowser } from '../../lib/supabase-browser'
-
-      async function checkTierGate() {
-        const gate = document.getElementById('category-content-gate')
-        const overlay = document.getElementById('paywall-overlay')
-        const dataContainer = document.getElementById('listings-data-container')
-        
-        if (!gate || !overlay) return
-
-        const requiredTier = gate.dataset.requiredTier || 'free'
-        if (requiredTier === 'free') return
-
-        // Check session
-        const { data: { session } } = await supabaseBrowser.auth.getSession()
-        let userTier = 'free'
-
-        if (session) {
-          const { data: profile } = await supabaseBrowser
-            .from('user_profiles')
-            .select('subscription_tier')
-            .eq('id', session.user.id)
-            .maybeSingle()
-          
-          if (profile) userTier = profile.subscription_tier
-        }
-
-        const tierRank = {
-          'free': 0,
-          'basic': 1,
-          'professional': 2,
-          'premium': 3,
-          'enterprise': 4
-        }
-
-        if (tierRank[userTier] < tierRank[requiredTier]) {
-          overlay.classList.remove('hidden')
-          if (dataContainer) {
-            dataContainer.classList.add('opacity-10', 'pointer-events-none', 'blur-sm')
-          }
-        }
-      }
-
-      checkTierGate()
-    </script>
 </BaseLayout>

@@ -3,6 +3,7 @@ import { supabase } from '../../lib/supabase'
 import { getRedirectUrl } from '../../lib/redirect'
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import ContactLabModal from '../../components/ContactLabModal'
+import AdUnit from '../../components/AdUnit.astro'
 
 // Disable static prerendering for performance - use SSR instead
 export const prerender = false
@@ -342,6 +343,7 @@ const pageDescription = formatDescription(
            </div>
         </div>
 
+        <AdUnit slot="sidebar-bottom" type="vertical" />
       </div>
     </div>
 
@@ -362,6 +364,7 @@ const pageDescription = formatDescription(
       </div>
     </div>
 
+    <AdUnit type="horizontal" class="mt-12" />
   </div>
 
   {/* Client-side Logic for Auth and Tracking */}
@@ -371,8 +374,8 @@ const pageDescription = formatDescription(
     
     // Use public anon key for browser-side checks
     const supabaseBrowser = createClient(
-      'https://haimjeaetrsaauitrhfy.supabase.co',
-      'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO'
+      import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co',
+      import.meta.env.PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4'
     )
 
     async function checkAuthAndClaimStatus() {

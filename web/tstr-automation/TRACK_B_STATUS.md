@@ -174,8 +174,8 @@ class OilGasScraper(BaseNicheScraper):
 
 ### Database State
 - **Supabase URL**: https://haimjeaetrsaauitrhfy.supabase.co
-- **Service Key**: `sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2`
-- **Anon Key**: `sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO`
+- **Service Key**: `[REDACTED_SECRET]`
+- **Anon Key**: `sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4`
 - **Tables Modified**:
   - `locations` - RLS policy added
   - `custom_fields` - 28 new rows

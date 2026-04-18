@@ -1,3 +1,4 @@
+import os
 #!/usr/bin/env python3
 """
 Add High-Yield niche testing providers for Under-served categories.
@@ -7,7 +8,7 @@ Aligned with PSEO 2.0 architecture and URL matrix.
 import requests
 
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
-SERVICE_ROLE_KEY = "sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2"
+SERVICE_ROLE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
 
 headers = {
     "apikey": SERVICE_ROLE_KEY,

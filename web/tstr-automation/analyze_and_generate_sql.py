@@ -9,8 +9,8 @@ NEW_LISTINGS_FILE = "/home/al/.gemini/antigravity/brain/2382ce1c-5eab-4fa7-97b6-
 SQL_OUTPUT_FILE = "insert_new_linkedin_companies.sql"
 JSON_OUTPUT_FILE = "insert_new_linkedin_companies.json" # Debug Output
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
-# Using the key found in get_current_listings.py
-SUPABASE_KEY = "sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2" 
+import os
+SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") 
 
 headers = {
     "apikey": SUPABASE_KEY,

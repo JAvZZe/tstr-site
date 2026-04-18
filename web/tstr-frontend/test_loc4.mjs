@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 // Use service role key to bypass RLS
 const supabase = createClient(
   'https://haimjeaetrsaauitrhfy.supabase.co',
-  'sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2'
+  '[REDACTED]'
 )
 
 // Check locations table with service role

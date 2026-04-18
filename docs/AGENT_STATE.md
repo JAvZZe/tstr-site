@@ -51,8 +51,9 @@ C:\Users\alber\OneDrive\Documents\.WORK\TSTR.directory
 ### **Supabase**
 ```
 URL: https://haimjeaetrsaauitrhfy.supabase.co
-Anon Key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-Service Role Key: sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2
+Anon Key: sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4
+Service Role Key: [REDACTED_SECRET] (FOR AGENT USE ONLY)
+
 
 Tables:
 - listings (19 verified entries)

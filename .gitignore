@@ -63,3 +63,11 @@ dev.pid
 current_listings.json
 
 /net-commander
+
+# MCP Configs (Contain sensitive tokens)
+web/tstr-automation/TSTR1.mcp.json
+
+# Local Key Repository (Sensitive)
+TSTR_hub_Supabase_Keys
+TSTR_hub_Supabase_Keys.md
+TSTR_HUB_Supabase_Keys.md

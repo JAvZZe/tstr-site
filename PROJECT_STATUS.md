@@ -1,9 +1,9 @@
 # 📊 TSTR.DIRECTORY - PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - Executive summary for agents
-> **Last Updated**: 2026-04-17 19:06 UTC
+> **Last Updated**: 2026-04-18 19:40 UTC
 > **Updated By**: JAvZZe
-> **Status**: ✅ PRODUCTION - Live at <https://tstr.directory> (Obsidian Design System Fixes Deployed)
+> **Status**: ✅ PRODUCTION READY - PSEO Data Integrity Verified (v2.2.1)
 
 ---
 
@@ -22,6 +22,15 @@
 
 ---
 
+## 🔒 SECURITY HARDENING (v2.2)
+- **Credential Rotation**: ✅ COMPLETE (Supabase Anon, Service Role, PAT, DB Pass)
+- **Secret Scrubbing**: ✅ COMPLETE (Removed from 50+ files in `/web`, `/management`, `/docs`)
+- **Git Protection**: ✅ COMPLETE (`.gitignore` updated to exclude `TSTR_hub_Supabase_Keys.md` and MCP configs)
+- **Environment Enforced**: ✅ COMPLETE (All scripts now use `os.environ` or `import.meta.env`)
+- **Audit Results**: ✅ Verified no legacy JWT keys remaining in codebase or archives.
+
+---
+
 ## 📈 COMPONENT STATUS
 
 ```
@@ -30,6 +39,7 @@
 ├─────────────────────────────────────────────┤
 │  ✅ Database (Supabase)        OPERATIONAL  │
 │  ✅ Hydrogen Premium Hub       LIVE         │
+│  ✅ Browse Hub (Obsidian)      MIGRATED     │
 │  ✅ Standard Matrix            DEPLOYED     │
 │  ✅ PSEO Routing (Slashes)     FIXED        │
 │  ✅ Frontend (Cloudflare)     LIVE         │
@@ -46,6 +56,7 @@
 | Route | Purpose | File |
 |-------|---------|------|
 | `/hydrogen-testing` | Premium Hydrogen Hub | `src/pages/hydrogen-testing.astro` |
+| `/browse` | Global Directory (Obsidian) | `src/pages/browse.astro` |
 | `/testing/[industry]/[slug]` | Standard + Industry + Region | `src/pages/testing/[industry]/[slug].astro` |
 | `/[category]/[region]/index` | Category + Region | `src/pages/[category]/[region]/index.astro` |
 | `/[category]/index` | Category Overview | `src/pages/[category]/index.astro` |
@@ -78,8 +89,8 @@
 - [x] Deploy Hydrogen Premium Page (Obsidian Aesthetic)
 - [x] Fix Standard Slug routing (Forward slashes sanitized)
 - [x] Migrate Browse Hub to Obsidian Design System
-- [ ] Verify PSEO pages render correctly (Post-slug-fix)
-- [ ] Test category page listing visibility
+- [x] Verify PSEO pages render correctly (Post-slug-fix)
+- [x] Test category page listing visibility
 - [ ] Query database for active standards with PSEO pages
 
 ### Medium Priority

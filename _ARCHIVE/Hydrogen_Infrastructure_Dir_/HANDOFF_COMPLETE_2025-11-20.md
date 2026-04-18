@@ -304,7 +304,7 @@ curl "https://tstr.site/api/search/by-standard?standard=ISO%2019880-3" | jq '.co
 
 # Check capabilities
 curl -s "https://haimjeaetrsaauitrhfy.supabase.co/rest/v1/listing_capabilities?select=count" \
-  -H "apikey: sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2" \
+  -H "apikey: [REDACTED_SECRET]" \
   -H "Prefer: count=exact"
 ```
 

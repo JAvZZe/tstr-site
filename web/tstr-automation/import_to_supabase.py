@@ -25,7 +25,8 @@ def import_data():
     load_dotenv(dotenv_path="../../.env")
 
     supabase_url = "https://haimjeaetrsaauitrhfy.supabase.co"
-    supabase_key = "sb_secret_zRN1fTFOYnN7cEbEIfAP7A_YrEKBfI2"
+    import os
+    supabase_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
 
     if not supabase_url or not supabase_key:
         print(

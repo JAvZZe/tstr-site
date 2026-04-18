@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
   'https://haimjeaetrsaauitrhfy.supabase.co',
-  'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO'
+  'sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4'
 )
 
 const { data: listings, error } = await supabase

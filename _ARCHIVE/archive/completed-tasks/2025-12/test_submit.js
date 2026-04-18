@@ -7,7 +7,7 @@ async function testSubmission() {
   try {
     // Get the existing supabase client from the page
     const supabaseUrl = 'https://haimjeaetrsaauitrhfy.supabase.co';
-    const supabaseKey = 'sb_publishable_EFSlg4kPRIvAYExPmyUJyA_7_BiJnHO'; // anon key
+    const supabaseKey = 'sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4'; // anon key
     
     const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
     const supabase = createClient(supabaseUrl, supabaseKey);
