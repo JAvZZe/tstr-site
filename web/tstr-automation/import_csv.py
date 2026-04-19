@@ -10,7 +10,6 @@ import os
 
 # Supabase config
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
-import os
 SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
 CATEGORY_ID = "a80a47e9-ca57-4712-9b55-d3139b98a6b7"  # environmental-testing
 DEFAULT_LOCATION_ID = "aac4019b-7e93-4aec-ba55-150103da7d6f"  # Global
