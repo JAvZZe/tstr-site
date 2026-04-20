@@ -1,13 +1,24 @@
 #!/usr/bin/env python3
+# ruff: noqa: E402
 """
 Load A2LA Materials Testing labs from pre-extracted JSONL data
 This bypasses the scraping issues and uses already-collected data
 """
 
+import os
+from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
+
 import json
 import logging
 import sys
-import os
+
 from supabase import create_client
 
 # Add parent directory to path
@@ -23,7 +34,7 @@ logger = logging.getLogger(__name__)
 
 # Credentials
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
-import os
+
 SUPABASE_SERVICE_ROLE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
 
 def load_a2la_labs(jsonl_file, limit=None):

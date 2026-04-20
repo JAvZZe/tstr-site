@@ -1,13 +1,20 @@
+# ruff: noqa: E402
 # Test Supabase Connection
-import os
-from dotenv import load_dotenv
-
-# Load environment variables from .env file
-load_dotenv()
 
 # Check if supabase library is installed
+import os
+from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
+# Load environment variables from .env file
+
 try:
-    from supabase import create_client, Client
+    from supabase import Client, create_client
     print("✅ Supabase library found")
 except ImportError:
     print("❌ Supabase library not installed")

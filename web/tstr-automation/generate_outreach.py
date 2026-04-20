@@ -7,6 +7,7 @@ import csv
 import os
 from datetime import datetime
 
+
 def generate_personalized_email(contact):
     """
     Generate personalized email based on contact info

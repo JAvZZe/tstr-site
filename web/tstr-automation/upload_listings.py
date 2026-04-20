@@ -1,12 +1,23 @@
+# ruff: noqa: E402
+
+import os
+from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
 
 import json
-import requests
-import os
+import re
 import sys
 import uuid
-import re
+
+import requests
 
 # CONFIG
+
 JSON_FILE = "insert_new_linkedin_companies.json"
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
 SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") 

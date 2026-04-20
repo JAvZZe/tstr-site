@@ -1,24 +1,33 @@
 #!/usr/bin/env python3
+# ruff: noqa: E402
 """
 Oil & Gas Testing Scraper using Playwright (bypasses Cloudflare)
 Scrapes Contract Laboratory petroleum testing directory
 """
 
 import os
+from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
+
+import logging
+import re
 import sys
 import time
-import re
-import logging
-from playwright.sync_api import sync_playwright
+
 from bs4 import BeautifulSoup
+from playwright.sync_api import sync_playwright
 
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from dotenv import load_dotenv
-from supabase import create_client
 
-load_dotenv()
+from supabase import create_client
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -159,6 +168,10 @@ def scrape_contract_laboratory(dry_run=False, limit=None):
                         logger.error(f"Error extracting lab from card: {e}")
                         continue
 
+                # Break if limit reached
+                if limit and len(listings) >= limit:
+                    break
+
                 # Rate limiting
                 time.sleep(2)
 
@@ -204,7 +217,7 @@ def scrape_contract_laboratory(dry_run=False, limit=None):
 
         logger.info(f"\nSaved: {saved_count}, Duplicates: {duplicate_count}")
 
-    return listings
+    return len(listings)
 
 
 if __name__ == "__main__":

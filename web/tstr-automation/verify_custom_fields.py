@@ -1,17 +1,25 @@
 #!/usr/bin/env python3
+# ruff: noqa: E402
 """Verify custom fields are properly populated and displaying correctly"""
+
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 from supabase import create_client
 
-# Direct credentials
-SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
-import os
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://haimjeaetrsaauitrhfy.supabase.co")
 SUPABASE_SERVICE_ROLE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
 
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
 # Get environmental testing category
 result = supabase.from_('categories').select('id').eq('slug', 'environmental-testing').execute()
+if not result.data:
+    print("Error: environmental-testing category not found")
+    exit(1)
 cat_id = result.data[0]['id']
 
 # Get custom field definitions for this category
@@ -65,14 +73,17 @@ print("=" * 70)
 
 # Get total custom field values
 all_values = supabase.from_('listing_custom_fields').select('listing_id').execute()
-print(f"Total custom field values in database: {len(all_values.data)}")
+if all_values.data:
+    print(f"Total custom field values in database: {len(all_values.data)}")
 
-# Count by listing
-values_by_listing = {}
-for val in all_values.data:
-    listing_id = val['listing_id']
-    values_by_listing[listing_id] = values_by_listing.get(listing_id, 0) + 1
+    # Count by listing
+    values_by_listing = {}
+    for val in all_values.data:
+        listing_id = val['listing_id']
+        values_by_listing[listing_id] = values_by_listing.get(listing_id, 0) + 1
 
-print(f"Average custom fields per listing: {len(all_values.data) / len(values_by_listing):.1f}")
-print(f"Min fields per listing: {min(values_by_listing.values())}")
-print(f"Max fields per listing: {max(values_by_listing.values())}")
+    print(f"Average custom fields per listing: {len(all_values.data) / len(values_by_listing):.1f}")
+    print(f"Min fields per listing: {min(values_by_listing.values())}")
+    print(f"Max fields per listing: {max(values_by_listing.values())}")
+else:
+    print("No custom field values found.")

@@ -1,13 +1,23 @@
 #!/usr/bin/env python3
+# ruff: noqa: E402
 """
 Base Scraper for tstr.directory Niche-Specific Intelligence Collection
 Abstract base class providing common functionality for all niche scrapers
 """
 
 import os
+from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
+
+import logging
 import re
 import time
-import logging
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional
 from urllib.parse import urlparse
@@ -15,15 +25,13 @@ from urllib.robotparser import RobotFileParser
 
 import requests
 from bs4 import BeautifulSoup
-from supabase import create_client
-from dotenv import load_dotenv
 
-from location_parser import LocationParser
-from url_validator import URLValidator
 from conglomerates import detect_parent
+from location_parser import LocationParser
+from supabase import create_client
+from url_validator import URLValidator
 
 # Load environment variables
-load_dotenv()
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -88,21 +96,17 @@ class BaseNicheScraper(ABC):
 
             # Get category_id from database
             self.category_id = self._get_category_id()
-
+        # Initialize utility components
+        if not dry_run:
+            self.location_parser = LocationParser(self.supabase)
             # Load custom fields for this category
             self.custom_fields = self._load_custom_fields()
-
-            # Initialize location parser
-            self.location_parser = LocationParser(self.supabase)
         else:
             self.supabase = None
             self.category_id = None
             self.custom_fields = []
             self.location_parser = None
 
-        # Initialize utility components
-        if not dry_run:
-            self.location_parser = LocationParser(self.supabase)
         self.url_validator = URLValidator()
 
         # Initialize requests session with headers
@@ -342,7 +346,7 @@ class BaseNicheScraper(ABC):
         raise NotImplementedError("Subclass must implement extract_custom_fields()")
 
     @abstractmethod
-    def get_listing_urls(self) -> List[str]:
+    def get_listing_urls(self, limit: Optional[int] = None) -> List[str]:
         """
         Get list of listing URLs to scrape
 
@@ -456,6 +460,10 @@ class BaseNicheScraper(ABC):
         Save listing to database (listings + custom field values). 
         Updates existing listing if found.
         """
+        if self.dry_run:
+            self.stats["listings_saved"] += 1
+            return f"dry-run-{hash(str(standard_fields))}"
+
         try:
             # Check for existing record
             existing_id = self.find_existing_id(
@@ -476,13 +484,19 @@ class BaseNicheScraper(ABC):
             parent_name = detect_parent(business_name)
             parent_id = self._get_or_create_parent_id(parent_name) if parent_name else None
 
+            # Ensure we have a valid location_id (mandatory in database)
+            location_id = standard_fields.get("location_id")
+            if not location_id and self.location_parser:
+                location_id = self.location_parser.get_global_id()
+                logger.warning(f"Using Global location fallback for: {business_name}")
+
             # Prepare listing data
             listing_data = {
                 "business_name": business_name,
                 "slug": slug,
                 "description": standard_fields.get("description", ""),
                 "category_id": self.category_id,
-                "location_id": standard_fields.get("location_id"),
+                "location_id": location_id,
                 "address": standard_fields.get("address", ""),
                 "phone": standard_fields.get("phone", ""),
                 "email": standard_fields.get("email", ""),
@@ -631,42 +645,19 @@ class BaseNicheScraper(ABC):
         logger.info(f"Source: {self.source_name}")
         logger.info("=" * 70)
 
+        self.dry_run = dry_run
         if dry_run:
             logger.info("DRY RUN MODE - No database writes")
             dry_run_data = []
 
         # Get listing URLs
-        listing_urls = self.get_listing_urls()
+        listing_urls = self.get_listing_urls(limit=limit)
         logger.info(f"Found {len(listing_urls)} listings to scrape")
-
-        if limit:
-            listing_urls = listing_urls[:limit]
-            logger.info(f"Limiting to {limit} listings")
 
         # Scrape each listing
         for idx, url in enumerate(listing_urls, 1):
             logger.info(f"\n[{idx}/{len(listing_urls)}] Processing listing...")
-
-            if dry_run:
-                # Extract data but don't save
-                soup = self.fetch_page(url)
-                if soup:
-                    logger.info("  Successfully fetched")
-                    # Extract fields
-                    standard_fields = self.extract_standard_fields(soup, url)
-                    custom_fields = self.extract_custom_fields(soup, url)
-                    # Combine
-                    listing_data = {**standard_fields, **custom_fields}
-                    dry_run_data.append(listing_data)
-                else:
-                    # If no soup (e.g., for cached data), try to extract from URL or skip
-                    logger.info("  Using cached data")
-                    standard_fields = self.extract_standard_fields(None, url)
-                    custom_fields = self.extract_custom_fields(None, url)
-                    listing_data = {**standard_fields, **custom_fields}
-                    dry_run_data.append(listing_data)
-            else:
-                self.scrape_listing(url)
+            self.scrape_listing(url)
 
         # Write to CSV in dry run
         if dry_run and dry_run_data:
@@ -678,7 +669,6 @@ class BaseNicheScraper(ABC):
     def _write_dry_run_csv(self, data: List[Dict]):
         """Write dry run data to CSV file"""
         import csv
-        import os
 
         if not data:
             return

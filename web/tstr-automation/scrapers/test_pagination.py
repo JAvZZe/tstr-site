@@ -2,9 +2,11 @@
 """
 Test if pagination actually changes content or shows same results
 """
-from playwright.sync_api import sync_playwright
-from bs4 import BeautifulSoup
 import time
+
+from bs4 import BeautifulSoup
+from playwright.sync_api import sync_playwright
+
 
 def test_pagination():
     base_url = 'https://www.contractlaboratory.com'

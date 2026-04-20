@@ -1,13 +1,22 @@
+# ruff: noqa: E402
+
 import os
-import logging
-from typing import Optional
-from supabase import create_client
 from dotenv import load_dotenv
-from conglomerates import detect_parent
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
+import logging
 import re
+from typing import Optional
+
+from conglomerates import detect_parent
+from supabase import create_client
 
 # Load environment variables
-load_dotenv()
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)

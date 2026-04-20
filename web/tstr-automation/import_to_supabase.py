@@ -1,7 +1,17 @@
-import csv
-from supabase import create_client, Client
+# ruff: noqa: E402
+import os
 from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
+import csv
 import re
+
+from supabase import Client, create_client
 
 
 def create_slug(text):
@@ -25,7 +35,6 @@ def import_data():
     load_dotenv(dotenv_path="../../.env")
 
     supabase_url = "https://haimjeaetrsaauitrhfy.supabase.co"
-    import os
     supabase_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
 
     if not supabase_url or not supabase_key:

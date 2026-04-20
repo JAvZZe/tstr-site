@@ -1,10 +1,20 @@
+# ruff: noqa: E402
 import os
-import requests
+from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
 import json
 import re
-from dotenv import load_dotenv
+
+import requests
 
 # Path to .env
+
 env_path = "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-frontend/.env"
 load_dotenv(env_path)
 

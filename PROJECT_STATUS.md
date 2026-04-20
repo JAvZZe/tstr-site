@@ -1,9 +1,9 @@
 # 📊 TSTR.DIRECTORY - PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - Executive summary for agents
-> **Last Updated**: 2026-04-18 20:55 UTC
-> **Updated By**: JAvZZe
-> **Status**: ✅ PRODUCTION READY - AdSense Verified & Automation Hardened (v2.2.4)
+> **Last Updated**: 2026-04-19 18:55 UTC
+> **Updated By**: Antigravity (Gemini)
+> **Status**: ✅ PRODUCTION READY - Automated Enrichment & Suite Hardening (v2.2.6)
 
 
 ---
@@ -92,6 +92,10 @@
 - [x] Migrate Browse Hub to Obsidian Design System
 - [x] Verify PSEO pages render correctly (Post-slug-fix)
 - [x] Test category page listing visibility
+- [x] Standardize Scraper Suite (BaseNicheScraper inheritance)
+- [x] Hardened Location Parsing (International support & hierarchy fixes)
+- [x] Automate Directory Enrichment (LinkedIn + Website discovery)
+- [x] Setup systemd automation for local enrichment runs
 - [ ] Query database for active standards with PSEO pages
 
 ### Medium Priority

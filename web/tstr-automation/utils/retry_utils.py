@@ -1,6 +1,17 @@
-import time
+# ruff: noqa: E402
+import os
+from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
 import logging
-from typing import Callable, Any
+import time
+from typing import Any, Callable
+
 
 def retry_with_backoff(
     func: Callable,

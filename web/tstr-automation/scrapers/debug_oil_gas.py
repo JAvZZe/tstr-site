@@ -5,8 +5,9 @@ Debug script to inspect Contract Laboratory HTML structure
 import os
 import sys
 import time
-from playwright.sync_api import sync_playwright
+
 from bs4 import BeautifulSoup
+from playwright.sync_api import sync_playwright
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 

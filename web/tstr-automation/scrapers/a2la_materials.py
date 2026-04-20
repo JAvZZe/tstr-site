@@ -4,14 +4,15 @@ A2LA Materials Testing Scraper
 Extracts ISO/IEC 17025 accredited materials testing laboratories from A2LA directory
 """
 
-import re
 import logging
-from typing import Dict, List
-from bs4 import BeautifulSoup
+import os
+import re
+import sys
+from typing import Dict, List, Optional
 from urllib.parse import urlencode
 
-import sys
-import os
+from bs4 import BeautifulSoup
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from base_scraper import BaseNicheScraper
@@ -141,7 +142,7 @@ class A2LAMaterialsScraper(BaseNicheScraper):
             '65',  # Nondestructive Field of Testing
         ]
 
-    def get_listing_urls(self) -> List[str]:
+    def get_listing_urls(self, limit: Optional[int] = None) -> List[str]:
         """
         Get list of lab detail URLs
 
@@ -167,6 +168,10 @@ class A2LAMaterialsScraper(BaseNicheScraper):
             ]
 
         listing_urls = []
+        if limit:
+            seed_lab_pids = seed_lab_pids[:limit]
+            logger.info(f"Limiting to {limit} PIDs")
+
         for lab_pid in seed_lab_pids:
             url = f"https://customer.a2la.org/index.cfm?event=directory.detail&labPID={lab_pid}"
             listing_urls.append(url)
@@ -420,6 +425,13 @@ class A2LAMaterialsScraper(BaseNicheScraper):
             custom_fields['project_lead_time'] = [lead_time_found]
 
         return custom_fields
+
+
+def scrape_a2la_materials(dry_run: bool = False, limit: Optional[int] = None) -> int:
+    """Wrapper for main_scraper orchestration"""
+    scraper = A2LAMaterialsScraper()
+    scraper.run(limit=limit, dry_run=dry_run)
+    return scraper.stats["listings_saved"]
 
 
 def main():

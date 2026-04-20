@@ -1,11 +1,20 @@
+# ruff: noqa: E402
 """
 Create pending_research table in Supabase
 """
 
 import os
 from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
-load_dotenv()
+
+
+# Load environment variables from .env file in the same directory as this script
+
+
+
+
 
 def create_table():
     """Create the pending_research table"""

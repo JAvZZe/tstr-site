@@ -4,9 +4,9 @@ tstr.directory OCI Scraper Runner
 Daily cron job that runs all scrapers
 """
 
+import logging
 import os
 import sys
-import logging
 from datetime import datetime
 
 # Add current directory to path

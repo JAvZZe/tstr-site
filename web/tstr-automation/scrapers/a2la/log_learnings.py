@@ -2,6 +2,7 @@
 """Log learnings from A2LA A/B test to system database"""
 
 import sys
+
 sys.path.insert(0, "/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state")
 
 from db_utils import add_learning

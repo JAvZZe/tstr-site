@@ -1,17 +1,29 @@
 #!/usr/bin/env python3
+# ruff: noqa: E402
 """
 Export tstr.directory listings to Google Sheets or CSV
 Supports both Google Sheets API and local CSV export
 """
 
+import os
+from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
+
 import csv
 import sys
 from datetime import datetime
+
 from supabase import create_client
 
 # Credentials
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
-import os
+
 SUPABASE_SERVICE_ROLE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
 
 def export_to_csv(category_slug=None, output_file=None):
