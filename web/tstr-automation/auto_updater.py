@@ -3,9 +3,12 @@ Automated Content Updater for tstr.directory
 Runs continuously to scrape new listings and check for updates
 """
 
-import schedule
 import time
+
+import schedule
+
 from scraper import TestingLabScraper
+
 
 def run_scraping_job():
     """

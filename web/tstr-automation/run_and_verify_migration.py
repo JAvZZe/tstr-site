@@ -1,13 +1,24 @@
 #!/usr/bin/env python3
+# ruff: noqa: E402
 """
 Run migration and verify results using Supabase client
 Requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables
 """
 
 import os
-import sys
-from supabase import create_client
+from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
+
 import logging
+import sys
+
+from supabase import create_client
 
 # Setup logging
 logging.basicConfig(
@@ -25,7 +36,6 @@ def verify_migration():
     if not supabase_key:
         logging.error("SUPABASE_SERVICE_ROLE_KEY environment variable not set")
         logging.info("Using anon key for read-only verification")
-        import os
         supabase_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
 
     logging.info(f"Connecting to Supabase: {supabase_url}")

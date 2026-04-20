@@ -1,8 +1,15 @@
-import os
-from supabase import create_client, Client
-from dotenv import load_dotenv
+# ruff: noqa: E402
 
-load_dotenv()
+import os
+from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
+from supabase import Client, create_client
 
 url = os.environ.get("SUPABASE_URL")
 key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")

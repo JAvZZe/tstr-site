@@ -5,13 +5,14 @@ Extracts petroleum testing laboratories from Contract Laboratory directory
 Source: https://www.contractlaboratory.com/directory/laboratories/by-industry.cfm?i=45
 """
 
-import re
 import logging
+import os
+import re
+import sys
 from typing import Dict, List
+
 from bs4 import BeautifulSoup
 
-import sys
-import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from base_scraper import BaseNicheScraper

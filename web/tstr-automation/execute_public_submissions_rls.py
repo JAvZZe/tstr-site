@@ -1,10 +1,20 @@
 #!/usr/bin/env python3
+# ruff: noqa: E402
 """
 Execute RLS policy fix for public form submissions to listings table
 Allows anonymous users to submit pending listings
 """
-import subprocess
 import os
+from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
+
+import subprocess
 import sys
 
 # Read the migration SQL

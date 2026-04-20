@@ -3,6 +3,7 @@ import logging
 from datetime import datetime
 from typing import Any
 
+
 def json_log(level: str, message: str, **data: Any) -> None:
     """
     Log a message as a JSON object for structured logging.

@@ -1,16 +1,28 @@
 #!/usr/bin/env python3
+# ruff: noqa: E402
 """
 EPA Approved Environmental Testing Labs Scraper
 Extracts EPA approved environmental testing laboratories from EPA EMC directory
 Data source: https://www.epa.gov/emc/epa-approved-test-labs-and-third-party-certifiers-table
 """
 
-import re
+import os
+from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
+
 import logging
-import requests
-from bs4 import BeautifulSoup
+import re
 from typing import Dict, List
 from urllib.parse import urljoin
+
+import requests
+from bs4 import BeautifulSoup
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

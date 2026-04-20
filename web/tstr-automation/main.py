@@ -3,15 +3,18 @@ Google Cloud Function Entry Points
 Wraps existing scrapers for cloud deployment
 """
 
-import functions_framework
 import json
 import logging
 from datetime import datetime
 
+import functions_framework
+
 # Import existing scrapers
 try:
-    from dual_scraper import DualPurposeScraper, load_config as load_dual_config
-    from scraper import ListingsScraperSecondary, load_config as load_secondary_config
+    from dual_scraper import DualPurposeScraper
+    from dual_scraper import load_config as load_dual_config
+    from scraper import ListingsScraperSecondary
+    from scraper import load_config as load_secondary_config
 except ImportError:
     # For local testing
     import sys
@@ -290,7 +293,8 @@ def run_cleanup(request):
 
 # For local testing
 if __name__ == "__main__":
-    from flask import Flask, request as flask_request
+    from flask import Flask
+    from flask import request as flask_request
     
     app = Flask(__name__)
     

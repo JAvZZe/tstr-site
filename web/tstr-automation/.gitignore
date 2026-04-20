@@ -1,12 +1,14 @@
 venv/
 .venv/
+fresh_venv/
 .env
 *.pyc
 __pycache__/
 
 # Exclude report and data files
-*.md
 *.txt
 *.csv
 *.sql
 
+# Allow specific documentation
+!ENRICHMENT_AUTOMATION_HANDOFF.md

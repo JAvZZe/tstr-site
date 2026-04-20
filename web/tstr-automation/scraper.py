@@ -1,3 +1,4 @@
+# ruff: noqa: E402
 """
 tstr.directory - Listings-Only Scraper (SECONDARY)
 Scrapes testing laboratory directory listings with duplicate detection
@@ -5,21 +6,30 @@ Checks Google Maps API availability, falls back to alternative sources
 Only scrapes new listings and detects changes
 """
 
+import os
+from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
+
+import csv
+import json
+import logging
+import time
+
 import requests
 from bs4 import BeautifulSoup
-import csv
-import time
-import json
-import os
-import logging
-from dotenv import load_dotenv
+
 from url_validator import URLValidator
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Load environment variables
-load_dotenv()
 
 class ListingsScraperSecondary:
     """

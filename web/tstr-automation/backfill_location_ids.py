@@ -1,15 +1,27 @@
 #!/usr/bin/env python3
+# ruff: noqa: E402
 """
 Backfill location_id for existing tstr.directory listings using libpostal
 Parses formatted_address to extract city, country, then links to locations table
 """
 
 import os
-import sys
-from postal.parser import parse_address
-from supabase import create_client
+from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
+
 import logging
-from typing import Optional, Dict
+import sys
+from typing import Dict, Optional
+
+from postal.parser import parse_address
+
+from supabase import create_client
 
 # Setup logging
 logging.basicConfig(

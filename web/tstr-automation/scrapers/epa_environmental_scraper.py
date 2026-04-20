@@ -5,247 +5,204 @@ Extracts EPA approved environmental testing laboratories from EPA EMC directory
 Data source: https://www.epa.gov/emc/epa-approved-test-labs-and-third-party-certifiers-table
 """
 
-import re
 import logging
-import requests
-from bs4 import BeautifulSoup
-from typing import Dict, List
+import os
+import re
+import sys
+from typing import Dict, List, Optional
 from urllib.parse import urljoin
 
-logging.basicConfig(level=logging.INFO)
+from bs4 import BeautifulSoup
+
+# Add parent directory to path to import base_scraper
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from base_scraper import BaseNicheScraper
+
 logger = logging.getLogger(__name__)
 
 
-class EPAScraper:
+class EPAEnvironmentalScraper(BaseNicheScraper):
     """
-    Simple scraper for EPA approved environmental testing labs
+    Scraper for EPA approved environmental testing labs inheriting from BaseNicheScraper
     """
 
-    def __init__(self):
+    def __init__(self, dry_run: bool = False):
+        super().__init__(
+            category_slug="environmental-testing",
+            source_name="EPA EMC Directory",
+            rate_limit_seconds=1.0,
+            dry_run=dry_run,
+        )
         self.base_url = "https://www.epa.gov"
         self.source_url = "https://www.epa.gov/emc/epa-approved-test-labs-and-third-party-certifiers-table"
-        self.category_slug = "environmental-testing"
+        self.labs_cache = []
 
-        # Initialize Supabase client
-        import os
-        from supabase import create_client
-
-        load_dotenv = __import__("dotenv").load_dotenv
-        load_dotenv()
-
-        supabase_url = os.getenv("SUPABASE_URL")
-        supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
-
-        if not supabase_url or not supabase_key:
-            raise ValueError("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY")
-
-        self.supabase = create_client(supabase_url, supabase_key)
-
-        # Get category_id
-        result = (
-            self.supabase.from_("categories")
-            .select("id")
-            .eq("slug", self.category_slug)
-            .single()
-            .execute()
-        )
-        self.category_id = result.data["id"]
-
-        # Set up session
-        self.session = requests.Session()
-        self.session.headers.update(
-            {
-                "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-            }
-        )
-
-    def scrape_labs(self) -> List[Dict]:
+    def get_listing_urls(self, limit: Optional[int] = None) -> List[str]:
         """
-        Scrape lab data from EPA page
+        Fetch the main table and return placeholder URLs for each lab
         """
-        logger.info("Scraping EPA approved environmental testing labs...")
-
+        logger.info(f"Fetching EPA labs from {self.source_url}...")
+        
         try:
             response = self.session.get(self.source_url)
             response.raise_for_status()
+            from bs4 import BeautifulSoup
             soup = BeautifulSoup(response.content, "html.parser")
-
-            labs = []
 
             # Find the table with lab data
             table = soup.find("table")
             if not table:
                 logger.error("No table found on EPA page")
-                return labs
+                return []
 
             # Skip header row
             rows = table.find_all("tr")[1:]
-
-            for row in rows:
+            
+            labs = []
+            for i, row in enumerate(rows):
+                if limit and len(labs) >= limit:
+                    break
+                    
                 cells = row.find_all("td")
                 if len(cells) < 6:
                     continue
 
-                try:
-                    # Extract data from table cells
-                    company_name = cells[0].get_text(strip=True)
-
-                    # Handle website link
-                    website_cell = cells[1]
-                    website = ""
-                    if website_cell.find("a"):
-                        website = website_cell.find("a")["href"]
-                        if not website.startswith("http"):
-                            website = urljoin(self.base_url, website)
-
-                    # Address
-                    address = cells[2].get_text(strip=True)
-
-                    # Contact info
-                    contact_cell = cells[3]
-                    contact_name = ""
-                    contact_email = ""
-                    contact_phone = ""
-
-                    # Parse contact info
-                    contact_text = contact_cell.get_text(separator="\n", strip=True)
-                    contact_lines = contact_text.split("\n")
-
-                    for line in contact_lines:
-                        line = line.strip()
-                        if "@" in line and not contact_email:
-                            # Extract email
-                            email_match = re.search(r"[\w\.-]+@[\w\.-]+\.\w+", line)
-                            if email_match:
-                                contact_email = email_match.group()
-                        elif re.search(r"\(\d{3}\)", line) or re.search(
-                            r"\d{3}-\d{3}", line
-                        ):
-                            # Phone number
-                            contact_phone = line
-                        elif line and not contact_name:
-                            # Name
-                            contact_name = line
-
-                    # Test lab and third party flags
-                    is_test_lab = cells[4].get_text(strip=True).lower() == "yes"
-                    is_third_party = cells[5].get_text(strip=True).lower() == "yes"
-
-                    # Approval expiration
-                    expires = cells[6].get_text(strip=True) if len(cells) > 6 else ""
-
-                    # Only include test labs
-                    if not is_test_lab:
-                        continue
-
-                    lab_data = {
-                        "company_name": company_name,
-                        "website": website,
-                        "address": address,
-                        "contact_name": contact_name,
-                        "contact_email": contact_email,
-                        "contact_phone": contact_phone,
-                        "is_third_party": is_third_party,
-                        "approval_expires": expires,
-                        "source_url": self.source_url,
-                    }
-
-                    labs.append(lab_data)
-                    logger.info(f"Found lab: {company_name}")
-
-                except Exception as e:
-                    logger.error(f"Error parsing row: {e}")
+                # Only include test labs
+                is_test_lab = cells[4].get_text(strip=True).lower() == "yes"
+                if not is_test_lab:
                     continue
 
-            logger.info(f"Successfully scraped {len(labs)} labs from EPA")
-            return labs
+                company_name = cells[0].get_text(strip=True)
+                
+                # Handle website link
+                website_cell = cells[1]
+                website = ""
+                if website_cell.find("a"):
+                    website = website_cell.find("a")["href"]
+                    if not website.startswith("http"):
+                        website = urljoin(self.base_url, website)
+
+                # Address
+                address = cells[2].get_text(strip=True)
+
+                # Contact info
+                contact_cell = cells[3]
+                contact_text = contact_cell.get_text(separator="\n", strip=True)
+                contact_lines = contact_text.split("\n")
+                
+                contact_email = ""
+                contact_phone = ""
+                for line in contact_lines:
+                    line = line.strip()
+                    if "@" in line and not contact_email:
+                        email_match = re.search(r"[\w\.-]+@[\w\.-]+\.\w+", line)
+                        if email_match:
+                            contact_email = email_match.group()
+                    elif re.search(r"\(\d{3}\)", line) or re.search(r"\d{3}-\d{3}", line):
+                        contact_phone = line
+
+                # Approval expiration
+                expires = cells[6].get_text(strip=True) if len(cells) > 6 else ""
+
+                lab_data = {
+                    "index": i,
+                    "business_name": company_name,
+                    "website": website,
+                    "address": address,
+                    "phone": contact_phone,
+                    "email": contact_email,
+                    "approval_expires": expires,
+                    "is_third_party": cells[5].get_text(strip=True).lower() == "yes"
+                }
+                
+                labs.append(lab_data)
+                
+            self.labs_cache = labs
+            logger.info(f"Found {len(labs)} EPA approved labs")
+            
+            # Return placeholder URLs using index
+            return [f"{self.source_url}#epa-{lab['index']}" for lab in labs]
 
         except Exception as e:
-            logger.error(f"Error scraping EPA page: {e}")
+            logger.error(f"Error fetching EPA labs: {e}")
             return []
 
-    def save_to_database(self, labs: List[Dict]) -> int:
-        """
-        Save labs to database
-        """
-        saved_count = 0
+    def extract_standard_fields(self, soup: BeautifulSoup, url: str) -> Dict:
+        """Extract standard fields from cache"""
+        index_match = re.search(r"#epa-(\d+)", url)
+        if not index_match:
+            return {}
+            
+        index = int(index_match.group(1))
+        lab_data = next((lab for lab in self.labs_cache if lab["index"] == index), None)
+        
+        if not lab_data:
+            return {}
+            
+        fields = {
+            "business_name": lab_data["business_name"],
+            "description": f"EPA approved environmental testing laboratory. Approval expires: {lab_data['approval_expires']}",
+            "address": lab_data["address"],
+            "phone": lab_data["phone"],
+            "email": lab_data["email"],
+            "website": lab_data["website"],
+            "location_id": None
+        }
+        
+        # Link location if not dry run
+        if fields["address"] and self.location_parser:
+            fields["location_id"] = self.location_parser.parse_and_link(
+                address=fields["address"]
+            )
+            
+        return fields
 
-        for lab in labs:
-            try:
-                # Check if lab already exists
-                existing = (
-                    self.supabase.from_("listings")
-                    .select("id")
-                    .eq("business_name", lab["company_name"])
-                    .execute()
-                )
+    def extract_custom_fields(self, soup: BeautifulSoup, url: str) -> Dict:
+        """Extract custom fields"""
+        # EPA approved labs usually focus on these
+        return {
+            "compliance_standards": ["EPA"],
+            "field_lab_services": ["Lab Only"],
+            "test_types": ["Air Quality", "Emissions Testing"]
+        }
 
-                if existing.data:
-                    logger.info(f"Lab already exists: {lab['company_name']}")
-                    continue
+    def scrape_listing(self, url: str) -> bool:
+        """Override to use cache instead of fetching"""
+        try:
+            standard_fields = self.extract_standard_fields(None, url)
+            if not standard_fields:
+                return False
+                
+            custom_fields = self.extract_custom_fields(None, url)
+            
+            listing_id = self.save_listing(standard_fields, custom_fields, url)
+            if listing_id:
+                self.stats["listings_scraped"] += 1
+                return True
+            return False
+        except Exception as e:
+            logger.error(f"Error scraping EPA listing {url}: {e}")
+            self.stats["listings_failed"] += 1
+            return False
 
-                # Create listing data
-                listing_data = {
-                    "business_name": lab["company_name"],
-                    "description": f"EPA approved environmental testing laboratory. Approval expires: {lab['approval_expires']}",
-                    "address": lab["address"],
-                    "phone": lab["contact_phone"],
-                    "email": lab["contact_email"],
-                    "website": lab["website"],
-                    "category_id": self.category_id,
-                    "source_script": "epa_environmental_scraper.py",
-                    "script_location": "web/tstr-automation/scrapers/",
-                    "status": "active",
-                }
 
-                # Insert listing
-                result = self.supabase.from_("listings").insert(listing_data).execute()
-
-                if result.data:
-                    listing_id = result.data[0]["id"]
-                    saved_count += 1
-
-                    # Add custom fields
-                    custom_fields = {
-                        "compliance_standards": ["EPA"],
-                        "field_lab_services": [
-                            "Lab Only"
-                        ],  # EPA approved labs are typically lab-based
-                        "test_types": [
-                            "Air Quality",
-                            "Emissions Testing",
-                        ],  # Based on EPA EMC focus
-                    }
-
-                    for field_name, field_value in custom_fields.items():
-                        if field_value:
-                            self.supabase.from_("custom_fields").insert(
-                                {
-                                    "listing_id": listing_id,
-                                    "field_name": field_name,
-                                    "field_value": field_value,
-                                }
-                            ).execute()
-
-                    logger.info(f"Saved lab: {lab['company_name']}")
-
-            except Exception as e:
-                logger.error(f"Error saving lab {lab['company_name']}: {e}")
-                continue
-
-        return saved_count
+def scrape_epa_environmental(dry_run: bool = False, limit: Optional[int] = None) -> int:
+    """Wrapper for main_scraper orchestration"""
+    scraper = EPAEnvironmentalScraper(dry_run=dry_run)
+    scraper.run(limit=limit, dry_run=dry_run)
+    return scraper.stats["listings_saved"]
 
 
 def main():
-    """Main function"""
-    scraper = EPAScraper()
-    labs = scraper.scrape_labs()
-
-    if labs:
-        saved = scraper.save_to_database(labs)
-        print(f"Successfully scraped {len(labs)} labs and saved {saved} new listings")
-    else:
-        print("No labs found")
+    import argparse
+    parser = argparse.ArgumentParser(description="EPA Environmental Scraper")
+    parser.add_argument("--limit", type=int, help="Limit number of listings")
+    parser.add_argument("--dry-run", action="store_true", help="Dry run mode")
+    args = parser.parse_args()
+    
+    scraper = EPAEnvironmentalScraper(dry_run=args.dry_run)
+    scraper.run(limit=args.limit, dry_run=args.dry_run)
 
 
 if __name__ == "__main__":

@@ -1,9 +1,19 @@
 #!/usr/bin/env python3
+# ruff: noqa: E402
 """
 Execute RLS fix for locations table
 """
-import subprocess
 import os
+from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
+
+import subprocess
 
 # Read the SQL file
 with open('/home/al/tstr-site-working/web/tstr-automation/migrations/fix_locations_rls.sql', 'r') as f:

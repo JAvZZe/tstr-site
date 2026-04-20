@@ -1,18 +1,29 @@
+# ruff: noqa: E402
 """
 tstr.directory - Dual-Purpose Scraper
 1. Scrape testing labs for directory listings (company info)
 2. Scrape decision-maker contacts for sales outreach (names, emails, LinkedIn)
 """
 
+import os
+from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
+
+import csv
+import json
+import logging
+import re
+import time
+
 import requests
 from bs4 import BeautifulSoup
-import csv
-import time
-import json
-import re
 
-import os
-import logging
 from url_validator import URLValidator
 
 # Setup basic logging

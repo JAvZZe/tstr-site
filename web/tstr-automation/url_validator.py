@@ -1,12 +1,25 @@
+# ruff: noqa: E402
 """
 URL Validation Module for TSTR Scrapers
 Validates URLs before adding them to the directory
 """
 
-import requests
+import os
+from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
+
 import logging
-from urllib.parse import urlparse
 import time
+from urllib.parse import urlparse
+
+import requests
+
 
 class URLValidator:
     """

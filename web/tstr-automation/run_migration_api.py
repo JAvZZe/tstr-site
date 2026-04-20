@@ -1,11 +1,20 @@
+# ruff: noqa: E402
 import os
-import json
-import urllib.request
-import urllib.error
-from collections import defaultdict
 from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
+import json
+import urllib.error
+import urllib.request
+from collections import defaultdict
 
 # Load env vars
+
 load_dotenv('/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/web/tstr-frontend/.env')
 
 SUPABASE_URL = os.getenv("PUBLIC_SUPABASE_URL")

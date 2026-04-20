@@ -1,15 +1,25 @@
 #!/usr/bin/env python3
+# ruff: noqa: E402
 """
 Location Parser for tstr.directory Scrapers
 Parses addresses using libpostal and links to hierarchical locations table
 """
 
 import os
+from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
+
+
 import logging
-from typing import Optional, Dict
+from typing import Dict, Optional
 
 # from postal.parser import parse_address  # Commented out due to dependency issues
-from supabase import create_client, Client
+from supabase import Client, create_client
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -73,6 +83,16 @@ class LocationParser:
             "singapore": "Singapore",  # City-state
             "dubai": "United Arab Emirates",  # City, but helps identify country
             "abu dhabi": "United Arab Emirates",
+            "germany": "Germany",
+            "france": "France",
+            "italy": "Italy",
+            "spain": "Spain",
+            "australia": "Australia",
+            "india": "India",
+            "china": "China",
+            "japan": "Japan",
+            "brazil": "Brazil",
+            "mexico": "Mexico",
         }
 
         # City-states that are both city and country
@@ -83,6 +103,13 @@ class LocationParser:
             "hong kong": "Hong Kong",
             "macau": "Macau",
         }
+
+    def get_global_id(self) -> str:
+        """
+        Return the UUID for the Global root location.
+        Ensures a valid location_id is always available for mandatory fields.
+        """
+        return self._get_or_create_location("Global", "global")["id"]
 
     def _load_locations_cache(self):
         """Load all existing locations from database into memory cache"""
@@ -132,34 +159,87 @@ class LocationParser:
             return {}
 
         try:
-            # Simple regex-based parsing as fallback for libpostal
             import re
-
-            # Pattern for US addresses: street, city, state zip
-            us_pattern = r"(.+?),\s*([^,]+),\s*([A-Z]{2})\s+(\d{5}(?:-\d{4})?)"
-            match = re.search(us_pattern, raw_address.strip())
-
+            raw_address = raw_address.strip()
             components = {}
+
+            # Pattern for US addresses with state and zip
+            # e.g., "123 Main St, Houston, TX 77001" or "123 Main St, Houston, TX 77001, USA"
+            us_pattern = r"(.+?),\s*([^,]+),\s*([A-Z]{2})\s+(\d{5}(?:-\d{4})?)(?:,\s*(.+))?"
+            match = re.search(us_pattern, raw_address)
+
             if match:
                 components["road"] = match.group(1).strip()
                 components["city"] = match.group(2).strip()
                 components["state"] = match.group(3).strip()
                 components["postcode"] = match.group(4).strip()
-                components["country"] = "United States"
-            else:
-                # Fallback: split by comma
-                parts = [p.strip() for p in raw_address.split(",")]
-                if len(parts) >= 1:
-                    components["road"] = parts[0]
-                if len(parts) >= 2:
-                    components["city"] = parts[-2]
-                if len(parts) >= 3:
-                    state_zip = parts[-1].split()
-                    if len(state_zip) >= 1:
-                        components["state"] = state_zip[0]
-                    if len(state_zip) >= 2:
-                        components["postcode"] = state_zip[1]
+                
+                country_part = match.group(5)
+                if country_part:
+                    components["country"] = self.normalize_country(country_part.strip())
+                else:
                     components["country"] = "United States"
+                return components
+
+            # Fallback for non-US or different formats: split by comma
+            parts = [p.strip() for p in raw_address.split(",")]
+            if len(parts) < 1:
+                return {}
+
+            # 1. Identify Country (usually the last part)
+            last_part = parts[-1]
+            normalized_last = self.normalize_country(last_part)
+            
+            # Check if last part is a known country (or alias)
+            is_known_country = False
+            # Check against our aliases
+            if last_part.lower() in self.country_aliases:
+                is_known_country = True
+            # Check against loaded cache (case-insensitive)
+            for key in self.location_cache:
+                if key.endswith(":country"):
+                    country_name = key.split(":")[0]
+                    if country_name == last_part.lower() or country_name == normalized_last.lower():
+                        is_known_country = True
+                        break
+            
+            if is_known_country:
+                components["country"] = normalized_last
+                parts.pop() # Remove country from parts
+            else:
+                # Default to US if not recognized and 3+ parts
+                if len(parts) >= 3:
+                    components["country"] = "United States"
+
+            if not parts:
+                return components
+
+            # 2. Identify City and Postcode from what remains
+            # Usually the last remaining part is City or City + Postcode
+            city_part = parts[-1]
+            parts.pop()
+            
+            # Extract UK-style postcode or other common formats if present at the end
+            # e.g., "London SW3 4ND" or "Singapore 238841"
+            postcode_pattern = r"([A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}|[A-Z]{2}\s*\d{5}|\d{5,6})$"
+            pc_match = re.search(postcode_pattern, city_part, re.IGNORECASE)
+            if pc_match:
+                components["postcode"] = pc_match.group(1).strip()
+                components["city"] = city_part[:pc_match.start()].strip()
+            else:
+                components["city"] = city_part
+
+            # 3. Remaining parts are likely the road/house number
+            if parts:
+                components["road"] = ", ".join(parts)
+
+            # 4. If we have a city but no country, check if it's a city-state
+            if not components.get("country") and components.get("city"):
+                city_lower = components["city"].lower()
+                if city_lower in self.country_aliases:
+                    components["country"] = self.country_aliases[city_lower]
+                elif city_lower in self.city_states:
+                    components["country"] = self.city_states[city_lower]
 
             return components
 
@@ -537,10 +617,9 @@ def parse_address_to_location_id(
 if __name__ == "__main__":
     """Test the LocationParser with sample addresses"""
     import sys
-    from dotenv import load_dotenv
+
 
     # Load environment variables from .env file
-    load_dotenv()
 
     # Initialize parser
     supabase_url = os.getenv("SUPABASE_URL")

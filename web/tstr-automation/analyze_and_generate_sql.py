@@ -1,15 +1,27 @@
+# ruff: noqa: E402
+
+import os
+from dotenv import load_dotenv
+# Load environment variables from .env file in the same directory as this script
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+
+
+# Load environment variables from .env file in the same directory as this script
 
 import json
 import re
-import requests
 import uuid
 
+import requests
+
 # CONSTANTS
+
 NEW_LISTINGS_FILE = "/home/al/.gemini/antigravity/brain/2382ce1c-5eab-4fa7-97b6-5596e6bbaad6/new_listings_to_add.json"
 SQL_OUTPUT_FILE = "insert_new_linkedin_companies.sql"
 JSON_OUTPUT_FILE = "insert_new_linkedin_companies.json" # Debug Output
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
-import os
+
 SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") 
 
 headers = {

@@ -5,14 +5,14 @@ Extracts NELAP accredited environmental laboratories from TNI LAMS database
 Data source: https://lams.nelac-institute.org/search
 """
 
-import re
 import logging
+import os
+import re
+import sys
 import time
 from typing import Dict, List, Optional
-from bs4 import BeautifulSoup
 
-import sys
-import os
+from bs4 import BeautifulSoup
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -309,7 +309,7 @@ class TNIEnvironmentalScraper(BaseNicheScraper):
 
         return labs
 
-    def get_listing_urls(self) -> List[str]:
+    def get_listing_urls(self, limit: Optional[int] = None) -> List[str]:
         """
         Get list of lab detail URLs to scrape
 
@@ -325,6 +325,11 @@ class TNIEnvironmentalScraper(BaseNicheScraper):
             for state in self.US_STATES:  # Search all configured states
                 labs = self.search_labs_by_state(state)  # No limit per state
                 all_labs.extend(labs)
+                
+                if limit and len(all_labs) >= limit:
+                    all_labs = all_labs[:limit]
+                    break
+                    
                 time.sleep(self.rate_limit_seconds)
 
             self.labs_cache = all_labs
@@ -582,6 +587,13 @@ class TNIEnvironmentalScraper(BaseNicheScraper):
             logger.error(f"Error processing listing {url}: {e}")
             self.stats["listings_failed"] += 1
             return False
+
+
+def scrape_tni_environmental(dry_run: bool = False, limit: Optional[int] = None) -> int:
+    """Wrapper for main_scraper orchestration"""
+    scraper = TNIEnvironmentalScraper(dry_run=dry_run)
+    scraper.run(limit=limit, dry_run=dry_run)
+    return scraper.stats["listings_saved"]
 
 
 def main():
