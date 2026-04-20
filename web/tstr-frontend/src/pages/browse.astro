@@ -6,7 +6,12 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 import AdUnit from '../components/AdUnit.astro'
 
 // Fetch all active listings with location hierarchy, category, and capabilities
-const { data: listings } = await supabase
+console.log('--- SUPABASE DEBUG ---');
+console.log('URL:', import.meta.env.PUBLIC_SUPABASE_URL);
+console.log('Key Type:', import.meta.env.SUPABASE_SERVICE_ROLE_KEY ? 'Service Role' : 'Anon');
+console.log('Key Prefix:', (import.meta.env.SUPABASE_SERVICE_ROLE_KEY || import.meta.env.PUBLIC_SUPABASE_ANON_KEY || '').substring(0, 10));
+
+const { data: listings, error: listingsError } = await supabase
   .from('listings')
   .select(`
     *,
@@ -24,6 +29,11 @@ const { data: listings } = await supabase
   `)
   .eq('status', 'active')
   .order('created_at', { ascending: false })
+
+if (listingsError) {
+  console.error('Listings Error:', listingsError);
+}
+console.log('Listings Count:', listings?.length || 0);
 
 // Fetch categories with active listings only for filter dropdown
 const { data: categoriesData } = await supabase
