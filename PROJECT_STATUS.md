@@ -1,9 +1,9 @@
 # 📊 TSTR.DIRECTORY - PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - Executive summary for agents
-> **Last Updated**: 2026-04-20 18:40 UTC
-> **Updated By**: JAvZZe (Antigravity)
-> **Status**: ✅ PRODUCTION LIVE - 596 Listings Restored (v2.2.7)
+> **Last Updated**: 2026-04-21 04:06 UTC
+> **Updated By**: Antigravity (Gemini)
+> **Status**: ✅ PRODUCTION MAINTENANCE - Scraper Health Verified (v2.2.8)
 
 
 ---
@@ -96,7 +96,8 @@
 - [x] Hardened Location Parsing (International support & hierarchy fixes)
 - [x] Automate Directory Enrichment (LinkedIn + Website discovery)
 - [x] Setup systemd automation for local enrichment runs
-- [ ] Query database for active standards with PSEO pages
+- [x] Query database for active standards with PSEO pages (596 listings / 240 standards)
+- [x] Restore OCI maintenance access (SSH key recovered)
 
 ### Medium Priority
 - [ ] Add more geographic regions (Asia, Europe, Middle East)
