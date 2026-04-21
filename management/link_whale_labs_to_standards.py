@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Link the newly added whale labs to their hydrogen standards
 """
+import os
 
 import requests
 

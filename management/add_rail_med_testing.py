@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Add Railway and Medical Device specialized listings and standards.
 """
+import os
 
 import requests
 

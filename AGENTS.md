@@ -95,6 +95,30 @@ This loads:
 
 ## 📝 PENDING TASKS
 
+## 🧠 SYSTEMS THINKING PROTOCOL (MANDATORY)
+
+**CRITICAL: Infrastructure changes often exceed the boundaries of the Git repository.**
+
+### Why we failed the Supabase-Cloudflare Sync:
+During the Supabase credential rotation, agents successfully updated the code and local `.env` files but failed to rotate the keys in the **Cloudflare Pages/Workers Dashboard**. This happened because the agents operated within a "Repository Silo," forgetting that production environment variables are stored on the Edge, not just in the codebase.
+
+### The Protocol:
+Before confirming any infrastructure-related task (Keys, URLs, Auth, Database), you MUST perform a **Systemic Audit**:
+
+1.  **Map the Connective Tissue**:
+    - **Data**: Supabase (Database, Auth, Storage)
+    - **Logic**: OCI (Scrapers, Management Scripts)
+    - **Delivery**: Cloudflare (Pages, Workers, KV, DNS)
+    - **Bridge**: GitHub (Actions, Secrets)
+
+2.  **Verify Non-Git State**:
+    - If you change a secret, check if it's mirrored in **Cloudflare Environment Variables**.
+    - If you change a database schema, check if **RLS Policies** or **Views** need updating.
+    - If you change a script path, check **systemd timers** or **crontabs** on OCI.
+
+3.  **The "If This, Then That" (ITTT) Analysis**:
+    - "If I rotate Supabase keys, I MUST update: Local .env, OCI .env, Cloudflare Dashboard, and GitHub Secrets."
+
 ## 📊 PROJECT STATUS PROTOCOL (MANDATORY)
 
 **CRITICAL**: All agents MUST read and update `PROJECT_STATUS.md` before & after any work:
@@ -128,11 +152,7 @@ To maintain a clean environment and reduce token clutter:
 
 **This is the SINGLE SOURCE OF TRUTH for tstr.directory's current state, structure, and change history.**
 
-### **Cleanup & Archiving Protocol (MANDATORY)**:
-To maintain a clean environment and reduce token clutter:
-1. **Delete Interim Files**: Once work is merged/completed, delete redundant files like `HANDOFF_*.md`, `implementation_plan.md`, or temporary reports.
-2. **Archive Historical Context**: If a document (e.g., an old project plan or complex analysis) has historical value but is no longer "active," move it to the `_ARCHIVE/` directory instead of leaving it in the root.
-3. **Reference Archives**: Before starting a task that feels like a "retry" or "resumption," proactively search the `_ARCHIVE/` folder for previous context or "forgotten" history.
+**Failure to perform this audit is a breach of the Systems Thinking Protocol.**
 
 ## AI Agent CLI Functions (v2.0 Integration)
 

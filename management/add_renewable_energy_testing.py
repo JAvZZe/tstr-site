@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Add Renewable Energy (Wind, Solar, BESS) specialized listings and standards.
 """
+import os
 
 import requests
 

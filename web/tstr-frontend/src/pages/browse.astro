@@ -197,12 +197,13 @@ const description = `Browse ${totalListings} verified testing service providers 
               const country = extractCountry(lab.address)
               const city = extractCity(lab.address)
               const categoryName = lab.category?.name || ''
+              const categorySlug = lab.category?.slug || ''
               const standards = lab.listing_capabilities?.map(cap => cap.standard).filter(Boolean) || []
               const standardsDisplay = standards.map(s => `${s.code} - ${s.name}`).join(', ')
 
               return (
                 <div class="glass-card glass-card-hover p-8 relative overflow-hidden group listing-card border-white/5" 
-                     data-country={country} data-city={city} data-category={categoryName} data-standards={standardsDisplay}>
+                     data-country={country} data-city={city} data-category={categoryName} data-category-slug={categorySlug} data-standards={standardsDisplay}>
                   <div class="absolute inset-0 bg-gradient-to-br from-blue-500/[0.01] to-emerald-500/[0.01] opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   
                   <div class="flex flex-col md:flex-row justify-between items-start gap-8 relative z-10">
@@ -540,10 +541,11 @@ const description = `Browse ${totalListings} verified testing service providers 
       const country = (listing.dataset.country || '').toLowerCase()
       const city = (listing.dataset.city || '').toLowerCase()
       const category = (listing.dataset.category || '').toLowerCase()
+      const categorySlug = (listing.dataset.categorySlug || '').toLowerCase()
       const standards = (listing.dataset.standards || '').toLowerCase()
 
       const matchesLocation = !selectedLocation || country === selectedLocation || city === selectedLocation
-      const matchesCategory = !selectedCategory || category === selectedCategory
+      const matchesCategory = !selectedCategory || category === selectedCategory || categorySlug === selectedCategory
       const matchesStandard = !selectedStandard || standards.includes(selectedStandard)
 
       if (matchesLocation && matchesCategory && matchesStandard) {
@@ -581,7 +583,14 @@ const description = `Browse ${totalListings} verified testing service providers 
     locationAutocomplete.updateClearButton()
   }
   if (params.has('category')) {
-    categoryFilter.value = params.get('category')
+    const catParam = params.get('category')
+    // Attempt to resolve slug to name for the input field display
+    const foundCat = categoriesData.find(c => c.slug === catParam || c.name.toLowerCase() === catParam.toLowerCase())
+    if (foundCat) {
+      categoryFilter.value = foundCat.name
+    } else {
+      categoryFilter.value = catParam
+    }
     categoryAutocomplete.updateClearButton()
   }
   if (params.has('standard')) {

@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Add critical hydrogen testing standards that are missing
 """
+import os
 
 import requests
 import uuid

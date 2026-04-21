@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Check current RLS policies on the listings table
 """
+import os
 
 from supabase import create_client, Client
 

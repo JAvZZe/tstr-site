@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Refine business headings: Separate service descriptors into capabilities/tags.
 """
+import os
 
 import requests
 

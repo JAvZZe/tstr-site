@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Add Nuclear Energy and Consumer Goods/Textile specialized listings and standards.
 """
+import os
 
 import requests
 

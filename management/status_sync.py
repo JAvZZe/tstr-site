@@ -17,9 +17,16 @@ Usage:
 import sys
 import json
 import subprocess
+import re
+import argparse
 from typing import Dict, List, Any, Optional
 from pathlib import Path
 from datetime import datetime, timezone
+
+try:
+    from .status_bridge import StatusBridge
+except ImportError:
+    StatusBridge = None
 
 
 class StatusSync:
@@ -37,12 +44,10 @@ class StatusSync:
             self.project_root.parent.parent / "SYSTEM" / "state" / "db_utils.py"
         )
 
-        # Import status bridge for operations
-        try:
-            from .status_bridge import StatusBridge
-
+        # Initialize bridge if available
+        if StatusBridge:
             self.bridge = StatusBridge(self.project_root)
-        except ImportError:
+        else:
             self.bridge = None
 
     def get_database_sessions(self) -> List[Dict[str, Any]]:
@@ -242,7 +247,7 @@ class StatusSync:
         try:
             content = self.status_file.read_text()
             # Extract timestamp from header
-            import re
+            # re is now imported at module level
 
             match = re.search(r"\*\*Last Updated\*\*: (.*)", content)
             return match.group(1) if match else "not found"
@@ -322,7 +327,7 @@ Generated: {datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")}
 
 def main():
     """CLI interface for synchronization operations"""
-    import argparse
+    # argparse is now imported at module level
 
     parser = argparse.ArgumentParser(description="TSTR.site Status Synchronization")
     subparsers = parser.add_subparsers(dest="command")

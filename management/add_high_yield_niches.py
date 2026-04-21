@@ -1,9 +1,9 @@
-import os
 #!/usr/bin/env python3
 """
 Add High-Yield niche testing providers for Under-served categories.
 Aligned with PSEO 2.0 architecture and URL matrix.
 """
+import os
 
 import requests
 

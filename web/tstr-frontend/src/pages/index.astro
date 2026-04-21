@@ -17,9 +17,10 @@ const { data: categoryData } = await supabase
     name,
     slug,
     description,
-    listings:listings!category_id(count)
+    listings:listings!category_id!inner(count)
   `)
   .not('description', 'is', null)
+  .eq('listings.status', 'active')
   .order('name');
 
 const PILLARS_CONFIG = {

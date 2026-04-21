@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Database migration: Add 'tags' column and clean up business names.
 """
+import os
 
 import requests
 

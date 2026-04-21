@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Add Calibration/Metrology and Hydraulic/Pneumatic specialized listings and standards.
 """
+import os
 
 import requests
 

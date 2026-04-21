@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Fix location data classification issues
 """
+import os
 
 import requests
 

@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Link listings to appropriate standards based on their category
 """
+import os
 
 import requests
 from datetime import datetime

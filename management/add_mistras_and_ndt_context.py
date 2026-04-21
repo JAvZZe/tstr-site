@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Add Non-Destructive Testing (NDT) category, standards, and Mistras Group listing.
 """
+import os
 
 import requests
 

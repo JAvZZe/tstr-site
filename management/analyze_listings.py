@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Analyze listings and suggest standard assignments
 """
+import os
 
 import requests
 import json

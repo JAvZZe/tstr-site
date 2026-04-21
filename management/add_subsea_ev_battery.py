@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Add Subsea/Marine and EV/Battery specialized listings and standards.
 """
+import os
 
 import requests
 
