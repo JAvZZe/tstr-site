@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Expand DNV and DEKRA, and add LRQA with detailed NDT/Asset Integrity data.
 """
+import os
 
 import requests
 

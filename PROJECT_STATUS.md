@@ -1,9 +1,9 @@
 # 📊 TSTR.DIRECTORY - PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - Executive summary for agents
-> **Last Updated**: 2026-04-21 04:06 UTC
-> **Updated By**: Antigravity (Gemini)
-> **Status**: ✅ PRODUCTION MAINTENANCE - Scraper Health Verified (v2.2.8)
+> **Last Updated**: 2026-04-21 04:55 UTC
+> **Updated By**: Antigravity
+> **Status**: ✅ PRODUCTION STABLE - Category Visibility Fixed (v2.3.0)
 
 
 ---
@@ -16,10 +16,18 @@
 | **Type** | Testing Services Directory Platform |
 | **Stack** | Astro 5.x + React 18 + Supabase + Python Scrapers |
 | **Deployment** | Cloudflare Pages (Frontend) + OCI (Scrapers) |
-| **Protocol** | ✅ Cleanup & Archiving (Mandatory for all agents) |
+| **Protocol** | ✅ Systems Thinking Protocol (Mandatory for all agents) |
 | **Listings** | 596+ active |
 | **Categories** | 33+ specialized (+3 Hydrogen) |
 | **Standards** | 70+ (+15 Hydrogen) |
+
+---
+
+## 🚀 LATEST UPDATES (v2.3.0)
+- **Directory Visibility**: ✅ **FIXED**. Resolved a critical logic discrepancy where categories with active listings appeared "empty" on the Browse page due to name/slug filtering mismatches.
+- **Data Integrity**: ✅ **HARDENED**. Updated `index.astro` to use `!inner` joins for category counts, ensuring only categories with *active* listings are surfaced on the homepage.
+- **PSEO Infrastructure**: ✅ **EXPANDED**. Updated `sitemap.xml.ts` to include programmatic `/testing/[industry]/[standard]-in-[region]` routes.
+- **Systems Thinking**: ✅ **FORMALIZED**. Integrated a mandatory Systems Thinking Protocol into `AGENTS.md`.
 
 ---
 

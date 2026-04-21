@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Add Hydrogen Infrastructure Testing category
 """
+import os
 
 import requests
 import uuid

@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Add whale labs with proper location records
 """
+import os
 
 import requests
 import uuid

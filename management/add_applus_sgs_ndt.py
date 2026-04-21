@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Expand Applus+ and SGS listings with detailed NDT/Asset Integrity data.
 """
+import os
 
 import requests
 

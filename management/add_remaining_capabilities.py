@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Add remaining capabilities for Oil & Gas and Biotech categories
 """
+import os
 
 import requests
 

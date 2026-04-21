@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Add Environmental/Carbon Sequestration and Telecommunications/5G specialized listings and standards.
 """
+import os
 
 import requests
 

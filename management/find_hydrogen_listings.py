@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Find hydrogen-related listings
 """
+import os
 
 import requests
 

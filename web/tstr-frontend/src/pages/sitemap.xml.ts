@@ -110,6 +110,41 @@ export const GET: APIRoute = async () => {
     lastmod: post.published_at ? post.published_at.split('T')[0] : currentDate
   }));
 
+  // Fetch all active listings with their categories and standards to build PSEO testing pages
+  // Route: /testing/[industry]/[standard]-in-[region]
+  const { data: pseoData } = await supabase
+    .from('listings')
+    .select(`
+      region,
+      category:category_id (slug),
+      listing_capabilities (
+        standard:standard_id (slug)
+      )
+    `)
+    .eq('status', 'active');
+
+  const pseoTestingPagesSet = new Set<string>();
+  pseoData?.forEach(listing => {
+    const categorySlug = listing.category?.slug;
+    const region = listing.region;
+    
+    if (categorySlug && region && listing.listing_capabilities) {
+      const regionSlug = region.toLowerCase().replace(/\s+/g, '-');
+      listing.listing_capabilities.forEach((cap: any) => {
+        const standardSlug = cap.standard?.slug;
+        if (standardSlug) {
+          pseoTestingPagesSet.add(`/testing/${categorySlug}/${standardSlug}-in-${regionSlug}`);
+        }
+      });
+    }
+  });
+
+  const pseoTestingPages = Array.from(pseoTestingPagesSet).map(url => ({
+    url,
+    priority: '0.8',
+    changefreq: 'weekly'
+  }));
+
   // Combine all pages
   const allPages = [
     ...staticPages,
@@ -120,7 +155,8 @@ export const GET: APIRoute = async () => {
     ...categoryPages,
     ...categoryRegionPages,
     ...subcategoryPages,
-    ...categoryBrowsePages
+    ...categoryBrowsePages,
+    ...pseoTestingPages
   ];
 
   // Generate XML

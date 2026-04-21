@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Add Battery Fire Safety and Product Safety/EMC specialized listings and standards.
 """
+import os
 
 import requests
 

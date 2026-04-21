@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Assign standards to their appropriate categories
 """
+import os
 
 import requests
 

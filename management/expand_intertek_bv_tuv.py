@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Expand Intertek, Bureau Veritas, and TÜV SÜD listings with detailed NDT/Asset Integrity data.
 """
+import os
 
 import requests
 

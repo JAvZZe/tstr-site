@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Verify hydrogen listings are in correct category
 """
+import os
 
 import requests
 

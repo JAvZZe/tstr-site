@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Add Subsea Integrity and Acoustics/Vibration specialized listings and standards.
 """
+import os
 
 import requests
 

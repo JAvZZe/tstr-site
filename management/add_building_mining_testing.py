@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """
 Add Building/Construction and Mining/Geochemistry specialized listings and standards.
 """
+import os
 
 import requests
 
