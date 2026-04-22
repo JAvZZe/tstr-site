@@ -2,7 +2,7 @@ beautifulsoup4==4.12.3
 requests==2.32.3
 schedule==1.2.0
 supabase==2.0.0
-python-dotenv==1.0.0
+python-dotenv==1.2.2
 functions-framework==3.5.0
 flask==3.0.0
 psycopg2-binary==2.9.11
