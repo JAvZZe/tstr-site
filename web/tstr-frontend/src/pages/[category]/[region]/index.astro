@@ -5,6 +5,7 @@ import { MAILTO_LINKS } from '../../../lib/contacts';
 import NewsletterBanner from '../../../components/NewsletterBanner';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { getRedirectUrl } from '../../../lib/redirect';
+import StaticLabMap from '../../../components/StaticLabMap.astro';
 
 // SSR rendering (output: 'server' in astro.config)
 
@@ -107,13 +108,23 @@ const pageDescription = formatDescription(
         </div>
       </div>
     </div>
-
     <!-- Error Handling -->
     {listingsError && (
       <div class="p-4 mb-8 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-center gap-3">
         <span>⚠️</span>
         <p class="text-sm font-medium">Error loading listings. Please try again later.</p>
       </div>
+    )}
+
+    <!-- Location Map View -->
+    {pageListings && pageListings.length > 0 && (
+      <StaticLabMap 
+        listings={pageListings.map(l => ({ 
+          latitude: l.latitude, 
+          longitude: l.longitude, 
+          name: l.business_name 
+        }))} 
+      />
     )}
 
     <!-- Listings Grid -->

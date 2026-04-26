@@ -4,6 +4,7 @@ import { CONTENT } from '../lib/contacts'
 import { getRedirectUrl } from '../lib/redirect'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import AdUnit from '../components/AdUnit.astro'
+import StaticLabMap from '../components/StaticLabMap.astro'
 
 // Fetch all active listings with location hierarchy, category, and capabilities
 
@@ -190,6 +191,9 @@ const description = `Browse ${totalListings} verified testing service providers 
               </a>
             </div>
           </div>
+
+          <!-- Static Map Cluster -->
+          <StaticLabMap listings={listings || []} />
 
           <!-- Listings Grid -->
           <div id="listings-grid" class="grid grid-cols-1 gap-6 animate-fade-up delay-600">

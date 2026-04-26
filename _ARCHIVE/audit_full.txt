@@ -1,0 +1,107 @@
+--- EMPTY CATEGORIES ---
+  - Air Quality Testing (slug: environmental-testing/air-quality)
+    URL: https://tstr.directory/browse?category=environmental-testing/air-quality
+  - Alternative Medicine (slug: alternative-medicine)
+    URL: https://tstr.directory/browse?category=alternative-medicine
+  - Appliances, Electrical, and Electronics Manufacturing (slug: appliances-electrical-and-electronics-manufacturing)
+    URL: https://tstr.directory/browse?category=appliances-electrical-and-electronics-manufacturing
+  - Automation Machinery Manufacturing (slug: automation-machinery-manufacturing)
+    URL: https://tstr.directory/browse?category=automation-machinery-manufacturing
+  - Beverage Manufacturing (slug: beverage-manufacturing)
+    URL: https://tstr.directory/browse?category=beverage-manufacturing
+  - Building Construction (slug: building-construction)
+    URL: https://tstr.directory/browse?category=building-construction
+  - Chemical Manufacturing (slug: chemical-manufacturing)
+    URL: https://tstr.directory/browse?category=chemical-manufacturing
+  - Climate Technology Product Manufacturing (slug: climate-technology-product-manufacturing)
+    URL: https://tstr.directory/browse?category=climate-technology-product-manufacturing
+  - Defense and Space Manufacturing (slug: defense-and-space-manufacturing)
+    URL: https://tstr.directory/browse?category=defense-and-space-manufacturing
+  - ESG & Sustainability Testing (slug: environmental-testing/esg-sustainability)
+    URL: https://tstr.directory/browse?category=environmental-testing/esg-sustainability
+  - Education Administration Programs (slug: education-administration-programs)
+    URL: https://tstr.directory/browse?category=education-administration-programs
+  - Electrical Equipment Manufacturing (slug: electrical-equipment-manufacturing)
+    URL: https://tstr.directory/browse?category=electrical-equipment-manufacturing
+  - Farming (slug: farming)
+    URL: https://tstr.directory/browse?category=farming
+  - Food and Beverage Services (slug: food-and-beverage-services)
+    URL: https://tstr.directory/browse?category=food-and-beverage-services
+  - Health and Human Services (slug: health-and-human-services)
+    URL: https://tstr.directory/browse?category=health-and-human-services
+  - Hose & Seal Testing (slug: hydrogen-infrastructure-testing/hose-seal)
+    URL: https://tstr.directory/browse?category=hydrogen-infrastructure-testing/hose-seal
+  - Hospitals and Health Care (slug: hospitals-and-health-care)
+    URL: https://tstr.directory/browse?category=hospitals-and-health-care
+  - Hydrogen Embrittlement Testing (slug: hydrogen-infrastructure-testing/embrittlement)
+    URL: https://tstr.directory/browse?category=hydrogen-infrastructure-testing/embrittlement
+  - Hydrogen Purity Testing (slug: hydrogen-infrastructure-testing/purity)
+    URL: https://tstr.directory/browse?category=hydrogen-infrastructure-testing/purity
+  - International Trade and Development (slug: international-trade-and-development)
+    URL: https://tstr.directory/browse?category=international-trade-and-development
+  - Medical Device (slug: medical-device)
+    URL: https://tstr.directory/browse?category=medical-device
+  - Motor Vehicle Manufacturing (slug: motor-vehicle-manufacturing)
+    URL: https://tstr.directory/browse?category=motor-vehicle-manufacturing
+  - Nanotechnology Research (slug: nanotechnology-research)
+    URL: https://tstr.directory/browse?category=nanotechnology-research
+  - Noise & Vibration Testing (slug: environmental-testing/noise-vibration)
+    URL: https://tstr.directory/browse?category=environmental-testing/noise-vibration
+  - Non-profit Organization Management (slug: non-profit-organization-management)
+    URL: https://tstr.directory/browse?category=non-profit-organization-management
+  - Personal Care Product Manufacturing (slug: personal-care-product-manufacturing)
+    URL: https://tstr.directory/browse?category=personal-care-product-manufacturing
+  - Professional Organizations (slug: professional-organizations)
+    URL: https://tstr.directory/browse?category=professional-organizations
+  - Public Safety (slug: public-safety)
+    URL: https://tstr.directory/browse?category=public-safety
+  - Renewable Energy Equipment Manufacturing (slug: renewable-energy-equipment-manufacturing)
+    URL: https://tstr.directory/browse?category=renewable-energy-equipment-manufacturing
+  - Research (slug: research)
+    URL: https://tstr.directory/browse?category=research
+  - Semiconductor Manufacturing (slug: semiconductor-manufacturing)
+    URL: https://tstr.directory/browse?category=semiconductor-manufacturing
+  - Software Development (slug: software-development)
+    URL: https://tstr.directory/browse?category=software-development
+  - Soil Testing & Contamination (slug: environmental-testing/soil-testing)
+    URL: https://tstr.directory/browse?category=environmental-testing/soil-testing
+  - Space Research and Technology (slug: space-research-and-technology)
+    URL: https://tstr.directory/browse?category=space-research-and-technology
+  - Strategic Management Services (slug: strategic-management-services)
+    URL: https://tstr.directory/browse?category=strategic-management-services
+  - Tank & Pressure Vessel Testing (slug: hydrogen-infrastructure-testing/tank-pressure)
+    URL: https://tstr.directory/browse?category=hydrogen-infrastructure-testing/tank-pressure
+  - Technology, Information and Internet (slug: technology-information-and-internet)
+    URL: https://tstr.directory/browse?category=technology-information-and-internet
+  - Technology, Information and Media (slug: technology-information-and-media)
+    URL: https://tstr.directory/browse?category=technology-information-and-media
+  - Valve & Fitting Testing (slug: hydrogen-infrastructure-testing/valve-fitting)
+    URL: https://tstr.directory/browse?category=hydrogen-infrastructure-testing/valve-fitting
+  - Water Quality Testing (slug: environmental-testing/water-quality)
+    URL: https://tstr.directory/browse?category=environmental-testing/water-quality
+  - Wholesale Building Materials (slug: wholesale-building-materials)
+    URL: https://tstr.directory/browse?category=wholesale-building-materials
+
+Target Check: Aerospace NDT Services (slug: aerospace-ndt-services)
+Count: 5
+Status: ✅ POPULATED (Possibly fixed or different environment)
+
+--- HOMEPAGE PILLAR AUDIT ---
+  - Hydrogen Infrastructure Testers          | Count: 15   | ✅ OK
+  - Materials Testers                        | Count: 218  | ✅ OK
+  - Environmental Testers                    | Count: 52   | ✅ OK
+  - Biopharma & Life Sciences Testers        | Count: 127  | ✅ OK
+  - Oil & Gas Testers                        | Count: 35   | ✅ OK
+  - Biotech Testers                          | Count: 36   | ✅ OK
+  - Aerospace Testing                        | Count: 1    | ✅ OK
+  - EV & Battery Safety Testing              | Count: 4    | ✅ OK
+  - Railway & Rolling Stock Testing          | Count: 2    | ✅ OK
+  - Cybersecurity & Software Testing         | Count: 4    | ✅ OK
+  - Telecommunications & 5G Testing          | Count: 3    | ✅ OK
+  - Nuclear Energy Testing & Inspection      | Count: 5    | ✅ OK
+  - Building & Construction Testing          | Count: 1    | ✅ OK
+  - Mining & Geochemistry Testing            | Count: 1    | ✅ OK
+  - Defense & Ballistics Testing             | Count: 4    | ✅ OK
+  - Acoustics, Vibration & Seismic Testing   | Count: 2    | ✅ OK
+  - Product Safety, EMC & Wireless           | Count: 2    | ✅ OK
+  - Calibration & Metrology Services         | Count: 2    | ✅ OK

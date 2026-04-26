@@ -6,6 +6,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { formatTitle, formatDescription } from '../../lib/seo';
 import { getRedirectUrl } from '../../lib/redirect';
 import AdUnit from '../../components/AdUnit.astro';
+import StaticLabMap from '../../components/StaticLabMap.astro';
 
 // 1. SSR Edge Caching for Performance
 Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=3600');
@@ -92,6 +93,8 @@ const pageDescription = formatDescription(
         </p>
       )}
     </div>
+
+    <StaticLabMap listings={listings || []} />
 
     <AdUnit type="horizontal" class="mb-12" />
 

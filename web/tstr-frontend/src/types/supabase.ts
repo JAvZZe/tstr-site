@@ -81,6 +81,7 @@ export type Database = {
           display_order: number | null
           icon: string | null
           id: string
+          min_tier_required: string | null
           name: string
           parent_id: string | null
           slug: string
@@ -92,6 +93,7 @@ export type Database = {
           display_order?: number | null
           icon?: string | null
           id?: string
+          min_tier_required?: string | null
           name: string
           parent_id?: string | null
           slug: string
@@ -103,6 +105,7 @@ export type Database = {
           display_order?: number | null
           icon?: string | null
           id?: string
+          min_tier_required?: string | null
           name?: string
           parent_id?: string | null
           slug?: string
@@ -153,6 +156,13 @@ export type Database = {
           source?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "certifications_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listing_groups_view"
+            referencedColumns: ["group_id"]
+          },
           {
             foreignKeyName: "certifications_listing_id_fkey"
             columns: ["listing_id"]
@@ -228,6 +238,13 @@ export type Database = {
           user_agent?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "clicks_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listing_groups_view"
+            referencedColumns: ["group_id"]
+          },
           {
             foreignKeyName: "clicks_listing_id_fkey"
             columns: ["listing_id"]
@@ -327,6 +344,13 @@ export type Database = {
             foreignKeyName: "equipment_listing_id_fkey"
             columns: ["listing_id"]
             isOneToOne: false
+            referencedRelation: "listing_groups_view"
+            referencedColumns: ["group_id"]
+          },
+          {
+            foreignKeyName: "equipment_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
             referencedRelation: "listings"
             referencedColumns: ["id"]
           },
@@ -383,6 +407,13 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "leads_rfq_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listing_groups_view"
+            referencedColumns: ["group_id"]
+          },
           {
             foreignKeyName: "leads_rfq_listing_id_fkey"
             columns: ["listing_id"]
@@ -444,6 +475,13 @@ export type Database = {
             foreignKeyName: "listing_capabilities_listing_id_fkey"
             columns: ["listing_id"]
             isOneToOne: false
+            referencedRelation: "listing_groups_view"
+            referencedColumns: ["group_id"]
+          },
+          {
+            foreignKeyName: "listing_capabilities_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
             referencedRelation: "listings"
             referencedColumns: ["id"]
           },
@@ -497,6 +535,13 @@ export type Database = {
             foreignKeyName: "listing_categories_listing_id_fkey"
             columns: ["listing_id"]
             isOneToOne: false
+            referencedRelation: "listing_groups_view"
+            referencedColumns: ["group_id"]
+          },
+          {
+            foreignKeyName: "listing_categories_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
             referencedRelation: "listings"
             referencedColumns: ["id"]
           },
@@ -543,6 +588,13 @@ export type Database = {
             foreignKeyName: "listing_custom_fields_listing_id_fkey"
             columns: ["listing_id"]
             isOneToOne: false
+            referencedRelation: "listing_groups_view"
+            referencedColumns: ["group_id"]
+          },
+          {
+            foreignKeyName: "listing_custom_fields_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
             referencedRelation: "listings"
             referencedColumns: ["id"]
           },
@@ -581,6 +633,13 @@ export type Database = {
           listing_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "listing_images_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listing_groups_view"
+            referencedColumns: ["group_id"]
+          },
           {
             foreignKeyName: "listing_images_listing_id_fkey"
             columns: ["listing_id"]
@@ -642,6 +701,13 @@ export type Database = {
             foreignKeyName: "listing_owners_listing_id_fkey"
             columns: ["listing_id"]
             isOneToOne: false
+            referencedRelation: "listing_groups_view"
+            referencedColumns: ["group_id"]
+          },
+          {
+            foreignKeyName: "listing_owners_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
             referencedRelation: "listings"
             referencedColumns: ["id"]
           },
@@ -693,6 +759,13 @@ export type Database = {
             foreignKeyName: "listing_ownership_listing_id_fkey"
             columns: ["listing_id"]
             isOneToOne: false
+            referencedRelation: "listing_groups_view"
+            referencedColumns: ["group_id"]
+          },
+          {
+            foreignKeyName: "listing_ownership_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
             referencedRelation: "listings"
             referencedColumns: ["id"]
           },
@@ -707,33 +780,46 @@ export type Database = {
       }
       listing_premium_data: {
         Row: {
+          coverage_radius_km: number | null
           created_at: string
           crunchbase_url: string | null
           email: string | null
           id: string
           linkedin_url: string | null
           listing_id: string | null
+          map_tier: string
           updated_at: string
         }
         Insert: {
+          coverage_radius_km?: number | null
           created_at?: string
           crunchbase_url?: string | null
           email?: string | null
           id?: string
           linkedin_url?: string | null
           listing_id?: string | null
+          map_tier?: string
           updated_at?: string
         }
         Update: {
+          coverage_radius_km?: number | null
           created_at?: string
           crunchbase_url?: string | null
           email?: string | null
           id?: string
           linkedin_url?: string | null
           listing_id?: string | null
+          map_tier?: string
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "listing_premium_data_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listing_groups_view"
+            referencedColumns: ["group_id"]
+          },
           {
             foreignKeyName: "listing_premium_data_listing_id_fkey"
             columns: ["listing_id"]
@@ -761,6 +847,7 @@ export type Database = {
           claimed_at: string | null
           contact_email: string | null
           contact_visibility: string | null
+          coverage_radius_km: number | null
           created_at: string | null
           description: string | null
           email: string | null
@@ -771,6 +858,7 @@ export type Database = {
           latitude: number | null
           location_id: string
           longitude: number | null
+          map_tier: string | null
           outreach_sent_at: string | null
           owner_id: string | null
           parent_listing_id: string | null
@@ -800,6 +888,7 @@ export type Database = {
           claimed_at?: string | null
           contact_email?: string | null
           contact_visibility?: string | null
+          coverage_radius_km?: number | null
           created_at?: string | null
           description?: string | null
           email?: string | null
@@ -810,6 +899,7 @@ export type Database = {
           latitude?: number | null
           location_id: string
           longitude?: number | null
+          map_tier?: string | null
           outreach_sent_at?: string | null
           owner_id?: string | null
           parent_listing_id?: string | null
@@ -839,6 +929,7 @@ export type Database = {
           claimed_at?: string | null
           contact_email?: string | null
           contact_visibility?: string | null
+          coverage_radius_km?: number | null
           created_at?: string | null
           description?: string | null
           email?: string | null
@@ -849,6 +940,7 @@ export type Database = {
           latitude?: number | null
           location_id?: string
           longitude?: number | null
+          map_tier?: string | null
           outreach_sent_at?: string | null
           owner_id?: string | null
           parent_listing_id?: string | null
@@ -882,6 +974,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "locations"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "listings_parent_listing_id_fkey"
+            columns: ["parent_listing_id"]
+            isOneToOne: false
+            referencedRelation: "listing_groups_view"
+            referencedColumns: ["group_id"]
           },
           {
             foreignKeyName: "listings_parent_listing_id_fkey"
@@ -942,6 +1041,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      newsletter_subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+        }
+        Relationships: []
       }
       payment_history: {
         Row: {
@@ -1029,6 +1152,13 @@ export type Database = {
           verified_by?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "payments_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listing_groups_view"
+            referencedColumns: ["group_id"]
+          },
           {
             foreignKeyName: "payments_listing_id_fkey"
             columns: ["listing_id"]
@@ -1140,6 +1270,13 @@ export type Database = {
           test_description?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "rfq_leads_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listing_groups_view"
+            referencedColumns: ["group_id"]
+          },
           {
             foreignKeyName: "rfq_leads_listing_id_fkey"
             columns: ["listing_id"]
@@ -1416,6 +1553,13 @@ export type Database = {
             foreignKeyName: "verification_evidence_listing_id_fkey"
             columns: ["listing_id"]
             isOneToOne: false
+            referencedRelation: "listing_groups_view"
+            referencedColumns: ["group_id"]
+          },
+          {
+            foreignKeyName: "verification_evidence_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
             referencedRelation: "listings"
             referencedColumns: ["id"]
           },
@@ -1457,6 +1601,19 @@ export type Database = {
       }
     }
     Views: {
+      listing_groups_view: {
+        Row: {
+          branch_count: number | null
+          branch_ids: string[] | null
+          branches: Json | null
+          group_description: string | null
+          group_id: string | null
+          group_name: string | null
+          group_slug: string | null
+          group_website: string | null
+        }
+        Relationships: []
+      }
       potential_dead_links: {
         Row: {
           business_name: string | null
@@ -1490,6 +1647,18 @@ export type Database = {
           unique_listings: number
         }[]
       }
+      get_pseo_stats: {
+        Args: {
+          p_category_slug: string
+          p_region: string
+          p_standard_code: string
+        }
+        Returns: {
+          listing_count: number
+          verified_count: number
+        }[]
+      }
+      get_tier_rank: { Args: { tier: string }; Returns: number }
       get_top_clicked_listings: {
         Args: { limit_count?: number }
         Returns: {
