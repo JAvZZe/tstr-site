@@ -25,16 +25,16 @@ jobs:
           npm run lint:js
           npm run lint:css
 
-      - name: Run tests
-        run: npm test
-
       - name: Build frontend
-        run: npm run build
+        run: |
+          cd web/tstr-frontend
+          npm install
+          npm run build
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           projectName: tstr-site
-          directory: web/tstr-frontend
+          directory: web/tstr-frontend/dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}

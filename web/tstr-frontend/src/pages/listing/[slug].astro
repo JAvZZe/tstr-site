@@ -4,6 +4,7 @@ import { getRedirectUrl } from '../../lib/redirect'
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import ContactLabModal from '../../components/ContactLabModal'
 import AdUnit from '../../components/AdUnit.astro'
+import ListingMap from '../../components/ListingMap.astro'
 
 // Disable static prerendering for performance - use SSR instead
 export const prerender = false
@@ -57,7 +58,9 @@ const { data: listing, error } = await supabase
       )
     ),
     premium_data:listing_premium_data (
-      linkedin_url
+      linkedin_url,
+      map_tier,
+      coverage_radius_km
     )
   `)
   .eq('slug', slug)
@@ -266,6 +269,9 @@ const pageDescription = formatDescription(
 
       <!-- Sidebar / Action Column -->
       <div class="space-y-6">
+        
+        <!-- Map View -->
+        <ListingMap listing={listing} />
         
         <!-- Contact Card -->
         <div class="glass-panel p-6 border-blue-500/30">

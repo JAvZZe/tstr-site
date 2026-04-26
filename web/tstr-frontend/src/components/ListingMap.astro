@@ -1,0 +1,93 @@
+---
+import PremiumLabMap from './PremiumLabMap';
+import StaticLabMap from './StaticLabMap.astro';
+import { getEffectiveMapTier } from '../lib/monetization';
+
+interface Props {
+  listing: {
+    latitude: number | null;
+    longitude: number | null;
+    business_name: string;
+    address?: string | null;
+    region?: string | null;
+    listing_premium_data?: {
+      map_tier?: string;
+      coverage_radius_km?: number | null;
+    } | null;
+    premium_data?: {
+      map_tier?: string;
+      coverage_radius_km?: number | null;
+    } | null;
+    map_tier?: string | null;
+    coverage_radius_km?: number | null;
+  };
+}
+
+const { listing } = Astro.props;
+
+// Detect tier from joined tables or direct columns (redundant schema support)
+const rawTier = listing.listing_premium_data?.map_tier 
+  || listing.premium_data?.map_tier 
+  || listing.map_tier;
+
+const tier = getEffectiveMapTier(rawTier);
+
+// Detect coverage radius
+const coverageRadiusKm = listing.listing_premium_data?.coverage_radius_km
+  || listing.premium_data?.coverage_radius_km
+  || listing.coverage_radius_km;
+
+const hasCoords = listing.latitude !== null && listing.longitude !== null && Math.abs(listing.latitude) > 0.001;
+---
+
+<div class="listing-map-section mb-12">
+  {hasCoords ? (
+    <>
+      {tier === 'premium' ? (
+        <PremiumLabMap 
+          client:load 
+          lat={listing.latitude!} 
+          lng={listing.longitude!}
+          labName={listing.business_name} 
+          coverageRadiusKm={coverageRadiusKm} 
+        />
+      ) : (
+        <div class="space-y-4">
+          <StaticLabMap 
+            listings={[{ 
+              latitude: listing.latitude, 
+              longitude: listing.longitude, 
+              name: listing.business_name 
+            }]} 
+            zoom={13} 
+            height={300} 
+          />
+          
+          <div class="glass-panel p-4 flex items-center justify-between border-blue-500/20 bg-blue-500/5">
+            <div class="flex items-center gap-3">
+              <span class="text-xl">🗺️</span>
+              <p class="text-sm text-gray-300">
+                Show your service area with an <span class="text-blue-400 font-bold">Interactive Map</span>
+              </p>
+            </div>
+            <a 
+              href="/lab-manager#upgrade" 
+              class="text-xs font-bold uppercase tracking-wider text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              Upgrade Plan →
+            </a>
+          </div>
+        </div>
+      )}
+    </>
+  ) : (
+    <div class="glass-panel py-12 text-center border-dashed opacity-50">
+      <div class="text-2xl mb-2">
+        { (listing.region?.toLowerCase() === 'global' || listing.address?.toLowerCase() === 'global') ? '🌍' : '📍' }
+      </div>
+      <p class="text-sm text-gray-400 font-mono uppercase tracking-widest">
+        { (listing.region?.toLowerCase() === 'global' || listing.address?.toLowerCase() === 'global') ? 'Global Operations' : 'Location not yet mapped' }
+      </p>
+    </div>
+  )}
+</div>

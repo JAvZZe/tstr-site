@@ -584,10 +584,10 @@ class BaseNicheScraper(ABC):
                 self.stats["custom_fields_populated"] += 1
 
             if values_to_insert:
-                self.supabase.from_("listing_custom_fields").insert(
+                self.supabase.from_("listing_custom_fields").upsert(
                     values_to_insert
                 ).execute()
-                logger.info(f"  Saved {len(values_to_insert)} custom field values")
+                logger.info(f"  Saved/Updated {len(values_to_insert)} custom field values")
 
         except Exception as e:
             logger.error(f"Failed to save custom field values: {e}")

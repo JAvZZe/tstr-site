@@ -6,6 +6,7 @@ import TrustBadge from '../../../components/TrustBadge';
 import ContactLabModal from '../../../components/ContactLabModal';
 import LabManagerTeaser from '../../../components/LabManagerTeaser';
 import AdUnit from '../../../components/AdUnit.astro';
+import StaticLabMap from '../../../components/StaticLabMap.astro';
 import { formatTitle, formatDescription } from '../../../lib/seo';
 
 // 1. SSR Edge Caching for Performance
@@ -32,6 +33,8 @@ const { data: pageData, error } = await supabase
     verified,
     claimed,
     website,
+    latitude,
+    longitude,
     listing_categories!inner (category:category_id!inner (name, slug)),
     listing_capabilities!inner (
       verified,
@@ -48,6 +51,7 @@ const { data: globalAlternatives } = (pageData?.length === 0) ? await supabase
   .from('listings')
   .select(`
     id, business_name, slug, description, region, verified, claimed, website,
+    latitude, longitude,
     listing_categories!inner (category:category_id!inner (name, slug)),
     listing_capabilities!inner (standard:standard_id!inner (code, slug, name))
   `)
@@ -67,6 +71,8 @@ const { data: relatedRegions } = await supabase
   .limit(8);
 
 const uniqueRegions = [...new Set(relatedRegions?.map(r => r.region).filter(Boolean))];
+
+const listingsForMap = (pageData && pageData.length > 0) ? pageData : (globalAlternatives || []);
 
 if (error) {
   console.error('PSEO Query Error:', error);
@@ -194,6 +200,8 @@ const schema = {
 
       <!-- Ad Placement Top -->
       <AdUnit className="mb-12" />
+
+      <StaticLabMap listings={listingsForMap} />
 
       <!-- Results Grid -->
       <div class="grid gap-8 mb-32">
@@ -378,6 +386,8 @@ const schema = {
                   <p class="text-slate-500 text-sm leading-relaxed">Client technical requirements are handled via TLS 1.3 encrypted direct channels to labs.</p>
               </div>
           </div>
+      </section>
+
     <ContactLabModal 
       client:load 
       preferredStandard={standardName}

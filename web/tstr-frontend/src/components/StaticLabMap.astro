@@ -1,0 +1,61 @@
+---
+/**
+ * StaticLabMap.astro — Zero client-side JS.
+ * Uses Google Maps Static API (a simple <img> URL).
+ * No SDK loaded. Cloudflare CDN-cacheable.
+ */
+interface Props {
+  listings: Array<{ latitude: number | null; longitude: number | null; name: string }>;
+  width?: number;
+  height?: number;
+  zoom?: number;
+}
+const { listings, width = 640, height = 300, zoom = 5 } = Astro.props;
+const API_KEY = import.meta.env.PUBLIC_GOOGLE_MAPS_API_KEY;
+
+const geoListings = listings.filter(l => l.latitude && l.longitude && Math.abs(l.latitude) > 0.001);
+const markers = geoListings.slice(0, 50)
+  .map(l => `markers=color:0x4F46E5%7C${l.latitude},${l.longitude}`)
+  .join('&');
+const center = geoListings.length > 0
+  ? `${geoListings[0].latitude},${geoListings[0].longitude}`
+  : "39.5,-98.35";
+
+const mapUrl = `https://maps.googleapis.com/maps/api/staticmap?`
+  + `center=${center}&zoom=${zoom}&size=${width}x${height}&maptype=roadmap`
+  + `&style=feature:all|element:geometry|color:0x1a1a2e`
+  + `&style=feature:road|element:geometry|color:0x0f3460`
+  + `&style=feature:poi|visibility:off`
+  + `&${markers}&key=${API_KEY}`;
+---
+
+{geoListings.length > 0 && (
+  <div class="static-map-container">
+    <img
+      src={mapUrl}
+      alt={`Map showing ${geoListings.length} testing lab locations`}
+      width={width}
+      height={height}
+      loading="lazy"
+      decoding="async"
+      class="static-map-img"
+    />
+    <p class="static-map-label">{geoListings.length} labs mapped</p>
+  </div>
+)}
+
+<style>
+  .static-map-container {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: #111;
+    margin-bottom: 2rem;
+  }
+  .static-map-img { width: 100%; height: auto; display: block; opacity: 0.85; }
+  .static-map-label {
+    position: absolute; bottom: 8px; right: 12px;
+    font-size: 11px; color: rgba(255,255,255,0.5); margin: 0;
+  }
+</style>
