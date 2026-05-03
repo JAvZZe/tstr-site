@@ -116,10 +116,12 @@ class GACMiddleEastScraper(BaseNicheScraper):
             standard_fields = {
                 "business_name": name,
                 "description": f"GAC Accredited Laboratory in {country}. Accreditation Code: {code}.",
-                "website": self.base_url, # Fallback
+                "website": url, # Use the unique row-level URL as primary identifier if no external website
                 "phone": "",
                 "email": "",
-                "address": country # Start with country, we might find more in schedule
+                "address": country,
+                "region": "middle-east",
+                "source_script": "gac_middle_east.py"
             }
 
             # Link location
@@ -129,7 +131,7 @@ class GACMiddleEastScraper(BaseNicheScraper):
             custom_fields = {
                 "cert_number": code,
                 "accreditation_body": "GAC",
-                "accreditation_type": "Testing" if "ATL" in code else "Unknown"
+                "accreditation_type": "Testing" if "ATL" in code else ("Calibration" if "APC" in code else "Other")
             }
 
             # Check for schedule links

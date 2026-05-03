@@ -51,3 +51,21 @@ Transition the directory to a dynamic SSR-based PSEO system with a 3-tier trust 
 - [x] **Task 5.4**: Add link/name of Skills folders to Gemini.md files.
 - [x] **Task 5.5**: Update scrapers to monitor and keep listing info up to date.
 - [x] **Task 5.6**: Create live listing counter in Supabase and replace static site numbers.
+
+## 🌍 Phase 6: Geographic Expansion
+
+### 📄 Reference Documents
+- **Roadmap**: [GEOGRAPHIC_EXPANSION_ROADMAP.md](./docs/active/GEOGRAPHIC_EXPANSION_ROADMAP.md)
+- **IAF API Integration**: [IAF_API_INTEGRATION_PLAN.md](./docs/active/IAF_API_INTEGRATION_PLAN.md)
+
+### 🎯 Objective
+Scale TSTR.directory to international markets (Europe, Middle East, Asia) using a combination of API-first (IAF CertSearch) and regional scrapers.
+
+---
+
+## 🛠️ TASK BOARD
+- [x] **Task 6.1**: Implement `scopematch_eu.py` Aggregator (Europe).
+- [x] **Task 6.2**: Implement `gac_middle_east.py` Scraper (GCC).
+- [ ] **Task 6.3**: Register for IAF CertSearch API access (User Action).
+- [ ] **Task 6.4**: Implement `iaf_verify_client.py` for global certification checks.
+- [ ] **Task 6.5**: Build Europe-specific PSEO landing pages.
