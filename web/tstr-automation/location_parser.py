@@ -379,6 +379,10 @@ class LocationParser:
         # Normalize country name
         country = self.normalize_country(country)
 
+        # Safety: If city is same as country, ignore city
+        if city and city.lower().strip() == country.lower().strip():
+            city = None
+
         # Get Global location (should always exist as root)
         global_loc = self._get_or_create_location("Global", "global")
 

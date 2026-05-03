@@ -585,7 +585,7 @@ class BaseNicheScraper(ABC):
 
             if values_to_insert:
                 self.supabase.from_("listing_custom_fields").upsert(
-                    values_to_insert
+                    values_to_insert, on_conflict="listing_id,custom_field_id"
                 ).execute()
                 logger.info(f"  Saved/Updated {len(values_to_insert)} custom field values")
 
@@ -631,22 +631,24 @@ class BaseNicheScraper(ABC):
             self.stats["listings_failed"] += 1
             return False
 
-    def run(self, limit: Optional[int] = None, dry_run: bool = False):
+    def run(self, limit: Optional[int] = None, dry_run: Optional[bool] = None):
         """
         Main scraping workflow
 
         Args:
             limit: Limit number of listings to scrape (for testing)
-            dry_run: Fetch and parse but don't save to database
+            dry_run: Fetch and parse but don't save to database (defaults to self.dry_run)
         """
+        if dry_run is not None:
+            self.dry_run = dry_run
+
         logger.info("=" * 70)
         logger.info(f"Starting scraper: {self.__class__.__name__}")
         logger.info(f"Category: {self.category_slug}")
         logger.info(f"Source: {self.source_name}")
         logger.info("=" * 70)
 
-        self.dry_run = dry_run
-        if dry_run:
+        if self.dry_run:
             logger.info("DRY RUN MODE - No database writes")
             dry_run_data = []
 
