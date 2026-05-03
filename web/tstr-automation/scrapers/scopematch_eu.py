@@ -139,7 +139,9 @@ class ScopeMatchScraper(BaseNicheScraper):
                 "phone": lab.get("phone") or "",
                 "email": lab.get("email") or "",
                 "latitude": lab.get("latitude"),
-                "longitude": lab.get("longitude")
+                "longitude": lab.get("longitude"),
+                "region": "eu",
+                "source_script": "scopematch_eu.py"
             }
             
             # Parse and link location
