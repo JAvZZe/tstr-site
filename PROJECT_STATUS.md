@@ -1,9 +1,9 @@
 # 📊 TSTR.DIRECTORY - PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - Executive summary for agents
-> **Last Updated**: 2026-05-04 05:01 UTC
+> **Last Updated**: 2026-05-04 18:09 UTC
 > **Updated By**: JAvZZe
-> **Status**: ✅ INTERNATIONAL SCALE ACTIVE - Europe & Middle East (v2.6.0)
+> **Status**: ✅ INTERNATIONAL SCALE ACTIVE - Europe & Middle East (v2.6.1)
 
 ---
 
@@ -33,7 +33,8 @@
 
 ---
 
-## 🚀 LATEST UPDATES (v2.6.0)
+## 🚀 LATEST UPDATES (v2.6.1)
+- **Agent Bootstrap Repair**: ✅ **RESOLVED**. Updated `start-agent.sh` to resolve the current workspace dynamically and load `TSTR.directory` project context without the stale `TSTR-site` path.
 - **International Scaling**: ✅ **COMPLETE**. Deployed ScopeMatch.eu (Europe) and GAC (Middle East) scrapers. 
 - **OAuth Fix**: ✅ **RESOLVED**. Implemented cookie-based state preservation for LinkedIn redirects.
 - **Data Integrity**: ✅ **VERIFIED**. Materials Testing enrichment successful (105/219 listings).

@@ -4,14 +4,15 @@
 
 echo "🚀 Initializing TSTR.site Agent Context..."
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # First: Global bootstrap (MANDATORY for all agents)
 echo "📋 Step 1: Global system bootstrap..."
 cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 
 # Second: Project-specific bootstrap
 echo "📋 Step 2: Project-specific context..."
-cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working"
-./bootstrap.sh TSTR-site
+cd "$SCRIPT_DIR" && ./bootstrap.sh TSTR.directory
 
 echo "✅ Complete agent context loaded successfully"
 echo "📋 Available commands:"
