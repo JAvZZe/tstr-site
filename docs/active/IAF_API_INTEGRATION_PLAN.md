@@ -28,6 +28,20 @@ To enable this integration, the following manual steps are required:
 ## 📐 Technical Implementation (TSTR.site)
 We will implement a specialized **`IAFVerifyClient`** to handle the matching and credit consumption logic.
 
+---
+
+## 🔍 IAF Data Ecosystem Analysis (Strategic)
+As per the steering update, we will analyze the IAF's data pipeline to inform TSTR's own negotiation strategy with standards bodies.
+
+### 1. Data Sourcing Analysis
+*   **Source**: IAF aggregates from national ABs (UKAS, A2LA, etc.) and global CBs.
+*   **Mechanism**: Data is pushed via XML/XLSX or pulled via API from the member bodies.
+*   **Negotiation Goal**: Understand the multilateral recognition arrangements (MLA/MRA) that underpin this data sharing to position TSTR as a value-add discovery partner.
+
+### 2. Partnership Positioning
+*   Analyze the 'Quality Trade' management of the IAF CertSearch platform.
+*   Evaluate how TSTR can negotiate similar direct data feeds from niche-specific ABs by demonstrating high-intent lead generation for their accredited members.
+
 ### 1. The "Matching" Problem
 TSTR has 700+ listings. We cannot afford to "blindly" verify all of them via API.
 *   **Strategy**: Use the **Search API** (low cost/free) to find potential matches first.

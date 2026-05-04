@@ -66,6 +66,7 @@ Scale TSTR.directory to international markets (Europe, Middle East, Asia) using 
 ## 🛠️ TASK BOARD
 - [x] **Task 6.1**: Implement `scopematch_eu.py` Aggregator (Europe).
 - [x] **Task 6.2**: Implement `gac_middle_east.py` Scraper (GCC).
+- [ ] **Task 6.6**: IAF Data Ecosystem Analysis & Negotiation Strategy (Strategic Alignment).
 - [ ] **Task 6.3**: Register for IAF CertSearch API access (User Action).
 - [ ] **Task 6.4**: Implement `iaf_verify_client.py` for global certification checks.
 - [ ] **Task 6.5**: Build Europe-specific PSEO landing pages.
