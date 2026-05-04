@@ -1,19 +1,25 @@
 # 📋 CURRENT WORK - TSTR.directory
 
-> **Active sprints and agent assignments** - Updated: 2026-04-16
+> **Active sprints and agent assignments** - Updated: 2026-05-04
 
 ---
 
-## 🎯 Active Sprint: PSEO 2.0 Optimization
+## 🎯 Active Sprint: Revenue Acceleration
 
 ### Owner
-**Agent**: Gemini Flash (in Antigravity session)
+**Agent**: Codex strategic lead; execution can be delegated to focused data, frontend, Hydrogen, and verification agents.
 
 ### Goals
-1. Optimize PSEO (Programmatic SEO) architecture
-2. Complete PSEO page refinement and testing
-3. Data enrichment for standards
-4. Verify E2E conversion flow
+1. Increase buyer RFQ conversion.
+2. Make sparse listings feel procurement-grade.
+3. Treat Hydrogen infrastructure testing as the premium monetization wedge.
+4. Reduce homepage, browse, listing, and RFQ friction.
+5. Verify the full buyer path from landing/search to RFQ submission.
+
+### Source of Truth
+Agents must execute from:
+
+- `docs/active/REVENUE_ACCELERATION_EXECUTION_PLAN.md`
 
 ---
 
@@ -38,6 +44,12 @@
 ---
 
 ## 📋 Pending Work (from Antigravity Handoff)
+
+### 0. Revenue Acceleration Plan
+- [ ] **Listing Value Density**: Audit active listing completeness and enrich Hydrogen, Materials/A2LA, Europe, and Middle East first.
+- [ ] **Hydrogen Premium Track**: Verify Hydrogen standards/capabilities, manually extract useful stale-branch data without merging, improve Hydrogen RFQ journey.
+- [ ] **UX/RFQ Friction**: Clarify homepage/browse/listing CTAs and reduce required RFQ fields.
+- [ ] **Verification**: Build, screenshots, and test representative RFQ flows.
 
 ### 1. Listing Page Refinement
 - [ ] **Lab Manager Portal Teaser**: Refactor "Claim Listing" block into high-value dashboard teaser
