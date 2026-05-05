@@ -1,4 +1,7 @@
-# 🛡️ IAF CertSearch API Integration Plan
+## 🛡️ IAF CertSearch API Integration Plan (API-FIRST PIVOT)
+
+### 🚨 Strategy Update
+Manual bulk upload attempts (XLSX) encountered UI mapping blockers. The project is now pivoting to an **API-First Verification** strategy using the IAF CertSearch REST API. This will allow for programmatic matching and automated data enrichment without manual UI intervention.
 
 ## Executive Cost Summary
 The IAF CertSearch API has moved to a **Company-Based Usage** model (as of July 2025). Credits are consumed per company verified, with unlimited access to all their certificates (ISO 9001, 17025, etc.) once "claimed."
