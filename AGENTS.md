@@ -156,6 +156,10 @@ To maintain a clean environment and reduce token clutter:
 
 ## AI Agent CLI Functions (v2.0 Integration)
 
+## Codex Strategic Lead Policy
+
+When Codex is the active agent, read and follow [`CODEX.md`](./CODEX.md). Codex should conserve its context for architecture, root-cause analysis, sequencing, production-risk decisions, integration review, and anti-drift enforcement. Delegate broad scans, repetitive audits, stale-branch comparisons, listing completeness reports, and first-pass UX reviews to Gemini/Qwen/CLI agents when practical.
+
 **Available in all bash sessions** (added to ~/.bashrc):
 
 ```bash

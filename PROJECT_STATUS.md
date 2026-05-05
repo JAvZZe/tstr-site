@@ -1,9 +1,9 @@
 # 📊 TSTR.DIRECTORY - PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - Executive summary for agents
-> **Last Updated**: 2026-05-04 18:09 UTC
+> **Last Updated**: 2026-05-05 05:01 UTC
 > **Updated By**: Codex
-> **Status**: ✅ REVENUE ACCELERATION PLANNED - Hydrogen + Listing Density (v2.6.2)
+> **Status**: ✅ CODEX STRATEGIC POLICY DOCUMENTED (v2.6.3)
 
 ---
 
@@ -33,7 +33,8 @@
 
 ---
 
-## 🚀 LATEST UPDATES (v2.6.2)
+## 🚀 LATEST UPDATES (v2.6.3)
+- **Codex Operating Policy**: ✅ **DOCUMENTED**. Added [`CODEX.md`](./CODEX.md) and linked it from `AGENTS.md` so Codex conserves context for strategy/integration and delegates broad scans or repetitive audits to Gemini/Qwen/CLI agents.
 - **Revenue Execution Plan**: ✅ **DOCUMENTED**. Added [Revenue Acceleration Execution Plan](./docs/active/REVENUE_ACCELERATION_EXECUTION_PLAN.md) for agents to execute listing value density, Hydrogen monetization, UX/RFQ friction reduction, and verification without drifting.
 - **Agent Bootstrap Repair**: ✅ **RESOLVED**. Updated `start-agent.sh` to resolve the current workspace dynamically and load `TSTR.directory` project context without the stale `TSTR-site` path.
 - **International Scaling**: ✅ **COMPLETE**. Deployed ScopeMatch.eu (Europe) and GAC (Middle East) scrapers. 
@@ -45,6 +46,7 @@
 ## 📝 PENDING TASKS
 
 ### High Priority
+- [x] Document Codex strategic lead and delegation policy across active instructions and memory systems.
 - [ ] Execute Revenue Acceleration Plan: Hydrogen premium track, listing value density, lower-friction RFQ, and conversion verification.
 - [ ] Register for IAF CertSearch API (User Action required).
 - [ ] Implement `iaf_verify_client.py` for global certification checks.
