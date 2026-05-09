@@ -26,6 +26,6 @@ response = session.post(search_url, data=payload, headers=headers)
 print(f"Status: {response.status_code}")
 try:
     print(response.text[:500])
-except:
+except Exception:
     pass
 

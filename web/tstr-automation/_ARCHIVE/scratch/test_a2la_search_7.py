@@ -25,7 +25,7 @@ try:
     if isinstance(data, list) and len(data) > 0:
         print(f"First result keys: {data[0].keys()}")
         print(f"First result labPID: {data[0].get('labPID')}")
-except:
+except Exception:
     print("Response is not JSON")
     print(response.text[:200])
 

@@ -55,7 +55,7 @@ class ScopeMatchScraper(BaseNicheScraper):
                     continue
                 response.raise_for_status()
                 return response.json()
-            except Exception as e:
+            except Exception:
                 if i < retries - 1:
                     continue
                 raise
