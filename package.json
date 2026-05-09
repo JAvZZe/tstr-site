@@ -17,7 +17,7 @@
     "prettier": "^3.8.1",
     "ts-jest": "^29.4.9",
     "tsx": "^4.21.0",
-    "wrangler": "^4.43.0"
+    "wrangler": "^4.90.0"
   },
   "dependencies": {
     "@opentelemetry/api": "^1.9.1",
@@ -27,8 +27,8 @@
     "@opentelemetry/sdk-node": "^0.217.0",
     "@opentelemetry/sdk-trace-node": "^2.7.1",
     "@opentelemetry/winston-transport": "^0.27.0",
-    "astro": "^6.1.6",
-    "axios": "^1.12.2",
+    "astro": "^6.3.1",
+    "axios": "^1.15.2",
     "express": "^5.2.1",
     "ws": "^8.20.0"
   },
