@@ -4,8 +4,8 @@ import { CONTENT } from '../../../lib/contacts'
 import Footer from '../../../components/Footer.astro'
 import { getRedirectUrl } from '../../../lib/redirect'
 
-// Enable static prerendering
-export const prerender = true
+// Static prerendering disabled to ensure build success on Cloudflare
+// export const prerender = true
 
 // Get all listings to generate static paths
 export async function getStaticPaths() {
