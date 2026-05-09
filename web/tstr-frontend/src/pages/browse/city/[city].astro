@@ -14,11 +14,13 @@ export async function getStaticPaths() {
     .select('id, name, slug, level')
     .eq('level', 'city')
 
-  // Generate paths for each city
-  return locations?.map(location => ({
-    params: { city: location.slug },
-    props: { cityName: location.name, cityId: location.id }
-  })) || []
+  // Generate paths for each city, filtering out missing or malformed slugs (e.g., containing colons)
+  return locations
+    ?.filter(location => location.slug && !location.slug.includes(':') && location.slug.trim() !== '')
+    .map(location => ({
+      params: { city: location.slug },
+      props: { cityName: location.name, cityId: location.id }
+    })) || []
 }
 
 const { city } = Astro.params

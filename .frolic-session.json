@@ -1,0 +1,184 @@
+{
+  "timestamp": "2026-05-09T07:13:12.639Z",
+  "sessionId": "28e6acd5-2c00-488f-a616-827e9d005ddb",
+  "eventCount": 11,
+  "events": [
+    {
+      "timestamp": "2026-05-09T06:29:49.274Z",
+      "sessionId": "28e6acd5-2c00-488f-a616-827e9d005ddb",
+      "eventType": "file_open",
+      "file": "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-frontend/src/pages/browse/city/[city].astro",
+      "relativePath": "tstr-site-working/web/tstr-frontend/src/pages/browse/city/[city].astro",
+      "language": "plaintext",
+      "lineCount": 350,
+      "isDirty": false,
+      "isUntitled": false,
+      "cursorPosition": null,
+      "selectionLength": 0,
+      "changes": []
+    },
+    {
+      "timestamp": "2026-05-09T06:31:03.980Z",
+      "sessionId": "28e6acd5-2c00-488f-a616-827e9d005ddb",
+      "eventType": "file_open",
+      "file": "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/instrumentation.node.ts",
+      "relativePath": "tstr-site-working/instrumentation.node.ts",
+      "language": "typescript",
+      "lineCount": 1127,
+      "isDirty": false,
+      "isUntitled": false,
+      "cursorPosition": null,
+      "selectionLength": 0,
+      "changes": []
+    },
+    {
+      "timestamp": "2026-05-09T06:31:03.992Z",
+      "sessionId": "28e6acd5-2c00-488f-a616-827e9d005ddb",
+      "eventType": "file_edit",
+      "file": "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/instrumentation.node.ts",
+      "relativePath": "tstr-site-working/instrumentation.node.ts",
+      "language": "typescript",
+      "lineCount": 1127,
+      "isDirty": false,
+      "isUntitled": false,
+      "cursorPosition": null,
+      "selectionLength": 0,
+      "changes": [
+        {
+          "textLength": 46820,
+          "rangeLength": 46734,
+          "lineCountDelta": 1126,
+          "likelyAI": false,
+          "changeText": "import { NodeSDK } from '@opentelemetry/sdk-node';\nimport { ConsoleSpanExporter } from '@opentelemetry/sdk-trace-node';\nimport { ReadableSpan } from '@opentelemetry/sdk-trace-base';\nimport { ExportResultCode } from '@opentelemetry/core';\nimport { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';\nimport { trace, context, SpanStatusCode } from '@opentelemetry/api';\nimport * as Module from 'module';\nimport * as path from 'path';\nimport * as fs from 'fs';\nimport { inspect } from 'util';\nimport express, { Request, Response } from 'express';\n\n// Force ws to use the pure JS path. Some bundlers partially shim optional\n// native bufferutil, which breaks sends with `bufferUtil.mask is not a function`.\nprocess.env.WS_NO_BUFFER_UTIL ??= '1';\nconst WsModule = require('ws') as typeof import('ws');\nconst WebSocket = (WsModule.WebSocket ?? WsModule) as typeof import('ws').WebSocket;\n\n// Hardcoded API_KEY\nconst API_KEY = 'sysk_NfPer7o6dO6uvy6tHgdTXlvDfoe6dHn';\n\n// Identifier Configuration\nconst APP_ID = 'b0c920ee-9259-4c92-b886-68dbfb539c78';\nconst APP_NAME = 'tstr-site-working';\nconst PROJECT_ID = 'd8349c01-47e9-494f-8e99-13415412fade';\n\n// ===== Configuration Switches =====\n// Set to false to disable all debug log output in instrumentation.ts file\nconst ENABLE_DEBUG_LOG = true;\n// Set to true to enable CachedSpanExporter console output (disabled by default)\nconst ENABLE_CONSOLE_EXPORTER = false;\n// ===================================\n\nclass CachedSpanExporter extends ConsoleSpanExporter {\n    private enabled: boolean;\n\n    constructor() {\n        super();\n        this.enabled = ENABLE_CONSOLE_EXPORTER; // Controlled by global switch\n    }\n\n    // Check if span is from instrumentation's own requests (should be filtered out)\n    private isInstrumentationSpan(span: ReadableSpan): boolean {\n        const attrs = span.attributes;\n        const httpUrl = attrs['http.url'] as string | undefined;\n        const httpHost = attrs['http.host'] as string | undefin...[TRUNCATED]",
+          "wasTruncated": true
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-05-09T06:31:03.997Z",
+      "sessionId": "28e6acd5-2c00-488f-a616-827e9d005ddb",
+      "eventType": "file_edit",
+      "file": "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/instrumentation.node.ts",
+      "relativePath": "tstr-site-working/instrumentation.node.ts",
+      "language": "typescript",
+      "lineCount": 1127,
+      "isDirty": true,
+      "isUntitled": false,
+      "cursorPosition": null,
+      "selectionLength": 0,
+      "changes": []
+    },
+    {
+      "timestamp": "2026-05-09T06:31:04.045Z",
+      "sessionId": "28e6acd5-2c00-488f-a616-827e9d005ddb",
+      "eventType": "file_edit",
+      "file": "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/instrumentation.node.ts",
+      "relativePath": "tstr-site-working/instrumentation.node.ts",
+      "language": "typescript",
+      "lineCount": 1127,
+      "isDirty": false,
+      "isUntitled": false,
+      "cursorPosition": null,
+      "selectionLength": 0,
+      "changes": []
+    },
+    {
+      "timestamp": "2026-05-09T06:31:04.046Z",
+      "sessionId": "28e6acd5-2c00-488f-a616-827e9d005ddb",
+      "eventType": "file_edit",
+      "file": "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/instrumentation.node.ts",
+      "relativePath": "tstr-site-working/instrumentation.node.ts",
+      "language": "typescript",
+      "lineCount": 1127,
+      "isDirty": false,
+      "isUntitled": false,
+      "cursorPosition": null,
+      "selectionLength": 0,
+      "changes": []
+    },
+    {
+      "timestamp": "2026-05-09T06:31:04.148Z",
+      "sessionId": "28e6acd5-2c00-488f-a616-827e9d005ddb",
+      "eventType": "diagnostic_change",
+      "file": "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/instrumentation.node.ts",
+      "relativePath": "tstr-site-working/instrumentation.node.ts",
+      "language": "unknown",
+      "lineCount": 0,
+      "isDirty": false,
+      "isUntitled": false,
+      "cursorPosition": null,
+      "selectionLength": 0,
+      "changes": []
+    },
+    {
+      "timestamp": "2026-05-09T06:32:48.713Z",
+      "sessionId": "28e6acd5-2c00-488f-a616-827e9d005ddb",
+      "eventType": "diagnostic_change",
+      "file": "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-frontend/src/pages/browse/city/[city].astro",
+      "relativePath": "tstr-site-working/web/tstr-frontend/src/pages/browse/city/[city].astro",
+      "language": "unknown",
+      "lineCount": 0,
+      "isDirty": false,
+      "isUntitled": false,
+      "cursorPosition": null,
+      "selectionLength": 0,
+      "changes": []
+    },
+    {
+      "timestamp": "2026-05-09T06:57:21.223Z",
+      "sessionId": "28e6acd5-2c00-488f-a616-827e9d005ddb",
+      "eventType": "file_open",
+      "file": "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-frontend/src/pages/browse/city/[city].astro",
+      "relativePath": "tstr-site-working/web/tstr-frontend/src/pages/browse/city/[city].astro",
+      "language": "plaintext",
+      "lineCount": 350,
+      "isDirty": false,
+      "isUntitled": false,
+      "cursorPosition": null,
+      "selectionLength": 0,
+      "changes": []
+    },
+    {
+      "timestamp": "2026-05-09T06:58:10.099Z",
+      "sessionId": "28e6acd5-2c00-488f-a616-827e9d005ddb",
+      "eventType": "file_edit",
+      "file": "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-frontend/src/pages/browse/city/[city].astro",
+      "relativePath": "tstr-site-working/web/tstr-frontend/src/pages/browse/city/[city].astro",
+      "language": "plaintext",
+      "lineCount": 350,
+      "isDirty": false,
+      "isUntitled": false,
+      "cursorPosition": null,
+      "selectionLength": 0,
+      "changes": [
+        {
+          "textLength": 224,
+          "rangeLength": 153,
+          "lineCountDelta": 3,
+          "likelyAI": false,
+          "changeText": "  // Generate paths for each city, filtering out missing or malformed slugs (e.g., containing colons)\n  return locations\n    ?.filter(location => location.slug && !location.slug.includes(':') && location.slug.trim() !== '')\n",
+          "wasTruncated": false
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-05-09T07:00:21.294Z",
+      "sessionId": "28e6acd5-2c00-488f-a616-827e9d005ddb",
+      "eventType": "diagnostic_change",
+      "file": "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-frontend/src/pages/browse/city/[city].astro",
+      "relativePath": "tstr-site-working/web/tstr-frontend/src/pages/browse/city/[city].astro",
+      "language": "unknown",
+      "lineCount": 0,
+      "isDirty": false,
+      "isUntitled": false,
+      "cursorPosition": null,
+      "selectionLength": 0,
+      "changes": []
+    }
+  ],
+  "metadata": {
+    "version": "1.3.0",
+    "trigger": "smart-backup",
+    "memoryUsage": 14574
+  }
+}
