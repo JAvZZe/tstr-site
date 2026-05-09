@@ -50,7 +50,74 @@ const adsenseId = import.meta.env.PUBLIC_ADSENSE_ID || "ca-pub-7003918988204966"
   </main>
   <Footer />
 
+  <!-- Floating Search Button (Global) -->
+  <div id="floating-search-container" class="fixed bottom-8 right-8 z-[100] opacity-0 pointer-events-none transition-all duration-500 translate-y-10">
+    <button 
+      id="floating-search-btn"
+      class="w-14 h-14 md:w-16 md:h-16 bg-blue-600 hover:bg-blue-500 text-white rounded-full flex items-center justify-center shadow-2xl shadow-blue-600/40 border border-white/10 transition-all active:scale-90 hover:scale-110 group"
+      title="Search for Testers"
+    >
+      <span class="text-2xl md:text-3xl group-hover:rotate-12 transition-transform">🔍</span>
+      <div class="absolute inset-0 rounded-full animate-ping bg-blue-400/20 pointer-events-none"></div>
+    </button>
+  </div>
+
+  <style is:global>
+    @keyframes bounce-subtle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .animate-bounce-subtle {
+      animation: bounce-subtle 3s infinite ease-in-out;
+    }
+  </style>
+
   <script>
+    function initFloatingSearch() {
+      const container = document.getElementById('floating-search-container');
+      const btn = document.getElementById('floating-search-btn');
+      if (!container || !btn) return;
+
+      let lastScroll = 0;
+      let ticking = false;
+
+      window.addEventListener('scroll', () => {
+        lastScroll = window.scrollY || document.documentElement.scrollTop;
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            if (lastScroll > 400) {
+              container.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-10');
+              container.classList.add('animate-bounce-subtle');
+            } else {
+              container.classList.add('opacity-0', 'pointer-events-none', 'translate-y-10');
+              container.classList.remove('animate-bounce-subtle');
+            }
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+
+      btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Try to focus the search input if it exists (on index page)
+        setTimeout(() => {
+          const input = document.getElementById('ai-search-input');
+          if (input) {
+            input.focus();
+          } else {
+            // If no search input on this page, maybe redirect to browse?
+            // For now, just scroll to top is fine for a "back to search" experience
+          }
+        }, 600);
+      });
+    }
+
+    // Initialize on load and on view transition
+    initFloatingSearch();
+    document.addEventListener('astro:after-swap', initFloatingSearch);
+
     function initApollo(){
       var n=Math.random().toString(36).substring(7),o=document.createElement("script");
       o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,

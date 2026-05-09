@@ -174,27 +174,6 @@ const pageDescription = formatDescription(
     </div>
   </section>
 
-  <!-- Floating Search Button -->
-  <div id="floating-search-container" class="fixed bottom-8 right-8 z-50 opacity-0 pointer-events-none transition-all duration-500 translate-y-10">
-    <button 
-      id="floating-search-btn"
-      class="w-16 h-16 bg-blue-600 hover:bg-blue-500 text-white rounded-full flex items-center justify-center shadow-2xl shadow-blue-600/40 border border-white/10 transition-all active:scale-90 animate-bounce-subtle"
-      title="Search for Testers"
-    >
-      <span class="text-3xl">🔍</span>
-    </button>
-  </div>
-
-  <style>
-    @keyframes bounce-subtle {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-    .animate-bounce-subtle {
-      animation: bounce-subtle 3s infinite ease-in-out;
-    }
-  </style>
-
   <script>
     // --- AI SEARCH WIDGET ---
     const input = document.getElementById('ai-search-input');
@@ -326,23 +305,6 @@ const pageDescription = formatDescription(
     // Interaction tracking or other init
     input?.addEventListener('focus', () => {
       if (input.value.length >= 2) resultsDiv.style.display = 'block';
-    });
-
-    // Floating Search Button Logic
-    const floatingContainer = document.getElementById('floating-search-container');
-    const floatingBtn = document.getElementById('floating-search-btn');
-    
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 400) {
-        floatingContainer?.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-10');
-      } else {
-        floatingContainer?.classList.add('opacity-0', 'pointer-events-none', 'translate-y-10');
-      }
-    });
-
-    floatingBtn?.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      setTimeout(() => input?.focus(), 600);
     });
   </script>
 </BaseLayout>
