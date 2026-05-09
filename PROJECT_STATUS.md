@@ -1,9 +1,9 @@
 # 📊 TSTR.DIRECTORY - PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - Executive summary for agents
-> **Last Updated**: 2026-05-09 11:54 UTC
+> **Last Updated**: 2026-05-09 18:06 UTC
 > **Updated By**: JAvZZe
-> **Status**: ✅ INTERNATIONAL SCALE ACTIVE - Saudi Energy Hub Seeded (v2.6.1)
+> **Status**: ✅ INTERNATIONAL SCALE ACTIVE - Saudi Energy Hub Seeded (v2.6.2)
 
 ---
 
@@ -37,6 +37,7 @@
 - **Saudi Energy Hub**: ✅ **SEEDED**. Manually enriched top-tier labs (GCC Lab, Al-Hoty, ETLCO).
 - **International Scaling**: ✅ **COMPLETE**. Deployed ScopeMatch.eu (Europe) and GAC (Middle East) scrapers. 
 - **OAuth Fix**: ✅ **RESOLVED**. Implemented cookie-based state preservation for LinkedIn redirects.
+- **Search Experience**: ✅ **IMPROVED**. Added premium floating search button and header search link (v2.6.2).
 
 ---
 
