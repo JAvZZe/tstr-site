@@ -70,7 +70,8 @@ class SACSaudiScraper(BaseNicheScraper):
                         break
                         
                     cols = row.find_all("td")
-                    if not cols: continue
+                    if not cols:
+                        continue
                     
                     # Look for the 'Show' button/link
                     show_btn = cols[-1].find("a")

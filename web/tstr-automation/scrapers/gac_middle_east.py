@@ -10,7 +10,6 @@ Source: http://www.gcc-accreditation.org/public/cabs
 import os
 import sys
 import logging
-import re
 import time
 from typing import Dict, List, Optional
 

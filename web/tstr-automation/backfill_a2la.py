@@ -1,7 +1,7 @@
 import logging
 import argparse
 import re
-from typing import List, Dict, Optional
+from typing import List, Dict
 from difflib import SequenceMatcher
 from scrapers.a2la_materials import A2LAMaterialsScraper
 
@@ -69,7 +69,8 @@ class A2LABackfiller:
                 final_results = []
                 
                 for query in search_queries:
-                    if not query or len(query) < 3: continue
+                    if not query or len(query) < 3:
+                        continue
                     logger.debug(f"Trying search query: {query}")
                     results = self.find_lab_pids_by_name(query)
                     if results:

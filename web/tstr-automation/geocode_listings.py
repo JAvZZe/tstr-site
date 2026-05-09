@@ -82,13 +82,13 @@ def main():
                     supabase.table("listings").update(
                         {"latitude": 0.000001, "longitude": 0.000001, "updated_at": "now()"}
                     ).eq("id", row["id"]).execute()
-                    print(f"  ✅ Marked as Global (0.000001)")
+                    print("  ✅ Marked as Global (0.000001)")
                 except Exception as e:
                     print(f"  ❌ DB Update failed: {e}")
                     fail_count += 1
                     continue
             else:
-                print(f"  ✅ [DRY RUN] Would mark as Global")
+                print("  ✅ [DRY RUN] Would mark as Global")
             success_count += 1
             continue
 

@@ -25,5 +25,5 @@ try:
     # Try a common name
     data = supabase.table("subscriptions").select("*").limit(1).execute()
     print("subscriptions table exists")
-except:
+except Exception:
     print("subscriptions table does not exist or access denied")
