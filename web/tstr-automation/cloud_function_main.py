@@ -102,7 +102,7 @@ def run_primary_scraper(request):
         logger.error(f"Error in primary scraper: {e}", exc_info=True)
         return {
             'status': 'error',
-            'message': str(e),
+            'message': 'Internal server error',
             'timestamp': datetime.now().isoformat()
         }, 500
 
@@ -200,7 +200,7 @@ def run_secondary_scraper(request):
         logger.error(f"Error in secondary scraper: {e}", exc_info=True)
         return {
             'status': 'error',
-            'message': str(e),
+            'message': 'Internal server error',
             'timestamp': datetime.now().isoformat()
         }, 500
 
@@ -286,7 +286,7 @@ def run_cleanup(request):
         logger.error(f"Error in cleanup: {e}", exc_info=True)
         return {
             'status': 'error',
-            'message': str(e),
+            'message': 'Internal server error',
             'timestamp': datetime.now().isoformat()
         }, 500
 
@@ -316,4 +316,4 @@ if __name__ == "__main__":
     print("  - http://localhost:8080/secondary")
     print("  - http://localhost:8080/cleanup")
     
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='127.0.0.1', port=8080, debug=False)

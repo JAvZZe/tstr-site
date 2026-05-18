@@ -51,8 +51,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       }
       console.error('Supabase error:', error);
       return new Response(JSON.stringify({
-        error: 'Database error occurred.',
-        details: error.message
+        error: 'Database error occurred.'
       }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
@@ -67,8 +66,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   } catch (e) {
     console.error('Request error:', e);
     return new Response(JSON.stringify({
-      error: 'Invalid request format.',
-      details: e instanceof Error ? e.message : String(e)
+      error: 'Invalid request format.'
     }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' },

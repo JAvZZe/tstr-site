@@ -39,6 +39,12 @@ venv/
 *.key
 *.pem
 secrets/
+secret_alerts.json
+secret_summary.tsv
+code_alerts.json
+code_summary.tsv
+dependabot_alerts.json
+dependabot_summary.tsv
 
 # Local Netlify folder
 .netlify
