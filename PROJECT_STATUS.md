@@ -1,9 +1,9 @@
 # 📊 TSTR.DIRECTORY - PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - Executive summary for agents
-> **Last Updated**: 2026-05-09 18:09 UTC
+> **Last Updated**: 2026-05-18 17:38 UTC
 > **Updated By**: JAvZZe
-> **Status**: ✅ INTERNATIONAL SCALE ACTIVE - Saudi Energy Hub Seeded (v2.6.2)
+> **Status**: 🛡️ SECURITY HARDENING IN PROGRESS - Local CodeQL fixes applied (v2.6.4)
 
 ---
 
@@ -33,7 +33,8 @@
 
 ---
 
-## 🚀 LATEST UPDATES (v2.6.1)
+## 🚀 LATEST UPDATES (v2.6.4)
+- **Security Hardening**: ✅ **LOCAL FIXES APPLIED**. Removed a hardcoded instrumentation API key from tracked code, sanitized API error responses, disabled local Flask debug defaults, tightened workflow permissions, added exact host checks, reduced sensitive logging, and ignored raw GitHub alert exports. Credential rotation/provider verification remains a separate dashboard task.
 - **Saudi Energy Hub**: ✅ **SEEDED**. Manually enriched top-tier labs (GCC Lab, Al-Hoty, ETLCO).
 - **International Scaling**: ✅ **COMPLETE**. Deployed ScopeMatch.eu (Europe) and GAC (Middle East) scrapers. 
 - **OAuth Fix**: ✅ **RESOLVED**. Implemented cookie-based state preservation for LinkedIn redirects.
