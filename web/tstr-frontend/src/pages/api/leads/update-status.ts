@@ -64,11 +64,9 @@ export const POST: APIRoute = async ({ request }) => {
     })
 
   } catch (error: unknown) {
-    const errorMsg = error instanceof Error ? error.message : String(error)
     console.error('Update lead status API error:', error)
     return new Response(JSON.stringify({
-      error: 'Internal server error',
-      details: errorMsg
+      error: 'Internal server error'
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }

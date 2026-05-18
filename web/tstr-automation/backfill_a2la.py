@@ -1,6 +1,7 @@
 import logging
 import argparse
 import re
+from urllib.parse import urlparse
 from typing import List, Dict
 from difflib import SequenceMatcher
 from scrapers.a2la_materials import A2LAMaterialsScraper
@@ -11,6 +12,14 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger("A2LABackfill")
+
+def is_a2la_url(url: str) -> bool:
+    """Return true only for a2la.org and its subdomains."""
+    try:
+        hostname = urlparse(url).hostname
+    except ValueError:
+        return False
+    return hostname == "a2la.org" or bool(hostname and hostname.endswith(".a2la.org"))
 
 class A2LABackfiller:
     def __init__(self):
@@ -43,7 +52,7 @@ class A2LABackfiller:
             
             # 1. Determine the A2LA URL
             url = None
-            if 'a2la.org' in website:
+            if is_a2la_url(website):
                 url = website
                 logger.info(f"Using existing A2LA URL for {name}: {url}")
             else:

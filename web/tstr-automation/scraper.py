@@ -193,9 +193,9 @@ class ListingsScraperSecondary:
                         
                         # Check for duplicates
                         if self._is_duplicate(listing_data):
-                            logging.debug(f"⏭️  Skipping duplicate: {listing_data['name']}")
+                            logging.debug("Skipping duplicate listing")
                         else:
-                            logging.info(f"✨ New listing found: {listing_data['name']}")
+                            logging.info("New listing found")
                             self.results.append(listing_data)
 
                     time.sleep(0.5)  # Rate limiting
@@ -273,10 +273,10 @@ class ListingsScraperSecondary:
                         
                         # Check for duplicates
                         if not self._is_duplicate(listing_data):
-                            logging.info(f"✨ New listing from Energy Pedia: {listing_data['name']}")
+                            logging.info("New listing from Energy Pedia")
                             self.results.append(listing_data)
                         else:
-                            logging.debug(f"⏭️  Skipping duplicate: {listing_data['name']}")
+                            logging.debug("Skipping duplicate listing from Energy Pedia")
                     
                 except Exception as e:
                     logging.warning(f"Error parsing listing: {e}")

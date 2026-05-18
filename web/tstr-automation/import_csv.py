@@ -16,6 +16,7 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 import csv
 import re
+from hashlib import sha256
 
 import requests
 
@@ -49,6 +50,10 @@ def create_slug(business_name):
         return "listing"
     slug = re.sub(r"[^a-z0-9]+", "-", business_name.lower()).strip("-")
     return slug[:100] if len(slug) > 100 else slug
+
+
+def short_hash(value):
+    return sha256((value or "").encode("utf-8")).hexdigest()[:10]
 
 
 def insert_custom_fields(listing_id, row):
@@ -85,11 +90,9 @@ def insert_custom_fields(listing_id, row):
         )
 
         if response.status_code == 201:
-            print(f"  ✓ Custom field {field_name}: {field_value}")
+            print(f"  ✓ Custom field {field_name}")
         else:
-            print(
-                f"  ✗ Custom field {field_name} failed: {response.status_code} {response.text}"
-            )
+            print(f"  ✗ Custom field {field_name} failed: {response.status_code}")
 
 
 def import_listings(csv_path):
@@ -124,7 +127,7 @@ def import_listings(csv_path):
             if check_response.status_code == 200 and check_response.json():
                 # Listing exists
                 listing_id = check_response.json()[0]["id"]
-                print(f"✓ Exists: {listing_data['business_name']} (ID: {listing_id})")
+                print(f"✓ Exists: listing {short_hash(slug)}")
             else:
                 # Insert listing
                 response = requests.post(
@@ -135,11 +138,9 @@ def import_listings(csv_path):
 
                 if response.status_code == 201:
                     listing_id = response.json()[0]["id"]
-                    print(f"✓ Inserted: {listing_data['business_name']}")
+                    print(f"✓ Inserted: listing {short_hash(slug)}")
                 else:
-                    print(
-                        f"✗ Failed: {listing_data['business_name']} - {response.status_code} {response.text}"
-                    )
+                    print(f"✗ Failed: listing {short_hash(slug)} - {response.status_code}")
                     continue
 
             # Insert custom fields

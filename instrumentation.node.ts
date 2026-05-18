@@ -16,8 +16,7 @@ process.env.WS_NO_BUFFER_UTIL ??= '1';
 const WsModule = require('ws') as typeof import('ws');
 const WebSocket = (WsModule.WebSocket ?? WsModule) as typeof import('ws').WebSocket;
 
-// Hardcoded API_KEY
-const API_KEY = 'sysk_NfPer7o6dO6uvy6tHgdTXlvDfoe6dHn';
+const API_KEY = process.env.SYN_CAUSE_API_KEY;
 
 // Identifier Configuration
 const APP_ID = 'b0c920ee-9259-4c92-b886-68dbfb539c78';
@@ -48,17 +47,17 @@ class CachedSpanExporter extends ConsoleSpanExporter {
         const httpTarget = attrs['http.target'] as string | undefined;
 
         // Filter out proxy server connection
-        if (httpUrl?.includes('api.syn-cause.com') ||
-            httpHost?.includes('api.syn-cause.com') ||
-            netPeerName?.includes('api.syn-cause.com')) {
+        if (isExactHost(httpUrl, 'api.syn-cause.com') ||
+            httpHost === 'api.syn-cause.com' ||
+            netPeerName === 'api.syn-cause.com') {
             return true;
         }
 
         // Filter out local instrumentation server requests
-        if (httpUrl?.includes('localhost:43210') ||
-            httpUrl?.includes('127.0.0.1:43210') ||
-            httpHost?.includes('localhost:43210') ||
-            httpHost?.includes('127.0.0.1:43210') ||
+        if (isExactHost(httpUrl, 'localhost', '43210') ||
+            isExactHost(httpUrl, '127.0.0.1', '43210') ||
+            httpHost === 'localhost:43210' ||
+            httpHost === '127.0.0.1:43210' ||
             httpTarget?.includes('/remote-debug/')) {
             return true;
         }
@@ -84,6 +83,16 @@ class CachedSpanExporter extends ConsoleSpanExporter {
         } catch {
             if (resultCallback) resultCallback({ code: ExportResultCode.FAILED });
         }
+    }
+}
+
+function isExactHost(rawUrl: string | undefined, hostname: string, port?: string): boolean {
+    if (!rawUrl) return false;
+    try {
+        const parsed = new URL(rawUrl);
+        return parsed.hostname === hostname && (port === undefined || parsed.port === port);
+    } catch {
+        return false;
     }
 }
 
@@ -767,6 +776,11 @@ function connectToProxyServer() {
     const apiKey = API_KEY;
 
     try {
+        if (!apiKey) {
+            debugLog.warn('[DEBUG] SYN_CAUSE_API_KEY is not configured; proxy connection skipped');
+            return;
+        }
+
         const urlWithAuth = apiKey
             ? `${wsUrl}${wsUrl.includes('?') ? '&' : '?'}api_key=${apiKey}`
             : wsUrl;

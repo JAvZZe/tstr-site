@@ -90,9 +90,8 @@ export const POST: APIRoute = async ({ request }) => {
             headers: { 'Content-Type': 'application/json' }
         });
     } catch (err: unknown) {
-        const errorMsg = err instanceof Error ? err.message : String(err)
         console.error('Contact form error:', err);
-        return new Response(JSON.stringify({ error: errorMsg || 'Server error' }), {
+        return new Response(JSON.stringify({ error: 'Server error' }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' }
         });
