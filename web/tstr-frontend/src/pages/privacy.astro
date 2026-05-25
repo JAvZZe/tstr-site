@@ -1,18 +1,23 @@
 ---
 // Privacy Policy page
+import BaseLayout from '../layouts/BaseLayout.astro'
 import { CONTACTS } from '../lib/contacts'
 import Footer from '../components/Footer.astro'
+import { formatTitle, formatDescription } from '../lib/seo';
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy Policy - TSTR Hub</title>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
-     crossorigin="anonymous"></script>
-  <style>
+<BaseLayout
+  title={formatTitle(["Privacy Policy - TSTR Hub"])}
+  description={formatDescription("How we collect, use, and protect your information")}
+>
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
+       crossorigin="anonymous"></script>
+    <style>
     * {
       margin: 0;
       padding: 0;
@@ -362,6 +367,6 @@ import Footer from '../components/Footer.astro'
     </div>
   </main>
 
-  <Footer />
+</BaseLayout>
 </body>
 </html>
