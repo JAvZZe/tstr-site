@@ -5,3 +5,5 @@ node_modules/
 .astro/
 **/shared/debugger.js
 **/dist/
+.syncause/
+web/tstr-automation/fresh_venv/

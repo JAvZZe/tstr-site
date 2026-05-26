@@ -466,6 +466,37 @@ import Footer from '../components/Footer.astro'
       background: white;
     }
 
+    /* Verification Styling */
+    .verification-addon {
+      display: block;
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background: #fffbeb;
+      border-left: 3px solid #f59e0b;
+      border-radius: 0 4px 4px 0;
+      font-size: 0.9rem;
+    }
+
+    .verification-included {
+      display: block;
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background: #ecfdf5;
+      border-left: 3px solid #10b981;
+      border-radius: 0 4px 4px 0;
+      font-size: 0.9rem;
+    }
+
+    .verification-enterprise {
+      display: block;
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background: #eff6ff;
+      border-left: 3px solid #3b82f6;
+      border-radius: 0 4px 4px 0;
+      font-size: 0.9rem;
+    }
+
     .modal::backdrop {
       background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(4px);
@@ -647,6 +678,7 @@ import Footer from '../components/Footer.astro'
            <li>Profile view tracking</li>
            <li>Email support</li>
            <li class="extra-cost-note"><strong>+$150/mo per extra category</strong></li>
+           <li><span class="verification-addon">IAF Laboratory Verification (+$150/month)</span></li>
          </ul>
          <div style="margin-top: 2rem;">
            <button id="btn-professional-paypal" class="cta-button" data-tier="professional" data-method="paypal">PayPal - $295/mo</button>
@@ -677,6 +709,7 @@ import Footer from '../components/Footer.astro'
            <li>48-hour early access to RFQs</li>
            <li>Priority email support</li>
            <li class="extra-cost-note"><strong>+$150/mo per extra category</strong></li>
+           <li><span class="verification-included">✅ TSTR Laboratory Verification Included</span></li>
          </ul>
          <div style="margin-top: 2rem;">
            <button id="btn-premium-paypal" class="cta-button" data-tier="premium" data-method="paypal">PayPal - $795/mo</button>
@@ -706,6 +739,7 @@ import Footer from '../components/Footer.astro'
           <li>Dedicated account manager</li>
           <li>White-label profile widget</li>
           <li>Custom contract terms</li>
+          <li><span class="verification-enterprise">✅ TSTR Laboratory Verification + API Access</span></li>
         </ul>
         <a href="/contact?inquiry=sales&subject=Enterprise%20Plan%20Inquiry" class="cta-button secondary">Contact Sales</a>
       </div>
@@ -715,6 +749,20 @@ import Footer from '../components/Footer.astro'
       <h3>💡 Why Upgrade?</h3>
       <p><strong>For Free Tier Users:</strong> Your listing is live, but potential customers can't reach you. Upgrade to Professional to show your contact information and start receiving inquiries today.</p>
       <p style="margin-top: 1rem;"><strong>ROI Guarantee:</strong> Just one new client from TSTR typically covers 10+ months of your subscription cost. Most Professional subscribers report their first inquiry within 30 days.</p>
+    </div>
+
+    <!-- Why Verification Matters -->
+    <div class="verification-section" style="background: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 2rem; margin: 3rem 0; border-radius: 0 12px 12px 0;">
+      <h3>🔒 Trust & Verification</h3>
+      <p>Laboratories with TSTR Verified badges have undergone independent validation of their certifications through IAF CertSearch, the global authority on accreditation. This addresses the industry trust gap where self-reported credentials cannot be independently confirmed.</p>
+
+      <p style="margin-top: 1rem;"><strong>Benefits of TSTR Verified status:</strong></p>
+      <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+        <li>Increased buyer confidence and inquiry conversion rates</li>
+        <li>Differentiation from laboratories with unverified claims</li>
+        <li>Access to verification-certified laboratory search filters</li>
+        <li>Quarterly monitoring ensures certifications remain current</li>
+      </ul>
     </div>
 
     <!-- Feature Comparison Table -->
@@ -783,9 +831,16 @@ import Footer from '../components/Footer.astro'
           <tr>
             <td>Support</td>
             <td>Community</td>
-            <td>Email</td>
+            <td>Email</td
             <td>Priority email</td>
             <td><strong>Dedicated manager</strong></td>
+          </tr>
+          <tr>
+            <td>IAF Laboratory Verification</td>
+            <td class="cross">✗</td>
+            <td><span class="verification-addon">Available (+$150/month)</span></td>
+            <td class="check">✓ Included</td>
+            <td class="check">✓ Included + API Access</td>
           </tr>
         </tbody>
       </table>
