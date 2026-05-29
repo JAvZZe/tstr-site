@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - Executive summary for agents
-> **Last Updated**: 2026-05-25 04:56 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-05-29 06:31 UTC
+> **Updated By**: Claude Code
 > **Status**: ✅ IAF VERIFICATION INTEGRATION COMPLETE - Pricing page updated with clear verification options and trust section
 
 ---
@@ -51,7 +51,7 @@
 - [x] Hardened Location Parsing (International support & hierarchy fixes).
 
 ### Medium Priority
-- [ ] Build **Saudi Energy Testing Hub** PSEO landing page.
+- [x] Build **Saudi Energy Testing Hub** PSEO landing page.
 - [ ] Setup error alerting for scraper failures.
 - [ ] Deploy Europe-specific PSEO landing pages.
 
