@@ -90,13 +90,33 @@ const { data: capabilities, error: _capError } = await supabase
   .from('listing_capabilities')
   .select(`
     standard:standard_id (
+      id,
       code,
       name,
-      description
+      description,
+      category_id
     )
   `)
   .eq('listing_id', listing.id)
   .order('created_at', { ascending: true })
+
+// Get related standards (same category as what they offer, but that they don't already offer)
+const offeredStandardIds = capabilities?.map(c => c.standard?.id) || [];
+const offeredCategoryIds = [...new Set(capabilities?.map(c => c.standard?.category_id).filter(id => id !== null))] || [];
+let relatedStandards = [];
+if (offeredCategoryIds.length > 0) {
+  // All active standards in the same categories this lab offers
+  const { data: allCategoryStandards, error: _catError } = await supabase
+    .from('standards')
+    .select('id, code, name')
+    .in('category_id', offeredCategoryIds)
+    .eq('is_active', true);
+
+  // Keep the ones this lab doesn't already offer (single round-trip)
+  relatedStandards = (allCategoryStandards || [])
+    .filter(std => !offeredStandardIds.includes(std.id))
+    .map(std => ({ id: std.id, code: std.code, name: std.name }));
+}
 
 // Build location breadcrumb
 const getLocationHierarchy = (location) => {
@@ -259,6 +279,34 @@ const pageDescription = formatDescription(
                       <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     </div>
                   )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {relatedStandards.length > 0 && (
+          <div class="glass-panel p-8">
+            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+              <span class="w-1.5 h-6 bg-blue-500 rounded-full"></span>
+              Related Tests Offered by Other Laboratories
+            </h2>
+            <p class="text-gray-400 mb-4">
+              While {listing.business_name} doesn't currently offer these specific tests, other accredited laboratories do:
+            </p>
+            <div class="space-y-3">
+              {relatedStandards.map(std => (
+                <div class="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors">
+                  <div class="flex-1">
+                    <span class="text-sm font-medium text-white">{std.name}</span>
+                    <span class="text-xs block text-gray-400">{std.code}</span>
+                  </div>
+                  <a
+                    href={`/browse?standard=${std.code}`}
+                    class="px-4 py-2 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 text-sm font-medium text-blue-300 hover:text-white transition-colors border border-blue-500/20"
+                  >
+                    View {relatedStandards.length === 1 ? 'Laboratory' : 'Laboratories'}
+                  </a>
                 </div>
               ))}
             </div>
