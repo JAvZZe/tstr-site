@@ -167,7 +167,7 @@ To maintain a clean environment and reduce token clutter:
 **Scrapers**: `web/tstr-automation/` (Python, deployed on OCI)
 **Database**: Supabase (https://haimjeaetrsaauitrhfy.supabase.co)
 **API Keys**:
-- Publishable: sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4
+- Publishable: sb_publishable_*** [REDACTED]
 - Service Role: [REDACTED_SECRET] (FOR AGENT USE ONLY)
 
 
