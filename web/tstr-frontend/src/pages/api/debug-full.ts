@@ -1,6 +1,15 @@
 import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = async ({ locals }) => {
+  // SECURITY: debug endpoints must never be reachable in production.
+  // Opt-in only via PUBLIC_DEBUG_ENDPOINTS=true (dev/diagnostics). See SECURITY_FINDINGS_FRONTEND_SECRETS.md.
+  if (import.meta.env.PUBLIC_DEBUG_ENDPOINTS !== 'true') {
+    return new Response(JSON.stringify({ error: 'not_found' }), {
+      status: 404,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
   const env = (locals as { runtime?: { env?: Record<string, string> } }).runtime?.env;
 
   const supabaseUrl = env?.PUBLIC_SUPABASE_URL ||
