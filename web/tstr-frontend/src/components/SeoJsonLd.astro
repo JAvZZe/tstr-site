@@ -1,0 +1,12 @@
+---
+// Reusable JSON-LD injector. Emits schema.org structured data for SEO + AI
+// engines (Google, ChatGPT, Perplexity, Gemini). Use set:html + JSON.stringify
+// — NEVER double-curly {{}} (outputs literal braces, breaks parsing).
+// Per tstr-seo: every listing + homepage MUST emit structured data.
+interface Props {
+  data: Record<string, unknown> | Record<string, unknown>[];
+}
+const { data } = Astro.props;
+const json = JSON.stringify(data);
+---
+<script type="application/ld+json" set:html={json}></script>

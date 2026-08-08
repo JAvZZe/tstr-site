@@ -1,6 +1,7 @@
 ---
 import { supabase } from '../lib/supabase'
 import BaseLayout from '../layouts/BaseLayout.astro'
+import SeoJsonLd from '../components/SeoJsonLd.astro'
 import { formatTitle, formatDescription } from '../lib/seo';
 
 // Fetch total active listings count
@@ -71,6 +72,31 @@ const pageDescription = formatDescription(
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
+  <SeoJsonLd data={{
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://tstr.directory/#organization",
+        "name": "TSTR.directory",
+        "url": "https://tstr.directory",
+        "description": "The global directory for specialist testing services — find and compare verified testing laboratories and certification bodies worldwide.",
+        "logo": "https://tstr.directory/favicon-32x32.png",
+        "sameAs": []
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://tstr.directory/#website",
+        "url": "https://tstr.directory",
+        "name": "TSTR.directory",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://tstr.directory/?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    ]
+  }} />
   <!-- HERO: AI Search Section -->
   <section id="hero-search" class="relative pt-32 pb-24 px-6 text-center overflow-hidden">
     <div class="relative z-10 max-w-4xl mx-auto animate-fade-up">
