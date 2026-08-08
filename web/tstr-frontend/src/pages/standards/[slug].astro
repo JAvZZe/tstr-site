@@ -1,6 +1,7 @@
 ---
 import { supabase } from '../../lib/supabase';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SeoJsonLd from '../../components/SeoJsonLd.astro';
 
 export const prerender = true;
 
@@ -28,6 +29,18 @@ const { data: listings } = await supabase
 ---
 
 <BaseLayout title={`${standard.code} Testing Labs | TSTR.directory`} description={standard.description || `Find laboratories certified for ${standard.code} testing.`}>
+  <SeoJsonLd data={{
+    "@context": "https://schema.org",
+    "@type": "DefinedTerm",
+    "name": `${standard.code}: ${standard.name}`,
+    "description": standard.description || `Technical standard ${standard.code} (${standard.name}).`,
+    "termCode": standard.code,
+    "url": `https://tstr.directory/standards/${standard.slug}`,
+    "inDefinedTermSet": {
+      "@type": "DefinedTermSet",
+      "name": "TSTR.directory Testing Standards"
+    }
+  }} />
   <main class="max-w-6xl mx-auto px-4 py-12">
     <!-- Breadcrumbs -->
     <nav class="flex items-center space-x-2 text-sm text-gray-400 mb-8" aria-label="Breadcrumb">

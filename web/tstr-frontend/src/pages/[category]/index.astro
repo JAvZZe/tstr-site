@@ -3,6 +3,7 @@
 import { supabase } from '../../lib/supabase';
 import NewsletterBanner from '../../components/NewsletterBanner';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SeoJsonLd from '../../components/SeoJsonLd.astro';
 import { formatTitle, formatDescription } from '../../lib/seo';
 import { getRedirectUrl } from '../../lib/redirect';
 import AdUnit from '../../components/AdUnit.astro';
@@ -68,6 +69,23 @@ const pageDescription = formatDescription(
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
+  <SeoJsonLd data={{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": `${categoryData.name} Testing Services Directory`,
+    "description": pageDescription,
+    "url": `https://tstr.directory/${categoryData.slug}`,
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": totalListings,
+      "itemListElement": (listings || []).slice(0, 20).map((l, i) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "url": `https://tstr.directory/listing/${l.slug}`,
+        "name": l.business_name
+      }))
+    }
+  }} />
   <main class="max-w-7xl mx-auto px-6 py-12">
     <!-- Navigation Breadcrumbs -->
     <nav class="flex items-center gap-2 text-sm font-medium text-slate-500 mb-8 overflow-x-auto whitespace-nowrap pb-2 no-scrollbar">
