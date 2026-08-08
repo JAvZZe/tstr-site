@@ -1,6 +1,7 @@
 ---
 import { supabase } from '../../lib/supabase'
 import BaseLayout from '../../layouts/BaseLayout.astro'
+import SeoJsonLd from '../../components/SeoJsonLd.astro'
 
 // Fetch all standards grouped by category/issuing body
 const { data: standards, error } = await supabase
@@ -23,6 +24,23 @@ const description = "Complete directory of testing standards for hydrogen, oil &
 ---
 
 <BaseLayout title={title} description={description}>
+  <SeoJsonLd data={{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Testing Standards Directory",
+    "description": description,
+    "url": "https://tstr.directory/standards",
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": standards?.length || 0,
+      "itemListElement": (standards || []).slice(0, 30).map((s, i) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "url": `https://tstr.directory/standards/${s.slug}`,
+        "name": `${s.code} — ${s.name}`
+      }))
+    }
+  }} />
   <div class="hero">
     <div class="max-w-4xl mx-auto">
       <h1>📋 Testing Standards Directory</h1>

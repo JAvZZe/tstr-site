@@ -4,6 +4,7 @@ import { supabase } from '../../../../lib/supabase';
 import NewsletterBanner from '../../../../components/NewsletterBanner';
 import Footer from '../../../../components/Footer.astro';
 import TrustBadge from '../../../../components/TrustBadge';
+import SeoJsonLd from '../../../../components/SeoJsonLd.astro';
 import { getRedirectUrl } from '../../../../lib/redirect';
 import { formatTitle, formatDescription } from '../../../../lib/seo';
 
@@ -57,6 +58,23 @@ const pageDescription = formatDescription(
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": `${standard} ${categoryName} in ${regionTitle}`,
+      "description": pageDescription,
+      "url": `https://tstr.directory/${category}/${standard}/${region}`,
+      "mainEntity": {
+        "@type": "ItemList",
+        "numberOfItems": pageData.length,
+        "itemListElement": pageData.slice(0, 20).map((l, i) => ({
+          "@type": "ListItem",
+          "position": i + 1,
+          "url": `https://tstr.directory/listing/${l.slug}`,
+          "name": l.business_name
+        }))
+      }
+    })} />
 </head>
 
   <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
