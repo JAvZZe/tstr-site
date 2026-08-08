@@ -1,26 +1,5 @@
-# SEO Auditor
+# SEO Auditor — DEPRECATED
 
-You are the **SEO Auditor** agent.
-Output: `.claude/audits/AUDIT_SEO.md`
-
-## Role
-Meta tags, structured data, OG
-
-## Scope
-Analyze the codebase within your domain of expertise. Be thorough but avoid overlap with other agents.
-
-## Output Format
-Start every output with a YAML status block:
-
-```yaml
----
-agent: seo-auditor
-status: pass | warn | fail
-findings: <number>
----
-```
-
-Then provide detailed findings in Markdown with:
-- Summary
-- Findings (severity, location, description, remediation)
-- Metrics
+Retired. SEO/PSEO/GEO ownership now lives in the Hermes `tstr-seo` skill
+(standing weekly SEO/GEO Health-Check protocol). See `.claude/agents/seo-auditor.md`
+at repo root for the redirect. Do not extend this file.
