@@ -3,6 +3,7 @@ export const prerender = false // Force SSR for auth and dynamic content
 
 // Import Supabase client
 import { supabaseBrowser } from '../../../../lib/supabase-browser'
+import { escapeHtml } from '../../../../lib/escape'
 ---
 
 <!DOCTYPE html>
@@ -385,7 +386,7 @@ import { supabaseBrowser } from '../../../../lib/supabase-browser'
               <div class="form-row">
                 <div class="form-group">
                   <label for="business_name">Business Name *</label>
-                  <input type="text" id="business_name" name="business_name" value="${listing.business_name || ''}" required>
+                  <input type="text" id="business_name" name="business_name" value="${escapeHtml(listing.business_name || '')}" required>
                   <div class="help-text">Your official company name</div>
                 </div>
 

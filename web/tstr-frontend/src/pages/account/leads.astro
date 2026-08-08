@@ -3,6 +3,7 @@ export const prerender = false // Force SSR for auth page
 
 // Import Supabase client
 import { supabaseBrowser } from '../../lib/supabase-browser'
+import { escapeHtml } from '../../lib/escape'
 ---
 
 <!DOCTYPE html>
@@ -701,8 +702,8 @@ import { supabaseBrowser } from '../../lib/supabase-browser'
                   <tr>
                     <td>
                       <div class="lead-info">
-                        <div class="lead-business">${lead.listing?.business_name || 'Unknown'}</div>
-                        <div class="lead-contact">${lead.listing?.category?.name || 'Uncategorized'}</div>
+                        <div class="lead-business">${escapeHtml(lead.listing?.business_name || 'Unknown')}</div>
+                        <div class="lead-contact">${escapeHtml(lead.listing?.category?.name || 'Uncategorized')}</div>
                       </div>
                     </td>
                     <td>
@@ -714,7 +715,7 @@ import { supabaseBrowser } from '../../lib/supabase-browser'
                     <td>${new Date(lead.created_at).toLocaleDateString()}</td>
                     <td>
                       <div class="actions">
-                        <button class="btn btn-primary btn-sm" onclick="openStatusModal('${lead.id}', '${lead.status}', '${(lead.owner_notes || '').replace(/'/g, "\\'")}')">
+                        <button class="btn btn-primary btn-sm" onclick="openStatusModal('${escapeHtml(lead.id)}', '${escapeHtml(lead.status)}', '${escapeHtml(lead.owner_notes || '')}')">
                           Update
                         </button>
                       </div>

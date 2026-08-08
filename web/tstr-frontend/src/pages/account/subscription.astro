@@ -4,6 +4,7 @@ export const prerender = false // Force SSR for auth page
 // Import Supabase client
 import { supabaseBrowser } from '../../lib/supabase-browser'
 import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
+import { escapeHtml } from '../../lib/escape'
 ---
 
 <!DOCTYPE html>
@@ -690,7 +691,7 @@ import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../../lib/contacts'
         console.error('Subscription page error:', error)
         contentDiv.innerHTML = `
           <div class="error-message">
-            An unexpected error occurred. Please refresh the page. Details: ${error.message}
+            An unexpected error occurred. Please refresh the page. Details: ${escapeHtml(error.message)}
           </div>
         `
       }
