@@ -12,3 +12,4 @@ __pycache__/
 
 # Allow specific documentation
 !ENRICHMENT_AUTOMATION_HANDOFF.md
+web/tstr-automation/_ARCHIVE/scraper-docs-legacy-2026-08-08/

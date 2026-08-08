@@ -49,8 +49,17 @@ class IAFVerifyClient:
     def __init__(self, api_key: str = None):
         self.api_key = api_key or os.getenv('IAF_API_KEY')
         if not self.api_key:
-            raise ValueError("IAF API key is required. Set IAF_API_KEY environment variable.")
+            # Sell-now / activate-later model: the IAF verification plan is sold
+            # on the site (pricing.astro) but the backend activates only once a
+            # paid IAF CertSearch API key is set. Degrade gracefully instead of
+            # crashing so a live call never 500s before activation.
+            self.active = False
+            logger.warning("IAFVerifyClient initialised WITHOUT IAF_API_KEY — "
+                           "verification is INACTIVE (sell-now / activate-on-key). "
+                           "Set IAF_API_KEY to enable.")
+            return
 
+        self.active = True
         self.base_url = "https://api.iafcertsearch.org"  # To be confirmed
         self.headers = {
             "Authorization": f"Bearer {self.api_key}",
@@ -193,6 +202,13 @@ class IAFVerifyClient:
         if not business_name:
             logger.warning("Cannot verify listing without business name")
             return tstr_listing
+
+        # Sell-now / activate-later: if no IAF_API_KEY is set, the backend is
+        # inactive. Return the listing unchanged (no crash, no false claim).
+        if not getattr(self, 'active', False):
+            logger.info(f"IAF inactive (no key) — skipping verification for {business_name}")
+            return {**tstr_listing, 'iaf_verified': False, 'iaf_match_confidence': 0.0,
+                    'iaf_status': 'inactive'}
 
         # Search for potential matches
         search_query = f"{business_name} {city} {country} {website}".strip()
