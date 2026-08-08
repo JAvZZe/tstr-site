@@ -2,6 +2,7 @@
 import { supabase } from '../../lib/supabase'
 import { getRedirectUrl } from '../../lib/redirect'
 import BaseLayout from '../../layouts/BaseLayout.astro'
+import SeoJsonLd from '../../components/SeoJsonLd.astro'
 import ContactLabModal from '../../components/ContactLabModal'
 import AdUnit from '../../components/AdUnit.astro'
 import ListingMap from '../../components/ListingMap.astro'
@@ -186,6 +187,53 @@ const pageDescription = formatDescription(
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
+  <SeoJsonLd data={{
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": ["LocalBusiness", "ProfessionalService"],
+        "@id": `https://tstr.directory/listing/${listing.slug}#lab`,
+        "name": listing.business_name,
+        "description": listing.description || `${listing.business_name} is a verified testing laboratory and certification body.`,
+        "url": `https://tstr.directory/listing/${listing.slug}`,
+        "areaServed": listing.location?.name || listing.region || "Worldwide",
+        "knowsAbout": listing.category?.name || "Specialist Testing Services",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": listing.location?.name || undefined,
+          "addressCountry": listing.location?.parent?.name || undefined
+        },
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer support",
+          "url": `https://tstr.directory/listing/${listing.slug}`,
+          "email": listing.email || undefined,
+          "telephone": listing.phone || undefined
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": `What testing services does ${listing.business_name} offer?`,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `${listing.business_name} is a verified ${listing.category?.name || "testing"} laboratory. ${listing.description || "Browse its profile on TSTR.directory to view accredited scopes, equipment, and how to request a quote."}`
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I verify a lab's ISO 17025 accreditation scope?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "ISO/IEC 17025 is the international standard for calibration and testing laboratory competence. On TSTR.directory, each verified lab lists its accredited scopes; always confirm the current scope certificate with the lab or its accreditation body before placing an order."
+            }
+          }
+        ]
+      }
+    ]
+  }} />
   <div class="max-w-6xl mx-auto px-4 py-8 md:py-12">
     
     <!-- Breadcrumbs -->
