@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { sendEmail, type EmailTemplate } from '../../lib/email';
+import { requiredString, optionalString } from '../../lib/validate';
 
 // Routing map
 const EMAIL_ROUTING: Record<string, string> = {
@@ -53,20 +54,20 @@ function createContactFormEmail(
 export const POST: APIRoute = async ({ request }) => {
     try {
         const formData = await request.formData();
-        const name = formData.get('name')?.toString() || '';
-        const email = formData.get('email')?.toString() || '';
-        const company = formData.get('company')?.toString() || '';
-        const inquiryType = formData.get('inquiryType')?.toString() || 'general';
-        const message = formData.get('message')?.toString() || '';
+        const nameR = requiredString(formData.get('name'), 'Name', { max: 200 });
+        const emailR = requiredString(formData.get('email'), 'Email', { max: 200, email: true });
+        const companyR = optionalString(formData.get('company'), { max: 200 });
+        const inquiryType = optionalString(formData.get('inquiryType'), { max: 50 }) || 'general';
+        const messageR = requiredString(formData.get('message'), 'Message', { max: 5000 });
 
-        // Validation
-        if (!name || !email || !message) {
-            return new Response(JSON.stringify({ error: 'Name, email, and message are required' }), {
-                status: 400,
-                headers: { 'Content-Type': 'application/json' }
-            });
-        }
+        if (!nameR.ok) return new Response(JSON.stringify({ error: nameR.error }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+        if (!emailR.ok) return new Response(JSON.stringify({ error: emailR.error }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+        if (!messageR.ok) return new Response(JSON.stringify({ error: messageR.error }), { status: 400, headers: { 'Content-Type': 'application/json' } });
 
+        const name = nameR.data;
+        const email = emailR.data;
+        const company = companyR;
+        const message = messageR.data;
         // Get destination email
         const toEmail = EMAIL_ROUTING[inquiryType] || 'admin@tstr.directory';
 

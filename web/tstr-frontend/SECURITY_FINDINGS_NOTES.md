@@ -13,3 +13,10 @@ Source: scan per tstr-security-hardening skill, 2026-08-07.
 - Added src/lib/escape.ts (escapeHtml).
 - Patched: leads.astro (business_name, owner_notes, contact_type, status), edit.astro (business_name attr), subscription.astro (error.message).
 - Verified: npm run build exit 0. Live render NOT verifiable here (astro-preview broken on cloudflare adapter) — compile-only.
+
+## F2 — RESOLVED 2026-08-07 (centralized input validation)
+- Added src/lib/validate.ts: requiredString(), optionalString(), validateJson() — zero-dependency boundary validation (length caps, email format, JSON/object shape).
+- Applied to public API routes: contact.ts (formData), newsletter.ts (json), submit.ts (json waitlist).
+- Added src/lib/validate.test.ts (11 assertions, all passing via node --experimental-strip-types).
+- Build: npm run build exit 0.
+- Chose zero-dep over zod to avoid lockfile/supply-chain churn + Cloudflare npm ci risk. If project later adopts zod, swap the helper internals.

@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
+import { requiredString } from '../../lib/validate';
 
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
@@ -17,29 +18,19 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const data = await request.json();
-    const email = data.email;
-
-    if (!email) {
-      return new Response(JSON.stringify({ error: 'Email is required' }), {
+    const emailR = requiredString((await request.json()).email, 'Email', { max: 200, email: true });
+    if (!emailR.ok) {
+      return new Response(JSON.stringify({ error: emailR.error }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
     }
-
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return new Response(JSON.stringify({ error: 'Invalid email format' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
+    const email = emailR.data;
 
     // Insert into the 'waitlist' table
     const { data: insertData, error } = await supabase
       .from('waitlist')
-      .insert([{ email: email }])
+      .insert([{ email }])
       .select();
 
     if (error) {
