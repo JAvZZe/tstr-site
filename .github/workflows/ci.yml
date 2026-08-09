@@ -22,8 +22,10 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install frontend dependencies
+        run: |
+          cd web/tstr-frontend
+          npm install
 
       - name: Lint changed files (blocking)
         run: |
@@ -42,7 +44,6 @@ jobs:
           PUBLIC_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           cd web/tstr-frontend
-          npm install
           npm run build
 
       - name: Deploy to Cloudflare Pages
