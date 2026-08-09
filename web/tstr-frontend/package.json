@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "astro dev",
     "lint": "bash scripts/lint-changed.sh",
-    "prebuild": "npm run lint",
+    "verify": "bash scripts/verify-changed.sh",
+    "watchdog": "bash scripts/verify-watchdog.sh",
+    "install-hooks": "bash scripts/install-hooks.sh",
+    "prebuild": "npm run lint && npm run verify",
     "build": "dotenv -- astro build",
     "preview": "astro preview",
     "astro": "astro"
