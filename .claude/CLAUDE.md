@@ -1,42 +1,30 @@
 # Claude Code Agents — Orchestrator
 
-You are the **orchestrator**. You manage subagents via `Task()`.
+The 24 legacy micro-agents (code-auditor, bug-auditor, seo-auditor, ui-auditor,
+etc.) were **retired on 2026-08-09** and moved to `.claude/agents/_ARCHIVE/`.
+They are superseded by the canonical TSTR agent skills (Hermes `tstr-*` set),
+which are the single source of truth for agent behavior on this project.
 
-## Available Agents
-- **code-auditor**: Code quality, complexity, maintainability
-- **bug-auditor**: Runtime bugs, logic errors, edge cases
-- **security-auditor**: OWASP, injection, auth, secrets
-- **doc-auditor**: Documentation gaps, stale docs
-- **infra-auditor**: Docker, CI/CD, config drift
-- **ui-auditor**: Accessibility, UX patterns, responsive
-- **db-auditor**: N+1, missing indexes, schema issues
-- **perf-auditor**: Bundle size, render perf, memory leaks
-- **dep-auditor**: Vulnerable, outdated, unused deps
-- **seo-auditor**: Meta tags, structured data, OG
-- **api-tester**: Endpoint validation, contract testing
-- **fix-planner**: Consolidate findings into prioritized FIXES.md
-- **code-fixer**: Implement fixes from FIXES.md
-- **test-runner**: Run tests and validate fixes
-- **test-writer**: Write missing test coverage
-- **browser-qa-agent**: Chrome-based E2E testing
-- **fullstack-qa-orchestrator**: Find-fix-verify loop
-- **console-monitor**: Watch browser console for errors
-- **visual-diff**: Screenshot comparison testing
-- **deploy-checker**: Pre-deployment validation
-- **env-validator**: Validate environment variables
-- **pr-writer**: Generate PR description from changes
-- **seed-generator**: Generate realistic test data
-- **architect-reviewer**: High-level architecture review and supervision
-
-## Available Workflows
-- **full-audit**: All 11 auditors in parallel → fix-planner
-- **pre-commit**: Quick code + test check before commit
-- **pre-deploy**: Deploy readiness check
-- **new-feature**: Test-first: writer → fixer → runner → browser QA
-- **bug-fix**: Write failing test → fix → verify
-- **release-prep**: Full audit → fixes → deploy → PR
+## Canonical agents (Hermes `tstr-*` skills)
+Defined in `/home/al/.hermes/profiles/tstr-hub_pm/skills/`:
+- tstr-team-lead — orchestrator / router
+- tstr-frontend — Astro 6 frontend engineering
+- tstr-seo — SEO + content contract (incl. GEO/AEO)
+- tstr-content — content/writing agent (anti-AI-slop voice)
+- tstr-scraper-agent — OCI scraper ops
+- tstr-data-ops — scraper/data operations
+- tstr-security / tstr-security-hardening — security
+- tstr-growth — marketing/growth
+- tstr-code-review — code review discipline
+- tstr-tdd — test-driven development
+- tstr-qa — dedicated QA/testing agent (Playwright + independent LLM critic)
+- tstr-verification-gate — static CI lint/scan gate
+- tstr-agent-creator — meta-agent: creates new TSTR agents/skills as needed
 
 ## Rules
-1. Never do the work yourself — always delegate to the correct agent.
-2. Auditors run in parallel; fixers run in sequence.
-3. All outputs go to `.claude/audits/`.
+1. Use the `tstr-*` skills as the agent definitions. Do not resurrect
+   `_ARCHIVE/` agents — update or extend the canonical skill instead.
+2. New agent needs → route to tstr-agent-creator (it researches best practice,
+   functions, and existing skills, then scaffolds the new agent).
+3. One clean change per commit; report-first before irreversible actions
+   (tstr-team-lead protocol).
