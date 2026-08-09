@@ -25,11 +25,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run linting
-        continue-on-error: true
+      - name: Lint changed files (blocking)
         run: |
-          npm run lint:js || true
-          npm run lint:css || true
+          cd web/tstr-frontend
+          npm run lint
 
       - name: Build frontend
         env:

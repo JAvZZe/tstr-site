@@ -4,6 +4,8 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
+    "lint": "bash scripts/lint-changed.sh",
+    "prebuild": "npm run lint",
     "build": "dotenv -- astro build",
     "preview": "astro preview",
     "astro": "astro"

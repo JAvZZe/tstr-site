@@ -1,0 +1,5 @@
+# Prettier parser bug: prettier-plugin-astro crashes on HTML comments inside
+# this generated file (SyntaxError, not invalid code — Astro builds it fine).
+# Excluded from the format gate so it can't break CI. Revisit after upgrading
+# prettier-plugin-astro. Brackets are escaped for gitignore-style globbing.
+src/pages/testing/\[industry\]/\[slug\].astro
