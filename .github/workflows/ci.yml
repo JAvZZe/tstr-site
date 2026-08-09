@@ -30,6 +30,11 @@ jobs:
           cd web/tstr-frontend
           npm run lint
 
+      - name: Security scan changed files (blocking)
+        run: |
+          cd web/tstr-frontend
+          npm run verify
+
       - name: Build frontend
         env:
           PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
