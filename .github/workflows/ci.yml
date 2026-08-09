@@ -46,10 +46,7 @@ jobs:
           cd web/tstr-frontend
           npm run build
 
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          projectName: tstr-site
-          directory: web/tstr-frontend/dist
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+      # Deploy is handled by Cloudflare's native GitHub integration
+      # (project tstr-hub watches main and builds web/tstr-frontend).
+      # The cloudflare/pages-action step below was redundant and failed because
+      # secrets.CF_API_TOKEN is not set; it is intentionally removed.
