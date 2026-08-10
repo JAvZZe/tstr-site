@@ -1,8 +1,8 @@
 # 📊 TSTR.DIRECTORY - PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - Executive summary for agents
-> **Last Updated**: 2026-08-10 17:43 UTC
-> **Updated By**: JAvZZe
+> **Last Updated**: 2026-08-10 17:52 UTC
+> **Updated By**: Hermes Agent
 > **Status**: ⚠️ IAF VERIFICATION IN PROGRESS - Pricing-page UI done; backend client is a STUB (# TODO: Implement actual API call in iaf_api_client.py), no API key wired, Basic 499 plan not purchased. See pending tasks.
 
 ---
@@ -58,7 +58,7 @@
 
 ### Low Priority
 - [ ] **Fix 1 — invalid URL**: identify + repair/replace the invalid URL still in the directory (see `docs/URL_VALIDATION_LIVE.md`; `cleanup_invalid_urls.py` reports/moves invalid URLs). Re-validate listing URLs before they're shown.
-- [ ] **Fix 2 — wire a free analytics provider**: code is done (consent-gated loader + cookie banner live). Remaining: choose a free privacy-respecting provider and set `PUBLIC_ANALYTICS_ID` in Cloudflare Pages (Production + Preview). Guide: `docs/active/ANALYTICS_SETUP_GUIDE.md`.
+- [x] **Fix 2 — wire a free analytics provider**: DONE. Consent-gated loader + cookie banner live; Cloudflare Web Analytics confirmed active on `tstr.directory` (beacon present). Guide: `docs/active/ANALYTICS_SETUP_GUIDE.md`.
 
 ---
 
