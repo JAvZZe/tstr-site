@@ -9,7 +9,6 @@ import logging
 import os
 import re
 import sys
-from typing import Dict, List
 
 from bs4 import BeautifulSoup
 
@@ -86,7 +85,7 @@ class ContractLabOilGasScraper(BaseNicheScraper):
             'waters', 'bruker', 'varian'
         ]
 
-    def get_listing_urls(self) -> List[str]:
+    def get_listing_urls(self) -> list[str]:
         """
         Scrape pagination from Contract Laboratory directory
 
@@ -134,7 +133,7 @@ class ContractLabOilGasScraper(BaseNicheScraper):
         logger.info(f"Total labs found: {len(listing_urls)}")
         return listing_urls
 
-    def extract_standard_fields(self, soup: BeautifulSoup, url: str) -> Dict:
+    def extract_standard_fields(self, soup: BeautifulSoup, url: str) -> dict:
         """
         Extract standard listing fields from Contract Laboratory profile page
 
@@ -250,7 +249,7 @@ class ContractLabOilGasScraper(BaseNicheScraper):
 
         return fields
 
-    def extract_custom_fields(self, soup: BeautifulSoup, url: str) -> Dict:
+    def extract_custom_fields(self, soup: BeautifulSoup, url: str) -> dict:
         """
         Extract Oil & Gas specific custom fields
 

@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-# ruff: noqa: E402
 """
 Load A2LA Materials Testing labs from pre-extracted JSONL data
 This bypasses the scraping issues and uses already-collected data
 """
 
 import os
+
 from dotenv import load_dotenv
+
 # Load environment variables from .env file in the same directory as this script
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 

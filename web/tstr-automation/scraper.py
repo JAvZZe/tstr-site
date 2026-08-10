@@ -1,4 +1,3 @@
-# ruff: noqa: E402
 """
 tstr.directory - Listings-Only Scraper (SECONDARY)
 Scrapes testing laboratory directory listings with duplicate detection
@@ -7,7 +6,9 @@ Only scrapes new listings and detects changes
 """
 
 import os
+
 from dotenv import load_dotenv
+
 # Load environment variables from .env file in the same directory as this script
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
@@ -23,7 +24,6 @@ import time
 
 import requests
 from bs4 import BeautifulSoup
-
 from url_validator import URLValidator
 
 # Setup logging

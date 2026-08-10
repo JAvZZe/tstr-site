@@ -23,7 +23,7 @@ FUNCTION_URL=https://us-central1-business-directory-app-8888888.cloudfunctions.n
 
 ### Gemini API
 ```bash
-GEMINI_API_KEY=AIzaSyBKVKWawwm-1zMTU4cWNqcpgKqpJUvlLwA
+GEMINI_API_KEY=[REDACTED Gemini]
 STATUS=QUOTA_EXHAUSTED (50/50 requests used)
 ```
 

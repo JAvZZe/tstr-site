@@ -1,5 +1,7 @@
-from base_scraper import BaseNicheScraper
 import logging
+
+from base_scraper import BaseNicheScraper
+
 logging.basicConfig(level=logging.ERROR)
 
 scraper = type('Dummy', (BaseNicheScraper,), {

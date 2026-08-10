@@ -4,8 +4,8 @@ Fix Intertek URL using Supabase REST API
 """
 
 import json
-import urllib.request
 import urllib.parse
+import urllib.request
 
 
 def fix_intertek_url():

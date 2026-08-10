@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-# ruff: noqa: E402
 """
 Execute SQL migration for custom fields
 """
 
 import os
+
 from dotenv import load_dotenv
+
 # Load environment variables from .env file in the same directory as this script
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
@@ -79,5 +80,5 @@ if __name__ == "__main__":
     try:
         run_migration()
     except Exception as e:
-        logging.error(f"Migration failed: {str(e)}")
+        logging.error(f"Migration failed: {e!s}")
         sys.exit(1)

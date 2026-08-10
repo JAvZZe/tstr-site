@@ -1,6 +1,7 @@
-# ruff: noqa: E402
 import os
+
 from dotenv import load_dotenv
+
 # Load environment variables from .env file in the same directory as this script
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
@@ -10,7 +11,8 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 import logging
 import time
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 
 def retry_with_backoff(

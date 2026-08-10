@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# ruff: noqa: E402
 """
 SAC (Saudi Accreditation Center) Scraper
 Standardized to use BaseNicheScraper architecture.
@@ -7,12 +6,11 @@ Extracts accredited labs in Saudi Arabia.
 Source: https://saac.gov.sa/en/accredited-cabs/
 """
 
-import os
-import sys
 import logging
+import os
 import re
+import sys
 import time
-from typing import Dict, List, Optional
 
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
@@ -40,7 +38,7 @@ class SACSaudiScraper(BaseNicheScraper):
         self.base_url = "https://saac.gov.sa"
         self.directory_url = "https://saac.gov.sa/en/accredited-cabs/"
 
-    def get_listing_urls(self, limit: Optional[int] = None) -> List[str]:
+    def get_listing_urls(self, limit: int | None = None) -> list[str]:
         """
         Use Playwright to crawl the dynamic table and extract detail URLs
         """
@@ -127,7 +125,7 @@ class SACSaudiScraper(BaseNicheScraper):
 
                 # Extract address from the rich table if present
                 # Highlights showed: | Kingdom of Saudi Arabia | 13213 - 2190 Riyadh... |
-                address_row = soup.find("td", string=re.compile(r"Riyadh|Jeddah|Dammam|Saudi", re.I))
+                address_row = soup.find("td", string=re.compile(r"Riyadh|Jeddah|Dammam|Saudi", re.IGNORECASE))
                 if address_row:
                     addr = address_row.get_text(strip=True)
                     standard_fields["address"] = addr
@@ -159,7 +157,7 @@ class SACSaudiScraper(BaseNicheScraper):
                 browser.close()
                 return False
 
-    def extract_custom_fields(self, soup: BeautifulSoup, url: str) -> Dict:
+    def extract_custom_fields(self, soup: BeautifulSoup, url: str) -> dict:
         return {}
 
 

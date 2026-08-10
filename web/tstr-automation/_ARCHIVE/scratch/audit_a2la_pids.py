@@ -1,7 +1,8 @@
-import requests
-from bs4 import BeautifulSoup
 import re
 import time
+
+import requests
+from bs4 import BeautifulSoup
 
 seed_pids_file = 'web/tstr-automation/scrapers/a2la/a2la_pids_final.txt'
 valid_pids_file = 'web/tstr-automation/scrapers/a2la/a2la_pids_valid.txt'
@@ -18,7 +19,7 @@ for i, pid in enumerate(pids):
         response = requests.get(url, timeout=10)
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        error_h2 = soup.find('h2', class_='text-danger', string=re.compile(r'An Unexpected Error Occured', re.I))
+        error_h2 = soup.find('h2', class_='text-danger', string=re.compile(r'An Unexpected Error Occured', re.IGNORECASE))
         title = soup.find('title')
         is_error = error_h2 or (title and 'Apologies' in title.get_text())
         

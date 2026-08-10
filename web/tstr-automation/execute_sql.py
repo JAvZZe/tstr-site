@@ -1,10 +1,11 @@
-# ruff: noqa: E402
 """
 Execute SQL directly via Supabase using psycopg2
 """
 
 import os
+
 from dotenv import load_dotenv
+
 # Load environment variables from .env file in the same directory as this script
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 

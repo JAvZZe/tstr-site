@@ -72,7 +72,7 @@ Deployed Functions:
 
 ### **Gemini API**
 ```
-Key: AIzaSyBKVKWawwm-1zMTU4cWNqcpgKqpJUvlLwA
+Key: [REDACTED Gemini]
 Status: FREE TIER QUOTA EXHAUSTED (50/50 requests)
 Reset: ~24 hours from last use
 ```

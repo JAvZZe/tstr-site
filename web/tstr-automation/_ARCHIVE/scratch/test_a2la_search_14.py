@@ -1,5 +1,6 @@
-import requests
 import json
+
+import requests
 
 # Try another search url pattern
 search_url = "https://customer.a2la.org/index.cfm/directory/search"

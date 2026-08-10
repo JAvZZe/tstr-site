@@ -8,7 +8,6 @@ import logging
 import os
 import re
 import sys
-from typing import Dict, List, Optional
 from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup
@@ -142,7 +141,7 @@ class A2LAMaterialsScraper(BaseNicheScraper):
             '65',  # Nondestructive Field of Testing
         ]
 
-    def get_listing_urls(self, limit: Optional[int] = None) -> List[str]:
+    def get_listing_urls(self, limit: int | None = None) -> list[str]:
         """
         Get list of lab detail URLs
 
@@ -180,7 +179,7 @@ class A2LAMaterialsScraper(BaseNicheScraper):
         logger.info("Note: A2LA uses AJAX for directory search. Additional labs require Selenium/Playwright.")
         return listing_urls
 
-    def _search_by_keyword(self, keyword: str) -> List[str]:
+    def _search_by_keyword(self, keyword: str) -> list[str]:
         """
         Execute search for specific keyword and extract result URLs
 
@@ -232,7 +231,7 @@ class A2LAMaterialsScraper(BaseNicheScraper):
             logger.error(f"Error searching for '{keyword}': {e}")
             return []
 
-    def extract_standard_fields(self, soup: BeautifulSoup, url: str) -> Dict:
+    def extract_standard_fields(self, soup: BeautifulSoup, url: str) -> dict:
         """
         Extract standard listing fields from A2LA lab detail page
 
@@ -256,21 +255,21 @@ class A2LAMaterialsScraper(BaseNicheScraper):
         }
 
         # Extract organization name from structured field
-        org_name_field = soup.find('label', string=re.compile(r'Organization Name:', re.I))
+        org_name_field = soup.find('label', string=re.compile(r'Organization Name:', re.IGNORECASE))
         if org_name_field:
             org_name_p = org_name_field.find_next('p', class_='form-control-static')
             if org_name_p:
                 fields['business_name'] = org_name_p.get_text(strip=True)
 
         # Extract website from structured field
-        web_field = soup.find('label', string=re.compile(r'Web:', re.I))
+        web_field = soup.find('label', string=re.compile(r'Web:', re.IGNORECASE))
         if web_field:
             web_link = web_field.find_next('a', href=True)
             if web_link:
                 fields['website'] = web_link.get('href', '').strip()
 
         # Extract address from structured field
-        address_field = soup.find('label', string=re.compile(r'Address:', re.I))
+        address_field = soup.find('label', string=re.compile(r'Address:', re.IGNORECASE))
         if address_field:
             address_link = address_field.find_next('a', href=re.compile(r'google.com/maps'))
             if address_link:
@@ -283,19 +282,19 @@ class A2LAMaterialsScraper(BaseNicheScraper):
                     fields['address'] = ', '.join(address_parts)
 
         # Extract contact information
-        contact_field = soup.find('label', string=re.compile(r'Contact\(s\):', re.I))
+        contact_field = soup.find('label', string=re.compile(r'Contact\(s\):', re.IGNORECASE))
         if contact_field:
             contact_div = contact_field.find_next('div')
             if contact_div:
                 contact_text = contact_div.get_text()
 
                 # Extract email
-                email_match = re.search(r'email:?\s*([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,})', contact_text, re.I)
+                email_match = re.search(r'email:?\s*([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,})', contact_text, re.IGNORECASE)
                 if email_match:
                     fields['email'] = email_match.group(1).strip()
 
                 # Extract phone
-                phone_match = re.search(r'phone:?\s*([\d\s\-\(\)]+)', contact_text, re.I)
+                phone_match = re.search(r'phone:?\s*([\d\s\-\(\)]+)', contact_text, re.IGNORECASE)
                 if phone_match:
                     fields['phone'] = phone_match.group(1).strip()
 
@@ -309,7 +308,7 @@ class A2LAMaterialsScraper(BaseNicheScraper):
             description_parts.append(cert_text)
 
         # Get standard versions and expiration
-        standard_texts = soup.find_all(string=re.compile(r'Standard Version|ISO/IEC|Expiration', re.I))
+        standard_texts = soup.find_all(string=re.compile(r'Standard Version|ISO/IEC|Expiration', re.IGNORECASE))
         for text in standard_texts:
             parent = text.find_parent(['div', 'p'])
             if parent:
@@ -330,7 +329,7 @@ class A2LAMaterialsScraper(BaseNicheScraper):
 
         return fields
 
-    def extract_custom_fields(self, soup: BeautifulSoup, url: str) -> Dict:
+    def extract_custom_fields(self, soup: BeautifulSoup, url: str) -> dict:
         """
         Extract Materials Testing specific custom fields
 
@@ -427,7 +426,7 @@ class A2LAMaterialsScraper(BaseNicheScraper):
         return custom_fields
 
 
-def scrape_a2la_materials(dry_run: bool = False, limit: Optional[int] = None) -> int:
+def scrape_a2la_materials(dry_run: bool = False, limit: int | None = None) -> int:
     """Wrapper for main_scraper orchestration"""
     scraper = A2LAMaterialsScraper()
     scraper.run(limit=limit, dry_run=dry_run)

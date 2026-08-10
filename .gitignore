@@ -77,3 +77,6 @@ web/tstr-automation/TSTR1.mcp.json
 TSTR_hub_Supabase_Keys
 TSTR_hub_Supabase_Keys.md
 TSTR_HUB_Supabase_Keys.md
+
+# Gitnexus local tool logs (never commit)
+.gitnexus/

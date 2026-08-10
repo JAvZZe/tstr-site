@@ -5,9 +5,9 @@ Avoids duplicates by matching on company name and website
 """
 
 import csv
-import requests
 import re
-from typing import Dict, Optional, List
+
+import requests
 
 # Supabase configuration
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
@@ -45,7 +45,7 @@ def normalize_url(url: str) -> str:
     return url
 
 
-def get_existing_listings() -> List[Dict]:
+def get_existing_listings() -> list[dict]:
     """Get all existing hydrogen listings"""
     url = f"{SUPABASE_URL}/rest/v1/listings"
     params = {
@@ -60,8 +60,8 @@ def get_existing_listings() -> List[Dict]:
 
 
 def find_matching_listing(
-    csv_company: Dict, existing_listings: List[Dict]
-) -> Optional[Dict]:
+    csv_company: dict, existing_listings: list[dict]
+) -> dict | None:
     """Find matching existing listing by company name or website"""
     csv_name = normalize_company_name(csv_company["Company Name"])
     csv_website = normalize_url(csv_company["Website"])
@@ -87,7 +87,7 @@ def find_matching_listing(
     return None
 
 
-def enhance_description(existing_desc: str, csv_data: Dict) -> str:
+def enhance_description(existing_desc: str, csv_data: dict) -> str:
     """Enhance existing description with high-value information"""
     enhancements = []
 
@@ -127,7 +127,7 @@ def enhance_description(existing_desc: str, csv_data: Dict) -> str:
     return existing_desc
 
 
-def update_listing(listing_id: str, csv_data: Dict, current_data: Dict) -> bool:
+def update_listing(listing_id: str, csv_data: dict, current_data: dict) -> bool:
     """Update listing with enhanced information"""
     url = f"{SUPABASE_URL}/rest/v1/listings"
     params = {"id": f"eq.{listing_id}"}
@@ -165,19 +165,7 @@ def update_listing(listing_id: str, csv_data: Dict, current_data: Dict) -> bool:
             update_data["region"] = "europe"
         elif "Canada" in csv_data["Headquarters Region"]:
             update_data["region"] = "north-america"
-        elif "Netherlands" in csv_data["Headquarters Region"]:
-            update_data["region"] = "europe"
-        elif "UK" in csv_data["Headquarters Region"]:
-            update_data["region"] = "europe"
-        elif "Switzerland" in csv_data["Headquarters Region"]:
-            update_data["region"] = "europe"
-        elif "France" in csv_data["Headquarters Region"]:
-            update_data["region"] = "europe"
-        elif "Norway" in csv_data["Headquarters Region"]:
-            update_data["region"] = "europe"
-        elif "Austria" in csv_data["Headquarters Region"]:
-            update_data["region"] = "europe"
-        elif "Spain" in csv_data["Headquarters Region"]:
+        elif "Netherlands" in csv_data["Headquarters Region"] or "UK" in csv_data["Headquarters Region"] or "Switzerland" in csv_data["Headquarters Region"] or "France" in csv_data["Headquarters Region"] or "Norway" in csv_data["Headquarters Region"] or "Austria" in csv_data["Headquarters Region"] or "Spain" in csv_data["Headquarters Region"]:
             update_data["region"] = "europe"
 
     if not update_data:

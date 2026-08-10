@@ -1,4 +1,5 @@
 from base_scraper import BaseNicheScraper
+
 scraper = type('Dummy', (BaseNicheScraper,), {
     'extract_standard_fields': lambda s, soup, url: {}, 
     'extract_custom_fields': lambda s, soup, url: {}, 

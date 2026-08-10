@@ -3,10 +3,10 @@
 Execute source tracking migration
 """
 
-from supabase import create_client
-
 # Load environment
 from dotenv import load_dotenv
+
+from supabase import create_client
 
 load_dotenv(
     "/media/al/AI_SSD/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/web/tstr-frontend/.env"

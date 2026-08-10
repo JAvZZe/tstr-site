@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-# ruff: noqa: E402
 """
 Oil & Gas Testing Scraper using Playwright (bypasses Cloudflare)
 Scrapes Contract Laboratory petroleum testing directory
 """
 
 import os
+
 from dotenv import load_dotenv
+
 # Load environment variables from .env file in the same directory as this script
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-# ruff: noqa: E402
 """Verify custom fields are properly populated and displaying correctly"""
 
 import os
+
 from dotenv import load_dotenv
 
 # Load environment variables from .env file in the same directory as this script

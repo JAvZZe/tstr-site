@@ -1,7 +1,9 @@
 
 import os
-from supabase import create_client
+
 from dotenv import load_dotenv
+
+from supabase import create_client
 
 load_dotenv("/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/.env")
 

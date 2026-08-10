@@ -6,7 +6,6 @@ Runs continuously to scrape new listings and check for updates
 import time
 
 import schedule
-
 from scraper import TestingLabScraper
 
 
@@ -20,7 +19,7 @@ def run_scraping_job():
     
     # Initialize scraper
     scraper = TestingLabScraper()
-    api_key = "AIzaSyAJfCW_X3fJerYy6fXwUR7T11QkKTLFUzM"
+    api_key = "[REDACTED Gemini]"
     
     # Expanded search targets (rotates through different regions)
     week_number = int(time.strftime('%U'))  # Week of year
@@ -92,7 +91,6 @@ def check_competitor_sites():
     """
     print("Checking competitor sites for trends...")
     # This would scrape competitor directories to see what categories are growing
-    pass
 
 def generate_seo_report():
     """
@@ -100,7 +98,6 @@ def generate_seo_report():
     """
     print("Generating SEO report...")
     # This would check Google Search Console API for rankings
-    pass
 
 # Schedule jobs
 schedule.every().sunday.at("02:00").do(run_scraping_job)  # Weekly scraping

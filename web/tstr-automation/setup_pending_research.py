@@ -1,10 +1,11 @@
-# ruff: noqa: E402
 """
 Setup pending_research table in Supabase via REST API
 """
 
 import os
+
 from dotenv import load_dotenv
+
 # Load environment variables from .env file in the same directory as this script
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 

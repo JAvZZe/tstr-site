@@ -1,6 +1,7 @@
+import re
+
 import requests
 from bs4 import BeautifulSoup
-import re
 
 # Searching for Mechanical testing which includes materials
 search_url = "https://customer.a2la.org/index.cfm?event=directory.search"
@@ -14,7 +15,7 @@ data = {
 response = requests.post(search_url, data=data)
 print(f"Status: {response.status_code}, Length: {len(response.text)}")
 soup = BeautifulSoup(response.text, 'html.parser')
-links = soup.find_all('a', href=re.compile(r'labPID=', re.I))
+links = soup.find_all('a', href=re.compile(r'labPID=', re.IGNORECASE))
 print(f"Found {len(links)} links")
 for link in links[:5]:
     print(f"  {link.get('href')}")

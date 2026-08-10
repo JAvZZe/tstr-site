@@ -5,6 +5,7 @@ Apply standards and capabilities migration directly to Supabase PostgreSQL
 
 import sys
 
+
 def apply_migration():
     """Apply the standards migration using direct PostgreSQL connection"""
     

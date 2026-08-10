@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-# ruff: noqa: E402
 """
 Location Parser for tstr.directory Scrapers
 Parses addresses using libpostal and links to hierarchical locations table
 """
 
 import os
+
 from dotenv import load_dotenv
+
 # Load environment variables from .env file in the same directory as this script
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
@@ -16,7 +17,6 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 
 import logging
-from typing import Dict, Optional
 
 # from postal.parser import parse_address  # Commented out due to dependency issues
 from supabase import Client, create_client
@@ -133,7 +133,7 @@ class LocationParser:
             logger.error(f"Failed to load locations cache: {e}")
             raise
 
-    def parse_address_components(self, raw_address: str) -> Dict[str, str]:
+    def parse_address_components(self, raw_address: str) -> dict[str, str]:
         """
         Parse raw address string into structured components using libpostal
 
@@ -274,10 +274,10 @@ class LocationParser:
         self,
         name: str,
         level: str,
-        parent_id: Optional[str] = None,
-        latitude: Optional[float] = None,
-        longitude: Optional[float] = None,
-    ) -> Dict:
+        parent_id: str | None = None,
+        latitude: float | None = None,
+        longitude: float | None = None,
+    ) -> dict:
         """
         Find existing location or create new entry
 
@@ -355,11 +355,11 @@ class LocationParser:
 
     def find_or_create_hierarchy(
         self,
-        city: Optional[str],
-        state: Optional[str],
+        city: str | None,
+        state: str | None,
         country: str,
-        latitude: Optional[float] = None,
-        longitude: Optional[float] = None,
+        latitude: float | None = None,
+        longitude: float | None = None,
     ) -> str:
         """
         Navigate/create location hierarchy and return deepest location_id
@@ -419,10 +419,10 @@ class LocationParser:
     def parse_and_link(
         self,
         address: str,
-        latitude: Optional[float] = None,
-        longitude: Optional[float] = None,
-        fallback_country: Optional[str] = None,
-    ) -> Optional[str]:
+        latitude: float | None = None,
+        longitude: float | None = None,
+        fallback_country: str | None = None,
+    ) -> str | None:
         """
         Main method: Parse address and return location_id
 
@@ -566,7 +566,7 @@ class LocationParser:
             logger.error(f"Failed to validate location hierarchy: {e}")
             return False
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         """
         Return parsing statistics
 
@@ -587,11 +587,11 @@ class LocationParser:
 # Convenience function for quick usage
 def parse_address_to_location_id(
     address: str,
-    supabase_url: Optional[str] = None,
-    supabase_key: Optional[str] = None,
-    latitude: Optional[float] = None,
-    longitude: Optional[float] = None,
-) -> Optional[str]:
+    supabase_url: str | None = None,
+    supabase_key: str | None = None,
+    latitude: float | None = None,
+    longitude: float | None = None,
+) -> str | None:
     """
     Convenience function to parse address and get location_id in one call
 

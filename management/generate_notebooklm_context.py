@@ -1,5 +1,5 @@
-import os
 import datetime
+import os
 
 # Configuration
 FILES_TO_INCLUDE = [
@@ -33,7 +33,7 @@ def generate_context():
                     with open(full_path, "r", encoding="utf-8") as infile:
                         outfile.write(infile.read())
                 except Exception as e:
-                    outfile.write(f"Error reading file: {str(e)}\n")
+                    outfile.write(f"Error reading file: {e!s}\n")
                 outfile.write(f"\n\n--- END FILE: {filepath} ---\n\n")
             else:
                 print(f"Warning: {filepath} not found.")

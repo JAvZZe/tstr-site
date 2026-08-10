@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-# ruff: noqa: E402
 """
 Tests for LocationParser
 Verifies geographic hierarchy resolution and address parsing
 """
 
 import os
+
 from dotenv import load_dotenv
 
 # Load environment variables from .env file in the same directory as this script
@@ -13,6 +13,7 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 import sys
 import unittest
+
 from supabase import create_client
 
 # Add root to path
@@ -81,7 +82,6 @@ class TestLocationParser(unittest.TestCase):
         self.parser.parse_and_link(address)
         # Currently, if it can't parse anything, it returns None or falls back to global if it finds country
         # Let's see what it does.
-        pass
 
     def test_hierarchy_uniqueness(self):
         """Test that we don't create duplicate cities in the same state"""

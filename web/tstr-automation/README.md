@@ -27,7 +27,7 @@ This will generate: `tstr_labs_bulk_import.csv`
 
 ## Google Maps API Usage
 
-Your API Key: `AIzaSyAJfCW_X3fJerYy6fXwUR7T11QkKTLFUzM`
+Your API Key: `[REDACTED Gemini]`
 
 **Free Tier Limits:**
 - $200 credit per month

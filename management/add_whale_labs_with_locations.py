@@ -3,9 +3,9 @@
 Add whale labs with proper location records
 """
 import os
+import uuid
 
 import requests
-import uuid
 
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
 SERVICE_ROLE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")

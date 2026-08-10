@@ -1,7 +1,8 @@
-import requests
 import json
-from bs4 import BeautifulSoup
 import re
+
+import requests
+from bs4 import BeautifulSoup
 
 search_url = "https://customer.a2la.org/index.cfm/directory/search"
 session = requests.Session()
@@ -21,7 +22,7 @@ response = session.post(search_url, data=json.dumps(payload), headers=headers)
 print(f"Status: {response.status_code}")
 
 soup = BeautifulSoup(response.text, 'html.parser')
-links = soup.find_all('a', href=re.compile(r'labPID=', re.I))
+links = soup.find_all('a', href=re.compile(r'labPID=', re.IGNORECASE))
 print(f"Found {len(links)} links with labPID")
 
 for link in links[:10]:

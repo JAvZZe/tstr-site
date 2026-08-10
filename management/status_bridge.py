@@ -16,19 +16,19 @@ Usage:
     bridge.log_session("AgentName", "Action taken", "Result achieved")
 """
 
-import sys
 import datetime
-import re
 import json
+import re
 import subprocess
-from typing import Optional, Dict, Any
+import sys
 from pathlib import Path
+from typing import Any
 
 
 class StatusBridge:
     """Unified API for all status management operations"""
 
-    def __init__(self, project_root: Optional[str] = None):
+    def __init__(self, project_root: str | None = None):
         """Initialize with project paths"""
         if project_root is None:
             # Auto-detect project root
@@ -174,7 +174,7 @@ class StatusBridge:
 
     def sync_status(
         self, agent_name: str, action: str, result: str, add_learning: bool = True
-    ) -> Dict[str, bool]:
+    ) -> dict[str, bool]:
         """
         Comprehensive status synchronization - update all systems
 
@@ -215,7 +215,7 @@ class StatusBridge:
 
         return results
 
-    def validate_consistency(self) -> Dict[str, Any]:
+    def validate_consistency(self) -> dict[str, Any]:
         """
         Validate consistency between different status tracking systems
 

@@ -7,7 +7,6 @@ Combines Google Maps API scraping with niche-specific scrapers
 import argparse
 import logging
 from datetime import datetime
-from typing import Dict, Optional
 
 # Import existing scrapers
 from dual_scraper import DualPurposeScraper
@@ -37,7 +36,7 @@ class MainScraper:
             "end_time": None,
         }
 
-    def run_google_maps_scraper(self, dry_run: bool = False, limit: Optional[int] = None) -> Dict:
+    def run_google_maps_scraper(self, dry_run: bool = False, limit: int | None = None) -> dict:
         """
         Run the Google Maps API scraper for pharmaceutical and other categories
         """
@@ -63,7 +62,7 @@ class MainScraper:
             json_error(f"Google Maps scraper failed: {e}")
             return {}
 
-    def run_oil_gas_scraper(self, dry_run: bool = False, limit: Optional[int] = None) -> int:
+    def run_oil_gas_scraper(self, dry_run: bool = False, limit: int | None = None) -> int:
         """
         Run the Oil & Gas testing scraper
         """
@@ -80,7 +79,7 @@ class MainScraper:
             logger.error(f"Oil & Gas scraper failed: {e}")
             return 0
 
-    def run_materials_scraper(self, dry_run: bool = False, limit: Optional[int] = None) -> int:
+    def run_materials_scraper(self, dry_run: bool = False, limit: int | None = None) -> int:
         """
         Run the Materials testing scraper (A2LA)
         """
@@ -97,7 +96,7 @@ class MainScraper:
             logger.error(f"Materials scraper failed: {e}")
             return 0
 
-    def run_environmental_scraper(self, dry_run: bool = False, limit: Optional[int] = None, run_tni: bool = True, run_epa: bool = True) -> int:
+    def run_environmental_scraper(self, dry_run: bool = False, limit: int | None = None, run_tni: bool = True, run_epa: bool = True) -> int:
         """
         Run the Environmental testing scrapers (TNI and EPA)
         """
@@ -132,12 +131,12 @@ class MainScraper:
 
     def run(self, 
             dry_run: bool = False, 
-            limit: Optional[int] = None,
+            limit: int | None = None,
             run_google: bool = True,
             run_oil_gas: bool = True,
             run_materials: bool = True,
             run_tni: bool = True,
-            run_epa: bool = True) -> Dict:
+            run_epa: bool = True) -> dict:
         """
         Run selected scrapers in sequence
         """

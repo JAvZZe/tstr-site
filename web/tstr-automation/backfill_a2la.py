@@ -1,9 +1,9 @@
-import logging
 import argparse
+import logging
 import re
-from urllib.parse import urlparse
-from typing import List, Dict
 from difflib import SequenceMatcher
+from urllib.parse import urlparse
+
 from scrapers.a2la_materials import A2LAMaterialsScraper
 
 # Configure logging
@@ -25,7 +25,7 @@ class A2LABackfiller:
     def __init__(self):
         self.scraper = A2LAMaterialsScraper()
         
-    def find_lab_pids_by_name(self, name: str) -> List[Dict]:
+    def find_lab_pids_by_name(self, name: str) -> list[dict]:
         """Wrapper for A2LA search"""
         return self.scraper._search_by_keyword(name)
 
@@ -64,7 +64,7 @@ class A2LABackfiller:
                 norm_name = name.replace('ü', 'u').replace('Ü', 'U').replace('ö', 'o').replace('Ö', 'O').replace('ä', 'a').replace('Ä', 'A')
                 
                 # Remove common business suffixes and special characters
-                clean_name = re.sub(r' (Inc|LLC|Ltd|Limited|Laboratories|Laboratory|Lab|Corp|Corporation|Pty|Pvt|Group|Services|Testing|International)\.?$', '', norm_name, flags=re.I).strip()
+                clean_name = re.sub(r' (Inc|LLC|Ltd|Limited|Laboratories|Laboratory|Lab|Corp|Corporation|Pty|Pvt|Group|Services|Testing|International)\.?$', '', norm_name, flags=re.IGNORECASE).strip()
                 clean_name = re.sub(r'[^\w\s]', ' ', clean_name).strip()
                 
                 # Build search variations

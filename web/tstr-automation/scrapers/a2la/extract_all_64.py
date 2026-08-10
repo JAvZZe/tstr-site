@@ -6,13 +6,12 @@ Uses web search with multiple strategies to extract complete lab data
 
 import json
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
 
 # Read PID lists
 PIDS_FILE = "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/a2la_pids_final.txt"
 COLLECTED_FILE = "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/a2la_pids_collected.txt"
 
-def read_pids() -> List[str]:
+def read_pids() -> list[str]:
     """Read 64 PIDs from file."""
     with open(PIDS_FILE, 'r') as f:
         pids = []
@@ -25,7 +24,7 @@ def read_pids() -> List[str]:
                     pids.append(pid)
         return pids
 
-def read_collected_data() -> Dict[str, Dict[str, str]]:
+def read_collected_data() -> dict[str, dict[str, str]]:
     """Read certificate numbers and scopes from collected data."""
     data = {}
     current_section = None
@@ -53,7 +52,7 @@ def read_collected_data() -> Dict[str, Dict[str, str]]:
 
     return data
 
-def parse_location(location_str: str) -> Tuple[Optional[str], Optional[str]]:
+def parse_location(location_str: str) -> tuple[str | None, str | None]:
     """Parse location string into city and state."""
     if not location_str or location_str in ["Not Found", ""]:
         return None, None
@@ -68,7 +67,7 @@ def parse_location(location_str: str) -> Tuple[Optional[str], Optional[str]]:
 
     return None, None
 
-def build_search_queries(pid: str, cert: str, scope: str) -> List[Dict[str, str]]:
+def build_search_queries(pid: str, cert: str, scope: str) -> list[dict[str, str]]:
     """Build list of search queries for a PID."""
     queries = []
 
@@ -112,7 +111,7 @@ def build_search_queries(pid: str, cert: str, scope: str) -> List[Dict[str, str]
 
     return sorted(queries, key=lambda x: x['order'])
 
-def get_gemini_data() -> Dict[str, Dict]:
+def get_gemini_data() -> dict[str, dict]:
     """Load Gemini's partial extraction results."""
     gemini_data = {}
     gemini_file = "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/claude_extraction.jsonl"
@@ -132,13 +131,13 @@ def get_gemini_data() -> Dict[str, Dict]:
 def create_extraction_record(
     pid: str,
     cert: str,
-    org: Optional[str],
-    city: Optional[str],
-    state: Optional[str],
+    org: str | None,
+    city: str | None,
+    state: str | None,
     scope: str,
     confidence: str,
     notes: str = ""
-) -> Dict:
+) -> dict:
     """Create a complete extraction record."""
     return {
         "pid": pid,

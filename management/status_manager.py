@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-import os
-import datetime
-import re
 import argparse
+import datetime
+import os
+import re
 
 # Configuration
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

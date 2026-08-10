@@ -4,8 +4,8 @@ TSTR.site Provider Database Dashboard
 Shows pipeline statistics and funnel metrics
 """
 
-import sqlite3
 import os
+import sqlite3
 from datetime import datetime
 
 DB_PATH = os.path.expanduser("~/memory/db/tstr.db")

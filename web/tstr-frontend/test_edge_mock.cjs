@@ -8,7 +8,7 @@ const https = require('https');
 const url = 'https://haimjeaetrsaauitrhfy.supabase.co/functions/v1/paypal-create-subscription';
 
 // Mock JWT token (this won't work for real auth, but let's see what error we get)
-const mockAuthToken = 'sb_secret_MOCK_TOKEN_FOR_TESTING_PURPOSES_ONLY';
+const mockAuthToken = '[REDACTED — test mock token]';
 
 const postData = JSON.stringify({
   tier: 'professional',

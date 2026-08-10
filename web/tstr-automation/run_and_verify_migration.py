@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-# ruff: noqa: E402
 """
 Run migration and verify results using Supabase client
 Requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables
 """
 
 import os
+
 from dotenv import load_dotenv
+
 # Load environment variables from .env file in the same directory as this script
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
@@ -68,7 +69,7 @@ def verify_migration():
         print("\n  Expected: 7 fields per category")
 
     except Exception as e:
-        logging.error(f"Error querying categories: {str(e)}")
+        logging.error(f"Error querying categories: {e!s}")
 
     # Query 2: Sample field details for each category
     print("\n2. Sample Custom Fields Details:")
@@ -97,7 +98,7 @@ def verify_migration():
                     print(f"    • {field['field_name']} ({field['field_type']}){options_str}")
 
     except Exception as e:
-        logging.error(f"Error querying custom fields: {str(e)}")
+        logging.error(f"Error querying custom fields: {e!s}")
 
     # Query 3: Validate options JSON
     print("\n3. Validation Check:")
@@ -134,7 +135,7 @@ def verify_migration():
             print("  ✓ All multi_select and select fields have valid options")
 
     except Exception as e:
-        logging.error(f"Error validating options: {str(e)}")
+        logging.error(f"Error validating options: {e!s}")
 
     # Summary
     print("\n" + "="*80)
@@ -174,7 +175,7 @@ def verify_migration():
             print("   Please review the migration and re-run if needed.")
 
     except Exception as e:
-        logging.error(f"Error in summary: {str(e)}")
+        logging.error(f"Error in summary: {e!s}")
 
     print("\n" + "="*80)
     print("\nFor detailed verification, run the SQL queries in:")
@@ -185,5 +186,5 @@ if __name__ == "__main__":
     try:
         verify_migration()
     except Exception as e:
-        logging.error(f"Verification failed: {str(e)}")
+        logging.error(f"Verification failed: {e!s}")
         sys.exit(1)

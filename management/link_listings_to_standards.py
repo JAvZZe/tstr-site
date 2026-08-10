@@ -3,9 +3,9 @@
 Link listings to appropriate standards based on their category
 """
 import os
+from datetime import datetime
 
 import requests
-from datetime import datetime
 
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
 SERVICE_ROLE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")

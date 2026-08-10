@@ -4,8 +4,11 @@ Check Supabase project status and basic health
 """
 
 import os
+
 import requests
-from supabase import create_client, Client
+
+from supabase import Client, create_client
+
 
 def main():
     supabase_url = os.getenv('PUBLIC_SUPABASE_URL', 'https://haimjeaetrsaauitrhfy.supabase.co')

@@ -1,5 +1,8 @@
-from base_scraper import BaseNicheScraper
 import pprint
+
+from base_scraper import BaseNicheScraper
+
+
 class MockScraper(BaseNicheScraper):
     def extract_standard_fields(self, soup, url): return {}
     def extract_custom_fields(self, soup, url): return {}

@@ -4,10 +4,9 @@ CRM Utility Functions for Testing Lab Outreach
 Usage: python3 crm_utils.py <command> [args]
 """
 
-import sqlite3
 import os
+import sqlite3
 from datetime import datetime, timedelta
-from typing import List, Dict, Optional
 
 DB_PATH = os.path.expanduser("~/memory/db/tstr.db")
 
@@ -19,7 +18,7 @@ def get_db():
 # QUERY FUNCTIONS (Read Operations)
 # ============================================
 
-def get_providers_by_status(status: str = 'unclaimed') -> List[Dict]:
+def get_providers_by_status(status: str = 'unclaimed') -> list[dict]:
     """
     Get all providers with a specific status.
     
@@ -54,7 +53,7 @@ def get_providers_by_status(status: str = 'unclaimed') -> List[Dict]:
     conn.close()
     return results
 
-def get_next_actions(days_ahead: int = 7) -> List[Dict]:
+def get_next_actions(days_ahead: int = 7) -> list[dict]:
     """
     Get all providers that need follow-up in the next N days.
     
@@ -100,7 +99,7 @@ def get_next_actions(days_ahead: int = 7) -> List[Dict]:
     conn.close()
     return results
 
-def get_outreach_history(provider_id: int) -> List[Dict]:
+def get_outreach_history(provider_id: int) -> list[dict]:
     """
     Get full outreach history for a specific provider.
     
@@ -140,7 +139,7 @@ def get_outreach_history(provider_id: int) -> List[Dict]:
     conn.close()
     return results
 
-def get_funnel_stats() -> Dict:
+def get_funnel_stats() -> dict:
     """
     Get conversion funnel statistics.
     
@@ -189,7 +188,7 @@ def log_outreach(
     provider_id: int,
     action_type: str,
     content_summary: str,
-    sentiment: Optional[str] = None,
+    sentiment: str | None = None,
     sequence_number: int = 1,
     days_until_next: int = 3
 ) -> int:
@@ -273,8 +272,8 @@ def add_contact(
     provider_id: int,
     name: str,
     email: str,
-    role: Optional[str] = None,
-    linkedin_url: Optional[str] = None
+    role: str | None = None,
+    linkedin_url: str | None = None
 ) -> int:
     """
     Add a contact person for a provider.

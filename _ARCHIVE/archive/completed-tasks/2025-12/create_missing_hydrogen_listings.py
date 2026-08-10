@@ -4,16 +4,16 @@ Create missing hydrogen listings from high-value CSV data
 """
 
 import csv
-import requests
 import uuid
-from typing import Dict, List
+
+import requests
 
 # Supabase configuration
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
 SUPABASE_KEY = "[REDACTED_SECRET]"  # Service key for writes
 
 
-def get_existing_listings() -> List[Dict]:
+def get_existing_listings() -> list[dict]:
     """Get all existing hydrogen listings to avoid duplicates"""
     url = f"{SUPABASE_URL}/rest/v1/listings"
     params = {
@@ -27,7 +27,7 @@ def get_existing_listings() -> List[Dict]:
     return response.json()
 
 
-def create_listing(csv_data: Dict) -> bool:
+def create_listing(csv_data: dict) -> bool:
     """Create a new listing from CSV data"""
     url = f"{SUPABASE_URL}/rest/v1/listings"
     headers = {
