@@ -9,6 +9,25 @@
 
 The live site currently exposes sensitive runtime configuration through public debug API routes.
 
+> ## 🔎 REALITY CHECK — 2026-08-10 (Hermes)
+> Verified against live site + source, not assumptions:
+> - **Live exposure: CONTAINED.** `https://tstr.directory/api/debug-env` and `/api/debug-full`
+>   return `404` (`{"error":"not_found"}`) in production. They are gated behind
+>   `PUBLIC_DEBUG_ENDPOINTS=true` (dev-only). So the P0 public exposure described below is
+>   **not currently reachable in production**.
+> - **But acceptance criteria are NOT met:**
+>   - Phase 1 says "delete both route files" — they were NOT deleted; only gated. `debug-full.ts:29-31`
+>     still builds a `keyFirstPart`/`keyLooksValid` leak path when the flag is on.
+>   - Phase 6 says `ai-search.ts` must not use service role — it STILL does (`ai-search.ts:8,55`).
+> - **Repo redaction sweep (2026-08-10):** plaintext secrets removed from tracked docs/configs
+>   and git-ignored credential stores. A commit-gating scanner now exists
+>   (`scripts/secret_scan.py` + `scripts/pre-commit.hook`).
+> - **Key rotation: NOT done.** 19 GitHub secret-scanning alerts remain OPEN (history + runtimes
+>   still hold real keys). Redaction alone does not close them — see `CREDENTIAL_ROTATION_RUNBOOK.md`.
+> - **Recommended next step:** either delete `debug-env.ts`/`debug-full.ts` (preferred) or keep
+>   the gate but strip the service-role metadata from `debug-full.ts`; and move `ai-search.ts`
+>   to anon key + RLS or a server-only admin helper.
+
 Confirmed public endpoints:
 
 - `https://tstr.directory/api/debug-env`

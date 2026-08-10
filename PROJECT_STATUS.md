@@ -34,7 +34,7 @@
 ---
 
 ## 🚀 LATEST UPDATES (v2.6.4)
-- **Security Hardening**: ✅ **LOCAL FIXES APPLIED**. Removed a hardcoded instrumentation API key from tracked code, sanitized API error responses, disabled local Flask debug defaults, tightened workflow permissions, added exact host checks, reduced sensitive logging, and ignored raw GitHub alert exports. Credential rotation/provider verification remains a separate dashboard task.
+- **Security Hardening**: ✅ **LOCAL FIXES APPLIED + 2026-08-10 REPO REDACTION SWEEP**. Tracked docs/configs and git-ignored credential stores (`docs/credentials/*`, `TSTR_hub_Supabase_Keys.md`, `secret_alerts.json`, `.gitnexus/lbug`) had plaintext secrets redacted; a commit-gating secret scanner now exists (`scripts/secret_scan.py` + `scripts/pre-commit.hook`, see `agents/tstr-secret-scanner.md`). Live debug routes (`/api/debug-env`, `/api/debug-full`) return 404 in production (gated behind `PUBLIC_DEBUG_ENDPOINTS`). ⚠️ **KEY ROTATION STILL PENDING**: 19 GitHub secret-scanning alerts remain OPEN (secrets still in git history + runtimes). Per `CREDENTIAL_ROTATION_RUNBOOK.md`, rotate every exposed credential, then update Cloudflare/OCI/GitHub/local `.env` before alerts can close. `ai-search.ts:8,55` still uses the service-role key — code fix outstanding.
 - **Saudi Energy Hub**: ✅ **SEEDED**. Manually enriched top-tier labs (GCC Lab, Al-Hoty, ETLCO).
 - **International Scaling**: ✅ **COMPLETE**. Deployed ScopeMatch.eu (Europe) and GAC (Middle East) scrapers. 
 - **OAuth Fix**: ✅ **RESOLVED**. Implemented cookie-based state preservation for LinkedIn redirects.

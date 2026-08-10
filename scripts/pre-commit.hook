@@ -1,0 +1,50 @@
+#!/bin/bash
+# Canonical pre-commit hook for TSTR.directory (committed; copied by scripts/install-hooks.sh).
+# Stage 1: secret scan on staged files (block on real secrets).
+# Stage 2: lint only staged JS/TS (eslint) and staged .py (ruff).
+# Vendored deps and git-ignored files (.env, .dev.vars) are never staged, so out of scope.
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+
+echo "pre-commit: secret scan (staged files)"
+if ! python3 "$ROOT/scripts/secret_scan.py" --staged; then
+  echo "pre-commit: FAILED — secrets detected in staged files. Redact/rotate before committing."
+  exit 1
+fi
+
+mapfile -t STAGED < <(git diff --cached --name-only --diff-filter=ACMR \
+  | grep -vE '^web/tstr-automation/fresh_venv/' \
+  | grep -E '\.(ts|tsx|js|jsx|mjs|cjs|py)$' || true)
+
+if [ "${#STAGED[@]}" -eq 0 ]; then
+  echo "pre-commit: no staged code files to lint (docs/skip)."
+  exit 0
+fi
+
+JS_TS=()
+PY=()
+for f in "${STAGED[@]}"; do
+  case "$f" in
+    *.ts|*.tsx|*.js|*.jsx|*.mjs|*.cjs) JS_TS+=("$f") ;;
+    *.py) PY+=("$f") ;;
+  esac
+done
+
+RC=0
+if [ "${#JS_TS[@]}" -gt 0 ]; then
+  echo "pre-commit: eslint on ${#JS_TS[@]} staged file(s)"
+  npx eslint --no-error-on-unmatched-pattern "${JS_TS[@]}" || RC=1
+fi
+if [ "${#PY[@]}" -gt 0 ]; then
+  echo "pre-commit: ruff on ${#PY[@]} staged file(s)"
+  ruff check --fix "${PY[@]}" || RC=1
+fi
+
+if [ "$RC" -ne 0 ]; then
+  echo "pre-commit: FAILED — fix the lint errors above before committing."
+  exit 1
+fi
+
+echo "pre-commit: passed."
+exit 0
