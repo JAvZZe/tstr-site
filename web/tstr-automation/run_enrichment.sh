@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Navigate to the automation directory
-cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation"
+cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation" || exit 1
 
 # Run the enrichment script using the fresh virtual environment
 # We set a limit of 20 per run to be polite to search engines and stay within safety bounds

@@ -17,7 +17,7 @@ FRONTEND_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 REPO_ROOT="$(git -C "$FRONTEND_DIR" rev-parse --show-toplevel)"
 STATE_FILE="$REPO_ROOT/.verification-watchdog.state"
 
-cd "$REPO_ROOT"
+cd "$REPO_ROOT" || exit 1
 
 LAST_SHA="$(cat "$STATE_FILE" 2>/dev/null || echo "")"
 if [[ -z "$LAST_SHA" ]] || ! git rev-parse --verify "$LAST_SHA" >/dev/null 2>&1; then

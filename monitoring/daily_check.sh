@@ -12,7 +12,7 @@ echo -e "\n2. Site Accessibility:"
 curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" https://tstr.site/
 
 echo -e "\n3. Build Verification:"
-cd web/tstr-frontend
+cd web/tstr-frontend || exit 1
 npm run build > /dev/null 2>&1
 if [ $? -eq 0 ]; then
     echo "✅ Build successful"

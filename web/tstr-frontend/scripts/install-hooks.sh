@@ -11,7 +11,6 @@ set -euo pipefail
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 HOOKS_DIR="$REPO_ROOT/.git/hooks"
-SCRIPT_DIR="$REPO_ROOT/web/tstr-frontend/scripts"
 mkdir -p "$HOOKS_DIR"
 
 # pre-push: lint + security-scan the commits being pushed.

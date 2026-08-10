@@ -1,7 +1,7 @@
 # 📊 TSTR.DIRECTORY - PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - Executive summary for agents
-> **Last Updated**: 2026-08-10 06:57 UTC
+> **Last Updated**: 2026-08-10 11:34 UTC
 > **Updated By**: JAvZZe
 > **Status**: ⚠️ IAF VERIFICATION IN PROGRESS - Pricing-page UI done; backend client is a STUB (# TODO: Implement actual API call in iaf_api_client.py), no API key wired, Basic 499 plan not purchased. See pending tasks.
 
@@ -36,6 +36,7 @@
 ## 🚀 LATEST UPDATES (v2.6.4)
 - **Security Hardening**: ✅ **LOCAL FIXES APPLIED + 2026-08-10 REPO REDACTION SWEEP**. Tracked docs/configs and git-ignored credential stores (`docs/credentials/*`, `TSTR_hub_Supabase_Keys.md`, `secret_alerts.json`, `.gitnexus/lbug`) had plaintext secrets redacted; a commit-gating secret scanner now exists (`scripts/secret_scan.py` + `scripts/pre-commit.hook`, see `agents/tstr-secret-scanner.md`). Live debug routes (`/api/debug-env`, `/api/debug-full`) return 404 in production (gated behind `PUBLIC_DEBUG_ENDPOINTS`). ⚠️ **KEY ROTATION STILL PENDING**: 19 GitHub secret-scanning alerts remain OPEN (secrets still in git history + runtimes). Per `CREDENTIAL_ROTATION_RUNBOOK.md`, rotate every exposed credential, then update Cloudflare/OCI/GitHub/local `.env` before alerts can close. `ai-search.ts:8,55` still uses the service-role key — code fix outstanding.
 - **Saudi Energy Hub**: ✅ **SEEDED**. Manually enriched top-tier labs (GCC Lab, Al-Hoty, ETLCO).
+- **ShellCheck gate**: ✅ **ADDED**. `scripts/shellcheck-changed.sh` lints changed `.sh` at warning severity (excludes `_ARCHIVE/`), wired into `scripts/pre-commit.hook` (shell stage) and `.github/workflows/ci.yml`. Fixed 4 real warnings in active scripts (unquoted `cd` + dead vars). Pre-existing `-S info` hits (unquoted `$DATABASE_URL` in `tests/*.sh`) logged but not enforced.
 - **International Scaling**: ✅ **COMPLETE**. Deployed ScopeMatch.eu (Europe) and GAC (Middle East) scrapers. 
 - **OAuth Fix**: ✅ **RESOLVED**. Implemented cookie-based state preservation for LinkedIn redirects.
 - **Search Experience**: ✅ **IMPROVED**. Added premium floating search button and header search link (v2.6.2).

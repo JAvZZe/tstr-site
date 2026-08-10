@@ -9,7 +9,6 @@ echo "=================================="
 echo "tstr.directory Scheduler Setup"
 echo "=================================="
 
-PROJECT_ID="tstr-automation"
 REGION="us-central1"
 TIMEZONE="Asia/Singapore"
 

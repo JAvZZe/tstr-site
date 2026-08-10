@@ -16,7 +16,7 @@ FRONTEND_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 REPO_ROOT="$(git -C "$FRONTEND_DIR" rev-parse --show-toplevel)"
 FRONTEND_REL="${FRONTEND_DIR#"$REPO_ROOT"/}"
 
-cd "$REPO_ROOT"
+cd "$REPO_ROOT" || exit 1
 
 if git -C "$REPO_ROOT" diff --cached --quiet 2>/dev/null; then
   BASE="HEAD~1"

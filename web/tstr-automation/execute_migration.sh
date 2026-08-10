@@ -13,9 +13,6 @@ echo "Project ID: $PROJECT_ID"
 echo "Migration file: $MIGRATION_FILE"
 echo ""
 
-# Read the SQL file
-SQL_CONTENT=$(cat "$MIGRATION_FILE")
-
 # Execute via Supabase Management API
 # https://supabase.com/docs/reference/api/introduction
 curl -X POST \
