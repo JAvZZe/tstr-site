@@ -121,32 +121,50 @@ def all_files():
 
 
 def history_scan():
-    """Scan all blobs in history. Report only; exit 0 regardless."""
+    """Scan all blobs across git history. Report only; exit 0 regardless.
+
+    Uses a single combined regex `git grep -E -n -I "<p1>|<p2>|..." <revs>` over
+    `git rev-list --all` — one pass instead of N prefixes x M commits. A hard timeout
+    prevents hangs on very large histories (this mode is manual/report-only, never
+    run by the pre-commit hook).
+    """
     print("== History scan (report only; secrets below remain in git history) ==")
-    # git log -p is huge; use git grep across all history blobs.
-    proc = subprocess.run(
-        ["git", "-C", ROOT, "grep", "-I", "--fixed-strings", "-n",
-         "sb_secret_", "sbp_", "AIzaSy", "re_", "WPL_AP1.", "AQ.", "ghp_", "sk-or-",
-         "$(git rev-list --all)"],
+    revs = subprocess.run(
+        ["git", "-C", ROOT, "rev-list", "--all"],
         capture_output=True, text=True, check=False,
-    )
-    lines = [l for l in proc.stdout.splitlines() if l.strip()]
-    if not lines:
-        print("  No high-signal secrets found in history blobs.")
+    ).stdout.splitlines()
+    if not revs:
+        print("  No commits found in history.")
+        return 0
+    # Combined regex of high-signal prefixes (fixed alternation, one grep pass).
+    prefixes = ["sb_secret_", "sbp_", "AIzaSy", "re_", "WPL_AP1\\.", "AQ\\.",
+                "ghp_", "sk-or-", "sk_live_", "glpat-", "EA[0-9A-Z]{8,}", "EB[0-9A-Z]{8,}"]
+    pattern = "|".join(prefixes)
+    try:
+        proc = subprocess.run(
+            ["git", "-C", ROOT, "grep", "-I", "-E", "-n", "-e", pattern] + revs,
+            capture_output=True, text=True, check=False, timeout=150,
+        )
+    except subprocess.TimeoutExpired:
+        print("  History scan timed out (>150s). Run on a shallow/limited range, e.g.:")
+        print("    git grep -E -n -e '<pattern>' HEAD~50..HEAD")
+        return 0
+    seen = {}
+    for line in proc.stdout.splitlines():
+        if not line.strip():
+            continue
+        parts = line.split(":", 2)  # <commit>:<path>:<lineno>:<text>
+        path = parts[1] if len(parts) >= 2 else line
+        seen[path] = seen.get(path, 0) + 1
+    if not seen:
+        print("  No high-signal secrets found in git history.")
     else:
-        # Summarise by file (history grep format: commit:path:line:match)
-        seen = {}
-        for l in lines[:200]:
-            try:
-                path = l.split(":", 2)[1]
-            except IndexError:
-                path = l
-            seen[path] = seen.get(path, 0) + 1
+        print(f"  Found secrets in {len(seen)} path(s) across history:")
         for p, c in sorted(seen.items(), key=lambda x: -x[1]):
             print(f"  {c:4d}  {p}")
-        if len(lines) > 200:
-            print(f"  ... and {len(lines) - 200} more matches (truncated).")
-        print("  ACTION: rotate these credentials; history cannot be cleaned without a force-push/rewrite (coordinate with owner).")
+        print("  ACTION: rotate these credentials; git history cannot be cleaned without a")
+        print("           force-push/rewrite (coordinate with the repo owner). Redaction of the")
+        print("           working tree does NOT remove them from history.")
     return 0
 
 
