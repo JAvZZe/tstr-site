@@ -38,6 +38,15 @@ Check `PROJECT_STATUS.md` for "Data Debt" entries and ensure critical data in st
 
 ---
 
+## 🧩 AGENT TEAM MAP
+
+The full role list, process, and collaboration model (18 roles, two-layer
+defs, secrets/tools reality, deploy reality) lives in **[AGENT_TEAM.md](./AGENT_TEAM.md)**.
+Per-role definitions: `agents/tstr-*.md` (harness-neutral) mirrored from the
+Hermes `tstr-*` skills. Read AGENT_TEAM.md before assigning or sequencing work.
+
+---
+
 ## 🚀 PROJECT INITIALIZATION (After Global Bootstrap)
 
 **When starting work in this project:**
