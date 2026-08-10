@@ -1,7 +1,7 @@
 # 📊 TSTR.DIRECTORY - PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - Executive summary for agents
-> **Last Updated**: 2026-08-10 11:34 UTC
+> **Last Updated**: 2026-08-10 17:43 UTC
 > **Updated By**: JAvZZe
 > **Status**: ⚠️ IAF VERIFICATION IN PROGRESS - Pricing-page UI done; backend client is a STUB (# TODO: Implement actual API call in iaf_api_client.py), no API key wired, Basic 499 plan not purchased. See pending tasks.
 
@@ -55,6 +55,10 @@
 - [x] Build **Saudi Energy Testing Hub** PSEO landing page.
 - [ ] Setup error alerting for scraper failures.
 - [ ] Deploy Europe-specific PSEO landing pages.
+
+### Low Priority
+- [ ] **Fix 1 — invalid URL**: identify + repair/replace the invalid URL still in the directory (see `docs/URL_VALIDATION_LIVE.md`; `cleanup_invalid_urls.py` reports/moves invalid URLs). Re-validate listing URLs before they're shown.
+- [ ] **Fix 2 — wire a free analytics provider**: code is done (consent-gated loader + cookie banner live). Remaining: choose a free privacy-respecting provider and set `PUBLIC_ANALYTICS_ID` in Cloudflare Pages (Production + Preview). Guide: `docs/active/ANALYTICS_SETUP_GUIDE.md`.
 
 ---
 
