@@ -1,5 +1,22 @@
 # Secrets Remediation Todos
 
+> ## ⚠️ STATUS AS OF 2026-08-10 (Hermes)
+> - **Repo doc/config redaction: DONE.** Plaintext secrets were removed from all tracked
+>   docs/configs and from git-ignored credential stores (`docs/credentials/*`,
+>   `TSTR_hub_Supabase_Keys.md`, `secret_alerts.json`, `.gitnexus/lbug`).
+>   A reusable scanner now gates commits: `scripts/secret_scan.py` + `scripts/pre-commit.hook`
+>   (see `agents/tstr-secret-scanner.md` / Hermes skill `tstr-secret-scanner`).
+> - **KEY ROTATION: NOT DONE.** Redaction does NOT close the 19 OPEN GitHub secret-scanning
+>   alerts (some from 2025-10). The real keys still live in git HISTORY and in the runtimes
+>   (Cloudflare Pages env, OCI .env, local .env). Per `CREDENTIAL_ROTATION_RUNBOOK.md`, every
+>   exposed credential must be rotated in its provider dashboard, then updated in all surfaces,
+>   before an alert can be marked resolved. **This is the outstanding action.**
+> - **Live code still uses service role:** `web/tstr-frontend/src/pages/api/ai-search.ts:8,55`
+>   still constructs a Supabase client with `SUPABASE_SERVICE_ROLE_KEY`. Debug routes
+>   (`debug-env.ts`, `debug-full.ts`) are gated to 404 in production but were NOT deleted;
+>   `debug-full.ts` still contains a service-role leak path when `PUBLIC_DEBUG_ENDPOINTS=true`.
+> - **`.env` / `.dev.vars` intentionally unchanged** (git-ignored local dev secrets).
+
 ## Immediate Actions Required
 
 ### 1. Supabase Service Role Key Exposure
