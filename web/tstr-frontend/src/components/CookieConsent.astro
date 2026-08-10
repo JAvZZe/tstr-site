@@ -1,0 +1,53 @@
+---
+/**
+ * Minimal cookie/consent banner.
+ * - Stores choice in localStorage ("tstr-consent": "all" | "necessary").
+ * - On "Accept all", enables third-party analytics (Apollo + PUBLIC_ANALYTICS_ID).
+ * - Shown only until a choice is made. GDPR-friendly: no tracking before consent.
+ */
+---
+
+<div id="cookie-consent" class="fixed bottom-0 inset-x-0 z-[200] hidden">
+  <div class="mx-auto max-w-3xl m-4 rounded-xl border border-white/10 bg-[#0b0d12] shadow-2xl p-4 flex flex-col sm:flex-row sm:items-center gap-4">
+    <p class="text-sm text-gray-300 flex-1">
+      We use cookies for essential site function and, with your consent, for anonymous
+      traffic analytics (to understand which labs and standards visitors search for).
+      See our <a href="/privacy" class="text-blue-400 underline">Privacy Policy</a>.
+    </p>
+    <div class="flex gap-2 shrink-0">
+      <button id="cc-necessary" class="px-3 py-2 text-sm rounded-lg border border-white/15 text-gray-300 hover:bg-white/5">
+        Necessary only
+      </button>
+      <button id="cc-accept" class="px-3 py-2 text-sm rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium">
+        Accept all
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { enableAnalyticsOnConsent } from '../lib/analytics';
+
+  const KEY = 'tstr-consent';
+  const banner = document.getElementById('cookie-consent');
+
+  function close() {
+    banner?.classList.add('hidden');
+  }
+
+  function decide(choice: 'all' | 'necessary') {
+    try { localStorage.setItem(KEY, choice); } catch { /* ignore */ }
+    close();
+    if (choice === 'all') enableAnalyticsOnConsent();
+  }
+
+  let stored: string | null = null;
+  try { stored = localStorage.getItem(KEY); } catch { /* ignore */ }
+
+  if (!stored && banner) {
+    banner.classList.remove('hidden');
+  }
+
+  document.getElementById('cc-accept')?.addEventListener('click', () => decide('all'));
+  document.getElementById('cc-necessary')?.addEventListener('click', () => decide('necessary'));
+</script>
