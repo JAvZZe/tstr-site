@@ -4,7 +4,7 @@ Check current RLS policies on the listings table
 """
 import os
 
-from supabase import create_client, Client
+from supabase import Client, create_client
 
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
 SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")

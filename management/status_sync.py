@@ -14,14 +14,14 @@ Usage:
     sync.sync_all_systems()
 """
 
-import sys
-import json
-import subprocess
-import re
 import argparse
-from typing import Dict, List, Any, Optional
-from pathlib import Path
+import json
+import re
+import subprocess
+import sys
 from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
 
 try:
     from .status_bridge import StatusBridge
@@ -32,7 +32,7 @@ except ImportError:
 class StatusSync:
     """Synchronization manager for status tracking systems"""
 
-    def __init__(self, project_root: Optional[str] = None):
+    def __init__(self, project_root: str | None = None):
         """Initialize with project paths"""
         if project_root is None:
             project_root = Path(__file__).parent.parent
@@ -50,7 +50,7 @@ class StatusSync:
         else:
             self.bridge = None
 
-    def get_database_sessions(self) -> List[Dict[str, Any]]:
+    def get_database_sessions(self) -> list[dict[str, Any]]:
         """Retrieve recent sessions from database"""
         if not self.db_utils.exists():
             return []
@@ -63,7 +63,7 @@ class StatusSync:
             print(f"Database session retrieval error: {e}")
             return []
 
-    def get_file_sessions(self) -> List[Dict[str, Any]]:
+    def get_file_sessions(self) -> list[dict[str, Any]]:
         """Parse sessions from .ai-session.md"""
         if not self.session_file.exists():
             return []
@@ -99,7 +99,7 @@ class StatusSync:
             print(f"File session parsing error: {e}")
             return []
 
-    def find_missing_sessions(self) -> Dict[str, List[Dict[str, Any]]]:
+    def find_missing_sessions(self) -> dict[str, list[dict[str, Any]]]:
         """
         Identify sessions that exist in one system but not the other
 
@@ -127,7 +127,7 @@ class StatusSync:
 
         return {"file_only": file_only, "db_only": db_only}
 
-    def sync_session_to_database(self, session: Dict[str, Any]) -> bool:
+    def sync_session_to_database(self, session: dict[str, Any]) -> bool:
         """Sync a session entry to the database"""
         if not self.db_utils.exists():
             return False
@@ -145,7 +145,7 @@ class StatusSync:
             print(f"Session sync error: {e}")
             return False
 
-    def sync_all_sessions(self) -> Dict[str, int]:
+    def sync_all_sessions(self) -> dict[str, int]:
         """
         Sync all missing sessions between systems
 
@@ -167,7 +167,7 @@ class StatusSync:
 
         return results
 
-    def validate_status_consistency(self) -> Dict[str, Any]:
+    def validate_status_consistency(self) -> dict[str, Any]:
         """
         Comprehensive consistency validation
 
@@ -202,7 +202,7 @@ class StatusSync:
 
         return results
 
-    def _check_timestamp_consistency(self) -> Dict[str, Any]:
+    def _check_timestamp_consistency(self) -> dict[str, Any]:
         """Check if timestamps are consistent between systems"""
         # This is a placeholder - would need actual database integration
         return {
@@ -211,7 +211,7 @@ class StatusSync:
             "last_session_entry": self._get_last_session_timestamp(),
         }
 
-    def _check_session_completeness(self) -> Dict[str, Any]:
+    def _check_session_completeness(self) -> dict[str, Any]:
         """Check if sessions have all required fields"""
         sessions = self.get_file_sessions()
         if not sessions:
@@ -230,7 +230,7 @@ class StatusSync:
             "complete_sessions": complete_sessions,
         }
 
-    def _check_learning_coverage(self) -> Dict[str, Any]:
+    def _check_learning_coverage(self) -> dict[str, Any]:
         """Check if important actions have corresponding learnings"""
         # This is a placeholder - would need database integration
         return {
@@ -296,7 +296,7 @@ Generated: {datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")}
 
         return report
 
-    def perform_full_sync(self) -> Dict[str, Any]:
+    def perform_full_sync(self) -> dict[str, Any]:
         """
         Perform complete synchronization of all status systems
 

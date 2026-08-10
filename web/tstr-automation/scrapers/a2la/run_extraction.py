@@ -6,17 +6,16 @@ This script coordinates with Claude's WebSearch tool to extract all 64 PIDs
 
 import json
 from pathlib import Path
-from typing import Dict
 
 # Load extraction plan
 PLAN_FILE = "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/extraction_plan_64.json"
 
-def load_plan() -> Dict:
+def load_plan() -> dict:
     """Load the extraction plan."""
     with open(PLAN_FILE, 'r') as f:
         return json.load(f)
 
-def load_gemini_results() -> Dict[str, Dict]:
+def load_gemini_results() -> dict[str, dict]:
     """Load Gemini's partial results."""
     gemini_file = "/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/claude_extraction.jsonl"
     gemini_data = {}

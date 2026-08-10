@@ -1,6 +1,6 @@
-import sqlite3
-import re
 import os
+import re
+import sqlite3
 
 # Configuration
 DB_PATH = os.path.expanduser("~/memory/db/tstr.db")

@@ -10,7 +10,6 @@ import os
 import re
 import sys
 import time
-from typing import Dict, List, Optional
 
 from bs4 import BeautifulSoup
 
@@ -154,7 +153,7 @@ class TNIEnvironmentalScraper(BaseNicheScraper):
         # Lab data cache: {tni_code: lab_data}
         self.labs_cache = []
 
-    def _get_form_viewstate(self, soup: BeautifulSoup) -> Dict[str, str]:
+    def _get_form_viewstate(self, soup: BeautifulSoup) -> dict[str, str]:
         """
         Extract ASP.NET ViewState and EventValidation for form submission
 
@@ -181,8 +180,8 @@ class TNIEnvironmentalScraper(BaseNicheScraper):
         return form_data
 
     def search_labs_by_state(
-        self, state: str, limit: Optional[int] = None
-    ) -> List[Dict]:
+        self, state: str, limit: int | None = None
+    ) -> list[dict]:
         """
         Search for labs in a specific state
 
@@ -244,7 +243,7 @@ class TNIEnvironmentalScraper(BaseNicheScraper):
             logger.error(f"Error searching labs in {state}: {e}")
             return []
 
-    def _parse_search_results(self, soup: BeautifulSoup, state: str) -> List[Dict]:
+    def _parse_search_results(self, soup: BeautifulSoup, state: str) -> list[dict]:
         """
         Parse lab results from search results page (Telerik RadGrid format)
 
@@ -309,7 +308,7 @@ class TNIEnvironmentalScraper(BaseNicheScraper):
 
         return labs
 
-    def get_listing_urls(self, limit: Optional[int] = None) -> List[str]:
+    def get_listing_urls(self, limit: int | None = None) -> list[str]:
         """
         Get list of lab detail URLs to scrape
 
@@ -337,7 +336,7 @@ class TNIEnvironmentalScraper(BaseNicheScraper):
         # Return unique placeholder URLs for each lab (use TNI code as identifier)
         return [f"{self.search_url}#{lab['tni_code']}" for lab in self.labs_cache]
 
-    def extract_standard_fields(self, soup: BeautifulSoup, url: str) -> Dict:
+    def extract_standard_fields(self, soup: BeautifulSoup, url: str) -> dict:
         """
         Extract standard listing fields from lab data
 
@@ -398,7 +397,7 @@ class TNIEnvironmentalScraper(BaseNicheScraper):
 
         return fields
 
-    def extract_custom_fields(self, soup: BeautifulSoup, url: str) -> Dict:
+    def extract_custom_fields(self, soup: BeautifulSoup, url: str) -> dict:
         """
         Extract Environmental Testing specific custom fields
 
@@ -589,7 +588,7 @@ class TNIEnvironmentalScraper(BaseNicheScraper):
             return False
 
 
-def scrape_tni_environmental(dry_run: bool = False, limit: Optional[int] = None) -> int:
+def scrape_tni_environmental(dry_run: bool = False, limit: int | None = None) -> int:
     """Wrapper for main_scraper orchestration"""
     scraper = TNIEnvironmentalScraper(dry_run=dry_run)
     scraper.run(limit=limit, dry_run=dry_run)

@@ -86,7 +86,7 @@ GitHub doesn't accept passwords anymore. You need a token.
 4. **Click:** "Generate token"
 
 5. **COPY THE TOKEN IMMEDIATELY** (you won't see it again)
-   - It looks like: `ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+   - It looks like: `[REDACTED GitHub PAT]`
    - Paste it in Notepad temporarily
 
 6. **Go back to Command Prompt**

@@ -4,17 +4,16 @@ Auto-Outreach Agent: Generates personalized cold emails for unclaimed providers.
 Uses LLM to draft emails based on provider data and email templates.
 """
 
-import sqlite3
 import os
+import sqlite3
 from datetime import datetime
-from typing import List, Dict
 
 # Configuration
 DB_PATH = os.path.expanduser("~/memory/db/tstr.db")
 DRAFT_DIR = os.path.expanduser("~/memory/drafts")
 TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), "cold-email-template.md")
 
-def get_uncontacted_leads(limit: int = 5) -> List[Dict]:
+def get_uncontacted_leads(limit: int = 5) -> list[dict]:
     """
     Fetches high-priority unclaimed leads.
     
@@ -54,7 +53,7 @@ def get_uncontacted_leads(limit: int = 5) -> List[Dict]:
     
     return leads
 
-def get_category_competitors(category: str, exclude_id: int, limit: int = 3) -> List[str]:
+def get_category_competitors(category: str, exclude_id: int, limit: int = 3) -> list[str]:
     """
     Get competitor names in the same category for social proof.
     
@@ -87,7 +86,7 @@ def get_category_competitors(category: str, exclude_id: int, limit: int = 3) -> 
     
     return competitors
 
-def generate_email_content(lead: Dict, sequence: int = 1) -> Dict:
+def generate_email_content(lead: dict, sequence: int = 1) -> dict:
     """
     Generate email content based on template and lead data.
     
@@ -231,7 +230,7 @@ P.S. — If you're not the right person, a quick forward to your marketing/BD te
         'generated_at': datetime.now().isoformat()
     }
 
-def save_draft(lead: Dict, email_content: Dict) -> str:
+def save_draft(lead: dict, email_content: dict) -> str:
     """
     Save email draft to file and update database.
     

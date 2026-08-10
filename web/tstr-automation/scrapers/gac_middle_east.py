@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# ruff: noqa: E402
 """
 GAC (GCC Accreditation Center) Scraper
 Standardized to use BaseNicheScraper architecture.
@@ -7,14 +6,13 @@ Extracts accredited labs in the GCC (Saudi Arabia, UAE, Qatar, Oman, Bahrain, Ku
 Source: http://www.gcc-accreditation.org/public/cabs
 """
 
+import logging
 import os
 import sys
-import logging
 import time
-from typing import Dict, List, Optional
 
-from bs4 import BeautifulSoup
 import requests
+from bs4 import BeautifulSoup
 
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -39,7 +37,7 @@ class GACMiddleEastScraper(BaseNicheScraper):
         self.base_url = "http://www.gcc-accreditation.org"
         self.directory_url = f"{self.base_url}/public/cabs"
 
-    def get_listing_urls(self, limit: Optional[int] = None) -> List[str]:
+    def get_listing_urls(self, limit: int | None = None) -> list[str]:
         """
         GAC uses a standard paginated table. We'll return page URLs or synthetic IDs.
         Since all data is in the table, we'll return page URLs and extract in scrape_listing.
@@ -149,7 +147,7 @@ class GACMiddleEastScraper(BaseNicheScraper):
             logger.error(f"Error parsing GAC lab row {row_idx}: {e}")
             return False
 
-    def extract_custom_fields(self, soup: BeautifulSoup, url: str) -> Dict:
+    def extract_custom_fields(self, soup: BeautifulSoup, url: str) -> dict:
         return {}
 
 

@@ -1,11 +1,12 @@
-# ruff: noqa: E402
 """
 Cleanup Script: Validate Existing URLs in Database
 Checks all existing listings and identifies/handles invalid URLs
 """
 
 import os
+
 from dotenv import load_dotenv
+
 # Load environment variables from .env file in the same directory as this script
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
@@ -17,7 +18,6 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 import csv
 import logging
 from datetime import datetime
-
 
 from url_validator import URLValidator
 

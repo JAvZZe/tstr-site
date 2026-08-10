@@ -1,10 +1,11 @@
-# ruff: noqa: E402
 """
 Create table using Supabase Management API
 """
 
 import os
+
 from dotenv import load_dotenv
+
 # Load environment variables from .env file in the same directory as this script
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
@@ -36,8 +37,8 @@ def create_via_api():
     
     sql_file = "pending_research_table.sql"
     
-    sql = """-- Run this in Supabase SQL Editor
--- URL: https://supabase.com/dashboard/project/{}/sql
+    sql = f"""-- Run this in Supabase SQL Editor
+-- URL: https://supabase.com/dashboard/project/{project_ref}/sql
 
 CREATE TABLE IF NOT EXISTS pending_research (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -70,7 +71,7 @@ ALTER TABLE pending_research ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Enable all for authenticated users" ON pending_research;
 CREATE POLICY "Enable all for authenticated users" ON pending_research
     FOR ALL USING (true);
-""".format(project_ref)
+"""
     
     with open(sql_file, 'w') as f:
         f.write(sql)

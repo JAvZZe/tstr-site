@@ -116,8 +116,7 @@ if __name__ == "__main__":
     if all_ids:
         # Save IDs for next script
         with open('/tmp/hydrogen_listing_ids.txt', 'w') as f:
-            for lid in all_ids:
-                f.write(f"{lid}\n")
+            f.writelines(f"{lid}\n" for lid in all_ids)
         
         print("💾 Saved IDs to /tmp/hydrogen_listing_ids.txt")
     else:

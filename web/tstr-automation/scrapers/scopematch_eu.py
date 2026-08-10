@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# ruff: noqa: E402
 """
 ScopeMatch.eu Pan-European Aggregator Scraper
 Standardized to use BaseNicheScraper architecture.
@@ -7,11 +6,10 @@ Utilizes the ScopeMatch API (v1) to fetch verified ISO 17025 labs.
 Coverage: UK (UKAS), Germany (DAkkS), France (COFRAC), Netherlands (RvA), Italy (ACCREDIA), Spain (ENAC).
 """
 
+import logging
 import os
 import sys
-import logging
 import time
-from typing import Dict, List, Optional
 
 import requests
 
@@ -28,7 +26,7 @@ class ScopeMatchScraper(BaseNicheScraper):
     Scraper for European labs using the ScopeMatch.eu API
     """
 
-    def __init__(self, country: Optional[str] = None, dry_run: bool = False):
+    def __init__(self, country: str | None = None, dry_run: bool = False):
         super().__init__(
             category_slug="materials-testing", # Primary category for these labs
             source_name="ScopeMatch.eu",
@@ -38,7 +36,7 @@ class ScopeMatchScraper(BaseNicheScraper):
         self.api_base = "https://scopematch.eu/api/v1"
         self.country = country # Filter by country (e.g., 'DE', 'GB')
 
-    def fetch_api(self, url: str, params: Optional[Dict] = None) -> Optional[Dict]:
+    def fetch_api(self, url: str, params: dict | None = None) -> dict | None:
         """
         Fetch from API with retry on 429
         """
@@ -61,7 +59,7 @@ class ScopeMatchScraper(BaseNicheScraper):
                 raise
         return None
 
-    def get_listing_urls(self, limit: Optional[int] = None) -> List[str]:
+    def get_listing_urls(self, limit: int | None = None) -> list[str]:
         """
         Fetch lab detail API URLs from the paginated list endpoint
         """

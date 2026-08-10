@@ -231,7 +231,7 @@ python generate_outreach.py
 - **Listings**: tstr.directory1+listing@gmail.com
 
 ### API:
-- **Google Maps**: AIzaSyAJfCW_X3fJerYy6fXwUR7T11QkKTLFUzM
+- **Google Maps**: [REDACTED Gemini]
 - **Free Credit**: $200/month
 
 ---

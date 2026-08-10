@@ -2,11 +2,11 @@
 """
 Analyze listings and suggest standard assignments
 """
+import json
 import os
+from collections import defaultdict
 
 import requests
-import json
-from collections import defaultdict
 
 SUPABASE_URL = "https://haimjeaetrsaauitrhfy.supabase.co"
 SERVICE_ROLE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")

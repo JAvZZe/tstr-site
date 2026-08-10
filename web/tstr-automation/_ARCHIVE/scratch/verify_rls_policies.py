@@ -1,6 +1,8 @@
 import os
-from supabase import create_client
+
 from dotenv import load_dotenv
+
+from supabase import create_client
 
 # Load env from web/tstr-automation/.env
 load_dotenv('web/tstr-automation/.env')

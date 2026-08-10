@@ -1,6 +1,8 @@
-from base_scraper import BaseNicheScraper
-import os
 import logging
+import os
+
+from base_scraper import BaseNicheScraper
+
 
 class MockScraper(BaseNicheScraper):
     def extract_standard_fields(self, soup, url): return {}

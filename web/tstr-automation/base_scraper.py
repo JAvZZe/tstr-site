@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-# ruff: noqa: E402
 """
 Base Scraper for tstr.directory Niche-Specific Intelligence Collection
 Abstract base class providing common functionality for all niche scrapers
 """
 
 import os
+
 from dotenv import load_dotenv
+
 # Load environment variables from .env file in the same directory as this script
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
@@ -19,17 +20,16 @@ import logging
 import re
 import time
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional
 from urllib.parse import urlparse
 from urllib.robotparser import RobotFileParser
 
 import requests
 from bs4 import BeautifulSoup
-
 from conglomerates import detect_parent
 from location_parser import LocationParser
-from supabase import create_client
 from url_validator import URLValidator
+
+from supabase import create_client
 
 # Load environment variables
 
@@ -62,7 +62,7 @@ class BaseNicheScraper(ABC):
         category_slug: str,
         source_name: str,
         rate_limit_seconds: float = 2.0,
-        user_agent: Optional[str] = None,
+        user_agent: str | None = None,
         dry_run: bool = False,
     ):
         """
@@ -154,7 +154,7 @@ class BaseNicheScraper(ABC):
             logger.error(f"Failed to get category_id for '{self.category_slug}': {e}")
             raise
 
-    def _load_custom_fields(self) -> Dict[str, Dict]:
+    def _load_custom_fields(self) -> dict[str, dict]:
         """
         Load custom field definitions for this category
 
@@ -189,7 +189,7 @@ class BaseNicheScraper(ABC):
             "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         )
 
-    def check_robots_allowed(self, url: str) -> Optional[str]:
+    def check_robots_allowed(self, url: str) -> str | None:
         """
         Check if URL is allowed by robots.txt
 
@@ -247,7 +247,7 @@ class BaseNicheScraper(ABC):
 
         self.last_request_times[domain] = time.time()
 
-    def fetch_page(self, url: str, max_retries: int = 3) -> Optional[BeautifulSoup]:
+    def fetch_page(self, url: str, max_retries: int = 3) -> BeautifulSoup | None:
         """
         Fetch and parse HTML page with retry logic
 
@@ -286,7 +286,7 @@ class BaseNicheScraper(ABC):
                     logger.error(f"Failed to fetch {url} after {max_retries} attempts")
                     return None
 
-    def extract_standard_fields(self, soup: BeautifulSoup, url: str) -> Dict:
+    def extract_standard_fields(self, soup: BeautifulSoup, url: str) -> dict:
         """
         Extract standard listing fields common to all niches
 
@@ -327,7 +327,7 @@ class BaseNicheScraper(ABC):
         }
 
     @abstractmethod
-    def extract_custom_fields(self, soup: BeautifulSoup, url: str) -> Dict:
+    def extract_custom_fields(self, soup: BeautifulSoup, url: str) -> dict:
         """
         Extract niche-specific custom fields
 
@@ -346,7 +346,7 @@ class BaseNicheScraper(ABC):
         raise NotImplementedError("Subclass must implement extract_custom_fields()")
 
     @abstractmethod
-    def get_listing_urls(self, limit: Optional[int] = None) -> List[str]:
+    def get_listing_urls(self, limit: int | None = None) -> list[str]:
         """
         Get list of listing URLs to scrape
 
@@ -360,9 +360,9 @@ class BaseNicheScraper(ABC):
     def find_existing_id(
         self,
         website: str,
-        phone: Optional[str] = None,
-        business_name: Optional[str] = None,
-    ) -> Optional[str]:
+        phone: str | None = None,
+        business_name: str | None = None,
+    ) -> str | None:
         """
         Check if listing already exists in database
 
@@ -421,7 +421,7 @@ class BaseNicheScraper(ABC):
             return False
 
 
-    def _get_or_create_parent_id(self, parent_name: str) -> Optional[str]:
+    def _get_or_create_parent_id(self, parent_name: str) -> str | None:
         if not parent_name:
             return None
             
@@ -454,8 +454,8 @@ class BaseNicheScraper(ABC):
             
         return None
     def save_listing(
-        self, standard_fields: Dict, custom_fields: Dict, source_url: str
-    ) -> Optional[str]:
+        self, standard_fields: dict, custom_fields: dict, source_url: str
+    ) -> str | None:
         """
         Save listing to database (listings + custom field values). 
         Updates existing listing if found.
@@ -532,7 +532,7 @@ class BaseNicheScraper(ABC):
             self.stats["listings_failed"] += 1
             return None
 
-    def _save_custom_field_values(self, listing_id: str, custom_fields: Dict):
+    def _save_custom_field_values(self, listing_id: str, custom_fields: dict):
         """
         Save custom field values to listing_custom_field_values table
 
@@ -592,7 +592,7 @@ class BaseNicheScraper(ABC):
         except Exception as e:
             logger.error(f"Failed to save custom field values: {e}")
 
-    def scrape_listing(self, url: str) -> Optional[str]:
+    def scrape_listing(self, url: str) -> str | None:
         """
         Scrape single listing and save to database
 
@@ -631,7 +631,7 @@ class BaseNicheScraper(ABC):
             self.stats["listings_failed"] += 1
             return False
 
-    def run(self, limit: Optional[int] = None, dry_run: Optional[bool] = None):
+    def run(self, limit: int | None = None, dry_run: bool | None = None):
         """
         Main scraping workflow
 
@@ -668,7 +668,7 @@ class BaseNicheScraper(ABC):
         # Print summary
         self._print_summary()
 
-    def _write_dry_run_csv(self, data: List[Dict]):
+    def _write_dry_run_csv(self, data: list[dict]):
         """Write dry run data to CSV file"""
         import csv
 
@@ -717,6 +717,6 @@ class BaseNicheScraper(ABC):
             )
             logger.info(f"New locations created: {location_stats['created_locations']}")
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         """Return scraping statistics"""
         return self.stats

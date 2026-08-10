@@ -9,7 +9,6 @@ import logging
 import os
 import re
 import sys
-from typing import Dict, List, Optional
 from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
@@ -38,7 +37,7 @@ class EPAEnvironmentalScraper(BaseNicheScraper):
         self.source_url = "https://www.epa.gov/emc/epa-approved-test-labs-and-third-party-certifiers-table"
         self.labs_cache = []
 
-    def get_listing_urls(self, limit: Optional[int] = None) -> List[str]:
+    def get_listing_urls(self, limit: int | None = None) -> list[str]:
         """
         Fetch the main table and return placeholder URLs for each lab
         """
@@ -128,7 +127,7 @@ class EPAEnvironmentalScraper(BaseNicheScraper):
             logger.error(f"Error fetching EPA labs: {e}")
             return []
 
-    def extract_standard_fields(self, soup: BeautifulSoup, url: str) -> Dict:
+    def extract_standard_fields(self, soup: BeautifulSoup, url: str) -> dict:
         """Extract standard fields from cache"""
         index_match = re.search(r"#epa-(\d+)", url)
         if not index_match:
@@ -158,7 +157,7 @@ class EPAEnvironmentalScraper(BaseNicheScraper):
             
         return fields
 
-    def extract_custom_fields(self, soup: BeautifulSoup, url: str) -> Dict:
+    def extract_custom_fields(self, soup: BeautifulSoup, url: str) -> dict:
         """Extract custom fields"""
         # EPA approved labs usually focus on these
         return {
@@ -187,7 +186,7 @@ class EPAEnvironmentalScraper(BaseNicheScraper):
             return False
 
 
-def scrape_epa_environmental(dry_run: bool = False, limit: Optional[int] = None) -> int:
+def scrape_epa_environmental(dry_run: bool = False, limit: int | None = None) -> int:
     """Wrapper for main_scraper orchestration"""
     scraper = EPAEnvironmentalScraper(dry_run=dry_run)
     scraper.run(limit=limit, dry_run=dry_run)

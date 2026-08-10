@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-# ruff: noqa: E402
 """
 Backfill location_id for existing tstr.directory listings using libpostal
 Parses formatted_address to extract city, country, then links to locations table
 """
 
 import os
+
 from dotenv import load_dotenv
+
 # Load environment variables from .env file in the same directory as this script
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
@@ -17,7 +18,6 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 import logging
 import sys
-from typing import Dict, Optional
 
 from postal.parser import parse_address
 
@@ -57,7 +57,7 @@ class LocationBackfiller:
 
         logging.info(f"Loaded {len(result.data)} existing locations")
 
-    def parse_address_components(self, formatted_address: str) -> Dict[str, str]:
+    def parse_address_components(self, formatted_address: str) -> dict[str, str]:
         """
         Use libpostal to parse address into components
 
@@ -86,7 +86,7 @@ class LocationBackfiller:
             logging.error(f"Failed to parse address '{formatted_address}': {e}")
             return {}
 
-    def find_or_create_location(self, city: Optional[str], country: str, state: Optional[str] = None) -> Optional[str]:
+    def find_or_create_location(self, city: str | None, country: str, state: str | None = None) -> str | None:
         """
         Find existing location or create new entry in locations table
         Returns location_id (UUID) or None
@@ -174,7 +174,7 @@ class LocationBackfiller:
         # No city, return country location_id
         return country_loc['id']
 
-    def backfill_listing(self, listing: Dict) -> bool:
+    def backfill_listing(self, listing: dict) -> bool:
         """
         Process single listing: parse address, find/create location, update location_id
         Returns True if successful
@@ -223,7 +223,7 @@ class LocationBackfiller:
             logging.error(f"Failed to update listing {listing_id}: {e}")
             return False
 
-    def run_backfill(self, limit: Optional[int] = None, dry_run: bool = False):
+    def run_backfill(self, limit: int | None = None, dry_run: bool = False):
         """
         Main backfill process
 

@@ -3,11 +3,11 @@ IAF CertSearch API Client for TSTR.directory
 Handles certification verification with credit-conscious approach
 """
 
-import os
 import logging
-from typing import Dict, List, Optional, Any
+import os
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -21,18 +21,18 @@ class IAFCertification:
     expiry_date: str
     status: str
     issuing_body: str
-    certificate_number: Optional[str] = None
+    certificate_number: str | None = None
 
 @dataclass
 class IAFCompanyMatch:
     """Represents a potential company match from IAF search"""
     company_name: str
     country: str
-    city: Optional[str] = None
-    website: Optional[str] = None
-    email: Optional[str] = None
-    phone: Optional[str] = None
-    certifications: List[IAFCertification] = None
+    city: str | None = None
+    website: str | None = None
+    email: str | None = None
+    phone: str | None = None
+    certifications: list[IAFCertification] = None
     confidence_score: float = 0.0  # 0.0 to 1.0
 
 class IAFVerifyClient:
@@ -91,7 +91,7 @@ class IAFVerifyClient:
         self.monthly_credits_used += credits_used
         logger.info(f"IAF API credits used: {credits_used}. Monthly total: {self.monthly_credits_used}/{self.monthly_credit_limit}")
 
-    def search_companies(self, query: str, country: str = None, limit: int = 10) -> List[IAFCompanyMatch]:
+    def search_companies(self, query: str, country: str = None, limit: int = 10) -> list[IAFCompanyMatch]:
         """
         Search for companies using the search endpoint (typically free/low cost)
         Returns potential matches for manual review or automated matching
@@ -134,7 +134,7 @@ class IAFVerifyClient:
         logger.info(f"IAF search for: '{query}' (country: {country}) - [PLACEHOLDER]")
         return []  # Placeholder
 
-    def verify_company(self, company_name: str, country: str = None) -> Optional[List[IAFCertification]]:
+    def verify_company(self, company_name: str, country: str = None) -> list[IAFCertification] | None:
         """
         Verify a specific company and retrieve its certifications
         Consumes verification credits - use judiciously
@@ -186,7 +186,7 @@ class IAFVerifyClient:
         logger.info(f"IAF verification for: '{company_name}' (country: {country}) - [PLACEHOLDER] - Would consume 1 credit")
         return []  # Placeholder
 
-    def smart_verify_tstr_listing(self, tstr_listing: Dict[str, Any]) -> Dict[str, Any]:
+    def smart_verify_tstr_listing(self, tstr_listing: dict[str, Any]) -> dict[str, Any]:
         """
         Smart verification approach for TSTR listings:
         1. Search for potential matches using business name/location
@@ -257,7 +257,7 @@ class IAFVerifyClient:
                 'iaf_matched_country': best_match.country
             }
 
-    def _calculate_confidence(self, query: str, search_result: Dict) -> float:
+    def _calculate_confidence(self, query: str, search_result: dict) -> float:
         """
         Calculate confidence score between search query and IAF result
         Based on name similarity, location matching, etc.
@@ -270,6 +270,7 @@ class IAFVerifyClient:
 if __name__ == "__main__":
     # Example of how to use the client
     import os
+
     from dotenv import load_dotenv
 
     load_dotenv()  # Load environment variables from .env

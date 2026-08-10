@@ -1,11 +1,12 @@
-# ruff: noqa: E402
 """
 URL Validation Module for TSTR Scrapers
 Validates URLs before adding them to the directory
 """
 
 import os
+
 from dotenv import load_dotenv
+
 # Load environment variables from .env file in the same directory as this script
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
@@ -87,7 +88,7 @@ class URLValidator:
                 'status_code': None,
                 'final_url': None,
                 'redirected': False,
-                'error': f'URL parsing error: {str(e)}',
+                'error': f'URL parsing error: {e!s}',
                 'method': None
             }
         
@@ -169,7 +170,7 @@ class URLValidator:
                 'status_code': None,
                 'final_url': None,
                 'redirected': False,
-                'error': f'HEAD request failed: {str(e)}',
+                'error': f'HEAD request failed: {e!s}',
                 'method': 'HEAD'
             }
     
@@ -230,7 +231,7 @@ class URLValidator:
                 'status_code': None,
                 'final_url': None,
                 'redirected': False,
-                'error': f'GET request failed: {str(e)}',
+                'error': f'GET request failed: {e!s}',
                 'method': 'GET'
             }
     

@@ -26,7 +26,7 @@
 **Google Cloud Project:**
 - Project ID: business-directory-app-8888888
 - Email: tstr.directory@gmail.com
-- Google Maps API Key: AIzaSyAJfCW_X3fJerYy6fXwUR7T11QkKTLFUzM
+- Google Maps API Key: [REDACTED Gemini]
 
 ---
 

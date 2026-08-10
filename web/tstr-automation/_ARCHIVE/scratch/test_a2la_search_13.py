@@ -1,5 +1,6 @@
-import requests
 import json
+
+import requests
 
 search_url = "https://customer.a2la.org/index.cfm?event=directory.search"
 session = requests.Session()

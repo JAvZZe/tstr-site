@@ -76,7 +76,7 @@ cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 **Scrapers** (Active on OCI):
 - Location: OCI instance 84.8.139.90 at `~/tstr-scraper/`
 - Scheduler: Cron daily at 2 AM GMT
-- Status: ✅ Working (127 listings deployed)
+- Status: ✅ Working (700+ listings live; see tstr.directory/sitemap.xml)
 
 **Frontend** (Not deployed):
 - Location: `web/tstr-frontend/`

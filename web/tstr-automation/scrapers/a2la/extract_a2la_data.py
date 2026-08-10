@@ -146,8 +146,7 @@ def main():
     
     # Save initialization
     with open(results_path, 'w') as f:
-        for result in results["extraction_results"]:
-            f.write(json.dumps(result) + '\n')
+        f.writelines(json.dumps(result) + '\n' for result in results["extraction_results"])
     
     print(f"Initialized extraction results: {results_path}")
     print(f"Total PIDs to process: {len(PIDS)}")

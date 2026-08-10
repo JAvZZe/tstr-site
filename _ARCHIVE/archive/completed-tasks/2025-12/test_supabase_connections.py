@@ -6,6 +6,7 @@ Test Supabase connections and configurations
 import os
 import subprocess
 
+
 def run_command(cmd, description):
     """Run a command and return success/failure"""
     try:

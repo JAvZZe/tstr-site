@@ -76,7 +76,7 @@ bash scripts/lint-changed.sh      # CI mode on current HEAD~1..HEAD
 bash scripts/verify-changed.sh    # security scan on same
 bash scripts/verify-watchdog.sh   # scans new commits since state marker
 # prove blocking:
-printf "const k={token:'sk_live_DEADBEEF123456'};\\n" > src/_p.ts
+printf "const k={token:'[REDACTED Stripe/live]'};\\n" > src/_p.ts
 git add src/_p.ts && bash scripts/verify-changed.sh   # exit 1 = blocks
 rm -f src/_p.ts && git reset -q src/_p.ts
 ```

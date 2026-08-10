@@ -1,4 +1,3 @@
-# ruff: noqa: E402
 """
 tstr.directory - Dual-Purpose Scraper
 1. Scrape testing labs for directory listings (company info)
@@ -6,7 +5,9 @@ tstr.directory - Dual-Purpose Scraper
 """
 
 import os
+
 from dotenv import load_dotenv
+
 # Load environment variables from .env file in the same directory as this script
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
@@ -23,7 +24,6 @@ import time
 
 import requests
 from bs4 import BeautifulSoup
-
 from url_validator import URLValidator
 
 # Setup basic logging

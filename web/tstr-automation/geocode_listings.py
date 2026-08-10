@@ -1,10 +1,12 @@
 
+import argparse
 import os
 import time
-import argparse
+
 import requests
-from supabase import create_client
 from dotenv import load_dotenv
+
+from supabase import create_client
 
 load_dotenv()
 

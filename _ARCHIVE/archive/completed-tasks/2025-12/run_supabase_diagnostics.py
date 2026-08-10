@@ -6,7 +6,9 @@ Run this after updating the service role key
 
 import os
 import sys
-from supabase import create_client, Client
+
+from supabase import Client, create_client
+
 
 def main():
     # Load environment variables

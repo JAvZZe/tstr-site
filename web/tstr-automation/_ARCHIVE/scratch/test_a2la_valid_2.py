@@ -1,6 +1,7 @@
+import re
+
 import requests
 from bs4 import BeautifulSoup
-import re
 
 pids = [
     "031C4AF0-B0DA-4AD7-BCDE-940DEECDE25E",
@@ -18,7 +19,7 @@ for pid in pids:
     title_text = title.get_text(strip=True) if title else "NO TITLE"
     print(f"  Title: {title_text}")
     
-    org_name_field = soup.find('label', string=re.compile(r'Organization Name:', re.I))
+    org_name_field = soup.find('label', string=re.compile(r'Organization Name:', re.IGNORECASE))
     print(f"  Org Name field found: {org_name_field is not None}")
     if org_name_field:
         org_name_p = org_name_field.find_next('p', class_='form-control-static')

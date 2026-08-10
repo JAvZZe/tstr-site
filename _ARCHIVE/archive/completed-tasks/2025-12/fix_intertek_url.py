@@ -5,7 +5,8 @@ Fix Intertek URL in pending_research table
 
 import os
 import sys
-from supabase import create_client, Client
+
+from supabase import Client, create_client
 
 # Add the frontend directory to path to import supabase config
 sys.path.append(os.path.join(os.path.dirname(__file__), "web", "tstr-frontend"))

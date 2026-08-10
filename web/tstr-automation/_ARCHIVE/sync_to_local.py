@@ -1,6 +1,8 @@
 import os
-from supabase import create_client
+
 from dotenv import load_dotenv
+
+from supabase import create_client
 
 # Remote config
 load_dotenv('.env')

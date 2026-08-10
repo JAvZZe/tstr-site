@@ -1,7 +1,8 @@
-# ruff: noqa: E402
 
 import os
+
 from dotenv import load_dotenv
+
 # Load environment variables from .env file in the same directory as this script
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
@@ -11,9 +12,9 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 import logging
 import re
-from typing import Optional
 
 from conglomerates import detect_parent
+
 from supabase import create_client
 
 # Load environment variables
@@ -29,7 +30,7 @@ if not supabase_url or not supabase_key:
 
 supabase = create_client(supabase_url, supabase_key)
 
-def get_or_create_parent(parent_name: str, category_id: str) -> Optional[str]:
+def get_or_create_parent(parent_name: str, category_id: str) -> str | None:
     # Check if parent exists
     result = supabase.from_("listings").select("id").eq("business_name", parent_name).is_("parent_listing_id", "null").execute()
     

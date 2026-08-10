@@ -16,20 +16,20 @@ Usage:
     print(results['summary'])
 """
 
-import os
-import sys
-import json
 import hashlib
+import json
+import os
 import re
-from typing import Dict, Any, Optional
-from pathlib import Path
+import sys
 from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
 
 
 class StatusValidator:
     """Comprehensive validator for status tracking systems"""
 
-    def __init__(self, project_root: Optional[str] = None):
+    def __init__(self, project_root: str | None = None):
         """Initialize with project paths"""
         if project_root is None:
             project_root = Path(__file__).parent.parent
@@ -47,7 +47,7 @@ class StatusValidator:
         # Optional files
         self.optional_files = [self.db_utils]
 
-    def validate_file_integrity(self) -> Dict[str, Any]:
+    def validate_file_integrity(self) -> dict[str, Any]:
         """
         Validate file existence, readability, and basic integrity
 
@@ -104,7 +104,7 @@ class StatusValidator:
 
     def _validate_single_file(
         self, file_path: Path, critical: bool = False
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Validate a single file"""
         results = {
             "exists": file_path.exists(),
@@ -157,7 +157,7 @@ class StatusValidator:
 
         return results
 
-    def validate_data_consistency(self) -> Dict[str, Any]:
+    def validate_data_consistency(self) -> dict[str, Any]:
         """
         Validate data consistency between different systems
 
@@ -176,9 +176,7 @@ class StatusValidator:
         scores = []
         for check_name, check_result in results.items():
             if check_name.endswith("_format") or check_name == "cross_references":
-                if isinstance(check_result, dict) and check_result.get("valid", False):
-                    scores.append(100)
-                elif isinstance(check_result, bool) and check_result:
+                if isinstance(check_result, dict) and check_result.get("valid", False) or isinstance(check_result, bool) and check_result:
                     scores.append(100)
                 else:
                     scores.append(50)  # Partial credit for attempted validation
@@ -190,7 +188,7 @@ class StatusValidator:
 
         return results
 
-    def _validate_status_format(self) -> Dict[str, Any]:
+    def _validate_status_format(self) -> dict[str, Any]:
         """Validate PROJECT_STATUS.md format"""
         if not self.status_file.exists():
             return {"valid": False, "issues": ["Status file does not exist"]}
@@ -220,7 +218,7 @@ class StatusValidator:
         except Exception as e:
             return {"valid": False, "issues": [f"Parse error: {e}"]}
 
-    def _validate_session_format(self) -> Dict[str, Any]:
+    def _validate_session_format(self) -> dict[str, Any]:
         """Validate .ai-session.md format"""
         if not self.session_file.exists():
             return {"valid": False, "issues": ["Session file does not exist"]}
@@ -248,7 +246,7 @@ class StatusValidator:
         except Exception as e:
             return {"valid": False, "issues": [f"Parse error: {e}"]}
 
-    def _validate_cross_references(self) -> Dict[str, Any]:
+    def _validate_cross_references(self) -> dict[str, Any]:
         """Validate cross-references between systems"""
         # This is a placeholder for more complex cross-validation
         # In a full implementation, this would check:
@@ -262,7 +260,7 @@ class StatusValidator:
             "issues": [],
         }
 
-    def validate_configuration(self) -> Dict[str, Any]:
+    def validate_configuration(self) -> dict[str, Any]:
         """
         Validate system configuration and environment
 
@@ -282,9 +280,7 @@ class StatusValidator:
         scores = []
         for check_name in ["project_structure", "permissions", "environment"]:
             check_result = results[check_name]
-            if isinstance(check_result, dict) and check_result.get("valid", False):
-                scores.append(100)
-            elif isinstance(check_result, bool) and check_result:
+            if isinstance(check_result, dict) and check_result.get("valid", False) or isinstance(check_result, bool) and check_result:
                 scores.append(100)
             else:
                 scores.append(50)
@@ -294,7 +290,7 @@ class StatusValidator:
 
         return results
 
-    def _validate_project_structure(self) -> Dict[str, Any]:
+    def _validate_project_structure(self) -> dict[str, Any]:
         """Validate project directory structure"""
         required_dirs = ["web", "docs", "management"]
         required_files = ["PROJECT_STATUS.md", ".ai-session.md"]
@@ -315,7 +311,7 @@ class StatusValidator:
             "project_root": str(self.project_root),
         }
 
-    def _validate_permissions(self) -> Dict[str, Any]:
+    def _validate_permissions(self) -> dict[str, Any]:
         """Validate file and directory permissions"""
         issues = []
 
@@ -335,7 +331,7 @@ class StatusValidator:
             "current_user": os.getlogin() if hasattr(os, "getlogin") else "unknown",
         }
 
-    def _validate_environment(self) -> Dict[str, Any]:
+    def _validate_environment(self) -> dict[str, Any]:
         """Validate environment and dependencies"""
         issues = []
 
@@ -357,7 +353,7 @@ class StatusValidator:
             "working_directory": str(self.project_root),
         }
 
-    def validate_all(self) -> Dict[str, Any]:
+    def validate_all(self) -> dict[str, Any]:
         """
         Run all validation checks
 
