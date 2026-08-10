@@ -37,6 +37,9 @@ jobs:
           cd web/tstr-frontend
           npm run verify
 
+      - name: ShellCheck changed shell scripts (blocking)
+        run: bash scripts/shellcheck-changed.sh
+
       - name: Build frontend
         env:
           PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
