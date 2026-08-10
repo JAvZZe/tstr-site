@@ -56,18 +56,34 @@ export const onRequest = defineMiddleware(async (context, next) => {
     const { markdown, originalTokens } = htmlToMarkdownForAgents({ html, url: url.toString() });
     const markdownTokens = Math.max(1, Math.round(markdown.length / 4));
 
-    const headers = new Headers(response.headers);
+    // Build a curated, safe header set. CF's Workers runtime rejects hop-by-hop /
+    // body-specific / duplicate headers (e.g. set-cookie, content-encoding,
+    // transfer-encoding, connection) when copied verbatim into a new Response,
+    // which surfaces as a 1102. We whitelist only safe, relevant headers.
+    const SAFE_HEADERS = new Set([
+      'cache-control',
+      'expires',
+      'pragma',
+      'age',
+      'strict-transport-security',
+      'content-language',
+      'x-frame-options',
+      'permissions-policy',
+      'referrer-policy',
+      'cross-origin-resource-policy',
+      'cross-origin-opener-policy',
+      'x-content-type-options',
+    ]);
+    const headers = new Headers();
+    response.headers.forEach((value, key) => {
+      if (SAFE_HEADERS.has(key.toLowerCase())) headers.set(key, value);
+    });
     headers.set('content-type', 'text/markdown; charset=utf-8');
     headers.set('vary', 'accept');
     headers.set('x-markdown-tokens', String(markdownTokens));
     headers.set('x-original-tokens', String(originalTokens));
     // Authoritative content-signal policy (overrides Cloudflare's default once set at origin).
     headers.set('content-signal', CONTENT_SIGNAL);
-    // Body is replaced; drop body-specific headers that no longer match.
-    headers.delete('content-encoding');
-    headers.delete('content-length');
-    headers.delete('etag');
-    headers.delete('last-modified');
 
     return new Response(markdown, {
       status: response.status,
@@ -75,7 +91,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
       headers,
     });
   } catch (err) {
-    // Conversion failed: fall back to the original HTML response.
+    // Conversion failed or body unreadable: fall back to the original HTML response.
     console.error('[markdown-for-agents] conversion failed, serving HTML:', err);
     return response;
   }
