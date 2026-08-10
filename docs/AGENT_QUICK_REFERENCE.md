@@ -173,7 +173,7 @@ Medium Priority:
 
 Low Priority:
 - [ ] Fix 1 invalid URL
-- [ ] Add analytics
+- [x] Add analytics  (2026-08-10: consent-gated traffic analytics loader + cookie banner; Apollo tracker now consent-gated; PUBLIC_ANALYTICS_ID env-var added)
 ```
 
 ---

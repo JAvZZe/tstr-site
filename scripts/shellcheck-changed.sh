@@ -21,12 +21,16 @@ if ! command -v shellcheck >/dev/null 2>&1; then
 fi
 
 # Decide the file set: staged (pre-commit hook) or last commit (CI / CF build).
+# Use the plumbing `git diff-index` (not porcelain `git diff --cached`) — it is
+# deterministic and immune to the index-refresh flakiness that porcelain can hit
+# in child processes. In a pre-commit hook the index already holds the staged
+# tree, so diff-index --cached HEAD is the authoritative changed-set.
 if git diff --cached --quiet 2>/dev/null; then
   BASE="HEAD~1"
   git rev-parse --verify "$BASE" >/dev/null 2>&1 || BASE="HEAD"
   mapfile -d '' FILES < <(git diff --name-only -z "$BASE" HEAD 2>/dev/null || true)
 else
-  mapfile -d '' FILES < <(git diff --cached --name-only -z 2>/dev/null || true)
+  mapfile -d '' FILES < <(git diff-index --cached -z HEAD --name-only 2>/dev/null || true)
 fi
 
 CHECK=()
