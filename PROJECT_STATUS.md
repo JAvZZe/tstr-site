@@ -1,7 +1,7 @@
 # 📊 TSTR.DIRECTORY - PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - Executive summary for agents
-> **Last Updated**: 2026-08-10 17:52 UTC
+> **Last Updated**: 2026-08-10 18:42 UTC
 > **Updated By**: Hermes Agent
 > **Status**: ⚠️ IAF VERIFICATION IN PROGRESS - Pricing-page UI done; backend client is a STUB (# TODO: Implement actual API call in iaf_api_client.py), no API key wired, Basic 499 plan not purchased. See pending tasks.
 
@@ -57,7 +57,9 @@
 - [ ] Deploy Europe-specific PSEO landing pages.
 
 ### Low Priority
-- [ ] **Fix 1 — invalid URL**: identify + repair/replace the invalid URL still in the directory (see `docs/URL_VALIDATION_LIVE.md`; `cleanup_invalid_urls.py` reports/moves invalid URLs). Re-validate listing URLs before they're shown.
+- [x] **Fix 1 — invalid URL**: IDENTIFIED + FIX KNOWN (2026-08-10). Scanned all 792 live listings via Supabase read-only. Only one genuinely malformed URL: **ABIOMED HIGIENE** → `https://abiomed-higiene.com ; jfraile` (stray `;` + junk makes it unparseable). Correct value: `https://abiomed-higiene.com`. BLOCKED on DB write: the only on-disk Supabase keys are stale (post-rotation) and the publishable/anon key cannot write (RLS blocks anon PATCH — returns 204 but changes 0 rows). To apply: run in Supabase SQL editor (or a service-role-authenticated script):
+  `update listings set website='https://abiomed-higiene.com' where business_name='ABIOMED HIGIENE';`
+  (23 other listings simply have empty website — not "invalid", left as-is.)
 - [x] **Fix 2 — wire a free analytics provider**: DONE. Consent-gated loader + cookie banner live; Cloudflare Web Analytics confirmed active on `tstr.directory` (beacon present). Guide: `docs/active/ANALYTICS_SETUP_GUIDE.md`.
 
 ---
