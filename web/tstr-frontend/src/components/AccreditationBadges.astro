@@ -1,0 +1,84 @@
+---
+// AccreditationBadges.astro
+// Renders a lab's accreditations (from the `certifications` table) as trust badges.
+// Each badge links to a viewable certificate: either `certificate_url` (when present)
+// or the lab's own public accreditations page (passed via `website`).
+//
+// Reusable: any listing with `certifications` rows gets the same treatment.
+interface Cert {
+  id?: string;
+  issuing_body?: string | null;
+  name?: string | null;
+  expiry_date?: string | null;
+  certificate_url?: string | null;
+}
+interface Props {
+  certifications?: Cert[] | null;
+  website?: string | null;
+  accent?: string;
+}
+const { certifications, website, accent = 'emerald' } = Astro.props;
+
+const fmtDate = (d?: string | null) => {
+  if (!d) return null;
+  try {
+    return new Date(d).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  } catch {
+    return d;
+  }
+};
+
+// Link target priority: direct certificate_url -> lab's accreditations page -> lab website
+const certLink = (c: Cert) => {
+  if (c.certificate_url) return c.certificate_url;
+  if (website) {
+    const base = website.replace(/\/+$/, '');
+    return `${base}/accreditations`;
+  }
+  return null;
+};
+---
+
+{
+  certifications && certifications.length > 0 && (
+    <div class="glass-panel border-emerald-500/20 bg-emerald-500/5 p-6">
+      <h3 class="mb-1 flex items-center gap-2 text-lg font-bold text-white">
+        <span class="h-5 w-1.5 rounded-full bg-emerald-500" />
+        Accreditations &amp; Certifications
+      </h3>
+      <p class="mb-4 text-xs text-gray-400">
+        Independently issued scopes of accreditation. Click any badge to view the certificate.
+      </p>
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {certifications.map((c) => {
+          const link = certLink(c);
+          const exp = fmtDate(c.expiry_date);
+          const label = c.issuing_body || 'Accredited';
+          return (
+            <div class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10">
+              <div class="min-w-0">
+                <div class="truncate text-sm font-semibold text-white">{label}</div>
+                <div class="truncate text-xs text-gray-400">{c.name || 'Accreditation'}</div>
+                {exp && <div class="mt-0.5 text-[11px] text-emerald-400/80">Valid to {exp}</div>}
+              </div>
+              {link ? (
+                <a
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class={`ml-3 shrink-0 rounded-lg px-3 py-1.5 bg-${accent}-600/20 hover:bg-${accent}-600/30 text-xs font-medium text-${accent}-300 border hover:text-white border-${accent}-500/20 transition-colors`}
+                >
+                  View ↗
+                </a>
+              ) : null}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  )
+}

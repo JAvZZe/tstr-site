@@ -1,0 +1,106 @@
+---
+// testing/standards/[code].astro
+// Server-rendered results page: given a standard code (e.g. "ASTM-F519" or
+// "ISO-11114-4" from a CapabilityDetail link), call the by-standard search API
+// and list the accredited labs. This closes the search-to-listing loop and is
+// itself crawlable + citable by AI assistants.
+import { supabase } from '../../../lib/supabase';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ListingMap from '../../../components/ListingMap.astro';
+
+export const prerender = false;
+
+const rawCode = Astro.params.code || '';
+// Accept either slugified (astm-f519) or spaced (ASTM F519) — normalize to code
+const standardCode = decodeURIComponent(rawCode).replace(/-/g, ' ').trim().toUpperCase();
+
+// Lookup the standard's friendly name for the title
+const { data: stdMeta } = await supabase
+  .from('standards')
+  .select('code, name, description')
+  .or(`code.ilike.%${standardCode}%`)
+  .limit(1);
+
+const code = stdMeta?.[0]?.code || standardCode;
+const stdName = stdMeta?.[0]?.name || '';
+
+// Call our own search API (server-side) to get matching labs
+let results = [];
+let apiError = null;
+try {
+  const base = new URL(Astro.request.url).origin;
+  const resp = await fetch(`${base}/api/search/by-standard?standard=${encodeURIComponent(code)}`);
+  const json = await resp.json();
+  results = json.results || [];
+  apiError = json.error || null;
+} catch (e) {
+  apiError = 'search_failed';
+}
+
+const title = `${code} Testing Laboratories${stdName ? ' — ' + stdName : ''} | TSTR.directory`;
+const description = `Find accredited laboratories performing ${code}${stdName ? ' (' + stdName + ')' : ''}. Compare scopes, verify ISO 17025 accreditation, and request a quote.`;
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="mx-auto max-w-6xl px-4 py-10">
+    <nav class="mb-6 text-sm text-gray-400">
+      <a href="/" class="hover:text-blue-400">Home</a>
+      <span class="text-gray-600"> / </span>
+      <a href="/standards" class="hover:text-blue-400">Standards</a>
+      <span class="text-gray-600"> / </span>
+      <span class="text-gray-200">{code}</span>
+    </nav>
+
+    <h1 class="mb-3 text-3xl font-black tracking-tight text-white md:text-5xl">
+      {code} Testing Laboratories
+    </h1>
+    {stdName && <p class="mb-2 text-lg text-gray-300">{stdName}</p>}
+    <p class="mb-8 max-w-2xl text-gray-400">
+      Accredited labs that perform this standard. Each profile lists verified scopes,
+      certifications, and a direct quote request. {results.length} matching laborator{
+        results.length === 1 ? 'y' : 'ies'
+      } found.
+    </p>
+
+    {
+      apiError && (
+        <div class="glass-panel p-6 text-amber-300">
+          Search temporarily unavailable. Please try again shortly.
+        </div>
+      )
+    }
+
+    {
+      !apiError && results.length === 0 && (
+        <div class="glass-panel p-8 text-gray-300">
+          No laboratories are currently listed for <strong>{code}</strong>.
+          <a href="/hydrogen-testing" class="text-blue-400 hover:underline">
+            Browse hydrogen testing labs →
+          </a>
+        </div>
+      )
+    }
+
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      {
+        results.map((lab: any) => (
+          <a
+            href={`/listing/${lab.listing_slug || ''}`}
+            class="glass-panel block p-6 transition-colors hover:bg-white/5"
+          >
+            <div class="flex items-center justify-between">
+              <h2 class="text-lg font-bold text-white">{lab.business_name}</h2>
+              {lab.verified && (
+                <span class="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold uppercase text-emerald-300">
+                  Verified
+                </span>
+              )}
+            </div>
+            <p class="mt-1 text-sm text-gray-400">{lab.address || lab.standard_name || ''}</p>
+            <div class="mt-3 text-xs text-blue-300">View listing →</div>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>

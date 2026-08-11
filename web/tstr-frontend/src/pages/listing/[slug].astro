@@ -1,14 +1,16 @@
 ---
-import { supabase } from '../../lib/supabase'
-import { getRedirectUrl } from '../../lib/redirect'
-import BaseLayout from '../../layouts/BaseLayout.astro'
-import SeoJsonLd from '../../components/SeoJsonLd.astro'
-import ContactLabModal from '../../components/ContactLabModal'
-import AdUnit from '../../components/AdUnit.astro'
-import ListingMap from '../../components/ListingMap.astro'
+import { supabase } from '../../lib/supabase';
+import { getRedirectUrl } from '../../lib/redirect';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SeoJsonLd from '../../components/SeoJsonLd.astro';
+import ContactLabModal from '../../components/ContactLabModal';
+import AdUnit from '../../components/AdUnit.astro';
+import ListingMap from '../../components/ListingMap.astro';
+import AccreditationBadges from '../../components/AccreditationBadges.astro';
+import CapabilityDetail from '../../components/CapabilityDetail.astro';
 
 // Disable static prerendering for performance - use SSR instead
-export const prerender = false
+export const prerender = false;
 
 // Generate static paths for all active listings
 export async function getStaticPaths() {
@@ -23,17 +25,18 @@ export async function getStaticPaths() {
     return [];
   }
 
-  return listings.map(listing => ({
-    params: { slug: listing.slug }
+  return listings.map((listing) => ({
+    params: { slug: listing.slug },
   }));
 }
 
-const { slug } = Astro.params
+const { slug } = Astro.params;
 
 // Fetch listing with location hierarchy and custom fields
 const { data: listing, error } = await supabase
   .from('listings')
-  .select(`
+  .select(
+    `
     *,
     category:category_id (
       id,
@@ -63,19 +66,21 @@ const { data: listing, error } = await supabase
       map_tier,
       coverage_radius_km
     )
-  `)
+  `
+  )
   .eq('slug', slug)
   .eq('status', 'active')
-  .single()
+  .single();
 
 if (error || !listing) {
-  return Astro.redirect('/browse')
+  return Astro.redirect('/browse');
 }
 
 // Fetch custom field values
 const { data: customFieldValues, error: _cfError } = await supabase
   .from('listing_custom_fields')
-  .select(`
+  .select(
+    `
     value,
     custom_field:custom_field_id (
       field_name,
@@ -83,13 +88,15 @@ const { data: customFieldValues, error: _cfError } = await supabase
       field_label,
       options
     )
-  `)
-  .eq('listing_id', listing.id)
+  `
+  )
+  .eq('listing_id', listing.id);
 
 // Fetch listing capabilities (standards/certifications)
 const { data: capabilities, error: _capError } = await supabase
   .from('listing_capabilities')
-  .select(`
+  .select(
+    `
     standard:standard_id (
       id,
       code,
@@ -97,13 +104,20 @@ const { data: capabilities, error: _capError } = await supabase
       description,
       category_id
     )
-  `)
+  `
+  )
   .eq('listing_id', listing.id)
-  .order('created_at', { ascending: true })
+  .order('created_at', { ascending: true });
 
-// Get related standards (same category as what they offer, but that they don't already offer)
-const offeredStandardIds = capabilities?.map(c => c.standard?.id) || [];
-const offeredCategoryIds = [...new Set(capabilities?.map(c => c.standard?.category_id).filter(id => id !== null))] || [];
+// Fetch listing accreditations / certifications (ISO 17025, Nadcap, etc.)
+const { data: certifications, error: _certError } = await supabase
+  .from('certifications')
+  .select('id, issuing_body, name, expiry_date, certificate_url')
+  .eq('listing_id', listing.id)
+  .order('created_at', { ascending: true });
+const offeredStandardIds = capabilities?.map((c) => c.standard?.id) || [];
+const offeredCategoryIds =
+  [...new Set(capabilities?.map((c) => c.standard?.category_id).filter((id) => id !== null))] || [];
 let relatedStandards = [];
 if (offeredCategoryIds.length > 0) {
   // All active standards in the same categories this lab offers
@@ -115,334 +129,494 @@ if (offeredCategoryIds.length > 0) {
 
   // Keep the ones this lab doesn't already offer (single round-trip)
   relatedStandards = (allCategoryStandards || [])
-    .filter(std => !offeredStandardIds.includes(std.id))
-    .map(std => ({ id: std.id, code: std.code, name: std.name }));
+    .filter((std) => !offeredStandardIds.includes(std.id))
+    .map((std) => ({ id: std.id, code: std.code, name: std.name }));
 }
 
 // Build location breadcrumb
 const getLocationHierarchy = (location) => {
-  if (!location) return []
-  const hierarchy = []
+  if (!location) return [];
+  const hierarchy = [];
 
   if (location.parent?.parent?.level === 'country') {
-    hierarchy.push({ name: location.parent.parent.name, slug: location.parent.parent.slug, level: 'country' })
+    hierarchy.push({
+      name: location.parent.parent.name,
+      slug: location.parent.parent.slug,
+      level: 'country',
+    });
   }
   if (location.parent?.level === 'state') {
-    hierarchy.push({ name: location.parent.name, slug: location.parent.slug, level: 'state' })
+    hierarchy.push({ name: location.parent.name, slug: location.parent.slug, level: 'state' });
   }
   if (location.level === 'city') {
-    hierarchy.push({ name: location.name, slug: location.slug, level: 'city' })
+    hierarchy.push({ name: location.name, slug: location.slug, level: 'city' });
   }
 
-  return hierarchy
-}
+  return hierarchy;
+};
 
-const locationHierarchy = getLocationHierarchy(listing.location)
-const country = locationHierarchy.find(l => l.level === 'country')
+const locationHierarchy = getLocationHierarchy(listing.location);
+const country = locationHierarchy.find((l) => l.level === 'country');
 
 // Subscription tier system
-let userTier = 'basic' 
-let isLoggedIn = false
+let userTier = 'basic';
+let isLoggedIn = false;
 
 // Format custom fields by type
 const formatFieldValue = (value, fieldType) => {
   if (fieldType === 'boolean') {
-    return value ? 'Yes' : 'No'
+    return value ? 'Yes' : 'No';
   }
   if (fieldType === 'multi_select' && Array.isArray(value)) {
-    return value.join(', ')
+    return value.join(', ');
   }
   if (Array.isArray(value)) {
-    return value.join(', ')
+    return value.join(', ');
   }
-  return value
-}
+  return value;
+};
 
-const customFields = customFieldValues?.map(cf => ({
-  name: cf.custom_field?.field_label || cf.custom_field?.field_name || 'Unknown',
-  value: formatFieldValue(cf.value, cf.custom_field?.field_type),
-  type: cf.custom_field?.field_type
-})) || []
+const customFields =
+  customFieldValues?.map((cf) => ({
+    name: cf.custom_field?.field_label || cf.custom_field?.field_name || 'Unknown',
+    value: formatFieldValue(cf.value, cf.custom_field?.field_type),
+    type: cf.custom_field?.field_type,
+  })) || [];
 
-const standards = capabilities?.map(cap => ({
-  name: cap.standard?.code || 'Unknown Standard',
-  value: cap.standard?.name || 'Certification',
-  type: 'standard'
-})) || []
+const standards =
+  capabilities?.map((cap) => ({
+    code: cap.standard?.code || 'Unknown Standard',
+    name: cap.standard?.name || 'Certification',
+    type: 'standard',
+    specs: cap.specifications || null,
+    notes: cap.notes || null,
+    verified: cap.verified || false,
+    slug: (cap.standard?.code || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, ''),
+  })) || [];
 
-const allCertifications = [...customFields, ...standards]
+const allCertifications = [...customFields, ...standards];
 
-import { formatTitle, formatDescription } from '../../lib/seo'
+import { formatTitle, formatDescription } from '../../lib/seo';
 
 const locationParts = [
   listing.location?.name,
   listing.location?.parent?.name,
-  listing.location?.parent?.parent?.name
+  listing.location?.parent?.parent?.name,
 ].filter(Boolean);
 
 const pageTitle = formatTitle([listing.business_name, ...locationParts]);
 const pageDescription = formatDescription(
-  listing.description || `${listing.business_name} is a verified testing laboratory and certification body. Access ISO 17025 accredited labs and testing services.`
+  listing.description ||
+    `${listing.business_name} is a verified testing laboratory and certification body. Access ISO 17025 accredited labs and testing services.`
 );
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
-  <SeoJsonLd data={{
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": ["LocalBusiness", "ProfessionalService"],
-        "@id": `https://tstr.directory/listing/${listing.slug}#lab`,
-        "name": listing.business_name,
-        "description": listing.description || `${listing.business_name} is a verified testing laboratory and certification body.`,
-        "url": `https://tstr.directory/listing/${listing.slug}`,
-        "areaServed": listing.location?.name || listing.region || "Worldwide",
-        "knowsAbout": listing.category?.name || "Specialist Testing Services",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": listing.location?.name || undefined,
-          "addressCountry": listing.location?.parent?.name || undefined
-        },
-        "contactPoint": {
-          "@type": "ContactPoint",
-          "contactType": "customer support",
-          "url": `https://tstr.directory/listing/${listing.slug}`,
-          "email": listing.email || undefined,
-          "telephone": listing.phone || undefined
-        }
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": `What testing services does ${listing.business_name} offer?`,
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": `${listing.business_name} is a verified ${listing.category?.name || "testing"} laboratory. ${listing.description || "Browse its profile on TSTR.directory to view accredited scopes, equipment, and how to request a quote."}`
-            }
+  <SeoJsonLd
+    data={{
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': ['LocalBusiness', 'ProfessionalService'],
+          '@id': `https://tstr.directory/listing/${listing.slug}#lab`,
+          name: listing.business_name,
+          description:
+            listing.description ||
+            `${listing.business_name} is a verified testing laboratory and certification body.`,
+          url: `https://tstr.directory/listing/${listing.slug}`,
+          areaServed: listing.location?.name || listing.region || 'Worldwide',
+          knowsAbout: listing.category?.name || 'Specialist Testing Services',
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: listing.location?.name || undefined,
+            addressCountry: listing.location?.parent?.name || undefined,
           },
-          {
-            "@type": "Question",
-            "name": "How do I verify a lab's ISO 17025 accreditation scope?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "ISO/IEC 17025 is the international standard for calibration and testing laboratory competence. On TSTR.directory, each verified lab lists its accredited scopes; always confirm the current scope certificate with the lab or its accreditation body before placing an order."
-            }
-          }
-        ]
-      }
-    ]
-  }} />
-  <div class="max-w-6xl mx-auto px-4 py-8 md:py-12">
-    
+          contactPoint: {
+            '@type': 'ContactPoint',
+            contactType: 'customer support',
+            url: `https://tstr.directory/listing/${listing.slug}`,
+            email: listing.email || undefined,
+            telephone: listing.phone || undefined,
+          },
+        },
+        {
+          '@type': 'FAQPage',
+          mainEntity: [
+            {
+              '@type': 'Question',
+              name: `What testing services does ${listing.business_name} offer?`,
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: `${listing.business_name} is a verified ${listing.category?.name || 'testing'} laboratory. ${listing.description || 'Browse its profile on TSTR.directory to view accredited scopes, equipment, and how to request a quote.'}`,
+              },
+            },
+            {
+              '@type': 'Question',
+              name: "How do I verify a lab's ISO 17025 accreditation scope?",
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'ISO/IEC 17025 is the international standard for calibration and testing laboratory competence. On TSTR.directory, each verified lab lists its accredited scopes; always confirm the current scope certificate with the lab or its accreditation body before placing an order.',
+              },
+            },
+            {
+              '@type': 'Question',
+              name: 'What is hydrogen embrittlement testing and when do I need it?',
+              acceptedAnswer: {
+                text: 'Hydrogen embrittlement testing measures how exposure to hydrogen degrades the mechanical properties of metals — causing sudden, delayed cracking under load. It is required for plated and fastened high-strength components, pressure-system parts, and hydrogen-fuel infrastructure. Common methods include ASTM F519 (notched specimen), ASTM F1459 (hydrogen gas), and ASTM G142.',
+              },
+            },
+            {
+              '@type': 'Question',
+              name: 'Can a buyer search TSTR.directory by specific standard and parameters?',
+              acceptedAnswer: {
+                text: 'Yes. TSTR.directory lets buyers filter laboratories by standard (e.g. ASTM F519) and, where a lab populates its scope, by parameters such as test method, pressure, and temperature — then request a quote directly from the listing.',
+              },
+            },
+          ],
+        },
+      ],
+    }}
+  />
+  <div class="mx-auto max-w-6xl px-4 py-8 md:py-12">
     <!-- Breadcrumbs -->
-    <nav class="flex items-center gap-2 text-sm text-gray-400 mb-8 overflow-x-auto whitespace-nowrap pb-2 scrollbar-hide">
-      <a href="/" class="hover:text-blue-400 transition-colors">Home</a>
+    <nav
+      class="scrollbar-hide mb-8 flex items-center gap-2 overflow-x-auto whitespace-nowrap pb-2 text-sm text-gray-400"
+    >
+      <a href="/" class="transition-colors hover:text-blue-400">Home</a>
       <span class="text-gray-600">/</span>
-      <a href="/browse" class="hover:text-blue-400 transition-colors">Browse</a>
-      {country && (
-        <>
-          <span class="text-gray-600">/</span>
-          <a href={`/browse/${country.slug}`} class="hover:text-blue-400 transition-colors">{country.name}</a>
-        </>
-      )}
+      <a href="/browse" class="transition-colors hover:text-blue-400">Browse</a>
+      {
+        country && (
+          <>
+            <span class="text-gray-600">/</span>
+            <a href={`/browse/${country.slug}`} class="transition-colors hover:text-blue-400">
+              {country.name}
+            </a>
+          </>
+        )
+      }
       <span class="text-gray-600">/</span>
       <span class="text-gray-200">{listing.business_name}</span>
     </nav>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
       <!-- Main Content Column -->
-      <div class="lg:col-span-2 space-y-8">
-        
+      <div class="space-y-8 lg:col-span-2">
         <!-- Hero Section -->
-        <div class="glass-panel p-8 relative overflow-hidden">
-          <div class="absolute top-0 right-0 p-4">
-             <div id="ownership-badge" class="hidden"></div>
+        <div class="glass-panel relative overflow-hidden p-8">
+          <div class="absolute right-0 top-0 p-4">
+            <div id="ownership-badge" class="hidden"></div>
           </div>
-          
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+
+          <div class="flex flex-col justify-between gap-6 md:flex-row md:items-center">
             <div>
-              <div class="flex items-center gap-3 mb-3">
-                {listing.category?.name && (
-                  <span class="px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-xs font-semibold text-blue-400 uppercase tracking-wider">
-                    {listing.category.name}
-                  </span>
-                )}
-                {listing.featured && (
-                  <span class="px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-full text-xs font-semibold text-amber-400 uppercase tracking-wider">
-                    Featured
-                  </span>
-                )}
+              <div class="mb-3 flex items-center gap-3">
+                {
+                  listing.category?.name && (
+                    <span class="rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-blue-400">
+                      {listing.category.name}
+                    </span>
+                  )
+                }
+                {
+                  listing.featured && (
+                    <span class="rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-amber-400">
+                      Featured
+                    </span>
+                  )
+                }
               </div>
-              <h1 class="text-3xl md:text-5xl font-black text-white mb-4 tracking-tight leading-tight">
+              <h1
+                class="mb-4 text-3xl font-black leading-tight tracking-tight text-white md:text-5xl"
+              >
                 {listing.business_name}
               </h1>
               <div class="flex items-center gap-4 text-gray-400">
-                 <span class="flex items-center gap-1.5">
-                   <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                   {listing.location?.name || listing.region?.toUpperCase()}
-                 </span>
-                 {listing.verified && (
-                   <span class="flex items-center gap-1.5 text-emerald-400 font-medium text-sm">
-                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                     Verified Laboratory
-                   </span>
-                 )}
+                <span class="flex items-center gap-1.5">
+                  <svg
+                    class="h-4 w-4 text-blue-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    ><path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    ></path><path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg
+                  >
+                  {listing.location?.name || listing.region?.toUpperCase()}
+                </span>
+                {
+                  listing.verified && (
+                    <span class="flex items-center gap-1.5 text-sm font-medium text-emerald-400">
+                      <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                          fill-rule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                      Verified Laboratory
+                    </span>
+                  )
+                }
               </div>
             </div>
           </div>
         </div>
 
+        <!-- Definitional intro (BLUF — cited by AI assistants, answers buyer intent) -->
+        <div class="glass-panel border-blue-500/20 bg-blue-500/5 p-8">
+          <p class="text-lg leading-relaxed text-gray-200">
+            <span class="font-bold text-white">{listing.business_name}</span> is a
+            {listing.category?.name?.toLowerCase() || 'specialist testing'} laboratory
+            {listing.verified ? 'accredited to ISO/IEC 17025' : 'listed on TSTR.directory'} and reachable
+            for quotes directly from this profile. Buyers use TSTR.directory to compare accredited scopes,
+            verify certifications, and request testing by standard and parameter.
+          </p>
+        </div>
+
         <!-- About Section -->
-        {listing.description && (
-          <div class="glass-panel p-8">
-            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-              <span class="w-1.5 h-6 bg-blue-600 rounded-full"></span>
-              Laboratory Profile
-            </h2>
-            <div class="prose prose-invert max-w-none text-gray-300 leading-relaxed text-lg">
-              {listing.description}
+        {
+          listing.description && (
+            <div class="glass-panel p-8">
+              <h2 class="mb-6 flex items-center gap-2 text-xl font-bold text-white">
+                <span class="h-6 w-1.5 rounded-full bg-blue-600" />
+                Laboratory Profile
+              </h2>
+              <div class="prose prose-invert max-w-none text-lg leading-relaxed text-gray-300">
+                {listing.description}
+              </div>
             </div>
-          </div>
-        )}
+          )
+        }
 
-        <!-- Capabilities section -->
-        {allCertifications.length > 0 && (
-          <div class="glass-panel p-8">
-            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-              <span class="w-1.5 h-6 bg-emerald-500 rounded-full"></span>
-              Testing Capabilities & Standards
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {allCertifications.map(cert => (
-                <div class="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors group">
-                  <div>
-                    <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1">{cert.name}</span>
-                    <span class="text-gray-200 group-hover:text-blue-400 transition-colors">{cert.value}</span>
-                  </div>
-                  {cert.type === 'standard' && (
-                    <div class="w-8 h-8 rounded-lg bg-blue-600/20 flex items-center justify-center">
-                      <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <!-- Capabilities section (rich, reusable template) -->
+        {
+          allCertifications.length > 0 && (
+            <div class="glass-panel p-8">
+              <h2 class="mb-2 flex items-center gap-2 text-xl font-bold text-white">
+                <span class="h-6 w-1.5 rounded-full bg-emerald-500" />
+                Testing Capabilities & Standards
+              </h2>
+              <p class="mb-6 text-sm text-gray-400">
+                Accredited scopes and test methods this laboratory performs. Filterable, verifiable,
+                and cited by AI assistants.
+              </p>
+              <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {allCertifications.map((cert) =>
+                  cert.type === 'standard' ? (
+                    <CapabilityDetail
+                      code={cert.code}
+                      name={cert.name}
+                      specs={cert.specs}
+                      notes={cert.notes}
+                      verified={cert.verified}
+                      standardSlug={cert.slug}
+                    />
+                  ) : (
+                    <div class="group flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/10">
+                      <div>
+                        <span class="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-500">
+                          {cert.name}
+                        </span>
+                        <span class="text-gray-200 transition-colors group-hover:text-blue-400">
+                          {cert.value}
+                        </span>
+                      </div>
                     </div>
-                  )}
-                </div>
-              ))}
+                  )
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )
+        }
 
-        {relatedStandards.length > 0 && (
-          <div class="glass-panel p-8">
-            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-              <span class="w-1.5 h-6 bg-blue-500 rounded-full"></span>
-              Related Tests Offered by Other Laboratories
-            </h2>
-            <p class="text-gray-400 mb-4">
-              While {listing.business_name} doesn't currently offer these specific tests, other accredited laboratories do:
-            </p>
-            <div class="space-y-3">
-              {relatedStandards.map(std => (
-                <div class="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors">
-                  <div class="flex-1">
-                    <span class="text-sm font-medium text-white">{std.name}</span>
-                    <span class="text-xs block text-gray-400">{std.code}</span>
+        {
+          relatedStandards.length > 0 && (
+            <div class="glass-panel p-8">
+              <h2 class="mb-6 flex items-center gap-2 text-xl font-bold text-white">
+                <span class="h-6 w-1.5 rounded-full bg-blue-500" />
+                Related Tests Offered by Other Laboratories
+              </h2>
+              <p class="mb-4 text-gray-400">
+                While {listing.business_name} doesn't currently offer these specific tests, other
+                accredited laboratories do:
+              </p>
+              <div class="space-y-3">
+                {relatedStandards.map((std) => (
+                  <div class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10">
+                    <div class="flex-1">
+                      <span class="text-sm font-medium text-white">{std.name}</span>
+                      <span class="block text-xs text-gray-400">{std.code}</span>
+                    </div>
+                    <a
+                      href={`/browse?standard=${std.code}`}
+                      class="rounded-lg border border-blue-500/20 bg-blue-600/20 px-4 py-2 text-sm font-medium text-blue-300 transition-colors hover:bg-blue-600/30 hover:text-white"
+                    >
+                      View {relatedStandards.length === 1 ? 'Laboratory' : 'Laboratories'}
+                    </a>
                   </div>
-                  <a
-                    href={`/browse?standard=${std.code}`}
-                    class="px-4 py-2 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 text-sm font-medium text-blue-300 hover:text-white transition-colors border border-blue-500/20"
-                  >
-                    View {relatedStandards.length === 1 ? 'Laboratory' : 'Laboratories'}
-                  </a>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        )}
-
+          )
+        }
       </div>
 
       <!-- Sidebar / Action Column -->
       <div class="space-y-6">
-        
         <!-- Map View -->
         <ListingMap listing={listing} />
-        
+
+        <!-- Accreditations (trust signals) -->
+        <AccreditationBadges certifications={certifications} website={listing.website} />
+
         <!-- Contact Card -->
-        <div class="glass-panel p-6 border-blue-500/30">
-          <h3 class="text-lg font-bold text-white mb-6">Connect with Laboratory</h3>
-          
-          <div class="space-y-4 mb-8">
-             <div id="contact-info-container" class="space-y-4">
-                {/* SSR View for SEO */}
-                {listing.website && (
-                  <div class="p-4 bg-white/5 border border-white/10 rounded-xl">
-                    <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1">Company Website</span>
-                    <a 
-                      href={getRedirectUrl(listing.website, listing.id)} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
+        <div class="glass-panel border-blue-500/30 p-6">
+          <h3 class="mb-6 text-lg font-bold text-white">Connect with Laboratory</h3>
+
+          <div class="mb-8 space-y-4">
+            <div id="contact-info-container" class="space-y-4">
+              {/* SSR View for SEO */}
+              {
+                listing.website && (
+                  <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+                    <span class="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-500">
+                      Company Website
+                    </span>
+                    <a
+                      href={getRedirectUrl(listing.website, listing.id)}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       onclick={`trackContactAccess('website', '${listing.website}')`}
-                      class="text-blue-400 hover:text-blue-300 transition-colors break-all"
+                      class="break-all text-blue-400 transition-colors hover:text-blue-300"
                     >
                       {listing.website}
                     </a>
                   </div>
-                )}
-                
-                {listing.phone && (
-                  <div id="phone-item" class="p-4 bg-white/5 border border-white/10 rounded-xl items-center justify-between flex">
-                    <div>
-                      <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1">Direct Phone</span>
-                      <span id="phone-value" class="text-gray-400 italic text-sm">Verified access required</span>
-                    </div>
-                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                  </div>
-                )}
+                )
+              }
 
-                {listing.email && (
-                  <div id="email-item" class="p-4 bg-white/5 border border-white/10 rounded-xl items-center justify-between flex">
+              {
+                listing.phone && (
+                  <div
+                    id="phone-item"
+                    class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4"
+                  >
                     <div>
-                      <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1">Inquiry Email</span>
-                      <span id="email-value" class="text-gray-400 italic text-sm">Verified access required</span>
+                      <span class="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-500">
+                        Direct Phone
+                      </span>
+                      <span id="phone-value" class="text-sm italic text-gray-400">
+                        Verified access required
+                      </span>
                     </div>
-                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    <svg
+                      class="h-5 w-5 text-gray-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      />
+                    </svg>
                   </div>
-                )}
+                )
+              }
 
-                {listing.premium_data?.linkedin_url && (
-                  <div class="p-4 bg-white/5 border border-white/10 rounded-xl flex items-center justify-between">
+              {
+                listing.email && (
+                  <div
+                    id="email-item"
+                    class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4"
+                  >
                     <div>
-                      <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1">Corporate LinkedIn</span>
-                      <span class="text-gray-400 italic text-sm">Premium Feature</span>
+                      <span class="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-500">
+                        Inquiry Email
+                      </span>
+                      <span id="email-value" class="text-sm italic text-gray-400">
+                        Verified access required
+                      </span>
                     </div>
-                    <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    <svg
+                      class="h-5 w-5 text-gray-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      />
+                    </svg>
                   </div>
-                )}
-             </div>
+                )
+              }
+
+              {
+                listing.premium_data?.linkedin_url && (
+                  <div class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4">
+                    <div>
+                      <span class="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-500">
+                        Corporate LinkedIn
+                      </span>
+                      <span class="text-sm italic text-gray-400">Premium Feature</span>
+                    </div>
+                    <svg class="h-5 w-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                    </svg>
+                  </div>
+                )
+              }
+            </div>
           </div>
-          
+
           <ContactLabModal client:visible listingId={listing.id} labName={listing.business_name} />
         </div>
 
         <!-- Claiming Card (Only shown if unclaimed / not logged in) -->
         <div id="claim-card-root" class="hidden">
-           <div class="glass-panel p-6 border-emerald-500/20 bg-emerald-500/5">
-              <h3 class="text-lg font-bold text-white mb-2">Own this Laboratory?</h3>
-              <p class="text-gray-400 text-sm mb-6 leading-relaxed">
-                Take control of your directory profile. Manage capabilities, respond to leads, and unlock premium analytics.
-              </p>
-              
-              <div id="claim-action-area">
-                <button id="claim-btn" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                  Claim Profile Now
-                </button>
-              </div>
+          <div class="glass-panel border-emerald-500/20 bg-emerald-500/5 p-6">
+            <h3 class="mb-2 text-lg font-bold text-white">Own this Laboratory?</h3>
+            <p class="mb-6 text-sm leading-relaxed text-gray-400">
+              Take control of your directory profile. Manage capabilities, respond to leads, and
+              unlock premium analytics.
+            </p>
 
-              <div id="claim-status-msg" class="hidden mt-4 p-3 rounded-lg text-sm"></div>
-           </div>
+            <div id="claim-action-area">
+              <button
+                id="claim-btn"
+                class="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-4 font-bold text-white shadow-lg shadow-emerald-500/20 transition-all hover:bg-emerald-500"
+              >
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                  ></path></svg
+                >
+                Claim Profile Now
+              </button>
+            </div>
+
+            <div id="claim-status-msg" class="mt-4 hidden rounded-lg p-3 text-sm"></div>
+          </div>
         </div>
 
         <AdUnit slot="sidebar-bottom" type="vertical" />
@@ -450,16 +624,22 @@ const pageDescription = formatDescription(
     </div>
 
     <!-- Concierge Fallback (Obsidian Standard) -->
-    <div class="mt-12 group">
-      <div class="glass-panel p-8 text-center border-blue-500/20 relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-        <h3 class="text-2xl font-black text-white mb-4 tracking-tight">Need a custom testing solution?</h3>
-        <p class="text-lg text-gray-400 max-w-2xl mx-auto mb-8">
-          Can't find the exact standard or facility? Our concierge team manually sources accredited partners for specialized engineering requirements.
+    <div class="group mt-12">
+      <div class="glass-panel relative overflow-hidden border-blue-500/20 p-8 text-center">
+        <div
+          class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
+        >
+        </div>
+        <h3 class="mb-4 text-2xl font-black tracking-tight text-white">
+          Need a custom testing solution?
+        </h3>
+        <p class="mx-auto mb-8 max-w-2xl text-lg text-gray-400">
+          Can't find the exact standard or facility? Our concierge team manually sources accredited
+          partners for specialized engineering requirements.
         </p>
-        <a 
+        <a
           href={`mailto:expert@tstr.directory?subject=Concierge Search: ${encodeURIComponent(listing.business_name)}&body=I am looking for specialized testing services related to...`}
-          class="inline-block py-4 px-10 bg-white text-black font-bold rounded-xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/10"
+          class="inline-block rounded-xl bg-white px-10 py-4 font-bold text-black shadow-xl shadow-white/10 transition-all hover:scale-105 active:scale-95"
         >
           Request Free Concierge Search →
         </a>
@@ -472,104 +652,115 @@ const pageDescription = formatDescription(
   {/* Client-side Logic for Auth and Tracking */}
   <script is:inline src="https://haimjeaetrsaauitrhfy.supabase.co/auth/v1/callback"></script>
   <script>
-    import { createClient } from '@supabase/supabase-js'
-    
+    import { createClient } from '@supabase/supabase-js';
+
     // Use public anon key for browser-side checks
     const supabaseBrowser = createClient(
       import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co',
       import.meta.env.PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4'
-    )
+    );
 
     async function checkAuthAndClaimStatus() {
       try {
-        const { data: { session } } = await supabaseBrowser.auth.getSession()
-        const claimBadge = document.getElementById('ownership-badge')
-        const claimCard = document.getElementById('claim-card-root')
-        const claimBtn = document.getElementById('claim-btn')
-        const claimStatus = document.getElementById('claim-status-msg')
-        
+        const {
+          data: { session },
+        } = await supabaseBrowser.auth.getSession();
+        const claimBadge = document.getElementById('ownership-badge');
+        const claimCard = document.getElementById('claim-card-root');
+        const claimBtn = document.getElementById('claim-btn');
+        const claimStatus = document.getElementById('claim-status-msg');
+
         // 1. Fetch current claim status for this listing
         const { data: claims, error: claimError } = await supabaseBrowser
           .from('listing_claims')
           .select('status, user_id')
           .eq('listing_id', '{listing.id}')
-          .maybeSingle()
+          .maybeSingle();
 
-        if (claimError) console.error('Error checking claim status:', claimError)
+        if (claimError) console.error('Error checking claim status:', claimError);
 
         // 2. UI Updates
         if (claims) {
-          const info = getClaimStatusInfo(claims.status)
+          const info = getClaimStatusInfo(claims.status);
           if (claimBadge) {
-             claimBadge.className = `flex items-center gap-1.5 px-3 py-1 bg-${info.color}-500/10 border border-${info.color}-500/20 rounded-full text-[10px] font-bold text-${info.color}-400 uppercase tracking-tighter`
-             claimBadge.innerHTML = `<span class="w-1 h-1 rounded-full bg-${info.color}-400"></span> ${info.text}`
-             claimBadge.style.display = 'flex'
+            claimBadge.className = `flex items-center gap-1.5 px-3 py-1 bg-${info.color}-500/10 border border-${info.color}-500/20 rounded-full text-[10px] font-bold text-${info.color}-400 uppercase tracking-tighter`;
+            claimBadge.innerHTML = `<span class="w-1 h-1 rounded-full bg-${info.color}-400"></span> ${info.text}`;
+            claimBadge.style.display = 'flex';
           }
-          
+
           if (claims.status === 'verified') {
-             // Show full contact info if verified and owned by current user
-             if (session?.user?.id === claims.user_id) {
-               showOwnerContactInfo()
-             }
+            // Show full contact info if verified and owned by current user
+            if (session?.user?.id === claims.user_id) {
+              showOwnerContactInfo();
+            }
           }
         } else {
           // Unclaimed: Show common claim CTA if not logged in or not verified owner
-          if (claimCard) claimCard.classList.remove('hidden')
+          if (claimCard) claimCard.classList.remove('hidden');
         }
 
         // 3. Claim Button Logic
         claimBtn?.addEventListener('click', async () => {
           if (!session) {
-            window.location.href = `/login?redirect=${window.location.pathname}`
-            return
+            window.location.href = `/login?redirect=${window.location.pathname}`;
+            return;
           }
 
-          const btn = claimBtn as HTMLButtonElement
-          btn.disabled = true
-          btn.innerHTML = '<span class="animate-pulse">Processing...</span>'
+          const btn = claimBtn as HTMLButtonElement;
+          btn.disabled = true;
+          btn.innerHTML = '<span class="animate-pulse">Processing...</span>';
 
-          const { error } = await supabaseBrowser
-            .from('listing_claims')
-            .insert([{
+          const { error } = await supabaseBrowser.from('listing_claims').insert([
+            {
               listing_id: '{listing.id}',
               user_id: session.user.id,
-              status: 'pending'
-            }])
+              status: 'pending',
+            },
+          ]);
 
           if (!error) {
             if (claimStatus) {
-              claimStatus.className = 'mt-4 p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl'
-              claimStatus.innerHTML = '<strong>Success:</strong> Your claim request has been submitted for verification.'
-              claimStatus.classList.remove('hidden')
+              claimStatus.className =
+                'mt-4 p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl';
+              claimStatus.innerHTML =
+                '<strong>Success:</strong> Your claim request has been submitted for verification.';
+              claimStatus.classList.remove('hidden');
             }
-            if (btn.parentElement) btn.parentElement.style.display = 'none'
+            if (btn.parentElement) btn.parentElement.style.display = 'none';
           } else {
-            console.error('Claim error:', error)
+            console.error('Claim error:', error);
             if (claimStatus) {
-               claimStatus.className = 'mt-4 p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl'
-               claimStatus.innerHTML = `<strong>Error:</strong> ${error.message}`
-               claimStatus.classList.remove('hidden')
+              claimStatus.className =
+                'mt-4 p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl';
+              claimStatus.innerHTML = `<strong>Error:</strong> ${error.message}`;
+              claimStatus.classList.remove('hidden');
             }
-            btn.disabled = false
-            btn.innerHTML = 'Claim Profile Now'
+            btn.disabled = false;
+            btn.innerHTML = 'Claim Profile Now';
           }
-        })
-
+        });
       } catch (error) {
-        console.error('Auth/Claim check failed:', error)
+        console.error('Auth/Claim check failed:', error);
       }
     }
 
     function getClaimStatusInfo(status: string) {
       switch (status) {
-        case 'verified': return { text: 'Verified Owner', color: 'emerald' }
-        case 'pending': return { text: 'Claim Pending', color: 'amber' }
-        case 'rejected': return { text: 'Claim Rejected', color: 'red' }
-        default: return { text: 'Not Claimed', color: 'gray' }
+        case 'verified':
+          return { text: 'Verified Owner', color: 'emerald' };
+        case 'pending':
+          return { text: 'Claim Pending', color: 'amber' };
+        case 'rejected':
+          return { text: 'Claim Rejected', color: 'red' };
+        default:
+          return { text: 'Not Claimed', color: 'gray' };
       }
     }
 
-    (window as any).trackContactAccess = async function(contactType: string, contactValue: string) {
+    (window as any).trackContactAccess = async function (
+      contactType: string,
+      contactValue: string
+    ) {
       try {
         await fetch('/api/leads/create', {
           method: 'POST',
@@ -577,37 +768,38 @@ const pageDescription = formatDescription(
           body: JSON.stringify({
             listingId: '{listing.id}',
             contactType: contactType,
-            contactValue: contactValue
-          })
-        })
-      } catch (e) { console.warn('Lead tracking failed:', e) }
-    }
+            contactValue: contactValue,
+          }),
+        });
+      } catch (e) {
+        console.warn('Lead tracking failed:', e);
+      }
+    };
 
     function showOwnerContactInfo() {
       // Logic to swap dummy placeholders with real data already fetched via SSR
       // and expose it to the verified owner
-      const phoneItem = document.getElementById('phone-item')
-      const emailItem = document.getElementById('email-item')
-      
+      const phoneItem = document.getElementById('phone-item');
+      const emailItem = document.getElementById('email-item');
+
       if (phoneItem && '{listing.phone}') {
-         const val = document.getElementById('phone-value')
-         if (val) {
-           val.innerHTML = `<a href="tel:{listing.phone}" class="text-blue-400">{listing.phone}</a>`
-           val.classList.remove('italic', 'text-gray-400')
-         }
+        const val = document.getElementById('phone-value');
+        if (val) {
+          val.innerHTML = `<a href="tel:{listing.phone}" class="text-blue-400">{listing.phone}</a>`;
+          val.classList.remove('italic', 'text-gray-400');
+        }
       }
-      
+
       if (emailItem && '{listing.email}') {
-         const val = document.getElementById('email-value')
-         if (val) {
-           val.innerHTML = `<a href="mailto:{listing.email}" class="text-blue-400">{listing.email}</a>`
-           val.classList.remove('italic', 'text-gray-400')
-         }
+        const val = document.getElementById('email-value');
+        if (val) {
+          val.innerHTML = `<a href="mailto:{listing.email}" class="text-blue-400">{listing.email}</a>`;
+          val.classList.remove('italic', 'text-gray-400');
+        }
       }
     }
 
     // Initialize
-    document.addEventListener('DOMContentLoaded', checkAuthAndClaimStatus)
+    document.addEventListener('DOMContentLoaded', checkAuthAndClaimStatus);
   </script>
-
 </BaseLayout>
