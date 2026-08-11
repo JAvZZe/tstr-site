@@ -97,6 +97,9 @@ const { data: capabilities, error: _capError } = await supabase
   .from('listing_capabilities')
   .select(
     `
+    specifications,
+    notes,
+    verified,
     standard:standard_id (
       id,
       code,
@@ -112,7 +115,7 @@ const { data: capabilities, error: _capError } = await supabase
 // Fetch listing accreditations / certifications (ISO 17025, Nadcap, etc.)
 const { data: certifications, error: _certError } = await supabase
   .from('certifications')
-  .select('id, issuing_body, name, expiry_date, certificate_url')
+  .select('id, issuing_body, name, expiry_date')
   .eq('listing_id', listing.id)
   .order('created_at', { ascending: true });
 const offeredStandardIds = capabilities?.map((c) => c.standard?.id) || [];
