@@ -80,3 +80,6 @@ TSTR_HUB_Supabase_Keys.md
 
 # Gitnexus local tool logs (never commit)
 .gitnexus/
+
+# BAML spike (throwaway venv, not committed)
+web/tstr-automation/_baml_spike/
