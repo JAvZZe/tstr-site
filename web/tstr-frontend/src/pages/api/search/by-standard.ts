@@ -13,11 +13,11 @@ export const GET: APIRoute = async ({ request }) => {
     return new Response(
       JSON.stringify({
         error: 'Missing required parameter: standard',
-        example: '/api/search/by-standard?standard=ISO%2019880-3'
+        example: '/api/search/by-standard?standard=ISO%2019880-3',
       }),
       {
         status: 400,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       }
     );
   }
@@ -32,11 +32,11 @@ export const GET: APIRoute = async ({ request }) => {
         return new Response(
           JSON.stringify({
             error: 'Invalid specs parameter: must be valid JSON',
-            example: '{"max_pressure_bar": 700}'
+            example: '{"max_pressure_bar": 700}',
           }),
           {
             status: 400,
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' },
           }
         );
       }
@@ -57,12 +57,25 @@ export const GET: APIRoute = async ({ request }) => {
 
     if (capError) {
       console.error('Phase 1 (Capabilities) error:', capError);
-      return new Response(JSON.stringify({ error: 'Failed to identify capability matches', details: capError.message }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+      return new Response(
+        JSON.stringify({
+          error: 'Failed to identify capability matches',
+          details: capError.message,
+        }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
     }
 
     if (!capData || capData.length === 0) {
       return new Response(
-        JSON.stringify({ standard, category: category || 'all', location: location || null, specs, count: 0, results: [] }),
+        JSON.stringify({
+          standard,
+          category: category || 'all',
+          location: location || null,
+          specs,
+          count: 0,
+          results: [],
+        }),
         { status: 200, headers: { 'Content-Type': 'application/json' } }
       );
     }
@@ -73,9 +86,11 @@ export const GET: APIRoute = async ({ request }) => {
     // Fetch full business and location details for identified IDs
     let listQuery = supabase
       .from('listings')
-      .select(`
+      .select(
+        `
         id,
         business_name,
+        slug,
         website,
         address,
         verified,
@@ -95,7 +110,8 @@ export const GET: APIRoute = async ({ request }) => {
             )
           )
         )
-      `)
+      `
+      )
       .eq('status', 'active')
       .in('id', listingIds);
 
@@ -109,7 +125,10 @@ export const GET: APIRoute = async ({ request }) => {
 
     if (listError) {
       console.error('Phase 2 (Hydration) error:', listError);
-      return new Response(JSON.stringify({ error: 'Database query failed (Phase 2)', details: listError.message }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+      return new Response(
+        JSON.stringify({ error: 'Database query failed (Phase 2)', details: listError.message }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
     }
 
     let filteredData = listingsData || [];
@@ -121,8 +140,10 @@ export const GET: APIRoute = async ({ request }) => {
         const addressMatch = (item.address?.toLowerCase() || '').includes(locLower);
         const nameMatch = (item.location?.name?.toLowerCase() || '').includes(locLower);
         const parentMatch = (item.location?.parent?.name?.toLowerCase() || '').includes(locLower);
-        const pParentMatch = (item.location?.parent?.parent?.name?.toLowerCase() || '').includes(locLower);
-        
+        const pParentMatch = (item.location?.parent?.parent?.name?.toLowerCase() || '').includes(
+          locLower
+        );
+
         return addressMatch || nameMatch || parentMatch || pParentMatch;
       });
     }
@@ -133,13 +154,14 @@ export const GET: APIRoute = async ({ request }) => {
       const cap = capData.find((c: any) => c.listing_id === listing.id);
       return {
         listing_id: listing.id,
+        listing_slug: listing.slug,
         business_name: listing.business_name,
         website: listing.website,
         address: listing.address,
         verified: listing.verified || cap?.verified,
         standard_code: cap?.standard?.code || standard,
         standard_name: cap?.standard?.name || '',
-        specifications: cap?.specifications || {}
+        specifications: cap?.specifications || {},
       };
     });
 
@@ -151,14 +173,14 @@ export const GET: APIRoute = async ({ request }) => {
         location: location || null,
         specs,
         count: transformedResults.length,
-        results: transformedResults
+        results: transformedResults,
       }),
       {
         status: 200,
         headers: {
           'Content-Type': 'application/json',
-          'Cache-Control': 'public, max-age=300' // Cache for 5 minutes
-        }
+          'Cache-Control': 'public, max-age=300', // Cache for 5 minutes
+        },
       }
     );
   } catch (err) {
@@ -166,11 +188,11 @@ export const GET: APIRoute = async ({ request }) => {
     return new Response(
       JSON.stringify({
         error: 'Internal server error',
-        message: err instanceof Error ? err.message : 'Unknown error'
+        message: err instanceof Error ? err.message : 'Unknown error',
       }),
       {
         status: 500,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       }
     );
   }
