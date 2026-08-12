@@ -62,8 +62,27 @@ You are the coordinator for a small agent team improving and marketing **TSTR.di
 
 ## Anti-drift rules
 - Keep memory entries under the 2200-char budget; consolidate rather than append.
-- Don't create new root .md files; archive to `_ARCHIVE/` instead.
 - One feature per clean session. Don't batch unrelated changes into one commit.
+
+## Folder discipline (TWO TIERS — VERIFIED 2026-08-12)
+The AI System root `/media/al/AI_DATA/AI_PROJECTS_SPACE` is the ENGINE. It holds `SYSTEM/`
+(agents=.sh launchers, skills/, state/, config/, hooks/), `AGENTS.md` (root role registry),
+`CLAUDE.md`, and `ACTIVE_PROJECTS/`. **Nothing project-specific may be written above
+`ACTIVE_PROJECTS/`.** Per-project work lives ONLY under `ACTIVE_PROJECTS/<project>/`.
+- TSTR project root = `ACTIVE_PROJECTS/tstr-site-working/`.
+  - Agent defs → `agents/tstr-*.md` (NEVER `docs/agents/`).
+  - Executable scripts → `scripts/`.
+  - Project **plans** (SCRAPER_*.md, PLAN_*.md) → BARE project root.
+    > USER OVERRIDE (2026-08-12): "plans go to the TSTR project root folder" — this SUPERSEDES
+    > the older anti-drift line "don't create new root .md files; archive to `_ARCHIVE/`" for
+    > *plan/strategy docs*. Reference/guide docs still belong in `docs/`. Future agents: project
+    > plans at root; everything else per its natural folder.
+  - Reference/guides → `docs/`.
+
+## Verification gate (MANDATORY for agent-produced work)
+After producing files/code, the agent MUST NOT self-declare "done". Route through `tstr-qa`
+(mechanical tests + independent LLM critic) and report real tool output. "Should work" is
+not proof. No verification evidence → treat as NOT verified (per tstr-qa blocking rules).
 
 ---
 *Mirrored from the canonical Hermes skill `tstr-team-lead` (source of truth). Keep this
