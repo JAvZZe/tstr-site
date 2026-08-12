@@ -12,7 +12,7 @@
   - iter1 A / nemotron-3-super-120b-a12b:free
   - iter2 B / gemma-4-26b-a4b-it:free
   - iter3 C / llama-3.3-70b-instruct:free (LLM 404 fell back to prior version — noted inline)
-- Outputs: `docs/active/PLAN_SWOO_P_v1.md`, `_v2.md`, `_v3.md`, `PLAN_SWOO_FINAL.md`.
+- Outputs: `PLAN_SWOO_P_v1.md`, `_v2.md`, `_v3.md`, `PLAN_SWOO_FINAL.md`.
 
 ## Measurement (the key result)
 **Honest scorecard (6-axis, max 30): baseline 18 → v1 28 → v2 30 → final 30.**
