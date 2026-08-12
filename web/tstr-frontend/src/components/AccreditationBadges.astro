@@ -1,8 +1,10 @@
 ---
 // AccreditationBadges.astro
 // Renders a lab's accreditations (from the `certifications` table) as trust badges.
-// Each badge links to a viewable certificate: either `certificate_url` (when present)
-// or the lab's own public accreditations page (passed via `website`).
+// Each badge can show TWO links (user's choice per cert):
+//   - `certificate_url`      : the certificate on the lab's OWN site (original-source link)
+//   - `local_certificate_url`: OUR hosted copy on TSTR (asset we control, SEO-friendly)
+// If only one is present, that one renders. If both, both render with distinct labels.
 //
 // Reusable: any listing with `certifications` rows gets the same treatment.
 interface Cert {
@@ -10,7 +12,8 @@ interface Cert {
   issuing_body?: string | null;
   name?: string | null;
   expiry_date?: string | null;
-  certificate_url?: string | null;
+  certificate_url?: string | null; // lab's own-site certificate (original source)
+  local_certificate_url?: string | null; // TSTR-hosted copy (our asset)
 }
 interface Props {
   certifications?: Cert[] | null;
@@ -32,13 +35,9 @@ const fmtDate = (d?: string | null) => {
   }
 };
 
-// Link target priority: direct certificate_url -> lab's accreditations page -> lab website
-const certLink = (c: Cert) => {
-  if (c.certificate_url) return c.certificate_url;
-  if (website) {
-    const base = website.replace(/\/+$/, '');
-    return `${base}/accreditations`;
-  }
+// Fallback when neither cert URL is set: lab's own accreditations page.
+const siteFallback = (c: Cert) => {
+  if (website) return `${website.replace(/\/+$/, '')}/accreditations`;
   return null;
 };
 ---
@@ -48,16 +47,18 @@ const certLink = (c: Cert) => {
     <div class="glass-panel border-emerald-500/20 bg-emerald-500/5 p-6">
       <h3 class="mb-1 flex items-center gap-2 text-lg font-bold text-white">
         <span class="h-5 w-1.5 rounded-full bg-emerald-500" />
-        Accreditations &amp; Certifications
+        Accreditations & Certifications
       </h3>
       <p class="mb-4 text-xs text-gray-400">
-        Independently issued scopes of accreditation. Click any badge to view the certificate.
+        Independently issued scopes of accreditation. View the certificate on the lab's site or on
+        TSTR.
       </p>
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {certifications.map((c) => {
-          const link = certLink(c);
           const exp = fmtDate(c.expiry_date);
           const label = c.issuing_body || 'Accredited';
+          const local = c.local_certificate_url || null;
+          const orig = c.certificate_url || siteFallback(c);
           return (
             <div class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10">
               <div class="min-w-0">
@@ -65,16 +66,32 @@ const certLink = (c: Cert) => {
                 <div class="truncate text-xs text-gray-400">{c.name || 'Accreditation'}</div>
                 {exp && <div class="mt-0.5 text-[11px] text-emerald-400/80">Valid to {exp}</div>}
               </div>
-              {link ? (
-                <a
-                  href={link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class={`ml-3 shrink-0 rounded-lg px-3 py-1.5 bg-${accent}-600/20 hover:bg-${accent}-600/30 text-xs font-medium text-${accent}-300 border hover:text-white border-${accent}-500/20 transition-colors`}
-                >
-                  View ↗
-                </a>
-              ) : null}
+              <div class="ml-3 flex shrink-0 flex-col items-end gap-1">
+                {local && (
+                  <a
+                    href={local}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class={`shrink-0 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors bg-${accent}-600/25 hover:bg-${accent}-600/40 text-${accent}-200 border-${accent}-500/30 hover:text-white`}
+                  >
+                    TSTR copy ↗
+                  </a>
+                )}
+                {orig && (
+                  <a
+                    href={orig}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class={`shrink-0 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+                      local
+                        ? 'border-white/10 bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white'
+                        : `bg-${accent}-600/25 hover:bg-${accent}-600/40 text-${accent}-200 border-${accent}-500/30 hover:text-white`
+                    }`}
+                  >
+                    {local ? 'Lab site ↗' : 'View ↗'}
+                  </a>
+                )}
+              </div>
             </div>
           );
         })}
