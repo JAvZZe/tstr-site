@@ -83,3 +83,6 @@ TSTR_HUB_Supabase_Keys.md
 
 # BAML spike (throwaway venv, not committed)
 web/tstr-automation/_baml_spike/
+
+# Crawl4ai pilot venv (throwaway)
+web/tstr-automation/_crawl4ai_venv/
