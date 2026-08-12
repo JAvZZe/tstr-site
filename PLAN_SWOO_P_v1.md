@@ -122,7 +122,7 @@
 | Operational overhead (manual review) | Bottleneck | Review UI limits to ≤ 50 pending rows per batch; automated scoring (`intent_score`) prioritises high‑value leads for faster review. |
 
 ## Evidence (this session)
-- BAML spike: `docs/active/SCRAPER_BAML_SPIKE_AND_TOOLING.md` (commit `544eb28`).  
+- BAML spike: `SCRAPER_BAML_SPIKE_AND_TOOLING.md` (commit `544eb28`).  
 - crawl4ai pilot: rendered TÜV SÜD + Intertek → typed BAML output (ran live).  
 - Throwaway venvs `_baml_spike/`, `_crawl4ai_venv/` are git‑ignored.  
 

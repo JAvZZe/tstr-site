@@ -92,6 +92,6 @@ collection** for our audiences + related industries.
 - OCI free tier = 1 VM; heavy crawling may need the always-free shape limits.
 
 ## Evidence (this session)
-- BAML spike: `docs/active/SCRAPER_BAML_SPIKE_AND_TOOLING.md` (committed `544eb28`).
+- BAML spike: `SCRAPER_BAML_SPIKE_AND_TOOLING.md` (committed `544eb28`).
 - crawl4ai pilot: rendered TÜV SÜD + Intertek → typed BAML output (ran live).
 - Throwaway venvs `_baml_spike/`, `_crawl4ai_venv/` are gitignored.

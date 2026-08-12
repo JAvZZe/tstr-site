@@ -29,10 +29,10 @@ def better_score(t):
 
 if __name__ == "__main__":
     files = {
-        "baseline": "docs/active/SCRAPER_TOOLSET_BUILD_PLAN.md",
-        "v1": "docs/active/PLAN_SWOO_P_v1.md",
-        "v2": "docs/active/PLAN_SWOO_P_v2.md",
-        "v3/final": "docs/active/PLAN_SWOO_FINAL.md",
+        "baseline": "SCRAPER_TOOLSET_BUILD_PLAN.md",
+        "v1": "PLAN_SWOO_P_v1.md",
+        "v2": "PLAN_SWOO_P_v2.md",
+        "v3/final": "PLAN_SWOO_FINAL.md",
     }
     print(f"{'version':12} {'score':5}  detail")
     for name, f in files.items():

@@ -11,7 +11,7 @@ import os
 import re
 import sys
 
-PLAN = sys.argv[1] if len(sys.argv) > 1 else "docs/active/SCRAPER_TOOLSET_BUILD_PLAN.md"
+PLAN = sys.argv[1] if len(sys.argv) > 1 else "SCRAPER_TOOLSET_BUILD_PLAN.md"
 KEY = ""
 _key_path = "/tmp/or_key.txt"
 if os.path.exists(_key_path):
@@ -95,11 +95,11 @@ def main():
         print(f"  score={sc}/30  changes={chg[:160]}")
     final = versions[-1]
     print(f"\nFINAL score: {score(final)}/30  (delta {score(final) - score(base)})")
-    _write("docs/active/PLAN_SWOO_P_v1.md", versions[1])
-    _write("docs/active/PLAN_SWOO_P_v2.md", versions[2])
-    _write("docs/active/PLAN_SWOO_P_v3.md", versions[3])
-    _write("docs/active/PLAN_SWOO_FINAL.md", final)
-    print("Wrote docs/active/PLAN_SWOO_P_v{1,2,3}.md and PLAN_SWOO_FINAL.md")
+    _write("PLAN_SWOO_P_v1.md", versions[1])
+    _write("PLAN_SWOO_P_v2.md", versions[2])
+    _write("PLAN_SWOO_P_v3.md", versions[3])
+    _write("PLAN_SWOO_FINAL.md", final)
+    print("Wrote PLAN_SWOO_P_v{1,2,3}.md and PLAN_SWOO_FINAL.md")
 
 if __name__ == "__main__":
     main()
