@@ -22,6 +22,11 @@ const { data: categoryData } = await supabase
   .eq('slug', category)
   .single();
 
+// 404 on unknown category — prevents soft-404 junk pages (e.g. /standards/<x>)
+if (!categoryData) {
+  return Astro.notFound();
+}
+
 // Fetch listings for this category/region
 let listingsQuery = supabase
   .from('listings')
