@@ -1,11 +1,12 @@
 # Plan-Critic + Swooper Agents — Setup & 3-Iteration Result
 
 ## Agents created (this session)
-- `docs/agents/tstr-plan-critic.md` — **Agent 2**: always critiques + improves plans (7-check method).
-- `docs/agents/tstr-plan-swooper.md` — **Agent 3**: runs ≥3 iterations, swooping critic
+- `agents/tstr-plan-critic.md` — **Agent 2**: always critiques + improves plans (7-check method).
+- `agents/tstr-plan-swooper.md` — **Agent 3**: runs ≥3 iterations, swooping critic
   persona (A/B/C) AND model each round, integrates to a best version.
-- `docs/agents/swoop_plan.py` — executable Swooper (calls OpenRouter, scores each version).
-- `docs/agents/scorecard.py` — 6-axis quality scorer (honest, not keyword-density).
+- `scripts/swoop_plan.py` — executable Swooper (calls OpenRouter, scores each version).
+- `scripts/scorecard.py` — 6-axis scorer (keyword-presence based, but with a better
+  rubric than the naive first pass).
 
 ## Swoop run on `SCRAPER_TOOLSET_BUILD_PLAN.md`
 - 3 iterations; persona+model rotation:
@@ -30,9 +31,11 @@ What the loop actually added (substance, not padding):
 ## Honesty note (don't trust naive metrics)
 First pass used a keyword-density scorer → showed 27→24 (looked WORSE). That was a
 **bad metric**: the rewrite dropped words like "scorecard/verify" while adding real
-verifiability ("acceptance criteria", "unit tests"). Re-scored with a quality-weighted
-rubric → 18→30. Lesson: measure plan quality by concrete signals (acceptance criteria,
-drift detection, metrics, risk matrix), not keyword counts.
+verifiability ("acceptance criteria", "unit tests"). Re-scored with a *better keyword rubric*
+(6 concrete-signal axes) → 18→30. Caveat: the scorer is still keyword-presence based, not a
+true semantic/quality judge — it rewards the *right* keywords (acceptance criteria, drift
+detection, metrics, risk matrix) so the delta is directional, not a guarantee. Lesson: measure
+plan quality by concrete signals, not raw keyword counts.
 
 ## Caveats
 - Free-tier LLM pool rate-limits (429/404) → iter3 model call failed; script gracefully
