@@ -30,7 +30,8 @@ if (!categoryData) {
 // Fetch listings for this category/region
 let listingsQuery = supabase
   .from('listings')
-  .select(`
+  .select(
+    `
     *,
     location:location_id (
       id,
@@ -40,7 +41,8 @@ let listingsQuery = supabase
     listing_categories!inner (
       category_id
     )
-  `)
+  `
+  )
   .eq('status', 'active')
   .eq('listing_categories.category_id', categoryData?.id || '00000000-0000-0000-0000-000000000000');
 
@@ -75,214 +77,249 @@ const pageDescription = formatDescription(
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
-  <SeoJsonLd data={{
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "name": `${titleCat} Testing Services in ${titleReg}`,
-    "description": pageDescription,
-    "url": `https://tstr.directory/${category}/${region}`,
-    "mainEntity": {
-      "@type": "ItemList",
-      "numberOfItems": listingCount,
-      "itemListElement": (pageListings || []).slice(0, 20).map((l, i) => ({
-        "@type": "ListItem",
-        "position": i + 1,
-        "url": `https://tstr.directory/listing/${l.slug}`,
-        "name": l.business_name
-      }))
-    }
-  }} />
-  <main class="max-w-6xl mx-auto px-4 py-8 md:py-12">
+  <SeoJsonLd
+    data={{
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: `${titleCat} Testing Services in ${titleReg}`,
+      description: pageDescription,
+      url: `https://tstr.directory/${category}/${region}`,
+      mainEntity: {
+        '@type': 'ItemList',
+        numberOfItems: listingCount,
+        itemListElement: (pageListings || []).slice(0, 20).map((l, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          url: `https://tstr.directory/listing/${l.slug}`,
+          name: l.business_name,
+        })),
+      },
+    }}
+  />
+  <main class="mx-auto max-w-6xl px-4 py-8 md:py-12">
     <!-- Breadcrumbs -->
-    <nav class="flex items-center space-x-2 text-sm text-gray-400 mb-8" aria-label="Breadcrumb">
-      <a href="/" class="hover:text-blue-400 transition-colors">Home</a>
+    <nav class="mb-8 flex items-center space-x-2 text-sm text-gray-400" aria-label="Breadcrumb">
+      <a href="/" class="transition-colors hover:text-blue-400">Home</a>
       <span class="text-gray-600">/</span>
-      <a href={`/${category}`} class="hover:text-blue-400 transition-colors">{titleCat}</a>
+      <a href={`/${category}`} class="transition-colors hover:text-blue-400">{titleCat}</a>
       <span class="text-gray-600">/</span>
-      <span class="text-blue-400 font-medium">{titleReg}</span>
+      <span class="font-medium text-blue-400">{titleReg}</span>
     </nav>
 
     <!-- Page Header Section -->
-    <div class="glass-panel p-8 md:p-12 mb-12 relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 blur-3xl -mr-32 -mt-32"></div>
-      
+    <div class="glass-panel relative mb-12 overflow-hidden p-8 md:p-12">
+      <div class="absolute right-0 top-0 -mr-32 -mt-32 h-64 w-64 bg-blue-500/10 blur-3xl"></div>
+
       <div class="relative z-10">
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-white">
-          {titleCat} <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">in {titleReg}</span>
+        <h1 class="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl">
+          {titleCat}
+          <span class="bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent"
+            >in {titleReg}</span
+          >
         </h1>
-        
-        <h2 class="text-xl md:text-2xl font-semibold text-gray-300 mb-6 font-mono">
+
+        <h2 class="mb-6 font-mono text-xl font-semibold text-gray-300 md:text-2xl">
           High-Value {testingServiceName} in {titleReg}
         </h2>
 
         <div class="max-w-3xl">
-          <p class="text-lg text-gray-400 leading-relaxed mb-6">
+          <p class="mb-6 text-lg leading-relaxed text-gray-400">
             Find verified <strong class="text-white">{titleCat.toLowerCase()}</strong> and compare
-            <strong class="text-white">{testingServiceName.toLowerCase()}</strong> from ISO 17025
-            accredited laboratories in {titleReg}.
-            {categoryData?.description && ` Expert providers for ${categoryData.description.toLowerCase()}.`}
+            <strong class="text-white">{testingServiceName.toLowerCase()}</strong> from ISO 17025 accredited
+            laboratories in {titleReg}.
+            {
+              categoryData?.description &&
+                ` Expert providers for ${categoryData.description.toLowerCase()}.`
+            }
           </p>
-          
+
           <div class="flex items-center gap-4">
-            <div class="px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 font-bold text-sm">
-              {listingCount === 0 ? 'No' : listingCount} verified {listingCount === 1 ? 'laboratory' : 'laboratories'}
+            <div
+              class="rounded-full border border-blue-500/20 bg-blue-500/10 px-4 py-2 text-sm font-bold text-blue-400"
+            >
+              {listingCount === 0 ? 'No' : listingCount} verified {
+                listingCount === 1 ? 'laboratory' : 'laboratories'
+              }
             </div>
           </div>
         </div>
       </div>
     </div>
     <!-- Error Handling -->
-    {listingsError && (
-      <div class="p-4 mb-8 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-center gap-3">
-        <span>⚠️</span>
-        <p class="text-sm font-medium">Error loading listings. Please try again later.</p>
-      </div>
-    )}
+    {
+      listingsError && (
+        <div class="mb-8 flex items-center gap-3 rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-red-400">
+          <span>⚠️</span>
+          <p class="text-sm font-medium">Error loading listings. Please try again later.</p>
+        </div>
+      )
+    }
 
     <!-- Location Map View -->
-    {pageListings && pageListings.length > 0 && (
-      <StaticLabMap 
-        listings={pageListings.map(l => ({ 
-          latitude: l.latitude, 
-          longitude: l.longitude, 
-          name: l.business_name 
-        }))} 
-      />
-    )}
+    {
+      pageListings && pageListings.length > 0 && (
+        <StaticLabMap
+          listings={pageListings.map((l) => ({
+            latitude: l.latitude,
+            longitude: l.longitude,
+            name: l.business_name,
+          }))}
+        />
+      )
+    }
 
     <!-- Listings Grid -->
-    {pageListings && pageListings.length > 0 ? (
-      <div class="grid gap-6">
-        {pageListings.map((listing) => (
-          <div class="glass-card group hover:scale-[1.01] transition-all duration-300">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-              <div class="flex-1">
-                <div class="flex items-center gap-3 mb-2">
-                  <h3 class="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors">
-                    {listing.business_name}
-                  </h3>
-                  {listing.verified && (
-                    <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                      Verified
-                    </span>
-                  )}
-                  {listing.featured && (
-                    <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30">
-                      Featured
-                    </span>
-                  )}
-                </div>
+    {
+      pageListings && pageListings.length > 0 ? (
+        <div class="grid gap-6">
+          {pageListings.map((listing) => (
+            <div class="glass-card group transition-all duration-300 hover:scale-[1.01]">
+              <div class="flex flex-col justify-between gap-6 md:flex-row md:items-center">
+                <div class="flex-1">
+                  <div class="mb-2 flex items-center gap-3">
+                    <h3 class="text-2xl font-bold text-white transition-colors group-hover:text-blue-400">
+                      {listing.business_name}
+                    </h3>
+                    {listing.verified && (
+                      <span class="rounded border border-emerald-500/30 bg-emerald-500/20 px-2 py-0.5 text-[10px] font-black uppercase text-emerald-400">
+                        Verified
+                      </span>
+                    )}
+                    {listing.featured && (
+                      <span class="rounded border border-amber-500/30 bg-amber-500/20 px-2 py-0.5 text-[10px] font-black uppercase text-amber-400">
+                        Featured
+                      </span>
+                    )}
+                  </div>
 
-                <div class="flex flex-wrap items-center gap-4 text-sm text-gray-400 mb-4">
-                  <span class="flex items-center gap-1.5">
-                    <span class="text-blue-400">📍</span>
-                    {listing.location?.name || listing.region?.toUpperCase()}
-                  </span>
-                  {listing.trust_score && (
+                  <div class="mb-4 flex flex-wrap items-center gap-4 text-sm text-gray-400">
                     <span class="flex items-center gap-1.5">
-                      <span class="text-amber-400">⭐</span>
-                      Trust Score: {listing.trust_score}
+                      <span class="text-blue-400">📍</span>
+                      {listing.location?.name || listing.region?.toUpperCase()}
                     </span>
+                    {listing.trust_score && (
+                      <span class="flex items-center gap-1.5">
+                        <span class="text-amber-400">⭐</span>
+                        Trust Score: {listing.trust_score}
+                      </span>
+                    )}
+                  </div>
+
+                  {listing.description && (
+                    <p class="line-clamp-2 max-w-2xl text-sm text-gray-400">
+                      {listing.description}
+                    </p>
                   )}
                 </div>
 
-                {listing.description && (
-                  <p class="text-gray-400 text-sm line-clamp-2 max-w-2xl">
-                    {listing.description}
-                  </p>
-                )}
-              </div>
-
-              <div class="flex flex-col sm:flex-row md:flex-col gap-3 min-w-[180px]">
-                {listing.website && (
+                <div class="flex min-w-[180px] flex-col gap-3 sm:flex-row md:flex-col">
+                  {listing.website && (
+                    <a
+                      href={getRedirectUrl(listing.website, listing.id)}
+                      target="_blank"
+                      rel="nofollow noopener noreferrer"
+                      class="w-full rounded-lg bg-blue-600 px-6 py-3 text-center text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition-all hover:bg-blue-500"
+                    >
+                      Visit Website
+                    </a>
+                  )}
                   <a
-                    href={getRedirectUrl(listing.website, listing.id)}
-                    target="_blank"
-                    rel="nofollow noopener noreferrer"
-                    class="w-full text-center px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm transition-all shadow-lg shadow-blue-600/20"
+                    href={`/listing/${listing.slug}`}
+                    class="w-full rounded-lg border border-white/10 bg-white/5 px-6 py-3 text-center text-sm font-bold text-white transition-all hover:bg-white/10"
                   >
-                    Visit Website
+                    View Full Profile
                   </a>
-                )}
-                <a
-                  href={`/listing/${listing.slug}`}
-                  class="w-full text-center px-6 py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white border border-white/10 font-bold text-sm transition-all"
-                >
-                  View Full Profile
-                </a>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
 
-        {/* Low Density Fallback - Show when fewer than 5 results */}
-        {listingCount < 5 && (
-          <div class="mt-12 group relative">
-             <div class="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-emerald-600/20 blur-xl opacity-50 group-hover:opacity-100 transition-opacity"></div>
-             <div class="glass-panel p-8 md:p-12 relative border-blue-500/30">
-                <div class="grid md:grid-cols-2 gap-8 items-center">
+          {/* Low Density Fallback - Show when fewer than 5 results */}
+          {listingCount < 5 && (
+            <div class="group relative mt-12">
+              <div class="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-emerald-600/20 opacity-50 blur-xl transition-opacity group-hover:opacity-100" />
+              <div class="glass-panel relative border-blue-500/30 p-8 md:p-12">
+                <div class="grid items-center gap-8 md:grid-cols-2">
                   <div>
-                    <h3 class="text-3xl font-black text-white mb-4">
+                    <h3 class="mb-4 text-3xl font-black text-white">
                       Request <span class="text-blue-400">Concierge Search</span>
                     </h3>
-                    <p class="text-gray-400 text-lg leading-relaxed mb-8">
-                      Our engineering team manually sources ISO 17025 accredited laboratories for specialized requirements.
-                      We'll find the perfect testing partner for your needs—at no cost to you.
+                    <p class="mb-8 text-lg leading-relaxed text-gray-400">
+                      Our engineering team manually sources ISO 17025 accredited laboratories for
+                      specialized requirements. We'll find the perfect testing partner for your
+                      needs—at no cost to you.
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="flex flex-col gap-4 sm:flex-row">
                       <a
                         href={`${MAILTO_LINKS.enterprisePlan}&body=Concierge Search Request for ${encodeURIComponent(titleCat)} in ${encodeURIComponent(titleReg)}`}
-                        class="px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-black text-lg transition-all shadow-xl shadow-blue-600/20 flex items-center justify-center gap-2 group/btn"
+                        class="group/btn flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-4 text-lg font-black text-white shadow-xl shadow-blue-600/20 transition-all hover:from-blue-500 hover:to-blue-600"
                       >
                         Request Free Search
-                        <span class="group-hover/btn:translate-x-1 transition-transform">→</span>
+                        <span class="transition-transform group-hover/btn:translate-x-1">→</span>
                       </a>
                     </div>
-                    <p class="text-sm text-gray-500 mt-6 font-mono">
+                    <p class="mt-6 font-mono text-sm text-gray-500">
                       ⚡ Average response time: 24 hours
                     </p>
                   </div>
-                  
+
                   <div class="hidden md:block">
-                     <div class="grid grid-cols-2 gap-4 text-white">
-                        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
-                          <div class="text-2xl font-black mb-1 group-hover:text-blue-400 transition-colors uppercase">24H</div>
-                          <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Response</div>
+                    <div class="grid grid-cols-2 gap-4 text-white">
+                      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center">
+                        <div class="mb-1 text-2xl font-black uppercase transition-colors group-hover:text-blue-400">
+                          24H
                         </div>
-                        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
-                          <div class="text-2xl font-black mb-1 group-hover:text-blue-400 transition-colors uppercase">100%</div>
-                          <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Verified</div>
+                        <div class="text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                          Response
                         </div>
-                        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
-                          <div class="text-2xl font-black mb-1 group-hover:text-blue-400 transition-colors uppercase">FREE</div>
-                          <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Service</div>
+                      </div>
+                      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center">
+                        <div class="mb-1 text-2xl font-black uppercase transition-colors group-hover:text-blue-400">
+                          100%
                         </div>
-                        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
-                          <div class="text-2xl font-black mb-1 group-hover:text-blue-400 transition-colors uppercase">ISO</div>
-                          <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Compliant</div>
+                        <div class="text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                          Verified
                         </div>
-                     </div>
+                      </div>
+                      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center">
+                        <div class="mb-1 text-2xl font-black uppercase transition-colors group-hover:text-blue-400">
+                          FREE
+                        </div>
+                        <div class="text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                          Service
+                        </div>
+                      </div>
+                      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center">
+                        <div class="mb-1 text-2xl font-black uppercase transition-colors group-hover:text-blue-400">
+                          ISO
+                        </div>
+                        <div class="text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                          Compliant
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-             </div>
-          </div>
-        )}
-      </div>
-    ) : (
-      <div class="glass-panel py-20 text-center border-dashed">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/5 text-gray-500 mb-6 text-2xl">
-          🔍
+              </div>
+            </div>
+          )}
         </div>
-        <p class="text-gray-400 text-xl mb-8">
-          No {titleCat.toLowerCase()} listed in {titleReg} yet.
-        </p>
-        <a 
-          href="/contact" 
-          class="inline-block px-8 py-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all shadow-lg shadow-blue-600/20"
-        >
-          Be the first to list here →
-        </a>
-      </div>
-    )}
+      ) : (
+        <div class="glass-panel border-dashed py-20 text-center">
+          <div class="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/5 text-2xl text-gray-500">
+            🔍
+          </div>
+          <p class="mb-8 text-xl text-gray-400">
+            No {titleCat.toLowerCase()} listed in {titleReg} yet.
+          </p>
+          <a
+            href="/contact"
+            class="inline-block rounded-xl bg-blue-600 px-8 py-4 font-bold text-white shadow-lg shadow-blue-600/20 transition-all hover:bg-blue-500"
+          >
+            Be the first to list here →
+          </a>
+        </div>
+      )
+    }
   </main>
 </BaseLayout>
