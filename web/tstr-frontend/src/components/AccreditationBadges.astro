@@ -19,8 +19,35 @@ interface Props {
   certifications?: Cert[] | null;
   website?: string | null;
   accent?: string;
+  /** Listing slug — used to deep-link the claim flow for empty profiles. */
+  slug?: string | null;
+  /** Lab name, shown in the "is this your lab?" prompt. */
+  businessName?: string | null;
+  /** Set false to hide the empty-state entirely (e.g. compact views). */
+  showEmptyState?: boolean;
 }
-const { certifications, website, accent = 'emerald' } = Astro.props;
+const {
+  certifications,
+  website,
+  accent = 'emerald',
+  slug = null,
+  businessName = null,
+  showEmptyState = true,
+} = Astro.props;
+
+const hasCerts = Array.isArray(certifications) && certifications.length > 0;
+
+// Slots we invite the lab to complete. These are LABELLED PLACEHOLDERS —
+// deliberately NOT fake certificate data. Showing invented accreditations would
+// mislead buyers and breaks the project rule "never invent certifications".
+const requestedSlots = [
+  { label: 'ISO/IEC 17025', hint: 'Testing & calibration competence' },
+  { label: 'Accreditation body', hint: 'e.g. UKAS, A2LA, SAC, DAkkS' },
+  { label: 'Certificate number', hint: 'For independent verification' },
+  { label: 'Scope of accreditation', hint: 'PDF or scope document' },
+];
+
+const claimHref = slug ? `/claim?listing=${encodeURIComponent(slug)}` : '/claim';
 
 const fmtDate = (d?: string | null) => {
   if (!d) return null;
@@ -43,7 +70,7 @@ const siteFallback = (c: Cert) => {
 ---
 
 {
-  certifications && certifications.length > 0 && (
+  hasCerts && (
     <div class="glass-panel border-emerald-500/20 bg-emerald-500/5 p-6">
       <h3 class="mb-1 flex items-center gap-2 text-lg font-bold text-white">
         <span class="h-5 w-1.5 rounded-full bg-emerald-500" />
@@ -95,6 +122,49 @@ const siteFallback = (c: Cert) => {
             </div>
           );
         })}
+      </div>
+    </div>
+  )
+}
+
+{
+  !hasCerts && showEmptyState && (
+    <div class="glass-panel border-amber-500/20 bg-amber-500/5 p-6">
+      <h3 class="mb-1 flex items-center gap-2 text-lg font-bold text-white">
+        <span class="h-5 w-1.5 rounded-full bg-amber-500" />
+        Accreditations & Certifications
+      </h3>
+      <p class="mb-4 text-xs text-amber-200/80">
+        <span class="font-semibold">Not yet supplied.</span> We have not received accreditation
+        documents for this lab, so nothing is shown here. Buyers should request current certificates
+        directly before placing an order.
+      </p>
+
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {requestedSlots.map((s) => (
+          <div class="flex items-center justify-between rounded-xl border border-dashed border-white/15 bg-white/[0.03] p-3">
+            <div class="min-w-0">
+              <div class="truncate text-sm font-semibold text-gray-300">{s.label}</div>
+              <div class="truncate text-xs text-gray-500">{s.hint}</div>
+            </div>
+            <span class="ml-3 shrink-0 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-gray-400">
+              Awaiting
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-5 flex flex-col gap-3 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
+        <p class="text-xs text-gray-400">
+          {businessName ? `Do you work at ${businessName}?` : 'Is this your laboratory?'} Claim the
+          profile to add your accreditations — it's free.
+        </p>
+        <a
+          href={claimHref}
+          class="shrink-0 rounded-lg border border-amber-500/30 bg-amber-600/25 px-4 py-2 text-xs font-semibold text-amber-100 transition-colors hover:bg-amber-600/40 hover:text-white"
+        >
+          Claim this profile →
+        </a>
       </div>
     </div>
   )

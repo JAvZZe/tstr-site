@@ -481,7 +481,12 @@ const pageDescription = formatDescription(
         <ListingMap listing={listing} />
 
         <!-- Accreditations (trust signals) -->
-        <AccreditationBadges certifications={certifications} website={listing.website} />
+        <AccreditationBadges
+          certifications={certifications}
+          website={listing.website}
+          slug={listing.slug}
+          businessName={listing.business_name}
+        />
 
         <!-- Contact Card -->
         <div class="glass-panel border-blue-500/30 p-6">
