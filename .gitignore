@@ -86,3 +86,6 @@ web/tstr-automation/_baml_spike/
 
 # Crawl4ai pilot venv (throwaway)
 web/tstr-automation/_crawl4ai_venv/
+
+# Lead/outreach data with real contact emails (privacy — keep local)
+OUTREACH_BATCH_*.md
