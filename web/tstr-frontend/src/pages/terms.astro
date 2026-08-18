@@ -1,337 +1,363 @@
 ---
 // Terms of Service page
-import BaseLayout from '../layouts/BaseLayout.astro'
-import { CONTACTS } from '../lib/contacts'
-import Footer from '../components/Footer.astro'
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CONTACTS } from '../lib/contacts';
+import Footer from '../components/Footer.astro';
 import { formatTitle, formatDescription } from '../lib/seo';
 ---
 
 <BaseLayout
-  title={formatTitle(["Terms of Service - TSTR Hub"])}
-  description={formatDescription("Legal terms and conditions for using TSTR Hub")}
+  title={formatTitle(['Terms of Service - TSTR Hub'])}
+  description={formatDescription('Legal terms and conditions for using TSTR Hub')}
 >
-  <!DOCTYPE html>
   <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
-       crossorigin="anonymous"></script>
-    <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
+        crossorigin="anonymous"></script>
+      <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #f5f5f5;
-    }
+        body {
+          font-family:
+            -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+            sans-serif;
+          line-height: 1.6;
+          color: #333;
+          background: #f5f5f5;
+        }
 
-    header {
-      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
-      color: white;
-      padding: 3rem 2rem;
-      text-align: center;
-    }
+        header {
+          background: linear-gradient(135deg, #000080 0%, #32cd32 100%);
+          color: white;
+          padding: 3rem 2rem;
+          text-align: center;
+        }
 
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-    }
+        header h1 {
+          font-size: 2.5rem;
+          margin-bottom: 0.5rem;
+          font-weight: 700;
+        }
 
-    header p {
-      font-size: 1.1rem;
-      opacity: 0.95;
-    }
+        header p {
+          font-size: 1.1rem;
+          opacity: 0.95;
+        }
 
-    main {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 3rem 2rem;
-    }
+        main {
+          max-width: 900px;
+          margin: 0 auto;
+          padding: 3rem 2rem;
+        }
 
-    .content {
-      background: white;
-      border-radius: 12px;
-      padding: 3rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
+        .content {
+          background: white;
+          border-radius: 12px;
+          padding: 3rem;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
 
-    .back-link {
-      display: inline-block;
-      margin-bottom: 2rem;
-      color: #000080;
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.3s ease;
-    }
+        .back-link {
+          display: inline-block;
+          margin-bottom: 2rem;
+          color: #000080;
+          text-decoration: none;
+          font-weight: 600;
+          transition: color 0.3s ease;
+        }
 
-    .back-link:hover {
-      color: #32CD32;
-    }
+        .back-link:hover {
+          color: #32cd32;
+        }
 
-    h2 {
-      color: #000080;
-      font-size: 1.75rem;
-      margin-top: 2rem;
-      margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid #000080;
-    }
+        h2 {
+          color: #000080;
+          font-size: 1.75rem;
+          margin-top: 2rem;
+          margin-bottom: 1rem;
+          padding-bottom: 0.5rem;
+          border-bottom: 2px solid #000080;
+        }
 
-    h3 {
-      color: #555;
-      font-size: 1.25rem;
-      margin-top: 1.5rem;
-      margin-bottom: 0.75rem;
-    }
+        h3 {
+          color: #555;
+          font-size: 1.25rem;
+          margin-top: 1.5rem;
+          margin-bottom: 0.75rem;
+        }
 
-    p, li {
-      margin-bottom: 1rem;
-      color: #555;
-      line-height: 1.8;
-    }
+        p,
+        li {
+          margin-bottom: 1rem;
+          color: #555;
+          line-height: 1.8;
+        }
 
-    ul {
-      margin-left: 2rem;
-      margin-bottom: 1.5rem;
-    }
+        ul {
+          margin-left: 2rem;
+          margin-bottom: 1.5rem;
+        }
 
-    li {
-      margin-bottom: 0.5rem;
-    }
+        li {
+          margin-bottom: 0.5rem;
+        }
 
-    .effective-date {
-      background: #f0f0f0;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 2rem;
-      font-weight: 600;
-      color: #000080;
-    }
+        .effective-date {
+          background: #f0f0f0;
+          padding: 1rem;
+          border-radius: 8px;
+          margin-bottom: 2rem;
+          font-weight: 600;
+          color: #000080;
+        }
 
-    .contact-box {
-      background: #f5f7fa;
-      border-left: 4px solid #000080;
-      padding: 1.5rem;
-      margin-top: 2rem;
-      border-radius: 4px;
-    }
+        .contact-box {
+          background: #f5f7fa;
+          border-left: 4px solid #000080;
+          padding: 1.5rem;
+          margin-top: 2rem;
+          border-radius: 4px;
+        }
 
-    .contact-box strong {
-      color: #000080;
-    }
+        .contact-box strong {
+          color: #000080;
+        }
 
-    a {
-      color: #000080;
-      text-decoration: none;
-    }
+        a {
+          color: #000080;
+          text-decoration: none;
+        }
 
-    a:hover {
-      text-decoration: underline;
-    }
+        a:hover {
+          text-decoration: underline;
+        }
 
-    footer {
-      background: #333;
-      color: white;
-      text-align: center;
-      padding: 2rem;
-      margin-top: 3rem;
-    }
+        footer {
+          background: #333;
+          color: white;
+          text-align: center;
+          padding: 2rem;
+          margin-top: 3rem;
+        }
 
-    footer a {
-      color: white;
-      margin: 0 1rem;
-    }
-  </style>
-  <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
-</head>
-<body>
-  <header>
-    <h1>Terms of Service</h1>
-    <p>Legal terms and conditions for using TSTR Hub</p>
-  </header>
+        footer a {
+          color: white;
+          margin: 0 1rem;
+        }
+      </style>
+      <script>
+        function initApollo() {
+          var n = Math.random().toString(36).substring(7),
+            o = document.createElement('script');
+          ((o.src = 'https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache=' + n),
+            (o.async = !0),
+            (o.defer = !0),
+            (o.onload = function () {
+              window.trackingFunctions.onLoad({ appId: '6979e8021ac917001927e9b2' });
+            }),
+            document.head.appendChild(o));
+        }
+        initApollo();
+      </script>
+    </head>
+    <body>
+      <header>
+        <h1>Terms of Service</h1>
+        <p>Legal terms and conditions for using TSTR Hub</p>
+      </header>
 
-  <main>
-    <a href="/" class="back-link">← Back to Directory</a>
+      <main>
+        <a href="/" class="back-link">← Back to Directory</a>
 
-    <div class="content">
-      <div class="effective-date">
-        Effective Date: November 30, 2025
-      </div>
+        <div class="content">
+          <div class="effective-date">Effective Date: November 30, 2025</div>
 
-      <p>
-        Welcome to TSTR Hub ("we," "our," or "us"). These Terms of Service ("Terms") govern your access to and use of our website at <a href="https://tstr.directory">tstr.directory</a> and our services. By accessing or using our website, you agree to be bound by these Terms.
-      </p>
+          <p>
+            This page sets out the rules for using TSTR Hub at <a href="https://tstr.directory"
+              >tstr.directory</a
+            >. "We" and "us" mean TSTR Hub. "You" means anyone using the site. By using the site,
+            you accept these terms.
+          </p>
 
-      <p>
-        Please read these Terms carefully. If you do not agree to these Terms, please do not access or use our website.
-      </p>
+          <p>Please read them. If you don't agree with something here, don't use the site.</p>
 
-      <h2>1. Acceptance of Terms</h2>
+          <h2>1. What TSTR Hub does</h2>
 
-      <p>
-        By accessing and using TSTR Hub, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
-      </p>
+          <p>
+            We run a directory of testing laboratories and testing service providers. On the site
+            you can:
+          </p>
+          <ul>
+            <li>
+              Search for testing providers by industry, location, and the standards they work to
+            </li>
+            <li>Submit a company for listing</li>
+            <li>Find contact details for listed providers</li>
+            <li>See certification and capability information we've gathered from public sources</li>
+          </ul>
 
-      <h2>2. Description of Service</h2>
+          <h2>2. Accounts</h2>
 
-      <p>
-        TSTR Hub is a directory service that connects industries with certified testing laboratories and service providers. Our platform allows:
-      </p>
-      <ul>
-        <li>Browsing and searching testing service providers by industry, location, and certification standards</li>
-        <li>Submitting company listings for inclusion in our directory</li>
-        <li>Accessing contact information for listed service providers</li>
-        <li>Viewing certification and capability information extracted from public databases</li>
-      </ul>
+          <p>
+            Some parts of the site need an account. Give us accurate details when you register, and
+            keep your password to yourself.
+          </p>
 
-      <h2>3. User Accounts and Registration</h2>
+          <p>You're responsible for:</p>
+          <ul>
+            <li>Anything done using your account</li>
+            <li>Keeping your password secure</li>
+            <li>Telling us straight away if someone else uses your account</li>
+            <li>Logging out when you're finished</li>
+          </ul>
 
-      <h3>3.1 Account Creation</h3>
-      <p>
-        Some features of our service may require you to create an account. When you create an account, you must provide accurate, complete, and current information. You are responsible for maintaining the confidentiality of your account credentials.
-      </p>
+          <h2>3. How you may use the site</h2>
 
-      <h3>3.2 Account Responsibilities</h3>
-      <p>You are responsible for:</p>
-      <ul>
-        <li>All activities that occur under your account</li>
-        <li>Maintaining the security of your password and account</li>
-        <li>Notifying us immediately of any unauthorized use of your account</li>
-        <li>Ensuring that you exit from your account at the end of each session</li>
-      </ul>
+          <p>When you use TSTR Hub, you agree to:</p>
+          <ul>
+            <li>Give accurate information</li>
+            <li>Keep to the law</li>
+            <li>Leave our systems alone, including not trying to break into them</li>
+            <li>Not disrupt the site or its servers</li>
+            <li>Ask before you run automated tools against the site</li>
+            <li>Respect other people's intellectual property</li>
+            <li>Not submit false or misleading company information</li>
+          </ul>
 
-      <h2>4. User Obligations</h2>
+          <h2>4. Listings</h2>
 
-      <p>When using our service, you agree to:</p>
-      <ul>
-        <li>Provide accurate and truthful information</li>
-        <li>Not use the service for any illegal or unauthorized purpose</li>
-        <li>Not attempt to gain unauthorized access to our systems</li>
-        <li>Not interfere with or disrupt our service or servers</li>
-        <li>Not use automated tools to access our service without permission</li>
-        <li>Respect the intellectual property rights of others</li>
-        <li>Not submit false or misleading company information</li>
-      </ul>
+          <h3>4.1 If you submit a listing</h3>
+          <p>By submitting a company, you're confirming that:</p>
+          <ul>
+            <li>You're allowed to submit it on the company's behalf</li>
+            <li>The information is accurate and current</li>
+            <li>The company genuinely provides testing services</li>
+            <li>You'll keep the listing up to date</li>
+          </ul>
 
-      <h2>5. Company Listings and Content</h2>
+          <h3>4.2 About the accuracy of what you read here</h3>
+          <p>
+            <strong>Please read this part.</strong> Certifications and capabilities shown on the site
+            come from public sources. We have not independently checked them. Where we don't hold a document,
+            we leave the field blank instead of guessing. Before you engage a laboratory, confirm its
+            credentials with the laboratory itself and with the accreditation body that issued them.
+          </p>
 
-      <h3>5.1 Listing Submissions</h3>
-      <p>
-        When submitting a company listing, you warrant that:
-      </p>
-      <ul>
-        <li>You have authority to submit the listing on behalf of the company</li>
-        <li>All information provided is accurate and current</li>
-        <li>The company is a legitimate testing service provider</li>
-        <li>You will maintain and update the listing information as needed</li>
-      </ul>
+          <h2>5. Intellectual property</h2>
 
-      <h3>5.2 Content Accuracy Disclaimer</h3>
-      <p>
-        <strong>Important:</strong> Certifications and capabilities listed on our platform are extracted from public databases and have not been independently verified by TSTR Hub. We strongly recommend verifying all credentials directly with the testing laboratory and relevant accreditation bodies before engaging their services.
-      </p>
+          <h3>5.1 Our content</h3>
+          <p>
+            The site, and the content and features we've built, belong to TSTR Hub and our
+            licensors, and are protected by copyright and trademark law.
+          </p>
 
-      <h2>6. Intellectual Property</h2>
+          <h3>5.2 Your content</h3>
+          <p>
+            When you submit content, you give us permission to use, display, and distribute it as
+            part of running the site. This permission is worldwide, non-exclusive, and royalty-free.
+          </p>
 
-      <h3>6.1 Our Content</h3>
-      <p>
-        The service and its original content, features, and functionality are and will remain the exclusive property of TSTR Hub and its licensors. The service is protected by copyright, trademark, and other laws.
-      </p>
+          <h2>6. Privacy</h2>
 
-      <h3>6.2 User Content</h3>
-      <p>
-        By submitting content to our service, you grant us a worldwide, non-exclusive, royalty-free license to use, display, and distribute your content in connection with the service.
-      </p>
+          <p>
+            Our <a href="/privacy">Privacy Policy</a> explains what we collect and why. It applies alongside
+            these terms.
+          </p>
 
-      <h2>7. Privacy and Data Protection</h2>
+          <h2>7. What we don't promise</h2>
 
-      <p>
-        Your privacy is important to us. Please review our <a href="/privacy">Privacy Policy</a>, which also governs your use of the service, to understand our practices.
-      </p>
+          <h3>7.1 The site as it is</h3>
+          <p>
+            We provide the site as it is. We don't guarantee that it will always be available, or
+            that everything on it is complete or free of errors.
+          </p>
 
-      <h2>8. Disclaimers and Limitations of Liability</h2>
+          <h3>7.2 We're a directory, nothing more</h3>
+          <p>
+            TSTR Hub doesn't carry out testing, issue certifications, or give professional advice.
+            If you decide to work with a provider listed here, that decision and its consequences
+            are yours.
+          </p>
 
-      <h3>8.1 Service Disclaimer</h3>
-      <p>
-        The information on this website is provided on an "as is" basis. We make no representations or warranties of any kind, express or implied, as to the operation of the service or the information, content, or materials included therein.
-      </p>
+          <h3>7.3 Limits on our liability</h3>
+          <p>
+            We're not liable for indirect, incidental, special, consequential, or punitive damages
+            arising from your use of the site. That includes lost profits, lost data, lost business,
+            and damage to reputation.
+          </p>
 
-      <h3>8.2 Professional Services Disclaimer</h3>
-      <p>
-        TSTR Hub is a directory service only. We do not provide testing services, certifications, or professional consulting. Any decisions to engage with listed service providers are made at your own risk.
-      </p>
+          <h2>8. If you cause us a claim</h2>
 
-      <h3>8.3 Limitation of Liability</h3>
-      <p>
-        In no event shall TSTR Hub, its directors, employees, or agents be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your use of the service.
-      </p>
+          <p>
+            If someone brings a claim against us because of what you did, you agree to cover our
+            costs, including legal fees. This covers claims arising from:
+          </p>
+          <ul>
+            <li>Your use of the site</li>
+            <li>Your breach of these terms</li>
+            <li>
+              Your infringement of someone else's rights, including copyright, property, and privacy
+              rights
+            </li>
+            <li>Harm caused to a third party by content you submitted</li>
+          </ul>
 
-      <h2>9. Indemnification</h2>
+          <h2>9. Ending access</h2>
 
-      <p>
-        You agree to defend, indemnify, and hold harmless TSTR Hub and its licensee and licensors, and their employees, contractors, agents, officers and directors, from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses (including but not limited to attorney's fees), resulting from or arising out of:
-      </p>
-      <ul>
-        <li>Your use and access of the service</li>
-        <li>Your violation of any term of these Terms</li>
-        <li>Your violation of any third-party right, including without limitation any copyright, property, or privacy right</li>
-        <li>Any claim that your content caused damage to a third party</li>
-      </ul>
+          <p>
+            We can suspend or close an account and block access to the site, without notice, if the
+            terms here are broken.
+          </p>
 
-      <h2>10. Termination</h2>
+          <p>If you want to close your account, stop using the site or ask us to remove it.</p>
 
-      <p>
-        We may terminate or suspend your account and bar access to the service immediately, without prior notice or liability, under our sole discretion, for any reason whatsoever and without limitation, including but not limited to a breach of the Terms.
-      </p>
+          <h2>10. Which law applies</h2>
 
-      <p>
-        If you wish to terminate your account, you may simply discontinue using the service.
-      </p>
+          <p>
+            These terms are governed by the law of the jurisdiction where TSTR Hub operates. If we
+            don't enforce part of these terms straight away, we haven't given up the right to
+            enforce it later.
+          </p>
 
-      <h2>11. Governing Law</h2>
+          <h2>11. Changes to these terms</h2>
 
-      <p>
-        These Terms shall be interpreted and governed by the laws of the jurisdiction in which TSTR Hub operates, without regard to its conflict of law provisions. Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights.
-      </p>
+          <p>
+            We may update these terms. For a significant change, we'll give at least 30 days notice
+            before it takes effect. If you keep using the site after that, the new terms apply to
+            you.
+          </p>
 
-      <h2>12. Changes to Terms</h2>
+          <h2>12. If part of this is unenforceable</h2>
 
-      <p>
-        We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will provide at least 30 days notice prior to any new terms taking effect.
-      </p>
+          <p>
+            If a court finds any part of these terms invalid, the rest still applies. These terms
+            are the whole agreement between us about the site, and they replace anything agreed
+            earlier.
+          </p>
 
-      <p>
-        What constitutes a material change will be determined at our sole discretion. By continuing to access or use our service after any revisions become effective, you agree to be bound by the revised terms.
-      </p>
+          <h2>13. Getting in touch</h2>
 
-      <h2>13. Severability</h2>
-
-      <p>
-        If any provision of these Terms is held to be invalid or unenforceable by a court, the remaining provisions of these Terms will remain in effect. These Terms constitute the entire agreement between us regarding our service and supersede and replace any prior agreements we might have had between us regarding the service.
-      </p>
-
-      <h2>14. Contact Information</h2>
-
-      <div class="contact-box">
-        <p><strong>If you have any questions about these Terms of Service, please contact us:</strong></p>
-        <p>
-          <strong>Contact Form:</strong> <a href="/contact?inquiry=general&subject=Terms%20of%20Service%20Inquiry">https://tstr.directory/contact</a><br>
-          <strong>Website:</strong> <a href="https://tstr.directory">https://tstr.directory</a>
-        </p>
-      </div>
-    </div>
-  </main>
-
+          <div class="contact-box">
+            <p><strong>Questions about these terms? Send them to us:</strong></p>
+            <p>
+              <strong>Contact form:</strong>
+              <a href="/contact?inquiry=general&subject=Terms%20of%20Service%20Inquiry"
+                >https://tstr.directory/contact</a
+              ><br />
+              <strong>Website:</strong>
+              <a href="https://tstr.directory">https://tstr.directory</a>
+            </p>
+          </div>
+        </div>
+      </main>
+    </body>
+  </html>
 </BaseLayout>
-</body>
-</html>

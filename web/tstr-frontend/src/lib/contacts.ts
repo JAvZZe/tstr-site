@@ -48,7 +48,7 @@ export const CONTACTS = {
 
   // Legal/compliance matters
   legal: 'support@tstr.directory',
-} as const
+} as const;
 
 /**
  * Helper function to generate mailto links
@@ -58,14 +58,14 @@ export function getMailtoLink(
   subject?: string,
   body?: string
 ): string {
-  const email = CONTACTS[type]
-  const params = new URLSearchParams()
+  const email = CONTACTS[type];
+  const params = new URLSearchParams();
 
-  if (subject) params.set('subject', subject)
-  if (body) params.set('body', body)
+  if (subject) params.set('subject', subject);
+  if (body) params.set('body', body);
 
-  const queryString = params.toString()
-  return `mailto:${email}${queryString ? `?${queryString}` : ''}`
+  const queryString = params.toString();
+  return `mailto:${email}${queryString ? `?${queryString}` : ''}`;
 }
 
 /**
@@ -81,7 +81,7 @@ export const MAILTO_LINKS = {
   claimListing: getMailtoLink('support', 'Claim My Listing'),
   reportIssue: getMailtoLink('support', 'Report an Issue'),
   verificationPricing: getMailtoLink('sales', 'Verification Service Pricing Request'),
-} as const
+} as const;
 
 /**
  * Site-wide content strings
@@ -102,7 +102,8 @@ export const CONTENT = {
   // Site taglines and descriptions
   tagline: 'Specialist Testing Services, Products and Solutions Directory',
 
-  description: 'Global directory of Testers serving specialized industries: Oil & Gas, Environmental, Materials Testing, Pharmaceuticals, and more.',
+  description:
+    'Global directory of Testers serving specialized industries: Oil & Gas, Environmental, Materials Testing, Pharmaceuticals, and more.',
 
   // Common CTAs
   cta: {
@@ -117,7 +118,7 @@ export const CONTENT = {
   // Footer text
   copyright: `© ${new Date().getFullYear()} TSTR Hub. All rights reserved.`,
 
-  footerTagline: 'Connecting industries with certified testers worldwide',
+  footerTagline: 'Find testing laboratories by standard, sector, and region.',
 
   footerLinks: [
     { href: '/terms', label: 'Terms of Service' },
@@ -129,4 +130,4 @@ export const CONTENT = {
     { href: 'https://linkedin.com/company/tstr-hub', label: 'LinkedIn', icon: 'linkedin' },
     { href: 'https://x.com/TSTR_hub', label: 'X (Twitter)', icon: 'x' },
   ],
-} as const
+} as const;
