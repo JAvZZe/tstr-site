@@ -19,8 +19,8 @@ interface Props {
   certifications?: Cert[] | null;
   website?: string | null;
   accent?: string;
-  /** Listing slug — used to deep-link the claim flow for empty profiles. */
-  slug?: string | null;
+  /** Listing UUID — the claim page reads this as `?id=`. */
+  listingId?: string | null;
   /** Lab name, shown in the "is this your lab?" prompt. */
   businessName?: string | null;
   /** Set false to hide the empty-state entirely (e.g. compact views). */
@@ -30,7 +30,7 @@ const {
   certifications,
   website,
   accent = 'emerald',
-  slug = null,
+  listingId = null,
   businessName = null,
   showEmptyState = true,
 } = Astro.props;
@@ -47,7 +47,13 @@ const requestedSlots = [
   { label: 'Scope of accreditation', hint: 'PDF or scope document' },
 ];
 
-const claimHref = slug ? `/claim?listing=${encodeURIComponent(slug)}` : '/claim';
+// Deep-link the claim flow with params the claim page ACTUALLY reads: it parses
+// `provider` (display name) and `id`/`listingId`. A `?listing=` param would be
+// silently ignored, losing the lab context.
+const claimParams = new URLSearchParams();
+if (businessName) claimParams.set('provider', businessName);
+if (listingId) claimParams.set('id', listingId);
+const claimHref = claimParams.toString() ? `/claim?${claimParams.toString()}` : '/claim';
 
 const fmtDate = (d?: string | null) => {
   if (!d) return null;
@@ -135,9 +141,9 @@ const siteFallback = (c: Cert) => {
         Accreditations & Certifications
       </h3>
       <p class="mb-4 text-xs text-amber-200/80">
-        <span class="font-semibold">Not yet supplied.</span> We have not received accreditation
-        documents for this lab, so nothing is shown here. Buyers should request current certificates
-        directly before placing an order.
+        <span class="font-semibold">Not yet supplied.</span> We haven't received accreditation
+        documents for this lab, so we show nothing rather than guess. Ask the lab for current
+        certificates before you place an order.
       </p>
 
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -157,7 +163,7 @@ const siteFallback = (c: Cert) => {
       <div class="mt-5 flex flex-col gap-3 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
         <p class="text-xs text-gray-400">
           {businessName ? `Do you work at ${businessName}?` : 'Is this your laboratory?'} Claim the
-          profile to add your accreditations — it's free.
+          profile to add your accreditations. It's free.
         </p>
         <a
           href={claimHref}
