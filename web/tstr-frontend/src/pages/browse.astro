@@ -1,16 +1,17 @@
 ---
-import { supabase } from '../lib/supabase'
-import { CONTENT } from '../lib/contacts'
-import { getRedirectUrl } from '../lib/redirect'
-import BaseLayout from '../layouts/BaseLayout.astro'
-import AdUnit from '../components/AdUnit.astro'
-import StaticLabMap from '../components/StaticLabMap.astro'
+import { supabase } from '../lib/supabase';
+import { CONTENT } from '../lib/contacts';
+import { getRedirectUrl } from '../lib/redirect';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AdUnit from '../components/AdUnit.astro';
+import StaticLabMap from '../components/StaticLabMap.astro';
 
 // Fetch all active listings with location hierarchy, category, and capabilities
 
 const { data: listings, error: listingsError } = await supabase
   .from('listings')
-  .select(`
+  .select(
+    `
     *,
     category:category_id (id, name, slug),
     location:location_id (
@@ -23,9 +24,10 @@ const { data: listings, error: listingsError } = await supabase
     listing_capabilities(
       standard:standard_id(id, code, name, issuing_body, standard_type)
     )
-  `)
+  `
+  )
   .eq('status', 'active')
-  .order('created_at', { ascending: false })
+  .order('created_at', { ascending: false });
 
 if (listingsError) {
   console.error('Listings Error:', listingsError);
@@ -36,132 +38,219 @@ console.log('Listings Count:', listings?.length || 0);
 const { data: categoriesData } = await supabase
   .from('categories')
   .select(`id, name, slug, listings:listings!category_id(count)`)
-  .order('name', { ascending: true })
+  .order('name', { ascending: true });
 
 const allCategories = (categoriesData || [])
-  .filter(cat => cat.listings && cat.listings[0]?.count > 0)
-  .map(cat => ({ id: cat.id, name: cat.name, slug: cat.slug }))
+  .filter((cat) => cat.listings && cat.listings[0]?.count > 0)
+  .map((cat) => ({ id: cat.id, name: cat.name, slug: cat.slug }));
 
 // Extract unique standards from listings capabilities
-const standardsMap = new Map()
-listings?.forEach(listing => {
-  listing.listing_capabilities?.forEach(capability => {
+const standardsMap = new Map();
+listings?.forEach((listing) => {
+  listing.listing_capabilities?.forEach((capability) => {
     if (capability.standard) {
-      const standard = capability.standard
-      const key = `${standard.code} - ${standard.name}`
+      const standard = capability.standard;
+      const key = `${standard.code} - ${standard.name}`;
       if (!standardsMap.has(key)) {
-        standardsMap.set(key, { ...standard, displayName: key })
+        standardsMap.set(key, { ...standard, displayName: key });
       }
     }
-  })
-})
+  });
+});
 
 const allStandards = Array.from(standardsMap.values()).sort((a, b) => {
-  const bodyCompare = (a.issuing_body || '').localeCompare(b.issuing_body || '')
-  if (bodyCompare !== 0) return bodyCompare
-  return a.code.localeCompare(b.code)
-})
+  const bodyCompare = (a.issuing_body || '').localeCompare(b.issuing_body || '');
+  if (bodyCompare !== 0) return bodyCompare;
+  return a.code.localeCompare(b.code);
+});
 
 // Location Helpers
-const extractCountry = (address) => address ? address.split(',').map(p => p.trim()).pop() || '' : ''
-const extractCity = (address) => address ? address.split(',').map(p => p.trim())[0] || '' : ''
+const extractCountry = (address) =>
+  address
+    ? address
+        .split(',')
+        .map((p) => p.trim())
+        .pop() || ''
+    : '';
+const extractCity = (address) => (address ? address.split(',').map((p) => p.trim())[0] || '' : '');
 
 // Build location options for autocomplete
-const locationsMap = new Map()
-listings?.forEach(lab => {
-  const country = extractCountry(lab.address)
-  const city = extractCity(lab.address)
-  if (country) locationsMap.set(`${country} (Country)`, { displayName: `${country} (Country)`, value: country })
-  if (city) locationsMap.set(`${city} (City)`, { displayName: `${city} (City)`, value: city })
-})
-const locationOptions = Array.from(locationsMap.values()).sort((a, b) => a.displayName.localeCompare(b.displayName))
+const locationsMap = new Map();
+listings?.forEach((lab) => {
+  const country = extractCountry(lab.address);
+  const city = extractCity(lab.address);
+  if (country)
+    locationsMap.set(`${country} (Country)`, {
+      displayName: `${country} (Country)`,
+      value: country,
+    });
+  if (city) locationsMap.set(`${city} (City)`, { displayName: `${city} (City)`, value: city });
+});
+const locationOptions = Array.from(locationsMap.values()).sort((a, b) =>
+  a.displayName.localeCompare(b.displayName)
+);
 
-const urlParams = new URLSearchParams(Astro.url.search)
-const categoryDisplayName = urlParams.get('category')?.replace(/%20/g, ' ')
-const totalListings = listings?.length || 0
+const urlParams = new URLSearchParams(Astro.url.search);
+const categoryDisplayName = urlParams.get('category')?.replace(/%20/g, ' ');
+const totalListings = listings?.length || 0;
 
-const title = categoryDisplayName ? `${categoryDisplayName} | TSTR Hub` : 'Browse Testing Laboratories | TSTR Hub'
-const description = `Browse ${totalListings} verified testing service providers by country, city, and specialty. Oil & Gas, Pharmaceutical, Environmental testing labs worldwide.`
+const title = categoryDisplayName
+  ? `${categoryDisplayName} | TSTR Hub`
+  : 'Browse Testing Laboratories | TSTR Hub';
+const description = `Browse ${totalListings} testing service providers by country, city, and specialty. Oil and gas, pharmaceutical, and environmental testing laboratories worldwide.`;
 ---
 
 <BaseLayout title={title} description={description}>
-  <div class="min-h-screen text-white selection:bg-blue-500/30 overflow-x-hidden pt-24 pb-20">
-    <div class="max-w-7xl mx-auto px-6">
+  <div class="min-h-screen overflow-x-hidden pb-20 pt-24 text-white selection:bg-blue-500/30">
+    <div class="mx-auto max-w-7xl px-6">
       <!-- Breadcrumbs -->
-      <nav class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-8 animate-fade-up">
-        <a href="/" class="hover:text-blue-400 transition-colors">Home</a>
+      <nav
+        class="animate-fade-up mb-8 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-500"
+      >
+        <a href="/" class="transition-colors hover:text-blue-400">Home</a>
         <span class="text-slate-800">/</span>
-        {categoryDisplayName && (
-          <>
-            <span class="text-slate-400">{categoryDisplayName}</span>
-            <span class="text-slate-800">/</span>
-          </>
-        )}
+        {
+          categoryDisplayName && (
+            <>
+              <span class="text-slate-400">{categoryDisplayName}</span>
+              <span class="text-slate-800">/</span>
+            </>
+          )
+        }
         <span class="text-blue-500/80">Directory</span>
       </nav>
 
       <!-- Page Header -->
-      <div class="mb-16 relative">
-        <div class="absolute -top-24 -left-24 w-64 h-64 bg-blue-600/10 blur-[100px] rounded-full pointer-events-none"></div>
-        <h1 class="text-5xl md:text-6xl font-black mb-6 tracking-tighter animate-fade-up delay-100">
+      <div class="relative mb-16">
+        <div
+          class="pointer-events-none absolute -left-24 -top-24 h-64 w-64 rounded-full bg-blue-600/10 blur-[100px]"
+        >
+        </div>
+        <h1 class="animate-fade-up mb-6 text-5xl font-black tracking-tighter delay-100 md:text-6xl">
           {categoryDisplayName ? `Browse ${categoryDisplayName}` : 'Global Directory'}
         </h1>
-        <p class="text-slate-400 text-lg md:text-xl max-w-2xl font-medium animate-fade-up delay-200">
-          Connect with verified specialist labs across 33+ industrial sectors and 70+ technical standards.
+        <p
+          class="animate-fade-up max-w-2xl text-lg font-medium text-slate-400 delay-200 md:text-xl"
+        >
+          Connect with verified specialist labs across 33+ industrial sectors and 70+ technical
+          standards.
         </p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-12 items-start">
+      <div class="grid grid-cols-1 items-start gap-12 lg:grid-cols-4">
         <!-- Filters Sidebar -->
-        <aside class="lg:col-span-1 space-y-8 sticky top-32 animate-fade-up delay-300">
-          <div class="glass-card p-8 border-white/5 bg-[#0a0a0b]/40">
-            <h2 class="text-sm font-black uppercase tracking-widest text-blue-400 mb-8 flex items-center gap-3">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+        <aside class="animate-fade-up sticky top-32 space-y-8 delay-300 lg:col-span-1">
+          <div class="glass-card border-white/5 bg-[#0a0a0b]/40 p-8">
+            <h2
+              class="mb-8 flex items-center gap-3 text-sm font-black uppercase tracking-widest text-blue-400"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                ><path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                  d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                ></path></svg
+              >
               Search Filter
             </h2>
-            
+
             <div class="space-y-8">
               <div class="filter-group">
-                <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-3">Geography</label>
-                <div class="relative group">
-                  <input type="text" id="location-filter" 
-                         class="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.04] transition-all" 
-                         placeholder="City or Country...">
-                  <button class="autocomplete-clear absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white p-1 opacity-0 transition-opacity">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <label
+                  class="mb-3 block text-[10px] font-black uppercase tracking-widest text-slate-500"
+                  >Geography</label
+                >
+                <div class="group relative">
+                  <input
+                    type="text"
+                    id="location-filter"
+                    class="w-full rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3.5 text-sm text-white transition-all focus:border-blue-500/50 focus:bg-white/[0.04] focus:outline-none"
+                    placeholder="City or Country..."
+                  />
+                  <button
+                    class="autocomplete-clear absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-500 opacity-0 transition-opacity hover:text-white"
+                  >
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      ><path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2.5"
+                        d="M6 18L18 6M6 6l12 12"></path></svg
+                    >
                   </button>
-                  <div class="autocomplete-dropdown hidden absolute z-50 w-full mt-2 glass-card border border-white/10 max-h-64 overflow-y-auto no-scrollbar shadow-2xl bg-[#0a0a0b]/95 backdrop-blur-xl"></div>
+                  <div
+                    class="autocomplete-dropdown glass-card no-scrollbar absolute z-50 mt-2 hidden max-h-64 w-full overflow-y-auto border border-white/10 bg-[#0a0a0b]/95 shadow-2xl backdrop-blur-xl"
+                  >
+                  </div>
                 </div>
               </div>
 
               <div class="filter-group">
-                <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-3">Industry Sector</label>
-                <div class="relative group">
-                  <input type="text" id="category-filter" 
-                         class="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.04] transition-all" 
-                         placeholder="Select Sector...">
-                  <button class="autocomplete-clear absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white p-1 opacity-0 transition-opacity">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <label
+                  class="mb-3 block text-[10px] font-black uppercase tracking-widest text-slate-500"
+                  >Industry Sector</label
+                >
+                <div class="group relative">
+                  <input
+                    type="text"
+                    id="category-filter"
+                    class="w-full rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3.5 text-sm text-white transition-all focus:border-blue-500/50 focus:bg-white/[0.04] focus:outline-none"
+                    placeholder="Select Sector..."
+                  />
+                  <button
+                    class="autocomplete-clear absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-500 opacity-0 transition-opacity hover:text-white"
+                  >
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      ><path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2.5"
+                        d="M6 18L18 6M6 6l12 12"></path></svg
+                    >
                   </button>
-                  <div class="autocomplete-dropdown hidden absolute z-50 w-full mt-2 glass-card border border-white/10 max-h-64 overflow-y-auto no-scrollbar shadow-2xl bg-[#0a0a0b]/95 backdrop-blur-xl"></div>
+                  <div
+                    class="autocomplete-dropdown glass-card no-scrollbar absolute z-50 mt-2 hidden max-h-64 w-full overflow-y-auto border border-white/10 bg-[#0a0a0b]/95 shadow-2xl backdrop-blur-xl"
+                  >
+                  </div>
                 </div>
               </div>
 
               <div class="filter-group">
-                <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-3">Technical Standard</label>
-                <div class="relative group">
-                  <input type="text" id="standard-filter" 
-                         class="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.04] transition-all" 
-                         placeholder="ASTM, ISO, etc...">
-                  <button class="autocomplete-clear absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white p-1 opacity-0 transition-opacity">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <label
+                  class="mb-3 block text-[10px] font-black uppercase tracking-widest text-slate-500"
+                  >Technical Standard</label
+                >
+                <div class="group relative">
+                  <input
+                    type="text"
+                    id="standard-filter"
+                    class="w-full rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3.5 text-sm text-white transition-all focus:border-blue-500/50 focus:bg-white/[0.04] focus:outline-none"
+                    placeholder="ASTM, ISO, etc..."
+                  />
+                  <button
+                    class="autocomplete-clear absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-500 opacity-0 transition-opacity hover:text-white"
+                  >
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      ><path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2.5"
+                        d="M6 18L18 6M6 6l12 12"></path></svg
+                    >
                   </button>
-                  <div class="autocomplete-dropdown hidden absolute z-50 w-full mt-2 glass-card border border-white/10 max-h-64 overflow-y-auto no-scrollbar shadow-2xl bg-[#0a0a0b]/95 backdrop-blur-xl"></div>
+                  <div
+                    class="autocomplete-dropdown glass-card no-scrollbar absolute z-50 mt-2 hidden max-h-64 w-full overflow-y-auto border border-white/10 bg-[#0a0a0b]/95 shadow-2xl backdrop-blur-xl"
+                  >
+                  </div>
                 </div>
               </div>
 
-              <div class="pt-6 border-t border-white/5">
-                <div id="results-count" class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400/60 text-center">
+              <div class="border-t border-white/5 pt-6">
+                <div
+                  id="results-count"
+                  class="text-center text-[10px] font-black uppercase tracking-[0.2em] text-blue-400/60"
+                >
                   {totalListings} FACILITIES MAPPED
                 </div>
               </div>
@@ -173,20 +262,36 @@ const description = `Browse ${totalListings} verified testing service providers 
         </aside>
 
         <!-- Main Content -->
-        <div class="lg:col-span-3 space-y-10">
+        <div class="space-y-10 lg:col-span-3">
           <!-- Horizontal Ad -->
-          <AdUnit format="horizontal" className="mb-8 animate-fade-up delay-400" />
+          <AdUnit format="horizontal" className="animate-fade-up delay-400 mb-8" />
 
           <!-- Disclaimer -->
-          <div class="glass-card bg-amber-500/[0.02] border-amber-500/10 p-6 flex items-start gap-4 animate-fade-up delay-500">
-            <div class="p-2.5 bg-amber-500/10 rounded-xl">
-              <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+          <div
+            class="glass-card animate-fade-up flex items-start gap-4 border-amber-500/10 bg-amber-500/[0.02] p-6 delay-500"
+          >
+            <div class="rounded-xl bg-amber-500/10 p-2.5">
+              <svg
+                class="h-5 w-5 text-amber-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                ><path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                ></path></svg
+              >
             </div>
             <div>
-              <p class="text-amber-100/70 text-xs leading-relaxed mb-2">
+              <p class="mb-2 text-xs leading-relaxed text-amber-100/70">
                 {CONTENT.disclaimer}
               </p>
-              <a href={CONTENT.disclaimerLink.href} class="text-amber-500 text-[10px] font-black uppercase tracking-widest hover:text-amber-400 transition-colors">
+              <a
+                href={CONTENT.disclaimerLink.href}
+                class="text-[10px] font-black uppercase tracking-widest text-amber-500 transition-colors hover:text-amber-400"
+              >
                 {CONTENT.disclaimerLink.text}
               </a>
             </div>
@@ -196,118 +301,187 @@ const description = `Browse ${totalListings} verified testing service providers 
           <StaticLabMap listings={listings || []} />
 
           <!-- Listings Grid -->
-          <div id="listings-grid" class="grid grid-cols-1 gap-6 animate-fade-up delay-600">
-            {listings && listings.map((lab) => {
-              const country = extractCountry(lab.address)
-              const city = extractCity(lab.address)
-              const categoryName = lab.category?.name || ''
-              const categorySlug = lab.category?.slug || ''
-              const standards = lab.listing_capabilities?.map(cap => cap.standard).filter(Boolean) || []
-              const standardsDisplay = standards.map(s => `${s.code} - ${s.name}`).join(', ')
+          <div id="listings-grid" class="animate-fade-up delay-600 grid grid-cols-1 gap-6">
+            {
+              listings &&
+                listings.map((lab) => {
+                  const country = extractCountry(lab.address);
+                  const city = extractCity(lab.address);
+                  const categoryName = lab.category?.name || '';
+                  const categorySlug = lab.category?.slug || '';
+                  const standards =
+                    lab.listing_capabilities?.map((cap) => cap.standard).filter(Boolean) || [];
+                  const standardsDisplay = standards.map((s) => `${s.code} - ${s.name}`).join(', ');
 
-              return (
-                <div class="glass-card glass-card-hover p-8 relative overflow-hidden group listing-card border-white/5" 
-                     data-country={country} data-city={city} data-category={categoryName} data-category-slug={categorySlug} data-standards={standardsDisplay}>
-                  <div class="absolute inset-0 bg-gradient-to-br from-blue-500/[0.01] to-emerald-500/[0.01] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  
-                  <div class="flex flex-col md:flex-row justify-between items-start gap-8 relative z-10">
-                    <div class="flex-1 min-w-0">
-                      <div class="flex flex-wrap items-center gap-3 mb-4">
-                        <h3 class="text-2xl font-black text-white tracking-tight group-hover:text-blue-400 transition-colors">
-                          <a href={`/listing/${lab.slug}`} class="decoration-none">
-                            {lab.business_name}
+                  return (
+                    <div
+                      class="glass-card glass-card-hover listing-card group relative overflow-hidden border-white/5 p-8"
+                      data-country={country}
+                      data-city={city}
+                      data-category={categoryName}
+                      data-category-slug={categorySlug}
+                      data-standards={standardsDisplay}
+                    >
+                      <div class="absolute inset-0 bg-gradient-to-br from-blue-500/[0.01] to-emerald-500/[0.01] opacity-0 transition-opacity group-hover:opacity-100" />
+
+                      <div class="relative z-10 flex flex-col items-start justify-between gap-8 md:flex-row">
+                        <div class="min-w-0 flex-1">
+                          <div class="mb-4 flex flex-wrap items-center gap-3">
+                            <h3 class="text-2xl font-black tracking-tight text-white transition-colors group-hover:text-blue-400">
+                              <a href={`/listing/${lab.slug}`} class="decoration-none">
+                                {lab.business_name}
+                              </a>
+                            </h3>
+                            {lab.website_verified && (
+                              <div class="flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1">
+                                <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+                                <span class="text-[10px] font-black uppercase tracking-widest text-emerald-400">
+                                  Verified
+                                </span>
+                              </div>
+                            )}
+                            {categoryName && (
+                              <span class="rounded-md border border-white/5 bg-white/5 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-slate-500">
+                                {categoryName}
+                              </span>
+                            )}
+                          </div>
+
+                          {lab.description && (
+                            <p class="mb-8 line-clamp-2 text-sm font-medium leading-relaxed text-slate-400">
+                              {lab.description}
+                            </p>
+                          )}
+
+                          <div class="flex flex-col gap-6 text-[11px] font-bold uppercase tracking-widest sm:flex-row">
+                            {lab.address && (
+                              <div class="flex items-center gap-2.5 text-slate-500">
+                                <span class="text-blue-500/50">LOCATION</span>
+                                <span class="text-slate-300">{lab.address}</span>
+                              </div>
+                            )}
+                            {standards.length > 0 && (
+                              <div class="flex items-center gap-2.5 text-slate-500">
+                                <span class="text-blue-500/50">STANDARDS</span>
+                                <div class="flex flex-wrap gap-2">
+                                  {standards.slice(0, 3).map((s) => (
+                                    <span class="text-blue-400/80">{s.code}</span>
+                                  ))}
+                                  {standards.length > 3 && (
+                                    <span class="text-slate-600">+{standards.length - 3}</span>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div class="flex w-full flex-shrink-0 flex-col gap-3 md:w-auto">
+                          {lab.website && (
+                            <a
+                              href={getRedirectUrl(lab.website, lab.id)}
+                              class="rounded-xl bg-blue-600 px-8 py-3.5 text-center text-xs font-black uppercase tracking-widest text-white no-underline shadow-lg shadow-blue-900/20 transition-all hover:bg-blue-500 active:scale-[0.98]"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Visit Website
+                            </a>
+                          )}
+                          <a
+                            href={`/claim?listing_id=${lab.id}`}
+                            data-listing-id={lab.id}
+                            data-listing-name={lab.business_name}
+                            class="claim-link py-2 text-center text-[10px] font-black uppercase tracking-widest text-slate-600 no-underline transition-colors hover:text-white"
+                          >
+                            Claim Listing
                           </a>
-                        </h3>
-                        {lab.website_verified && (
-                          <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span class="text-[10px] font-black uppercase tracking-widest text-emerald-400">Verified</span>
-                          </div>
-                        )}
-                        {categoryName && (
-                          <span class="text-[10px] font-black uppercase tracking-widest text-slate-500 bg-white/5 px-3 py-1 rounded-md border border-white/5">
-                            {categoryName}
-                          </span>
-                        )}
-                      </div>
-
-                      {lab.description && (
-                        <p class="text-slate-400 mb-8 line-clamp-2 text-sm leading-relaxed font-medium">
-                          {lab.description}
-                        </p>
-                      )}
-
-                      <div class="flex flex-col sm:flex-row gap-6 text-[11px] font-bold uppercase tracking-widest">
-                        {lab.address && (
-                          <div class="flex items-center gap-2.5 text-slate-500">
-                            <span class="text-blue-500/50">LOCATION</span>
-                            <span class="text-slate-300">{lab.address}</span>
-                          </div>
-                        )}
-                        {standards.length > 0 && (
-                          <div class="flex items-center gap-2.5 text-slate-500">
-                            <span class="text-blue-500/50">STANDARDS</span>
-                            <div class="flex flex-wrap gap-2">
-                              {standards.slice(0, 3).map(s => (
-                                <span class="text-blue-400/80">{s.code}</span>
-                              ))}
-                              {standards.length > 3 && (
-                                <span class="text-slate-600">+{standards.length - 3}</span>
-                              )}
-                            </div>
-                          </div>
-                        )}
+                        </div>
                       </div>
                     </div>
-
-                    <div class="flex flex-col gap-3 w-full md:w-auto flex-shrink-0">
-                      {lab.website && (
-                        <a href={getRedirectUrl(lab.website, lab.id)} 
-                           class="px-8 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest text-white bg-blue-600 hover:bg-blue-500 transition-all text-center no-underline shadow-lg shadow-blue-900/20 active:scale-[0.98]"
-                           target="_blank" rel="noopener noreferrer">
-                          Visit Website
-                        </a>
-                      )}
-                      <a href={`/claim?listing_id=${lab.id}`} 
-                         data-listing-id={lab.id} 
-                         data-listing-name={lab.business_name}
-                         class="text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-white transition-colors py-2 text-center no-underline claim-link">
-                        Claim Listing
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
+                  );
+                })
+            }
           </div>
 
           <!-- Low Density Fallback (Concierge) -->
-          <div id="low-density-fallback" class="hidden glass-card p-10 border-blue-500/20 bg-blue-500/[0.02] animate-fade-up">
-            <div class="flex flex-col md:flex-row items-center gap-10">
-              <div class="w-20 h-20 bg-blue-500/10 rounded-3xl flex items-center justify-center flex-shrink-0 border border-blue-500/20">
-                <svg class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <div
+            id="low-density-fallback"
+            class="glass-card animate-fade-up hidden border-blue-500/20 bg-blue-500/[0.02] p-10"
+          >
+            <div class="flex flex-col items-center gap-10 md:flex-row">
+              <div
+                class="flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-3xl border border-blue-500/20 bg-blue-500/10"
+              >
+                <svg
+                  class="h-10 w-10 text-blue-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg
+                >
               </div>
               <div>
-                <h3 class="text-2xl font-black text-white mb-3 tracking-tight">Need a specific provider?</h3>
-                <p class="text-slate-400 mb-6 text-sm font-medium max-w-xl leading-relaxed">
-                  We're currently expanding our directory. If you haven't found the specific technical capabilities required, our team will conduct a free manual market search.
+                <h3 class="mb-3 text-2xl font-black tracking-tight text-white">
+                  Need a specific provider?
+                </h3>
+                <p class="mb-6 max-w-xl text-sm font-medium leading-relaxed text-slate-400">
+                  We're currently expanding our directory. If you haven't found the specific
+                  technical capabilities required, our team will conduct a free manual market
+                  search.
                 </p>
-                <a id="concierge-link" href="/contact?inquiry=sales" class="inline-flex items-center gap-3 px-8 py-4 bg-white text-black text-xs font-black uppercase tracking-widest rounded-xl hover:bg-slate-200 transition-all no-underline active:scale-[0.98]">
+                <a
+                  id="concierge-link"
+                  href="/contact?inquiry=sales"
+                  class="inline-flex items-center gap-3 rounded-xl bg-white px-8 py-4 text-xs font-black uppercase tracking-widest text-black no-underline transition-all hover:bg-slate-200 active:scale-[0.98]"
+                >
                   Request Concierge Search
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    ><path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2.5"
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg
+                  >
                 </a>
               </div>
             </div>
           </div>
 
           <!-- No Results -->
-          <div id="no-results" class="hidden glass-card p-20 text-center border-dashed border-white/10 animate-fade-up">
-            <div class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-8 border border-white/5">
-              <svg class="w-10 h-10 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <div
+            id="no-results"
+            class="glass-card animate-fade-up hidden border-dashed border-white/10 p-20 text-center"
+          >
+            <div
+              class="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full border border-white/5 bg-white/5"
+            >
+              <svg
+                class="h-10 w-10 text-slate-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                ><path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path></svg
+              >
             </div>
-            <h2 class="text-3xl font-black text-white mb-4 tracking-tight">No Matching Facilities</h2>
-            <p class="text-slate-400 mb-10 text-sm font-medium">Try broadening your search parameters or adjusting technical filters.</p>
-            <button onclick="location.reload()" class="px-10 py-4 bg-white/5 hover:bg-white/10 text-white text-[10px] font-black uppercase tracking-widest rounded-xl border border-white/10 transition-all">
+            <h2 class="mb-4 text-3xl font-black tracking-tight text-white">
+              No Matching Facilities
+            </h2>
+            <p class="mb-10 text-sm font-medium text-slate-400">
+              Try broadening your search parameters or adjusting technical filters.
+            </p>
+            <button
+              onclick="location.reload()"
+              class="rounded-xl border border-white/10 bg-white/5 px-10 py-4 text-[10px] font-black uppercase tracking-widest text-white transition-all hover:bg-white/10"
+            >
               Reset All Filters
             </button>
           </div>
@@ -317,295 +491,332 @@ const description = `Browse ${totalListings} verified testing service providers 
   </div>
 
   <script define:vars={{ locationOptions, allCategories, allStandards }}>
-  // Data for autocomplete dropdowns
-  const locationData = JSON.parse(JSON.stringify(locationOptions || []))
-  const categoriesData = JSON.parse(JSON.stringify(allCategories || []))
-  const standardsData = JSON.parse(JSON.stringify(allStandards))
+    // Data for autocomplete dropdowns
+    const locationData = JSON.parse(JSON.stringify(locationOptions || []));
+    const categoriesData = JSON.parse(JSON.stringify(allCategories || []));
+    const standardsData = JSON.parse(JSON.stringify(allStandards));
 
-  // Autocomplete class for intelligent dropdowns
-  class AutocompleteDropdown {
-    constructor(inputElement, options, displayField = 'name') {
-      this.input = inputElement
-      this.options = options
-      this.displayField = displayField
-      this.container = inputElement.parentElement
-      this.dropdown = this.container.querySelector('.autocomplete-dropdown')
-      this.clearBtn = this.container.querySelector('.autocomplete-clear')
-      this.filteredOptions = []
-      this.selectedIndex = -1
-      this.isExpanded = false
-      
-      this.init()
-    }
+    // Autocomplete class for intelligent dropdowns
+    class AutocompleteDropdown {
+      constructor(inputElement, options, displayField = 'name') {
+        this.input = inputElement;
+        this.options = options;
+        this.displayField = displayField;
+        this.container = inputElement.parentElement;
+        this.dropdown = this.container.querySelector('.autocomplete-dropdown');
+        this.clearBtn = this.container.querySelector('.autocomplete-clear');
+        this.filteredOptions = [];
+        this.selectedIndex = -1;
+        this.isExpanded = false;
 
-    init() {
-      this.input.addEventListener('input', this.debounce(() => this.handleInput(), 150))
-      this.input.addEventListener('focus', () => this.showDropdown())
-      this.input.addEventListener('keydown', (e) => this.handleKeydown(e))
-      this.input.addEventListener('blur', () => {
-        setTimeout(() => this.hideDropdown(), 200)
-      })
+        this.init();
+      }
 
-      this.clearBtn.addEventListener('click', () => this.clearSelection())
+      init() {
+        this.input.addEventListener(
+          'input',
+          this.debounce(() => this.handleInput(), 150)
+        );
+        this.input.addEventListener('focus', () => this.showDropdown());
+        this.input.addEventListener('keydown', (e) => this.handleKeydown(e));
+        this.input.addEventListener('blur', () => {
+          setTimeout(() => this.hideDropdown(), 200);
+        });
 
-      document.addEventListener('click', (e) => {
-        if (!this.container.contains(e.target)) {
-          this.hideDropdown()
+        this.clearBtn.addEventListener('click', () => this.clearSelection());
+
+        document.addEventListener('click', (e) => {
+          if (!this.container.contains(e.target)) {
+            this.hideDropdown();
+          }
+        });
+      }
+
+      debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+          const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+        };
+      }
+
+      handleInput() {
+        const query = this.input.value.toLowerCase().trim();
+
+        if (query === '') {
+          this.filteredOptions = [...this.options];
+        } else {
+          this.filteredOptions = this.options
+            .filter((option) => {
+              const text = this.getDisplayText(option).toLowerCase();
+              return this.fuzzyMatch(query, text);
+            })
+            .sort((a, b) => {
+              const scoreA = this.getMatchScore(query, this.getDisplayText(a).toLowerCase());
+              const scoreB = this.getMatchScore(query, this.getDisplayText(b).toLowerCase());
+              return scoreB - scoreA;
+            });
         }
-      })
-    }
 
-    debounce(func, wait) {
-      let timeout
-      return function executedFunction(...args) {
-        const later = () => {
-          clearTimeout(timeout)
-          func(...args)
+        this.selectedIndex = -1;
+        this.renderOptions();
+        this.showDropdown();
+        this.updateClearButton();
+        window.filterListings();
+      }
+
+      escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      fuzzyMatch(query, text) {
+        if (query.length === 0) return true;
+        if (text.length === 0) return false;
+        const lowerQuery = query.toLowerCase();
+        const lowerText = text.toLowerCase();
+        if (lowerText.startsWith(lowerQuery)) return true;
+        const wordRegex = new RegExp(`(?:^|[\\s\\-])(${this.escapeRegex(lowerQuery)})`, 'i');
+        return wordRegex.test(lowerText);
+      }
+
+      getMatchScore(query, text) {
+        const lowerQuery = query.toLowerCase();
+        const lowerText = text.toLowerCase();
+        if (lowerQuery === lowerText) return 100;
+        if (lowerText.startsWith(lowerQuery)) return 80;
+        const wordRegex = new RegExp(`(?:^|[\\s\\-])(${this.escapeRegex(lowerQuery)})`, 'i');
+        if (wordRegex.test(lowerText)) return 60;
+        if (lowerText.includes(lowerQuery)) return 40;
+        return 0;
+      }
+
+      getDisplayText(option) {
+        return option[this.displayField] || option.name || option.displayName || '';
+      }
+
+      renderOptions() {
+        this.dropdown.innerHTML = '';
+        if (this.filteredOptions.length === 0) {
+          this.dropdown.innerHTML =
+            '<div class="px-4 py-3 text-slate-500 italic text-[10px] font-black uppercase tracking-widest">No Matches Found</div>';
+          return;
         }
-        clearTimeout(timeout)
-        timeout = setTimeout(later, wait)
+
+        this.filteredOptions.forEach((option, index) => {
+          const optionElement = document.createElement('div');
+          optionElement.className =
+            'px-4 py-3 cursor-pointer transition-colors border-b border-white/5 text-slate-300 text-[11px] font-bold uppercase tracking-widest hover:bg-blue-500/10 hover:text-white';
+          optionElement.setAttribute('role', 'option');
+          optionElement.setAttribute('data-index', index);
+
+          const displayText = this.getDisplayText(option);
+          const regex = new RegExp(
+            `(${this.input.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`,
+            'gi'
+          );
+          optionElement.innerHTML = displayText.replace(
+            regex,
+            '<span class="text-blue-400">$1</span>'
+          );
+
+          optionElement.addEventListener('click', () => this.selectOption(option));
+          optionElement.addEventListener('mouseenter', () => this.selectIndex(index));
+          this.dropdown.appendChild(optionElement);
+        });
+      }
+
+      handleKeydown(e) {
+        if (!this.isExpanded) {
+          if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter') {
+            e.preventDefault();
+            this.showDropdown();
+          }
+          return;
+        }
+        switch (e.key) {
+          case 'ArrowDown':
+            e.preventDefault();
+            this.selectIndex(Math.min(this.selectedIndex + 1, this.filteredOptions.length - 1));
+            break;
+          case 'ArrowUp':
+            e.preventDefault();
+            this.selectIndex(Math.max(this.selectedIndex - 1, -1));
+            break;
+          case 'Enter':
+            e.preventDefault();
+            if (this.selectedIndex >= 0)
+              this.selectOption(this.filteredOptions[this.selectedIndex]);
+            break;
+          case 'Escape':
+            this.hideDropdown();
+            break;
+        }
+      }
+
+      selectIndex(index) {
+        this.selectedIndex = index;
+        const options = this.dropdown.querySelectorAll('div[role="option"]');
+        options.forEach((option, i) => {
+          option.classList.toggle('bg-blue-500/10', i === index);
+          option.classList.toggle('text-white', i === index);
+        });
+      }
+
+      selectOption(option) {
+        const displayText = this.getDisplayText(option);
+        this.input.value = displayText;
+        this.input.setAttribute('data-selected-value', displayText);
+        this.hideDropdown();
+        this.updateClearButton();
+        window.filterListings();
+      }
+
+      clearSelection() {
+        this.input.value = '';
+        this.input.removeAttribute('data-selected-value');
+        this.hideDropdown();
+        this.updateClearButton();
+        window.filterListings();
+      }
+
+      updateClearButton() {
+        this.clearBtn.classList.toggle('opacity-100', this.input.value.length > 0);
+      }
+
+      showDropdown() {
+        if (this.filteredOptions.length === 0 && this.input.value === '') {
+          this.filteredOptions = [...this.options];
+          this.renderOptions();
+        }
+        this.dropdown.classList.remove('hidden');
+        this.isExpanded = true;
+      }
+
+      hideDropdown() {
+        this.dropdown.classList.add('hidden');
+        this.isExpanded = false;
+        this.selectedIndex = -1;
+      }
+
+      getValue() {
+        return this.input.getAttribute('data-selected-value') || this.input.value;
       }
     }
 
-    handleInput() {
-      const query = this.input.value.toLowerCase().trim()
-      
-      if (query === '') {
-        this.filteredOptions = [...this.options]
+    // Initialize
+    const locationFilter = document.getElementById('location-filter');
+    const categoryFilter = document.getElementById('category-filter');
+    const standardFilter = document.getElementById('standard-filter');
+    const listingsGrid = document.getElementById('listings-grid');
+    const resultsCount = document.getElementById('results-count');
+    const noResults = document.getElementById('no-results');
+    const lowDensityFallback = document.getElementById('low-density-fallback');
+    const conciergeLink = document.getElementById('concierge-link');
+    const listings = document.querySelectorAll('.listing-card');
+
+    const locationAutocomplete = new AutocompleteDropdown(
+      locationFilter,
+      locationData,
+      'displayName'
+    );
+    const categoryAutocomplete = new AutocompleteDropdown(categoryFilter, categoriesData, 'name');
+    const standardAutocomplete = new AutocompleteDropdown(
+      standardFilter,
+      standardsData,
+      'displayName'
+    );
+
+    window.filterListings = function () {
+      const selectedLocation = locationAutocomplete.getValue().toLowerCase();
+      const selectedCategory = categoryAutocomplete.getValue().toLowerCase();
+      const selectedStandard = standardAutocomplete.getValue().toLowerCase();
+
+      let visibleCount = 0;
+
+      listings.forEach((listing) => {
+        const country = (listing.dataset.country || '').toLowerCase();
+        const city = (listing.dataset.city || '').toLowerCase();
+        const category = (listing.dataset.category || '').toLowerCase();
+        const categorySlug = (listing.dataset.categorySlug || '').toLowerCase();
+        const standards = (listing.dataset.standards || '').toLowerCase();
+
+        const matchesLocation =
+          !selectedLocation || country === selectedLocation || city === selectedLocation;
+        const matchesCategory =
+          !selectedCategory || category === selectedCategory || categorySlug === selectedCategory;
+        const matchesStandard = !selectedStandard || standards.includes(selectedStandard);
+
+        if (matchesLocation && matchesCategory && matchesStandard) {
+          listing.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          listing.classList.add('hidden');
+        }
+      });
+
+      resultsCount.textContent = `${visibleCount} FACILITIES MAPPED`;
+
+      if (visibleCount === 0) {
+        listingsGrid.classList.add('hidden');
+        noResults.classList.remove('hidden');
+        lowDensityFallback.classList.add('hidden');
       } else {
-        this.filteredOptions = this.options.filter(option => {
-          const text = this.getDisplayText(option).toLowerCase()
-          return this.fuzzyMatch(query, text)
-        }).sort((a, b) => {
-          const scoreA = this.getMatchScore(query, this.getDisplayText(a).toLowerCase())
-          const scoreB = this.getMatchScore(query, this.getDisplayText(b).toLowerCase())
-          return scoreB - scoreA
-        })
-      }
+        listingsGrid.classList.remove('hidden');
+        noResults.classList.add('hidden');
+        lowDensityFallback.classList.toggle('hidden', visibleCount >= 5);
 
-      this.selectedIndex = -1
-      this.renderOptions()
-      this.showDropdown()
-      this.updateClearButton()
-      window.filterListings()
-    }
-
-    escapeRegex(string) {
-      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-    }
-
-    fuzzyMatch(query, text) {
-      if (query.length === 0) return true
-      if (text.length === 0) return false
-      const lowerQuery = query.toLowerCase()
-      const lowerText = text.toLowerCase()
-      if (lowerText.startsWith(lowerQuery)) return true
-      const wordRegex = new RegExp(`(?:^|[\\s\\-])(${this.escapeRegex(lowerQuery)})`, 'i')
-      return wordRegex.test(lowerText)
-    }
-
-    getMatchScore(query, text) {
-      const lowerQuery = query.toLowerCase()
-      const lowerText = text.toLowerCase()
-      if (lowerQuery === lowerText) return 100
-      if (lowerText.startsWith(lowerQuery)) return 80
-      const wordRegex = new RegExp(`(?:^|[\\s\\-])(${this.escapeRegex(lowerQuery)})`, 'i')
-      if (wordRegex.test(lowerText)) return 60
-      if (lowerText.includes(lowerQuery)) return 40
-      return 0
-    }
-
-    getDisplayText(option) {
-      return option[this.displayField] || option.name || option.displayName || ''
-    }
-
-    renderOptions() {
-      this.dropdown.innerHTML = ''
-      if (this.filteredOptions.length === 0) {
-        this.dropdown.innerHTML = '<div class="px-4 py-3 text-slate-500 italic text-[10px] font-black uppercase tracking-widest">No Matches Found</div>'
-        return
-      }
-
-      this.filteredOptions.forEach((option, index) => {
-        const optionElement = document.createElement('div')
-        optionElement.className = 'px-4 py-3 cursor-pointer transition-colors border-b border-white/5 text-slate-300 text-[11px] font-bold uppercase tracking-widest hover:bg-blue-500/10 hover:text-white'
-        optionElement.setAttribute('role', 'option')
-        optionElement.setAttribute('data-index', index)
-        
-        const displayText = this.getDisplayText(option)
-        const regex = new RegExp(`(${this.input.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
-        optionElement.innerHTML = displayText.replace(regex, '<span class="text-blue-400">$1</span>')
-
-        optionElement.addEventListener('click', () => this.selectOption(option))
-        optionElement.addEventListener('mouseenter', () => this.selectIndex(index))
-        this.dropdown.appendChild(optionElement)
-      })
-    }
-
-    handleKeydown(e) {
-      if (!this.isExpanded) {
-        if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter') {
-          e.preventDefault()
-          this.showDropdown()
+        if (visibleCount < 5) {
+          let subject = 'Concierge Search Request';
+          const context = [
+            categoryAutocomplete.getValue(),
+            locationAutocomplete.getValue().replace(/\s*\([^)]*\)$/, ''),
+            standardAutocomplete.getValue(),
+          ]
+            .filter(Boolean)
+            .join(', ');
+          if (context) subject += ` - ${context}`;
+          conciergeLink.href = `/contact?inquiry=sales&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent('Requesting free concierge search for the following context: ' + subject)}`;
         }
-        return
       }
-      switch (e.key) {
-        case 'ArrowDown':
-          e.preventDefault()
-          this.selectIndex(Math.min(this.selectedIndex + 1, this.filteredOptions.length - 1))
-          break
-        case 'ArrowUp':
-          e.preventDefault()
-          this.selectIndex(Math.max(this.selectedIndex - 1, -1))
-          break
-        case 'Enter':
-          e.preventDefault()
-          if (this.selectedIndex >= 0) this.selectOption(this.filteredOptions[this.selectedIndex])
-          break
-        case 'Escape':
-          this.hideDropdown()
-          break
-      }
+    };
+
+    // URL Params Handling
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('location')) {
+      locationFilter.value = params.get('location');
+      locationAutocomplete.updateClearButton();
     }
-
-    selectIndex(index) {
-      this.selectedIndex = index
-      const options = this.dropdown.querySelectorAll('div[role="option"]')
-      options.forEach((option, i) => {
-        option.classList.toggle('bg-blue-500/10', i === index)
-        option.classList.toggle('text-white', i === index)
-      })
-    }
-
-    selectOption(option) {
-      const displayText = this.getDisplayText(option)
-      this.input.value = displayText
-      this.input.setAttribute('data-selected-value', displayText)
-      this.hideDropdown()
-      this.updateClearButton()
-      window.filterListings()
-    }
-
-    clearSelection() {
-      this.input.value = ''
-      this.input.removeAttribute('data-selected-value')
-      this.hideDropdown()
-      this.updateClearButton()
-      window.filterListings()
-    }
-
-    updateClearButton() {
-      this.clearBtn.classList.toggle('opacity-100', this.input.value.length > 0)
-    }
-
-    showDropdown() {
-      if (this.filteredOptions.length === 0 && this.input.value === '') {
-        this.filteredOptions = [...this.options]
-        this.renderOptions()
-      }
-      this.dropdown.classList.remove('hidden')
-      this.isExpanded = true
-    }
-
-    hideDropdown() {
-      this.dropdown.classList.add('hidden')
-      this.isExpanded = false
-      this.selectedIndex = -1
-    }
-
-    getValue() {
-      return this.input.getAttribute('data-selected-value') || this.input.value
-    }
-  }
-
-  // Initialize
-  const locationFilter = document.getElementById('location-filter')
-  const categoryFilter = document.getElementById('category-filter')
-  const standardFilter = document.getElementById('standard-filter')
-  const listingsGrid = document.getElementById('listings-grid')
-  const resultsCount = document.getElementById('results-count')
-  const noResults = document.getElementById('no-results')
-  const lowDensityFallback = document.getElementById('low-density-fallback')
-  const conciergeLink = document.getElementById('concierge-link')
-  const listings = document.querySelectorAll('.listing-card')
-
-  const locationAutocomplete = new AutocompleteDropdown(locationFilter, locationData, 'displayName')
-  const categoryAutocomplete = new AutocompleteDropdown(categoryFilter, categoriesData, 'name')
-  const standardAutocomplete = new AutocompleteDropdown(standardFilter, standardsData, 'displayName')
-
-  window.filterListings = function() {
-    const selectedLocation = locationAutocomplete.getValue().toLowerCase()
-    const selectedCategory = categoryAutocomplete.getValue().toLowerCase()
-    const selectedStandard = standardAutocomplete.getValue().toLowerCase()
-
-    let visibleCount = 0
-
-    listings.forEach(listing => {
-      const country = (listing.dataset.country || '').toLowerCase()
-      const city = (listing.dataset.city || '').toLowerCase()
-      const category = (listing.dataset.category || '').toLowerCase()
-      const categorySlug = (listing.dataset.categorySlug || '').toLowerCase()
-      const standards = (listing.dataset.standards || '').toLowerCase()
-
-      const matchesLocation = !selectedLocation || country === selectedLocation || city === selectedLocation
-      const matchesCategory = !selectedCategory || category === selectedCategory || categorySlug === selectedCategory
-      const matchesStandard = !selectedStandard || standards.includes(selectedStandard)
-
-      if (matchesLocation && matchesCategory && matchesStandard) {
-        listing.classList.remove('hidden')
-        visibleCount++
+    if (params.has('category')) {
+      const catParam = params.get('category');
+      // Attempt to resolve slug to name for the input field display
+      const foundCat = categoriesData.find(
+        (c) => c.slug === catParam || c.name.toLowerCase() === catParam.toLowerCase()
+      );
+      if (foundCat) {
+        categoryFilter.value = foundCat.name;
       } else {
-        listing.classList.add('hidden')
+        categoryFilter.value = catParam;
       }
-    })
-
-    resultsCount.textContent = `${visibleCount} FACILITIES MAPPED`
-
-    if (visibleCount === 0) {
-      listingsGrid.classList.add('hidden')
-      noResults.classList.remove('hidden')
-      lowDensityFallback.classList.add('hidden')
-    } else {
-      listingsGrid.classList.remove('hidden')
-      noResults.classList.add('hidden')
-      lowDensityFallback.classList.toggle('hidden', visibleCount >= 5)
-      
-      if (visibleCount < 5) {
-        let subject = 'Concierge Search Request'
-        const context = [categoryAutocomplete.getValue(), locationAutocomplete.getValue().replace(/\s*\([^)]*\)$/, ''), standardAutocomplete.getValue()].filter(Boolean).join(', ')
-        if (context) subject += ` - ${context}`
-        conciergeLink.href = `/contact?inquiry=sales&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent('Requesting free concierge search for the following context: ' + subject)}`
-      }
+      categoryAutocomplete.updateClearButton();
     }
-  }
-
-  // URL Params Handling
-  const params = new URLSearchParams(window.location.search)
-  if (params.has('location')) {
-    locationFilter.value = params.get('location')
-    locationAutocomplete.updateClearButton()
-  }
-  if (params.has('category')) {
-    const catParam = params.get('category')
-    // Attempt to resolve slug to name for the input field display
-    const foundCat = categoriesData.find(c => c.slug === catParam || c.name.toLowerCase() === catParam.toLowerCase())
-    if (foundCat) {
-      categoryFilter.value = foundCat.name
-    } else {
-      categoryFilter.value = catParam
+    if (params.has('standard')) {
+      standardFilter.value = params.get('standard');
+      standardAutocomplete.updateClearButton();
     }
-    categoryAutocomplete.updateClearButton()
-  }
-  if (params.has('standard')) {
-    standardFilter.value = params.get('standard')
-    standardAutocomplete.updateClearButton()
-  }
-  if (params.toString()) window.filterListings()
+    if (params.toString()) window.filterListings();
   </script>
 </BaseLayout>
 
 <style is:global>
-  .no-scrollbar::-webkit-scrollbar { display: none; }
-  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 </style>
