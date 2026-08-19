@@ -23,6 +23,12 @@
 - **READ FIRST**: `PROJECT_STATUS.md` before any change. Update + version-bump + timestamp after.
 - **Report first**: finish task → STOP → report → WAIT for "proceed".
 - **Schema changes**: run `supabase db diff` before committing; use migration files.
+- **LOCAL Supabase stack — NEVER leave it running.** It exists for agents doing local dev; al does not use it. On 2026-08-19 it was found up for 43 hours serving nothing (0 rows, 0 client connections, every `.env` pointed at the REMOTE project). Always use the wrapper, which stops the stack on every exit path including failure:
+  - `./scripts/supabase-session run "<cmd>"` — **preferred**: starts, runs, always stops (EXIT trap)
+  - `./scripts/supabase-session up --minutes 30` — interactive, with watchdog auto-stop
+  - `./scripts/supabase-session down` / `status`
+  Do not call bare `supabase start` unless you immediately pair it with `supabase stop`.
+- **LOCAL vs LIVE**: state explicitly which one a migration/query targets. The app's real `.env` files point at the LIVE remote project (`haimjeaetrsaauitrhfy.supabase.co`); local is empty schema only. Confirm with al before touching LIVE data.
 - **Secrets**: Supabase service-role key + API keys were previously exposed in frontend code (remediated). NEVER echo secrets; use `[REDACTED]`. Frontend must not contain service-role/supabase secrets.
 - **SEO hook**: H1 "Testers" + H2 "Testing Services" dual-targeting is enforced — do not remove H2/title structure.
 

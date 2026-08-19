@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+# supabase-session — start the local TSTR Supabase stack, guaranteeing it stops.
+#
+# WHY THIS EXISTS: on 2026-08-19 the local stack was found running for 43 hours
+# serving nothing (0 rows, 0 client connections, app pointed at the REMOTE
+# project). An agent started it and never stopped it. "Remember to stop it" is
+# not a mechanism — this is.
+#
+# Usage:
+#   supabase-session run  "<command>"   # start, run command, ALWAYS stop after
+#   supabase-session up   [--minutes N] # start with a watchdog auto-stop (default 60)
+#   supabase-session down               # stop now
+#   supabase-session status             # is it up? how long?
+#
+# The `run` form is strongly preferred: the EXIT trap stops the stack even if
+# the command fails, times out, or the shell is interrupted.
+
+set -uo pipefail
+
+PROJECT_DIR="/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working"
+STAMP="/tmp/.supabase-session-tstr.started"
+WATCHDOG_PID="/tmp/.supabase-session-tstr.watchdog"
+
+cd "$PROJECT_DIR" || { echo "ERROR: cannot cd to $PROJECT_DIR"; exit 1; }
+
+is_up() { docker ps --filter "name=supabase_db_tstr-site-working" --format '{{.Names}}' | grep -q .; }
+
+start_stack() {
+    if is_up; then
+        echo "already up (started $(cat "$STAMP" 2>/dev/null || echo 'unknown'))"
+        return 0
+    fi
+    echo "starting local supabase (this is LOCAL, not the live remote project)..."
+    supabase start >/dev/null 2>&1 || { echo "ERROR: supabase start failed"; return 1; }
+    date '+%Y-%m-%d %H:%M:%S' > "$STAMP"
+    echo "up. API http://127.0.0.1:54321  Studio http://127.0.0.1:54323"
+}
+
+stop_stack() {
+    # kill any watchdog first so it can't fire later against a new session
+    if [ -f "$WATCHDOG_PID" ]; then
+        kill "$(cat "$WATCHDOG_PID")" 2>/dev/null || true
+        rm -f "$WATCHDOG_PID"
+    fi
+    if is_up; then
+        echo "stopping local supabase..."
+        supabase stop >/dev/null 2>&1
+        echo "stopped (volumes preserved)."
+    else
+        echo "already stopped."
+    fi
+    rm -f "$STAMP"
+}
+
+case "${1:-}" in
+    run)
+        shift
+        [ $# -gt 0 ] || { echo "usage: supabase-session run \"<command>\""; exit 2; }
+        # THE GUARANTEE: stop on any exit path — success, failure, or interrupt.
+        trap stop_stack EXIT INT TERM
+        start_stack || exit 1
+        echo "--- running: $* ---"
+        bash -c "$*"
+        rc=$?
+        echo "--- command exited $rc ---"
+        exit $rc
+        ;;
+    up)
+        mins=60
+        [ "${2:-}" = "--minutes" ] && mins="${3:-60}"
+        start_stack || exit 1
+        # watchdog: auto-stop so a forgotten session cannot idle for days
+        setsid bash -c "sleep $((mins*60)); cd '$PROJECT_DIR' && supabase stop >/dev/null 2>&1; rm -f '$STAMP' '$WATCHDOG_PID'" >/dev/null 2>&1 &
+        echo $! > "$WATCHDOG_PID"
+        echo "watchdog armed: auto-stop in ${mins} min. Stop sooner with: supabase-session down"
+        ;;
+    down) stop_stack ;;
+    status)
+        if is_up; then
+            started=$(cat "$STAMP" 2>/dev/null || echo "unknown")
+            n=$(docker ps --filter "name=supabase" --format '{{.Names}}' | wc -l)
+            echo "UP — $n containers, started $started"
+            [ -f "$WATCHDOG_PID" ] && echo "watchdog active (pid $(cat "$WATCHDOG_PID"))" || echo "NO watchdog — this can idle indefinitely"
+        else
+            echo "DOWN"
+        fi
+        ;;
+    *)
+        sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'
+        exit 2
+        ;;
+esac
