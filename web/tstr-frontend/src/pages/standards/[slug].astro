@@ -13,7 +13,7 @@ export async function getStaticPaths() {
 
   return (data || []).map((s: any) => ({
     params: { slug: s.slug },
-    props: { standard: s }
+    props: { standard: s },
   }));
 }
 
@@ -28,147 +28,184 @@ const { data: listings } = await supabase
   .order('trust_score', { foreignTable: 'listings', ascending: false });
 ---
 
-<BaseLayout title={`${standard.code} Testing Labs | TSTR.directory`} description={standard.description || `Find laboratories certified for ${standard.code} testing.`}>
-  <SeoJsonLd data={{
-    "@context": "https://schema.org",
-    "@type": "DefinedTerm",
-    "name": `${standard.code}: ${standard.name}`,
-    "description": standard.description || `Technical standard ${standard.code} (${standard.name}).`,
-    "termCode": standard.code,
-    "url": `https://tstr.directory/standards/${standard.slug}`,
-    "inDefinedTermSet": {
-      "@type": "DefinedTermSet",
-      "name": "TSTR.directory Testing Standards"
-    }
-  }} />
-  <main class="max-w-6xl mx-auto px-4 py-12">
+<BaseLayout
+  title={`${standard.code} Testing Labs | TSTR.directory`}
+  description={standard.description || `Find laboratories certified for ${standard.code} testing.`}
+>
+  <SeoJsonLd
+    data={{
+      '@context': 'https://schema.org',
+      '@type': 'DefinedTerm',
+      name: `${standard.code}: ${standard.name}`,
+      description:
+        standard.description || `Technical standard ${standard.code} (${standard.name}).`,
+      termCode: standard.code,
+      url: `https://tstr.directory/standards/${standard.slug}`,
+      inDefinedTermSet: {
+        '@type': 'DefinedTermSet',
+        name: 'TSTR.directory Testing Standards',
+      },
+    }}
+  />
+  <main class="mx-auto max-w-6xl px-4 py-12">
     <!-- Breadcrumbs -->
-    <nav class="flex items-center space-x-2 text-sm text-gray-400 mb-8" aria-label="Breadcrumb">
-      <a href="/" class="hover:text-blue-400 transition-colors">Home</a>
+    <nav class="mb-8 flex items-center space-x-2 text-sm text-gray-400" aria-label="Breadcrumb">
+      <a href="/" class="transition-colors hover:text-blue-400">Home</a>
       <span class="text-gray-600">/</span>
-      <a href="/standards" class="hover:text-blue-400 transition-colors">Standards</a>
+      <a href="/standards" class="transition-colors hover:text-blue-400">Standards</a>
       <span class="text-gray-600">/</span>
-      <span class="text-blue-400 font-medium">{standard.code}</span>
+      <span class="font-medium text-blue-400">{standard.code}</span>
     </nav>
 
     <!-- Hero Section -->
-    <div class="glass-panel p-8 md:p-12 mb-12 relative overflow-hidden">
+    <div class="glass-panel relative mb-12 overflow-hidden p-8 md:p-12">
       <!-- Ambient Glow -->
-      <div class="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 blur-3xl -mr-48 -mt-48"></div>
-      <div class="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 blur-3xl -ml-32 -mb-32"></div>
+      <div class="absolute right-0 top-0 -mr-48 -mt-48 h-96 w-96 bg-emerald-500/10 blur-3xl"></div>
+      <div class="absolute bottom-0 left-0 -mb-32 -ml-32 h-64 w-64 bg-blue-500/10 blur-3xl"></div>
 
       <div class="relative z-10 max-w-4xl">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold mb-6 uppercase tracking-widest">
+        <div
+          class="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-blue-400"
+        >
           Industry Standard
         </div>
-        
-        <h1 class="text-4xl md:text-5xl lg:text-7xl font-black mb-6 tracking-tight text-white leading-tight">
-          {standard.code}: <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">{standard.name}</span>
+
+        <h1
+          class="mb-6 text-4xl font-black leading-tight tracking-tight text-white md:text-5xl lg:text-7xl"
+        >
+          {standard.code}: <span
+            class="bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent"
+            >{standard.name}</span
+          >
         </h1>
-        
-        <p class="text-xl text-gray-400 leading-relaxed mb-8">
+
+        <p class="mb-8 text-xl leading-relaxed text-gray-400">
           {standard.description}
         </p>
 
         <div class="flex items-center gap-6">
           <div class="flex flex-col">
             <span class="text-3xl font-black text-white">{listings?.length || 0}</span>
-            <span class="text-[10px] uppercase font-bold text-gray-500 tracking-tighter">Certified Laboratories</span>
+            <span class="text-[10px] font-bold uppercase tracking-tighter text-gray-500"
+              >Certified Laboratories</span
+            >
           </div>
           <div class="h-10 w-px bg-white/10"></div>
           <div class="flex flex-col">
-             <span class="text-3xl font-black text-emerald-400">Verified</span>
-             <span class="text-[10px] uppercase font-bold text-gray-500 tracking-tighter">Compliance Data</span>
+            <span class="text-3xl font-black text-emerald-400">Verified</span>
+            <span class="text-[10px] font-bold uppercase tracking-tighter text-gray-500"
+              >Compliance Data</span
+            >
           </div>
         </div>
       </div>
     </div>
 
     <!-- Main Content Grid -->
-    <div class="grid lg:grid-cols-3 gap-12">
+    <div class="grid gap-12 lg:grid-cols-3">
       <div class="lg:col-span-2">
-        <h2 class="text-3xl font-black text-white mb-8 flex items-center gap-3">
+        <h2 class="mb-8 flex items-center gap-3 text-3xl font-black text-white">
           Qualified <span class="text-blue-400">Labs</span>
         </h2>
-        
-        {listings && listings.length > 0 ? (
-          <div class="space-y-6">
-            {listings.map((item: any) => (
-              <div class="glass-card group hover:scale-[1.01] transition-all duration-300">
-                <div class="flex items-center justify-between gap-6">
-                  <div>
-                    <h3 class="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors mb-2">
-                      {item.listings.business_name}
-                    </h3>
-                    <div class="flex items-center gap-4 text-sm text-gray-400">
-                      <span class="flex items-center gap-1.5">
-                        <span class="text-blue-400">📍</span>
-                        {item.listings.region || 'Global'}
-                      </span>
-                      <div class="flex items-center gap-2">
-                        <div class="w-24 h-2 bg-white/5 rounded-full overflow-hidden">
-                          <div class="h-full bg-emerald-500" style={`width: ${item.listings.trust_score || 0}%`}></div>
+
+        {
+          listings && listings.length > 0 ? (
+            <div class="space-y-6">
+              {listings.map((item: any) => (
+                <div class="glass-card group transition-all duration-300 hover:scale-[1.01]">
+                  <div class="flex items-center justify-between gap-6">
+                    <div>
+                      <h3 class="mb-2 text-2xl font-bold text-white transition-colors group-hover:text-blue-400">
+                        {item.listings.business_name}
+                      </h3>
+                      <div class="flex items-center gap-4 text-sm text-gray-400">
+                        <span class="flex items-center gap-1.5">
+                          <span class="text-blue-400">📍</span>
+                          {item.listings.region || 'Global'}
+                        </span>
+                        <div class="flex items-center gap-2">
+                          <div class="h-2 w-24 overflow-hidden rounded-full bg-white/5">
+                            <div
+                              class="h-full bg-emerald-500"
+                              style={`width: ${item.listings.trust_score || 0}%`}
+                            />
+                          </div>
+                          <span class="shrink-0 font-bold text-emerald-400">
+                            Trust Score: {item.listings.trust_score || 0}
+                          </span>
                         </div>
-                        <span class="text-emerald-400 font-bold shrink-0">Trust Score: {item.listings.trust_score || 0}</span>
                       </div>
                     </div>
+
+                    <a
+                      href={`/listing/${item.listings.id}`}
+                      class="whitespace-nowrap rounded-lg bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition-all hover:bg-blue-500"
+                    >
+                      View Profile
+                    </a>
                   </div>
-                  
-                  <a 
-                    href={`/listing/${item.listings.id}`} 
-                    class="px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm transition-all shadow-lg shadow-blue-600/20 whitespace-nowrap"
-                  >
-                    View Profile
-                  </a>
                 </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div class="glass-panel py-12 text-center text-gray-500 border-dashed">
-            <p>No laboratories currently listed for this standard.</p>
-          </div>
-        )}
+              ))}
+            </div>
+          ) : (
+            <div class="glass-panel border-dashed py-12 text-center text-gray-500">
+              <p>No laboratories currently listed for this standard.</p>
+            </div>
+          )
+        }
       </div>
 
       <aside class="space-y-8">
-        <div class="glass-panel p-6 border-blue-500/20">
-          <h4 class="text-white font-black uppercase text-xs tracking-widest mb-4">About This Standard</h4>
-          <p class="text-gray-400 text-sm leading-relaxed">
-            {standard.code} is a critical industry specification ensuring compliance and quality in technical testing and certification across global markets.
+        <div class="glass-panel border-blue-500/20 p-6">
+          <h4 class="mb-4 text-xs font-black uppercase tracking-widest text-white">
+            About This Standard
+          </h4>
+          <p class="text-sm leading-relaxed text-gray-400">
+            {standard.code} is a critical industry specification ensuring compliance and quality in technical
+            testing and certification across global markets.
           </p>
         </div>
 
-        <div class="glass-panel p-6 border-emerald-500/20 relative overflow-hidden group">
-           <div class="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-           <h4 class="text-white font-black uppercase text-xs tracking-widest mb-4">Need Help?</h4>
-           <p class="text-gray-400 text-sm mb-6">
-             Can't find a lab specifically for your {standard.code} requirements? Our concierge team can manually source verified providers for you.
-           </p>
-           <a href="/contact" class="block w-full text-center py-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all uppercase tracking-widest">
-             Request Sourcing
-           </a>
+        <div class="glass-panel group relative overflow-hidden border-emerald-500/20 p-6">
+          <div
+            class="absolute inset-0 bg-emerald-500/5 opacity-0 transition-opacity group-hover:opacity-100"
+          >
+          </div>
+          <h4 class="mb-4 text-xs font-black uppercase tracking-widest text-white">Need Help?</h4>
+          <p class="mb-6 text-sm text-gray-400">
+            Can't find a lab for your {standard.code} requirements? Tell us what you need and we'll look
+            for a provider.
+          </p>
+          <a
+            href="/contact"
+            class="block w-full rounded-lg bg-emerald-600 py-3 text-center text-xs font-bold uppercase tracking-widest text-white transition-all hover:bg-emerald-500"
+          >
+            Request Sourcing
+          </a>
         </div>
       </aside>
     </div>
   </main>
 
   <!-- JSON-LD -->
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    "name": `${standard.code} Testing Laboratories`,
-    "itemListElement": (listings || []).map((l: any, i: number) => ({
-      "@type": "ListItem",
-      "position": i + 1,
-      "item": {
-        "@type": "LocalBusiness",
-        "name": l.listings.business_name,
-        "hasCredential": {
-          "@type": "EducationalOccupationalCredential",
-          "name": standard.code
-        }
-      }
-    }))
-  })} />
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: `${standard.code} Testing Laboratories`,
+      itemListElement: (listings || []).map((l: any, i: number) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        item: {
+          '@type': 'LocalBusiness',
+          name: l.listings.business_name,
+          hasCredential: {
+            '@type': 'EducationalOccupationalCredential',
+            name: standard.code,
+          },
+        },
+      })),
+    })}
+  />
 </BaseLayout>

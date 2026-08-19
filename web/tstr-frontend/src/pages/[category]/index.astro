@@ -28,14 +28,16 @@ if (categoryError || !categoryData) {
 // 3. Fetch Listings for this Category
 const { data: listings, error: listingsError } = await supabase
   .from('listings')
-  .select(`
+  .select(
+    `
     *,
     location:location_id (
       id,
       name,
       slug
     )
-  `)
+  `
+  )
   .eq('status', 'active')
   .eq('category_id', categoryData.id)
   .order('priority_rank', { ascending: false })
@@ -45,98 +47,108 @@ const totalListings = listings?.length || 0;
 const requiredTier = categoryData.min_tier_required || 'free';
 
 // 4. Group by Region for the Regional Directory
-const groupedByRegion = (listings || []).reduce((acc, listing) => {
-  const region = listing.region || 'global';
-  if (!acc[region]) acc[region] = [];
-  acc[region].push(listing);
-  return acc;
-}, {} as Record<string, any[]>);
+const groupedByRegion = (listings || []).reduce(
+  (acc, listing) => {
+    const region = listing.region || 'global';
+    if (!acc[region]) acc[region] = [];
+    acc[region].push(listing);
+    return acc;
+  },
+  {} as Record<string, any[]>
+);
 
 const sortedRegions = Object.entries(groupedByRegion).sort((a, b) => b[1].length - a[1].length);
 
 // 5. Filter Handling
 const regionFilter = Astro.url.searchParams.get('region');
 const isFiltered = !!regionFilter;
-const filteredListings = isFiltered 
-  ? listings?.filter(l => l.region?.toLowerCase() === regionFilter?.toLowerCase()) 
+const filteredListings = isFiltered
+  ? listings?.filter((l) => l.region?.toLowerCase() === regionFilter?.toLowerCase())
   : listings;
 
 // Optimized SEO parts
 const pageTitle = formatTitle([categoryData.name, 'Regional Directory']);
 const pageDescription = formatDescription(
-  `Browse ${totalListings} verified ${categoryData.name.toLowerCase()} providers across ${sortedRegions.length} regions. Compare ISO 17025 accredited labs and specialized testing facilities.`
+  `Browse ${totalListings} ${categoryData.name.toLowerCase()} providers across ${sortedRegions.length} regions. Compare laboratories by scope, standard, and location.`
 );
 
 // GEO/AEO: FAQPage schema + answer-extractable FAQ for the sector hub (cited by AI assistants)
 const faqItems = [
   {
     q: `What is ${categoryData.name} testing?`,
-    a: `${categoryData.name} testing covers the inspection, calibration, and certification services laboratories provide to verify that materials, products, and processes meet industry and regulatory standards. TSTR.directory lists ${totalListings} ${categoryData.name.toLowerCase()} providers across ${sortedRegions.length} regions, each with stated accreditations such as ISO 17025.`
+    a: `${categoryData.name} testing covers the inspection, calibration, and certification services laboratories provide to verify that materials, products, and processes meet industry and regulatory standards. TSTR.directory lists ${totalListings} ${categoryData.name.toLowerCase()} providers across ${sortedRegions.length} regions, each with stated accreditations such as ISO 17025.`,
   },
   {
     q: `How do I verify a ${categoryData.name.toLowerCase()} lab's accreditations?`,
-    a: `Check the lab's stated scope against the issuing accreditation body (e.g. UKAS, A2LA, DAkkS) and confirm the relevant standard such as ISO 17025. TSTR.directory surfaces each provider's listed capabilities and accreditation so buyers can shortlist and then verify directly with the body before engaging.`
+    a: `Check the lab's stated scope against the issuing accreditation body (e.g. UKAS, A2LA, DAkkS) and confirm the relevant standard such as ISO 17025. TSTR.directory surfaces each provider's listed capabilities and accreditation so buyers can shortlist and then verify directly with the body before engaging.`,
   },
   {
     q: `What standards apply to ${categoryData.name.toLowerCase()} laboratories?`,
-    a: `Most testing laboratories operate under ISO/IEC 17025 for general competence, with sector-specific standards layered on top depending on the industry (e.g. pharmaceutical GMP, environmental EPA methods, oil & gas API specs). Always confirm the specific standard your project requires with the lab.`
-  }
+    a: `Most testing laboratories operate under ISO/IEC 17025 for general competence, with sector-specific standards layered on top depending on the industry (e.g. pharmaceutical GMP, environmental EPA methods, oil & gas API specs). Always confirm the specific standard your project requires with the lab.`,
+  },
 ];
 
 const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": faqItems.map((item) => ({
-    "@type": "Question",
-    "name": item.q,
-    "acceptedAnswer": { "@type": "Answer", "text": item.a }
-  }))
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
 };
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
-  <SeoJsonLd data={{
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "name": `${categoryData.name} Testing Services Directory`,
-    "description": pageDescription,
-    "url": `https://tstr.directory/${categoryData.slug}`,
-    "mainEntity": {
-      "@type": "ItemList",
-      "numberOfItems": totalListings,
-      "itemListElement": (listings || []).slice(0, 20).map((l, i) => ({
-        "@type": "ListItem",
-        "position": i + 1,
-        "url": `https://tstr.directory/listing/${l.slug}`,
-        "name": l.business_name
-      }))
-    }
-  }} />
+  <SeoJsonLd
+    data={{
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: `${categoryData.name} Testing Services Directory`,
+      description: pageDescription,
+      url: `https://tstr.directory/${categoryData.slug}`,
+      mainEntity: {
+        '@type': 'ItemList',
+        numberOfItems: totalListings,
+        itemListElement: (listings || []).slice(0, 20).map((l, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          url: `https://tstr.directory/listing/${l.slug}`,
+          name: l.business_name,
+        })),
+      },
+    }}
+  />
   <SeoJsonLd data={faqJsonLd} />
-  <main class="max-w-7xl mx-auto px-6 py-12">
+  <main class="mx-auto max-w-7xl px-6 py-12">
     <!-- Navigation Breadcrumbs -->
-    <nav class="flex items-center gap-2 text-sm font-medium text-slate-500 mb-8 overflow-x-auto whitespace-nowrap pb-2 no-scrollbar">
-      <a href="/" class="hover:text-emerald-400 transition-colors">Home</a>
+    <nav
+      class="no-scrollbar mb-8 flex items-center gap-2 overflow-x-auto whitespace-nowrap pb-2 text-sm font-medium text-slate-500"
+    >
+      <a href="/" class="transition-colors hover:text-emerald-400">Home</a>
       <span class="text-slate-700">/</span>
       <span class="text-white">{categoryData.name}</span>
     </nav>
 
-
     <!-- Page Header -->
     <div class="mb-12">
-      <h1 class="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight flex items-center gap-4">
+      <h1
+        class="mb-6 flex items-center gap-4 text-4xl font-black tracking-tight text-white md:text-6xl"
+      >
         {categoryData.name}
-        {requiredTier !== 'free' && (
-          <span class="bg-amber-500/10 text-amber-500 text-xs font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-amber-500/20">
-            🔒 {requiredTier}
-          </span>
-        )}
+        {
+          requiredTier !== 'free' && (
+            <span class="rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1.5 text-xs font-black uppercase tracking-widest text-amber-500">
+              🔒 {requiredTier}
+            </span>
+          )
+        }
       </h1>
-      {categoryData.description && (
-        <p class="text-xl text-slate-400 max-w-3xl leading-relaxed">
-          {categoryData.description}
-        </p>
-      )}
+      {
+        categoryData.description && (
+          <p class="max-w-3xl text-xl leading-relaxed text-slate-400">{categoryData.description}</p>
+        )
+      }
     </div>
 
     <StaticLabMap listings={listings || []} />
@@ -144,217 +156,313 @@ const faqJsonLd = {
     <AdUnit type="horizontal" class="mb-12" />
 
     <!-- Error Handling -->
-    {listingsError && (
-      <div class="glass-card bg-red-500/5 border-red-500/20 p-6 mb-8 flex items-center gap-4">
-        <span class="text-red-500 text-2xl">⚠️</span>
-        <p class="text-red-200/80 font-medium">
-          Error loading directory. Our engineers have been notified.
-        </p>
-      </div>
-    )}
-
+    {
+      listingsError && (
+        <div class="glass-card mb-8 flex items-center gap-4 border-red-500/20 bg-red-500/5 p-6">
+          <span class="text-2xl text-red-500">⚠️</span>
+          <p class="font-medium text-red-200/80">
+            Error loading directory. Our engineers have been notified.
+          </p>
+        </div>
+      )
+    }
 
     <!-- Filter Active Indicator -->
-    {isFiltered && (
-      <div class="mb-8 flex items-center gap-3">
-        <span class="text-slate-400">Showing results for:</span>
-        <span class="bg-emerald-500/10 text-emerald-400 px-4 py-1.5 rounded-full font-black text-xs uppercase tracking-widest border border-emerald-500/20">
-          📍 {regionFilter}
-        </span>
-        <a href={`/${category}`} class="text-blue-400 text-sm font-bold hover:text-blue-300 ml-2 transition-colors">Clear filter</a>
-      </div>
-    )}
+    {
+      isFiltered && (
+        <div class="mb-8 flex items-center gap-3">
+          <span class="text-slate-400">Showing results for:</span>
+          <span class="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400">
+            📍 {regionFilter}
+          </span>
+          <a
+            href={`/${category}`}
+            class="ml-2 text-sm font-bold text-blue-400 transition-colors hover:text-blue-300"
+          >
+            Clear filter
+          </a>
+        </div>
+      )
+    }
 
-
-      <!-- Content Grid: Regions OR Flat Listing List (if filtered) -->
-      <div id="category-content-gate" data-required-tier={requiredTier} class="relative">
-        {totalListings > 0 && (
+    <!-- Content Grid: Regions OR Flat Listing List (if filtered) -->
+    <div id="category-content-gate" data-required-tier={requiredTier} class="relative">
+      {
+        totalListings > 0 && (
           <div id="listings-data-container">
-          {isFiltered ? (
-            <div class="grid gap-6">
-              {filteredListings?.map((listing) => (
-                <div class="glass-card glass-card-hover p-8 relative overflow-hidden group">
-                  <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/0 via-transparent to-emerald-500/[0.02] pointer-events-none"></div>
-                  <div class="flex flex-col md:flex-row justify-between items-start gap-6 relative z-10">
-                    <div class="flex-1">
-                      <div class="flex items-center gap-3 mb-4">
-                        <h3 class="text-2xl font-bold text-white tracking-tight">
-                          <a href={`/listing/${listing.slug}`} class="hover:text-emerald-400 transition-colors">
-                            {listing.business_name}
-                          </a>
-                        </h3>
-                        {listing.verified && (
-                          <span class="bg-emerald-500/10 text-emerald-400 text-[10px] font-black uppercase tracking-tighter px-2 py-0.5 rounded border border-emerald-500/20">
-                            ✓ Verified
+            {isFiltered ? (
+              <div class="grid gap-6">
+                {filteredListings?.map((listing) => (
+                  <div class="glass-card glass-card-hover group relative overflow-hidden p-8">
+                    <div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-500/0 via-transparent to-emerald-500/[0.02]" />
+                    <div class="relative z-10 flex flex-col items-start justify-between gap-6 md:flex-row">
+                      <div class="flex-1">
+                        <div class="mb-4 flex items-center gap-3">
+                          <h3 class="text-2xl font-bold tracking-tight text-white">
+                            <a
+                              href={`/listing/${listing.slug}`}
+                              class="transition-colors hover:text-emerald-400"
+                            >
+                              {listing.business_name}
+                            </a>
+                          </h3>
+                          {listing.verified && (
+                            <span class="rounded border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-tighter text-emerald-400">
+                              ✓ Verified
+                            </span>
+                          )}
+                          {listing.featured && (
+                            <span class="rounded border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-tighter text-amber-500">
+                              ⭐ Featured
+                            </span>
+                          )}
+                        </div>
+                        <div class="mb-6 flex flex-wrap gap-4 text-sm text-slate-400">
+                          <span class="flex items-center gap-1.5">
+                            <span class="text-emerald-400">📍</span>
+                            {listing.location?.name || listing.region?.toUpperCase()}
                           </span>
-                        )}
-                        {listing.featured && (
-                          <span class="bg-amber-500/10 text-amber-500 text-[10px] font-black uppercase tracking-tighter px-2 py-0.5 rounded border border-amber-500/20">
-                            ⭐ Featured
-                          </span>
+                        </div>
+                        {listing.description && (
+                          <p class="line-clamp-2 text-sm italic leading-relaxed text-slate-400">
+                            "{listing.description}"
+                          </p>
                         )}
                       </div>
-                      <div class="flex flex-wrap gap-4 text-sm text-slate-400 mb-6">
-                        <span class="flex items-center gap-1.5">
-                          <span class="text-emerald-400">📍</span>
-                          {listing.location?.name || listing.region?.toUpperCase()}
-                        </span>
-                      </div>
-                      {listing.description && (
-                        <p class="text-slate-400 text-sm leading-relaxed line-clamp-2 italic">
-                          "{listing.description}"
-                        </p>
+                      {listing.website && (
+                        <a
+                          href={getRedirectUrl(listing.website, listing.id)}
+                          target="_blank"
+                          rel="nofollow noopener noreferrer"
+                          class="whitespace-nowrap rounded-full bg-gradient-to-r from-blue-600 to-emerald-500 px-8 py-3 text-center font-black text-white transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                        >
+                          Visit Website
+                        </a>
                       )}
                     </div>
-                    {listing.website && (
-                      <a
-                        href={getRedirectUrl(listing.website, listing.id)}
-                        target="_blank"
-                        rel="nofollow noopener noreferrer"
-                        class="px-8 py-3 rounded-full font-black text-white bg-gradient-to-r from-blue-600 to-emerald-500 transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] text-center whitespace-nowrap"
-                      >
-                        Visit Website
-                      </a>
-                    )}
                   </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {sortedRegions.map(([region, regionListings]) => {
-                const featuredCount = regionListings.filter(l => l.featured).length;
-                const verifiedCount = regionListings.filter(l => l.verified).length;
+                ))}
+              </div>
+            ) : (
+              <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {sortedRegions.map(([region, regionListings]) => {
+                  const featuredCount = regionListings.filter((l) => l.featured).length;
+                  const verifiedCount = regionListings.filter((l) => l.verified).length;
 
-                return (
-                  <a
-                    href={`/${category}/${region.toLowerCase()}`}
-                    class="glass-card glass-card-hover p-8 group flex flex-col justify-between"
-                  >
-                    <div>
-                      <div class="flex justify-between items-start mb-6">
-                        <h3 class="text-2xl font-black text-white group-hover:text-emerald-400 transition-colors tracking-tight">
-                          {region.toUpperCase()}
-                        </h3>
-                        <span class="bg-white/5 text-slate-300 text-xs font-black px-3 py-1 rounded-full border border-white/10 group-hover:bg-emerald-500/10 group-hover:text-emerald-400 transition-colors">
-                          {regionListings.length}
-                        </span>
-                      </div>
-
-                      <div class="space-y-3">
-                        <div class="flex items-center justify-between text-sm">
-                          <span class="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Providers</span>
-                          <span class="text-slate-300 font-mono">{regionListings.length}</span>
+                  return (
+                    <a
+                      href={`/${category}/${region.toLowerCase()}`}
+                      class="glass-card glass-card-hover group flex flex-col justify-between p-8"
+                    >
+                      <div>
+                        <div class="mb-6 flex items-start justify-between">
+                          <h3 class="text-2xl font-black tracking-tight text-white transition-colors group-hover:text-emerald-400">
+                            {region.toUpperCase()}
+                          </h3>
+                          <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-black text-slate-300 transition-colors group-hover:bg-emerald-500/10 group-hover:text-emerald-400">
+                            {regionListings.length}
+                          </span>
                         </div>
-                        {featuredCount > 0 && (
+
+                        <div class="space-y-3">
                           <div class="flex items-center justify-between text-sm">
-                            <span class="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Featured</span>
-                            <span class="text-amber-500 font-mono">{featuredCount}</span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                              Providers
+                            </span>
+                            <span class="font-mono text-slate-300">{regionListings.length}</span>
                           </div>
-                        )}
-                        {verifiedCount > 0 && (
-                          <div class="flex items-center justify-between text-sm">
-                            <span class="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Verified</span>
-                            <span class="text-emerald-400 font-mono">{verifiedCount}</span>
-                          </div>
-                        )}
+                          {featuredCount > 0 && (
+                            <div class="flex items-center justify-between text-sm">
+                              <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                                Featured
+                              </span>
+                              <span class="font-mono text-amber-500">{featuredCount}</span>
+                            </div>
+                          )}
+                          {verifiedCount > 0 && (
+                            <div class="flex items-center justify-between text-sm">
+                              <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                                Verified
+                              </span>
+                              <span class="font-mono text-emerald-400">{verifiedCount}</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
 
-                    <div class="mt-8 pt-6 border-t border-white/5 flex items-center justify-between group-hover:text-emerald-400 transition-colors">
-                      <span class="text-xs font-black uppercase tracking-widest">Explore Directory</span>
-                      <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                    </div>
-                  </a>
-                );
-              })}
-            </div>
-          )}
-
+                      <div class="mt-8 flex items-center justify-between border-t border-white/5 pt-6 transition-colors group-hover:text-emerald-400">
+                        <span class="text-xs font-black uppercase tracking-widest">
+                          Explore Directory
+                        </span>
+                        <svg
+                          class="h-5 w-5 transition-transform group-hover:translate-x-1"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M17 8l4 4m0 0l-4 4m4-4H3"
+                          />
+                        </svg>
+                      </div>
+                    </a>
+                  );
+                })}
+              </div>
+            )}
           </div>
-        )}
+        )
+      }
 
-    <!-- Paywall Overlay -->
-    <div id="paywall-overlay" class="hidden absolute inset-0 z-40 bg-slate-950/80 backdrop-blur-md flex flex-col items-center justify-start text-center p-8 rounded-3xl border border-white/10 mt-24">
-       <div class="glass-card p-12 max-w-lg w-full shadow-2xl relative overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-t from-blue-500/10 to-transparent pointer-events-none"></div>
+      <!-- Paywall Overlay -->
+      <div
+        id="paywall-overlay"
+        class="absolute inset-0 z-40 mt-24 flex hidden flex-col items-center justify-start rounded-3xl border border-white/10 bg-slate-950/80 p-8 text-center backdrop-blur-md"
+      >
+        <div class="glass-card relative w-full max-w-lg overflow-hidden p-12 shadow-2xl">
+          <div
+            class="pointer-events-none absolute inset-0 bg-gradient-to-t from-blue-500/10 to-transparent"
+          >
+          </div>
           <div class="relative z-10">
-            <div class="w-20 h-20 bg-amber-500/10 rounded-3xl flex items-center justify-center mx-auto mb-8 border border-amber-500/20">
+            <div
+              class="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-3xl border border-amber-500/20 bg-amber-500/10"
+            >
               <span class="text-4xl">🔒</span>
             </div>
-            <h2 class="text-3xl font-black text-white mb-4 tracking-tight uppercase tracking-widest">{requiredTier} Access Required</h2>
-            <p class="text-slate-400 mb-10 text-lg leading-relaxed">
-              The premium <strong class="text-white">{categoryData.name}</strong> directory is reserved for Professional members.
+            <h2
+              class="mb-4 text-3xl font-black uppercase tracking-tight tracking-widest text-white"
+            >
+              {requiredTier} Access Required
+            </h2>
+            <p class="mb-10 text-lg leading-relaxed text-slate-400">
+              The premium <strong class="text-white">{categoryData.name}</strong> directory is reserved
+              for Professional members.
             </p>
             <div class="flex flex-col gap-4">
-              <a href="/pricing" class="px-8 py-4 bg-white text-black font-black uppercase tracking-widest rounded-full hover:bg-emerald-400 transition-all hover:scale-105">
+              <a
+                href="/pricing"
+                class="rounded-full bg-white px-8 py-4 font-black uppercase tracking-widest text-black transition-all hover:scale-105 hover:bg-emerald-400"
+              >
                 Upgrade My Membership
               </a>
-              <a href={`/login?redirect_to=${encodeURIComponent(Astro.url.pathname)}`} class="text-slate-500 font-bold hover:text-white transition-colors py-2">
+              <a
+                href={`/login?redirect_to=${encodeURIComponent(Astro.url.pathname)}`}
+                class="py-2 font-bold text-slate-500 transition-colors hover:text-white"
+              >
                 Already a member? Sign in
               </a>
             </div>
           </div>
-       </div>
+        </div>
+      </div>
     </div>
 
-      </div>
-
-    {totalListings === 0 && (
-      <div class="text-center py-24 glass-card border-dashed border-white/10">
-        <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
-          <svg class="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-        </div>
-        <p class="text-slate-400 text-lg font-medium mb-6">
-          No {categoryData.name.toLowerCase()} providers listed yet.
-        </p>
-        <a href="/contact" class="inline-flex items-center gap-2 px-8 py-3 bg-white/5 hover:bg-white/10 text-white font-bold rounded-full transition-all border border-white/10">
-          Be the first to list here
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-        </a>
-      </div>
-    )}
-
-
-    <!-- FAQ (GEO/AEO: answer-extractable, cited by AI assistants) -->
-    {totalListings > 0 && (
-      <section id="faq" class="mt-20 scroll-mt-32">
-        <div class="flex items-center gap-3 mb-8">
-          <div class="w-1 h-8 bg-emerald-400 rounded-full"></div>
-          <h2 class="text-3xl font-black text-white tracking-tight">Frequently Asked Questions</h2>
-        </div>
-        <div class="space-y-4">
-          {faqItems.map((item) => (
-            <details class="glass-card p-6 group" name="category-faq">
-              <summary class="flex items-center justify-between cursor-pointer list-none">
-                <span class="text-lg font-bold text-white pr-6">{item.q}</span>
-                <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-              </summary>
-              <p class="text-slate-400 leading-relaxed mt-4 pt-4 border-t border-white/5">{item.a}</p>
-            </details>
-          ))}
-        </div>
-      </section>
-    )}
-
-
-    <!-- CTA Section -->
-    {totalListings > 0 && (
-      <div class="mt-20 glass-card p-10 border-blue-500/20 bg-gradient-to-r from-blue-600/10 to-emerald-500/10 relative overflow-hidden group">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] rounded-full -mr-32 -mt-32"></div>
-        <div class="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
-          <div class="text-center md:text-left">
-            <h2 class="text-3xl font-black text-white mb-3">List Your Lab in {categoryData.name}</h2>
-            <p class="text-slate-400 text-lg">Reach high-intent buyers specifically searching for {categoryData.name.toLowerCase()} services.</p>
+    {
+      totalListings === 0 && (
+        <div class="glass-card border-dashed border-white/10 py-24 text-center">
+          <div class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-white/5">
+            <svg
+              class="h-8 w-8 text-slate-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
           </div>
-          <a 
-            href="/pricing" 
-            class="px-10 py-4 bg-white text-black font-black uppercase tracking-widest rounded-full hover:bg-emerald-400 transition-all hover:scale-110 shadow-xl"
+          <p class="mb-6 text-lg font-medium text-slate-400">
+            No {categoryData.name.toLowerCase()} providers listed yet.
+          </p>
+          <a
+            href="/contact"
+            class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-8 py-3 font-bold text-white transition-all hover:bg-white/10"
           >
-            Get Listed Now
+            Be the first to list here
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+              />
+            </svg>
           </a>
         </div>
-      </div>
-    )}
+      )
+    }
+
+    <!-- FAQ (GEO/AEO: answer-extractable, cited by AI assistants) -->
+    {
+      totalListings > 0 && (
+        <section id="faq" class="mt-20 scroll-mt-32">
+          <div class="mb-8 flex items-center gap-3">
+            <div class="h-8 w-1 rounded-full bg-emerald-400" />
+            <h2 class="text-3xl font-black tracking-tight text-white">
+              Frequently Asked Questions
+            </h2>
+          </div>
+          <div class="space-y-4">
+            {faqItems.map((item) => (
+              <details class="glass-card group p-6" name="category-faq">
+                <summary class="flex cursor-pointer list-none items-center justify-between">
+                  <span class="pr-6 text-lg font-bold text-white">{item.q}</span>
+                  <svg
+                    class="h-5 w-5 flex-shrink-0 text-slate-400 transition-transform group-open:rotate-180"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </summary>
+                <p class="mt-4 border-t border-white/5 pt-4 leading-relaxed text-slate-400">
+                  {item.a}
+                </p>
+              </details>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <!-- CTA Section -->
+    {
+      totalListings > 0 && (
+        <div class="glass-card group relative mt-20 overflow-hidden border-blue-500/20 bg-gradient-to-r from-blue-600/10 to-emerald-500/10 p-10">
+          <div class="absolute right-0 top-0 -mr-32 -mt-32 h-64 w-64 rounded-full bg-emerald-500/10 blur-[100px]" />
+          <div class="relative z-10 flex flex-col items-center justify-between gap-8 md:flex-row">
+            <div class="text-center md:text-left">
+              <h2 class="mb-3 text-3xl font-black text-white">
+                List Your Lab in {categoryData.name}
+              </h2>
+              <p class="text-lg text-slate-400">
+                Reach high-intent buyers specifically searching for{' '}
+                {categoryData.name.toLowerCase()} services.
+              </p>
+            </div>
+            <a
+              href="/pricing"
+              class="rounded-full bg-white px-10 py-4 font-black uppercase tracking-widest text-black shadow-xl transition-all hover:scale-110 hover:bg-emerald-400"
+            >
+              Get Listed Now
+            </a>
+          </div>
+        </div>
+      )
+    }
   </main>
 </BaseLayout>

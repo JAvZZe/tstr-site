@@ -13,10 +13,11 @@ Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalid
 
 const { slug } = Astro.params;
 
-// 2. Fetch Comprehensive Company Data
+// 2. Fetch company data
 const { data: listing, error } = await supabase
   .from('listings')
-  .select(`
+  .select(
+    `
     *,
     location:location_id (id, name, slug),
     capabilities:listing_capabilities (
@@ -26,7 +27,8 @@ const { data: listing, error } = await supabase
       standard:standard_id (id, code, name, description)
     ),
     parent:parent_listing_id (id, business_name, slug)
-  `)
+  `
+  )
   .eq('slug', slug)
   .single();
 
@@ -34,9 +36,9 @@ if (!listing || error) {
   return Astro.redirect('/404');
 }
 
-const pageTitle = formatTitle([listing.business_name, "Verified Testing Services"]);
+const pageTitle = formatTitle([listing.business_name, 'Testing Services']);
 const pageDescription = formatDescription(
-  `${listing.business_name} offers verified testing services in ${listing.location?.name || listing.region}. View ISO certifications, equipment, and request quotes.`
+  `${listing.business_name} provides testing services in ${listing.location?.name || listing.region}. See its certifications, equipment, and how to request quotes.`
 );
 
 // 3. Structured data for GEO/AEO (entity clarity + answer-extractability)
@@ -47,42 +49,44 @@ const regionName = listing.location?.name || listing.region || '';
 
 const jsonLd = [
   {
-    "@context": "https://schema.org",
-    "@type": "ProfessionalService",
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
     name: listing.business_name,
     description: listing.description || pageDescription,
     url: `https://tstr.directory/company/${listing.slug}`,
     areaServed: regionName,
-    address: regionName ? { "@type": "PostalAddress", addressRegion: regionName } : undefined,
+    address: regionName ? { '@type': 'PostalAddress', addressRegion: regionName } : undefined,
     knowsAbout: standards.length ? standards : undefined,
     sameAs: listing.website || undefined,
-    ...(listing.website ? { url: `https://tstr.directory/company/${listing.slug}`, sameAs: listing.website } : {}),
+    ...(listing.website
+      ? { url: `https://tstr.directory/company/${listing.slug}`, sameAs: listing.website }
+      : {}),
   },
   {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
     mainEntity: [
       {
-        "@type": "Question",
+        '@type': 'Question',
         name: `What testing services does ${listing.business_name} offer?`,
         acceptedAnswer: {
-          "@type": "Answer",
+          '@type': 'Answer',
           text: `${listing.business_name} is a testing laboratory in ${regionName || 'its region'}${standards.length ? ` offering ${standards.slice(0, 5).join(', ')}${standards.length > 5 ? ', and more' : ''} testing and certification` : ' offering verification and compliance testing'}.`,
         },
       },
       {
-        "@type": "Question",
+        '@type': 'Question',
         name: `How do I verify ${listing.business_name}'s accreditations?`,
         acceptedAnswer: {
-          "@type": "Answer",
-          text: `Check the lab's scope against its accreditation body (e.g. ISO/IEC 17025). TSTR.directory shows the verified compliance matrix and standards the lab is accredited for; request the certificate directly from the laboratory for formal confirmation.`,
+          '@type': 'Answer',
+          text: `Check the lab's scope against the body that accredited it, such as ISO/IEC 17025. TSTR.directory lists the standards a lab has supplied, and leaves the field blank where nothing has been supplied. Ask the laboratory for the certificate itself to confirm.`,
         },
       },
       {
-        "@type": "Question",
+        '@type': 'Question',
         name: `Where is ${listing.business_name} located?`,
         acceptedAnswer: {
-          "@type": "Answer",
+          '@type': 'Answer',
           text: `${listing.business_name} is located in ${regionName || 'its listed region'}. Contact the lab via TSTR.directory to discuss testing requirements and turnaround times.`,
         },
       },
@@ -91,7 +95,7 @@ const jsonLd = [
 ];
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -99,47 +103,65 @@ const jsonLd = [
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-</head>
+  </head>
 
-  <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
+  <body class="min-h-screen bg-gray-50 font-sans text-gray-900">
     <NewsletterBanner client:only="react" />
-    
-    <nav class="bg-white shadow-sm p-4 sticky top-0 z-10">
-      <div class="max-w-6xl mx-auto flex justify-between items-center">
-        <a href="/" class="font-bold text-xl">TSTR<span class="text-blue-600">.directory</span></a>
-        {listing.website && (
-          <a href={getRedirectUrl(listing.website, listing.id)} class="bg-blue-600 text-white px-4 py-2 rounded font-bold hover:bg-blue-700 transition">Visit Website</a>
-        )}
+
+    <nav class="sticky top-0 z-10 bg-white p-4 shadow-sm">
+      <div class="mx-auto flex max-w-6xl items-center justify-between">
+        <a href="/" class="text-xl font-bold">TSTR<span class="text-blue-600">.directory</span></a>
+        {
+          listing.website && (
+            <a
+              href={getRedirectUrl(listing.website, listing.id)}
+              class="rounded bg-blue-600 px-4 py-2 font-bold text-white transition hover:bg-blue-700"
+            >
+              Visit Website
+            </a>
+          )
+        }
       </div>
     </nav>
 
-    <main class="max-w-5xl mx-auto p-6">
+    <main class="mx-auto max-w-5xl p-6">
       <!-- Breadcrumbs -->
-      <div class="text-sm text-gray-500 mb-6">
+      <div class="mb-6 text-sm text-gray-500">
         <a href="/" class="hover:text-blue-600">Home</a>
         <span class="mx-2">›</span>
-        {listing.parent && (
-          <>
-            <a href={`/group/${listing.parent.slug}`} class="hover:text-blue-600">{listing.parent.business_name}</a>
-            <span class="mx-2">›</span>
-          </>
-        )}
-        <span class="text-gray-900 font-medium">{listing.business_name}</span>
+        {
+          listing.parent && (
+            <>
+              <a href={`/group/${listing.parent.slug}`} class="hover:text-blue-600">
+                {listing.parent.business_name}
+              </a>
+              <span class="mx-2">›</span>
+            </>
+          )
+        }
+        <span class="font-medium text-gray-900">{listing.business_name}</span>
       </div>
 
       <!-- Hero Header -->
-      <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 mb-8 relative overflow-hidden">
-        <div class="absolute top-0 right-0 p-4">
-           <TrustBadge level={listing.verified ? 'verified' : (listing.claimed ? 'claimed' : 'aggregated')} size="lg" />
+      <div
+        class="relative mb-8 overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 shadow-sm"
+      >
+        <div class="absolute right-0 top-0 p-4">
+          <TrustBadge
+            level={listing.verified ? 'verified' : listing.claimed ? 'claimed' : 'aggregated'}
+            size="lg"
+          />
         </div>
-        
-        <div class="flex flex-col md:flex-row justify-between items-start gap-6">
+
+        <div class="flex flex-col items-start justify-between gap-6 md:flex-row">
           <div class="flex-1">
-            <h1 class="text-4xl md:text-5xl font-black text-blue-900 mb-3 tracking-tight">{listing.business_name}</h1>
-            <p class="text-xl text-gray-600 mb-6 flex items-center gap-2 font-medium">
+            <h1 class="mb-3 text-4xl font-black tracking-tight text-blue-900 md:text-5xl">
+              {listing.business_name}
+            </h1>
+            <p class="mb-6 flex items-center gap-2 text-xl font-medium text-gray-600">
               📍 {listing.location?.name}, {listing.region?.toUpperCase()}
             </p>
-            <div class="prose prose-blue max-w-3xl text-gray-700 text-lg leading-relaxed">
+            <div class="prose prose-blue max-w-3xl text-lg leading-relaxed text-gray-700">
               {listing.description}
             </div>
           </div>
@@ -148,45 +170,80 @@ const jsonLd = [
 
       <!-- Accreditations Section -->
       <section id="certifications" class="mb-16 scroll-mt-32">
-        <div class="flex items-center gap-3 mb-8">
-          <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-xl">📜</div>
-          <h2 class="text-3xl font-black text-gray-900 tracking-tight">Verified Compliance Matrix</h2>
+        <div class="mb-8 flex items-center gap-3">
+          <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-xl">
+            📜
+          </div>
+          <h2 class="text-3xl font-black tracking-tight text-gray-900">Standards and compliance</h2>
         </div>
-        
+
         <ComplianceMatrix capabilities={listing.capabilities} />
       </section>
 
       <!-- Contact CTA -->
-      <div id="contact" class="bg-gradient-to-br from-blue-900 to-indigo-950 text-white p-12 rounded-3xl text-center shadow-2xl relative overflow-hidden mb-12">
-        <h2 class="text-4xl font-black mb-4 relative z-1">Request technical data from {listing.business_name}</h2>
-        <p class="text-blue-100 text-xl mb-10 max-w-2xl mx-auto relative z-1">Discuss specialized testing requirements, get turnaround times, and receive verified quotes within 24 hours.</p>
-        
-        <button class="bg-white text-blue-900 px-12 py-5 rounded-2xl font-black text-2xl hover:bg-blue-50 transition-all transform hover:scale-105 shadow-lg active:scale-95 relative z-1">
+      <div
+        id="contact"
+        class="relative mb-12 overflow-hidden rounded-3xl bg-gradient-to-br from-blue-900 to-indigo-950 p-12 text-center text-white shadow-2xl"
+      >
+        <h2 class="z-1 relative mb-4 text-4xl font-black">
+          Request technical data from {listing.business_name}
+        </h2>
+        <p class="z-1 relative mx-auto mb-10 max-w-2xl text-xl text-blue-100">
+          Discuss specialized testing requirements, get turnaround times, and receive verified
+          quotes within 24 hours.
+        </p>
+
+        <button
+          class="z-1 relative transform rounded-2xl bg-white px-12 py-5 text-2xl font-black text-blue-900 shadow-lg transition-all hover:scale-105 hover:bg-blue-50 active:scale-95"
+        >
           Contact This Laboratory
         </button>
       </div>
       <!-- FAQ (GEO/AEO: answer-extractable, cited by AI assistants) -->
       <section id="faq" class="mb-16 scroll-mt-32">
-        <div class="flex items-center gap-3 mb-8">
-          <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-xl">❓</div>
-          <h2 class="text-3xl font-black text-gray-900 tracking-tight">Frequently Asked Questions</h2>
+        <div class="mb-8 flex items-center gap-3">
+          <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-xl">
+            ❓
+          </div>
+          <h2 class="text-3xl font-black tracking-tight text-gray-900">
+            Frequently Asked Questions
+          </h2>
         </div>
         <div class="space-y-4">
-          <details class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-            <summary class="font-bold text-lg cursor-pointer">What testing services does {listing.business_name} offer?</summary>
-            <p class="mt-3 text-gray-700 leading-relaxed">{listing.business_name} is a testing laboratory in {regionName || 'its region'}{standards.length ? ` offering ${standards.slice(0, 5).join(', ')}${standards.length > 5 ? ', and more' : ''} testing and certification` : ' offering verification and compliance testing'}.</p>
+          <details class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <summary class="cursor-pointer text-lg font-bold"
+              >What testing services does {listing.business_name} offer?</summary
+            >
+            <p class="mt-3 leading-relaxed text-gray-700">
+              {listing.business_name} is a testing laboratory in {regionName || 'its region'}{
+                standards.length
+                  ? ` offering ${standards.slice(0, 5).join(', ')}${standards.length > 5 ? ', and more' : ''} testing and certification`
+                  : ' offering verification and compliance testing'
+              }.
+            </p>
           </details>
-          <details class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-            <summary class="font-bold text-lg cursor-pointer">How do I verify {listing.business_name}'s accreditations?</summary>
-            <p class="mt-3 text-gray-700 leading-relaxed">Check the lab's scope against its accreditation body (e.g. ISO/IEC 17025). TSTR.directory shows the verified compliance matrix and standards the lab is accredited for; request the certificate directly from the laboratory for formal confirmation.</p>
+          <details class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <summary class="cursor-pointer text-lg font-bold"
+              >How do I verify {listing.business_name}'s accreditations?</summary
+            >
+            <p class="mt-3 leading-relaxed text-gray-700">
+              Check the lab's scope against its accreditation body (e.g. ISO/IEC 17025).
+              TSTR.directory shows the verified compliance matrix and standards the lab is
+              accredited for; request the certificate directly from the laboratory for formal
+              confirmation.
+            </p>
           </details>
-          <details class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-            <summary class="font-bold text-lg cursor-pointer">Where is {listing.business_name} located?</summary>
-            <p class="mt-3 text-gray-700 leading-relaxed">{listing.business_name} is located in {regionName || 'its listed region'}. Contact the lab via TSTR.directory to discuss testing requirements and turnaround times.</p>
+          <details class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <summary class="cursor-pointer text-lg font-bold"
+              >Where is {listing.business_name} located?</summary
+            >
+            <p class="mt-3 leading-relaxed text-gray-700">
+              {listing.business_name} is located in {regionName || 'its listed region'}. Contact the
+              lab via TSTR.directory to discuss testing requirements and turnaround times.
+            </p>
           </details>
         </div>
       </section>
-
     </main>
 
     <Footer />
