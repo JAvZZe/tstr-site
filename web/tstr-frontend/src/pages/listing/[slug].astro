@@ -213,7 +213,7 @@ const locationParts = [
 const pageTitle = formatTitle([listing.business_name, ...locationParts]);
 const pageDescription = formatDescription(
   listing.description ||
-    `${listing.business_name} is a verified testing laboratory and certification body. Access ISO 17025 accredited labs and testing services.`
+    `${listing.business_name} is a ${listing.category?.name || 'testing'} laboratory listed on TSTR.directory. See its scope, location, and how to request a quote.`
 );
 ---
 
@@ -228,7 +228,7 @@ const pageDescription = formatDescription(
           name: listing.business_name,
           description:
             listing.description ||
-            `${listing.business_name} is a verified testing laboratory and certification body.`,
+            `${listing.business_name} is a ${listing.category?.name || 'testing'} laboratory listed on TSTR.directory.`,
           url: `https://tstr.directory/listing/${listing.slug}`,
           areaServed: listing.location?.name || listing.region || 'Worldwide',
           knowsAbout: listing.category?.name || 'Specialist Testing Services',
@@ -253,7 +253,7 @@ const pageDescription = formatDescription(
               name: `What testing services does ${listing.business_name} offer?`,
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: `${listing.business_name} is a verified ${listing.category?.name || 'testing'} laboratory. ${listing.description || 'Browse its profile on TSTR.directory to view accredited scopes, equipment, and how to request a quote.'}`,
+                text: `${listing.business_name} is a ${listing.category?.name || 'testing'} laboratory. ${listing.description || 'Its TSTR.directory profile shows the scopes and standards it has supplied, its location, and how to request a quote.'}`,
               },
             },
             {
@@ -261,7 +261,7 @@ const pageDescription = formatDescription(
               name: "How do I verify a lab's ISO 17025 accreditation scope?",
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: 'ISO/IEC 17025 is the international standard for calibration and testing laboratory competence. On TSTR.directory, each verified lab lists its accredited scopes; always confirm the current scope certificate with the lab or its accreditation body before placing an order.',
+                text: 'ISO/IEC 17025 is the international standard for the competence of testing and calibration laboratories. Where a lab has supplied its accredited scopes, TSTR.directory lists them. Always confirm the current scope certificate with the lab or the body that accredited it before you place an order.',
               },
             },
             {

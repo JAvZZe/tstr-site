@@ -239,6 +239,42 @@ cat web/tstr-frontend/.env
 nano web/tstr-frontend/.env  # or vim, code, etc.
 ```
 
+## ✍️ WRITING STYLE (MANDATORY, ALL TEXT)
+
+Load and apply `/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/skills/anti-ai-writing-style.md`
+before writing any text for this project.
+
+**This applies to text no human ever reads.** Google and LLM crawlers parse machine-only
+fields and can penalise output that reads as AI-generated. There is no "internal" text that
+is exempt.
+
+Covered:
+- Page copy, headings, buttons, form labels, error messages
+- **JSON-LD / schema.org** `description`, FAQ `acceptedAnswer.text`, `knowsAbout`
+- **Meta descriptions**, `og:` tags, page titles
+- Image `alt` text
+- Email templates and outreach copy
+- API response messages
+- Docs, README files, commit messages, code comments
+
+Format follows the consumer: HTML for pages, JSON-LD for crawlers, Markdown for docs,
+whatever suits future agents. The prose style rule does not change with the format.
+
+Quick check before committing text:
+- No em dashes. Use a period, comma, or semicolon.
+- No banned vocabulary (crucial, leverage, seamless, robust, unlock, empower, holistic,
+  streamline, elevate, cutting-edge, and the rest of the list in the skill).
+- No "committed to", "dedicated to", "strive to", "is designed to".
+- No negative parallelism ("This isn't X, it's Y", "Not only X but also Y").
+- No dead openings ("In today's...", "It is important to note that...").
+- Contractions are fine. Short sentences are better.
+
+### Accuracy rule that outranks style
+Never assert a fact the data does not support. Do not call a lab "verified" or
+"accredited" in copy or schema unless the record proves it. Where proof is missing, leave
+the field out or say plainly that it has not been supplied. This is a legal exposure, not
+a wording preference.
+
 ## Code Style
 
 ### TypeScript/JavaScript
