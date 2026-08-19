@@ -1,91 +1,65 @@
 import type { APIRoute } from 'astro';
-import { supabase } from '../../lib/supabase'; 
-import { sendEmail } from '../../lib/email';   
 
-export const POST: APIRoute = async ({ request }) => {
+/**
+ * DEPRECATED. Kept only so any cached page or bookmarked integration still works.
+ *
+ * This endpoint used to write to `leads_rfq` and email the laboratory directly.
+ * That contradicted how TSTR operates: an enquiry must reach us first so we can
+ * forward it, otherwise we are not seen to facilitate and the directory has no
+ * demonstrable value to the lab.
+ *
+ * `leads_rfq` was renamed to `leads_rfq_deprecated_20260819` on 2026-08-19 and its
+ * single test row was migrated into `rfq_requests`, so the old code path would fail
+ * anyway. Rather than return an error, this proxies to /api/rfq, which persists the
+ * enquiry and alerts us.
+ *
+ * Remove once no traffic has hit this route for a full deploy cycle.
+ */
+export const POST: APIRoute = async ({ request, clientAddress }) => {
+  let body: Record<string, unknown> = {};
   try {
-    const body = await request.json();
-
-    // 1. Input validation
-    const { listingId, name, email, company, industry, role, message } = body;
-    console.log('Received lead. listingId:', listingId);
-    
-    if (!name || !email || !message || !industry || !role) {
-      console.log('Missing mandatory fields');
-      return new Response(JSON.stringify({ error: 'Missing required fields' }), { status: 400 });
-    }
-
-    let recipientEmail = "support@tstr.directory"; // Default admin email
-    let labName = "TSTR Global Support";
-
-    // 2. Fetch listing name + email if listingId provided
-    if (listingId) {
-      const { data: listing, error: listingError } = await supabase
-        .from('listings')
-        .select('business_name, email')
-        .eq('id', listingId)
-        .single();
-
-      if (listingError) {
-        console.error('Error fetching listing:', listingError);
-        // Fallback to admin if listing fetch fails
-      } else if (listing?.email) {
-        recipientEmail = listing.email;
-        labName = listing.business_name;
-      }
-    }
-
-    console.log('Routing lead to:', recipientEmail);
-
-    // 3. Insert lead
-    const { data: lead, error: dbError } = await supabase
-      .from('leads_rfq')
-      .insert({ 
-        listing_id: listingId || null, 
-        buyer_name: name, 
-        buyer_email: email, 
-        buyer_company: company, 
-        buyer_industry: industry, 
-        buyer_role: role, 
-        message 
-      })
-      .select('id')
-      .single();
-
-    if (dbError) throw dbError;
-
-    // 4. Send email
-    sendEmail(recipientEmail, {
-      subject: `New ${listingId ? 'RFQ' : 'General Enquiry'} from ${company || name} via TSTR.directory`,
-      html: `
-        <div style="font-family: sans-serif; color: #333;">
-          <h2 style="color: #000080;">New Request for Quote</h2>
-          <p>You have received a new ${listingId ? 'lead for <strong>' + labName + '</strong>' : 'general technical enquiry'} on TSTR.directory.</p>
-          <hr style="border: 0; border-top: 1px solid #eee; margin: 1.5rem 0;" />
-          <p><strong>From:</strong> ${name} (${email})</p>
-          <p><strong>Company:</strong> ${company || 'Not provided'}</p>
-          <p><strong>Industry:</strong> ${industry}</p>
-          <p><strong>Role:</strong> ${role}</p>
-          <div style="background: #f9fafb; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
-            <p style="margin-top: 0; font-weight: bold;">Message:</p>
-            <p style="white-space: pre-wrap;">${message}</p>
-          </div>
-          <p style="margin-top: 2rem; font-size: 0.9rem; color: #666;">
-            Reply directly to the customer's email to continue the conversation.
-          </p>
-        </div>
-      `,
-      text: `New Lead from ${name} (${email})\nCompany: ${company}\nRole: ${role} | Industry: ${industry}\n\nMessage:\n${message}`
-    }).then(result => {
-      if (result.success && lead?.id && listingId) {
-        supabase.from('leads_rfq').update({ notified_lab: true }).eq('id', lead.id).then(()=>{});
-      }
+    body = await request.json();
+  } catch {
+    return new Response(JSON.stringify({ error: 'Invalid JSON body' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
     });
-
-    return new Response(JSON.stringify({ success: true }), { status: 200 });
-  } catch (error: unknown) {
-    console.error('Lead submission error:', error);
-    const msg = error instanceof Error ? error.message : 'Unknown error';
-    return new Response(JSON.stringify({ error: msg }), { status: 500 });
   }
+
+  // Map the old field names onto the RFQ contract.
+  const mapped = {
+    listing_id: body.listingId ?? body.listing_id ?? null,
+    buyer_name: body.name ?? body.buyer_name,
+    buyer_email: body.email ?? body.buyer_email,
+    buyer_company: body.company ?? body.buyer_company,
+    buyer_role: body.role ?? body.buyer_role,
+    sector: body.industry ?? body.sector,
+    service_needed:
+      body.service_needed ?? `${(body.industry as string) || 'Testing'} enquiry (legacy form)`,
+    message: body.message,
+  };
+
+  const url = new URL('/api/rfq', request.url);
+  const forwarded = await fetch(url.toString(), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'user-agent': request.headers.get('user-agent') || 'legacy-leads-endpoint',
+      'x-forwarded-for': clientAddress || '',
+    },
+    body: JSON.stringify(mapped),
+  });
+
+  return new Response(await forwarded.text(), {
+    status: forwarded.status,
+    headers: { 'Content-Type': 'application/json' },
+  });
 };
+
+export const GET: APIRoute = () =>
+  new Response(
+    JSON.stringify({
+      error: 'Deprecated. Use POST /api/rfq.',
+    }),
+    { status: 410, headers: { 'Content-Type': 'application/json' } }
+  );

@@ -142,6 +142,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     const quantity = optionalString(body.quantity, { max: 80 });
     const deadline = optionalString(body.deadline, { max: 40 });
     const message = optionalString(body.message, { max: 4000 });
+    const buyerRole = optionalString(body.buyer_role, { max: 120 });
+    const sector = optionalString(body.sector, { max: 120 });
     const listingId = optionalString(body.listing_id, { max: 64 }) || null;
     const labName = optionalString(body.lab_name, { max: 200 });
     const listingSlug = optionalString(body.listing_slug, { max: 200 });
@@ -171,6 +173,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
         quantity: quantity || null,
         deadline: deadline || null,
         message: message || null,
+        buyer_role: buyerRole || null,
+        sector: sector || null,
         source: 'web',
         ip_hash: ipHash,
         user_agent: (request.headers.get('user-agent') || '').slice(0, 300),
@@ -206,7 +210,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       JSON.stringify({
         success: true,
         stored,
-        message: "Thanks — we've received your request and will match you with the right lab.",
+        message: "Thanks, we've got your request and we'll match you with the right lab.",
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );

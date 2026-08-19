@@ -128,3 +128,12 @@ CREATE TRIGGER rfq_requests_touch BEFORE UPDATE ON public.rfq_requests
 DROP TRIGGER IF EXISTS sales_leads_touch ON public.sales_leads;
 CREATE TRIGGER sales_leads_touch BEFORE UPDATE ON public.sales_leads
   FOR EACH ROW EXECUTE FUNCTION public.touch_updated_at();
+
+-- ---------------------------------------------------------------------------
+-- Added 2026-08-19 during consolidation of four overlapping demand tables.
+-- ContactLabModal collects the buyer's role and sector, which the original
+-- schema had no home for, so both were being discarded on submit.
+-- ---------------------------------------------------------------------------
+ALTER TABLE public.rfq_requests
+  ADD COLUMN IF NOT EXISTS buyer_role text,
+  ADD COLUMN IF NOT EXISTS sector text;
