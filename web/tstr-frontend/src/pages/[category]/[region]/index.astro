@@ -72,7 +72,7 @@ const testingServiceName = getTestingServiceName(titleCat);
 // Optimized SEO parts
 const pageTitle = formatTitle([titleCat, titleReg]);
 const pageDescription = formatDescription(
-  `Find ${listingCount} verified ${titleCat.toLowerCase()} and ${testingServiceName.toLowerCase()} in ${titleReg}. Compare ISO 17025 labs and certification bodies. Get quotes from certified providers.`
+  `Find ${listingCount} ${titleCat.toLowerCase()} and ${testingServiceName.toLowerCase()} in ${titleReg}. Compare laboratories and certification bodies, and request a quote.`
 );
 ---
 
@@ -137,9 +137,8 @@ const pageDescription = formatDescription(
             <div
               class="rounded-full border border-blue-500/20 bg-blue-500/10 px-4 py-2 text-sm font-bold text-blue-400"
             >
-              {listingCount === 0 ? 'No' : listingCount} verified {
-                listingCount === 1 ? 'laboratory' : 'laboratories'
-              }
+              {listingCount === 0 ? 'No' : listingCount}
+              {listingCount === 1 ? 'laboratory' : 'laboratories'}
             </div>
           </div>
         </div>
@@ -247,7 +246,7 @@ const pageDescription = formatDescription(
                     <p class="mb-8 text-lg leading-relaxed text-gray-400">
                       Our engineering team manually sources ISO 17025 accredited laboratories for
                       specialized requirements. We'll find the perfect testing partner for your
-                      needs—at no cost to you.
+                      needs, at no cost to you.
                     </p>
                     <div class="flex flex-col gap-4 sm:flex-row">
                       <a

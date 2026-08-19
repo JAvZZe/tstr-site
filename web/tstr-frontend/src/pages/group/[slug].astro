@@ -20,37 +20,51 @@ if (!group || error) {
   return Astro.redirect('/404');
 }
 
-const pageTitle = formatTitle([group.group_name, "Global Branch Network"]);
+const pageTitle = formatTitle([group.group_name, 'Global Branch Network']);
 const pageDescription = formatDescription(
-  `Explore the global branch network of ${group.group_name}. Find ${group.branch_count} local physical labs and verified testing facilities worldwide.`
+  `Branch network for ${group.group_name}. ${group.branch_count} laboratory locations worldwide.`
 );
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
-</head>
-  <body class="bg-gray-50 text-gray-900 font-sans">
-    <nav class="bg-white shadow-sm p-4 sticky top-0 z-10 border-b border-gray-100">
-      <div class="max-w-6xl mx-auto flex justify-between items-center">
-        <a href="/" class="font-black text-2xl tracking-tighter hover:text-blue-600 transition-colors">TSTR<span class="text-blue-600">.directory</span></a>
+  </head>
+  <body class="bg-gray-50 font-sans text-gray-900">
+    <nav class="sticky top-0 z-10 border-b border-gray-100 bg-white p-4 shadow-sm">
+      <div class="mx-auto flex max-w-6xl items-center justify-between">
+        <a
+          href="/"
+          class="text-2xl font-black tracking-tighter transition-colors hover:text-blue-600"
+          >TSTR<span class="text-blue-600">.directory</span></a
+        >
       </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto p-6 md:p-12">
+    <main class="mx-auto max-w-6xl p-6 md:p-12">
       <div class="mb-16">
-        <h1 class="text-5xl md:text-7xl font-black text-blue-900 mb-6 tracking-tight leading-[0.9]">{group.group_name}</h1>
-        <p class="text-2xl text-gray-600 max-w-3xl mb-10 font-medium leading-relaxed">{group.group_description}</p>
-        
-        <div class="flex flex-wrap gap-4 items-center">
-          <div class="bg-white border border-gray-200 px-6 py-3 rounded-2xl shadow-sm flex items-center gap-3">
+        <h1 class="mb-6 text-5xl font-black leading-[0.9] tracking-tight text-blue-900 md:text-7xl">
+          {group.group_name}
+        </h1>
+        <p class="mb-10 max-w-3xl text-2xl font-medium leading-relaxed text-gray-600">
+          {group.group_description}
+        </p>
+
+        <div class="flex flex-wrap items-center gap-4">
+          <div
+            class="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-6 py-3 shadow-sm"
+          >
             <span class="text-2xl">🌍</span>
             <div>
-              <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">Network Scale</div>
-              <div class="text-lg font-black text-blue-900">{group.branch_count} Certified Locations</div>
+              <div class="text-xs font-bold uppercase tracking-widest text-gray-400">
+                Network Scale
+              </div>
+              <div class="text-lg font-black text-blue-900">
+                {group.branch_count} Certified Locations
+              </div>
             </div>
           </div>
         </div>
@@ -58,7 +72,7 @@ const pageDescription = formatDescription(
 
       <BranchLocator branches={group.branches} groupName={group.group_name} />
     </main>
-    
+
     <Footer />
   </body>
 </html>

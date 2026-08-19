@@ -1,27 +1,29 @@
 ---
-import { supabase } from '../../lib/supabase'
-import { CONTENT } from '../../lib/contacts'
-import Footer from '../../components/Footer.astro'
-import { getRedirectUrl } from '../../lib/redirect'
+import { supabase } from '../../lib/supabase';
+import { CONTENT } from '../../lib/contacts';
+import Footer from '../../components/Footer.astro';
+import { getRedirectUrl } from '../../lib/redirect';
 
 // Enable static prerendering
-export const prerender = true
+export const prerender = true;
 
 // Get all listings to generate static paths
 export async function getStaticPaths() {
   const { data: locations } = await supabase
     .from('locations')
     .select('id, name, slug, level')
-    .eq('level', 'country')
+    .eq('level', 'country');
 
   // Generate paths for each country
-  return locations?.map(location => ({
-    params: { country: location.slug },
-    props: { countryName: location.name, countryId: location.id }
-  })) || []
+  return (
+    locations?.map((location) => ({
+      params: { country: location.slug },
+      props: { countryName: location.name, countryId: location.id },
+    })) || []
+  );
 }
 
-const { country } = Astro.params
+const { country } = Astro.params;
 
 // Fetch the country data based on URL param (needed for SSR mode in dev)
 const { data: countryData } = await supabase
@@ -29,36 +31,35 @@ const { data: countryData } = await supabase
   .select('id, name, slug')
   .eq('slug', country)
   .eq('level', 'country')
-  .single()
+  .single();
 
 // Use props from getStaticPaths if available (build time), otherwise use fetched data (dev/SSR)
-const countryName = Astro.props.countryName || countryData?.name
-const countryId = Astro.props.countryId || countryData?.id
+const countryName = Astro.props.countryName || countryData?.name;
+const countryId = Astro.props.countryId || countryData?.id;
 
 // First, get all location IDs that belong to this country (including nested cities/states)
 const { data: countryLocations } = await supabase
   .from('locations')
   .select('id')
-  .or(`id.eq.${countryId},parent_id.eq.${countryId}`)
+  .or(`id.eq.${countryId},parent_id.eq.${countryId}`);
 
 // Also get locations that are grandchildren (city -> state -> country)
-const { data: grandchildLocations } = await supabase
-  .from('locations')
-  .select('id, parent_id')
+const { data: grandchildLocations } = await supabase.from('locations').select('id, parent_id');
 
 // Filter grandchildren to find those whose parent is in countryLocations
-const parentIds = countryLocations?.map(loc => loc.id) || []
-const grandchildIds = grandchildLocations
-  ?.filter(loc => parentIds.includes(loc.parent_id))
-  .map(loc => loc.id) || []
+const parentIds = countryLocations?.map((loc) => loc.id) || [];
+const grandchildIds =
+  grandchildLocations?.filter((loc) => parentIds.includes(loc.parent_id)).map((loc) => loc.id) ||
+  [];
 
 // Combine all location IDs
-const allLocationIds = [...new Set([...parentIds, ...grandchildIds])]
+const allLocationIds = [...new Set([...parentIds, ...grandchildIds])];
 
 // Fetch listings for all these locations
 const { data: listings } = await supabase
   .from('listings')
-  .select(`
+  .select(
+    `
     *,
     location:location_id (
       id,
@@ -78,301 +79,326 @@ const { data: listings } = await supabase
         )
       )
     )
-  `)
+  `
+  )
   .eq('status', 'active')
   .in('location_id', allLocationIds)
-  .order('created_at', { ascending: false })
+  .order('created_at', { ascending: false });
 
-const totalListings = listings?.length || 0
+const totalListings = listings?.length || 0;
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Testing Laboratories in {countryName} | TSTR Hub</title>
-  <meta name="description" content={`Find ${totalListings} verified testing service providers in ${countryName}. Oil & Gas, Pharmaceutical, Biotech, Environmental, and Materials Testing laboratories.`}>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
-     crossorigin="anonymous"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Testing Laboratories in {countryName} | TSTR Hub</title>
+    <meta
+      name="description"
+      content={`Find ${totalListings} testing service providers in ${countryName}. Oil and gas, pharmaceutical, biotech, and environmental, and Materials Testing laboratories.`}
+    />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
+      crossorigin="anonymous"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #f5f5f5;
-    }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+          sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #f5f5f5;
+      }
 
-    header {
-      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
-      color: white;
-      padding: 2rem;
-      text-align: center;
-    }
+      header {
+        background: linear-gradient(135deg, #000080 0%, #32cd32 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+      }
 
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-    }
+      header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+      }
 
-    .breadcrumb {
-      margin-top: 1rem;
-      opacity: 0.9;
-    }
+      .breadcrumb {
+        margin-top: 1rem;
+        opacity: 0.9;
+      }
 
-    .breadcrumb a {
-      color: white;
-      text-decoration: none;
-    }
+      .breadcrumb a {
+        color: white;
+        text-decoration: none;
+      }
 
-    .breadcrumb a:hover {
-      text-decoration: underline;
-    }
+      .breadcrumb a:hover {
+        text-decoration: underline;
+      }
 
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 3rem 2rem;
-    }
+      main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+      }
 
-    .intro {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      margin-bottom: 2rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      text-align: center;
-    }
+      .intro {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
 
-    .intro h2 {
-      color: #000080;
-      margin-bottom: 1rem;
-    }
+      .intro h2 {
+        color: #000080;
+        margin-bottom: 1rem;
+      }
 
-    .listings-grid {
-      display: grid;
-      gap: 1.5rem;
-    }
+      .listings-grid {
+        display: grid;
+        gap: 1.5rem;
+      }
 
-    .listing-card {
-      background: white;
-      border: 2px solid #e0e0e0;
-      border-radius: 12px;
-      padding: 2rem;
-      transition: all 0.3s ease;
-    }
+      .listing-card {
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+      }
 
-    .listing-card:hover {
-      border-color: #000080;
-      box-shadow: 0 4px 12px rgba(102,126,234,0.2);
-      transform: translateY(-2px);
-    }
+      .listing-card:hover {
+        border-color: #000080;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        transform: translateY(-2px);
+      }
 
-    .listing-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: start;
-      margin-bottom: 1rem;
-    }
+      .listing-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 1rem;
+      }
 
-    .listing-title {
-      color: #000080;
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-    }
+      .listing-title {
+        color: #000080;
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
 
-    .category-badge {
-      background: #f0f0f0;
-      padding: 0.25rem 0.75rem;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      color: #555;
-      display: inline-block;
-    }
+      .category-badge {
+        background: #f0f0f0;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        color: #555;
+        display: inline-block;
+      }
 
-    .verified-badge {
-      background: #4caf50;
-      color: white;
-      padding: 0.25rem 0.75rem;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
+      .verified-badge {
+        background: #4caf50;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
 
-    .listing-description {
-      color: #666;
-      margin-bottom: 1rem;
-      line-height: 1.6;
-    }
+      .listing-description {
+        color: #666;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+      }
 
-    .listing-details {
-      display: grid;
-      gap: 0.5rem;
-      color: #555;
-      font-size: 0.95rem;
-    }
+      .listing-details {
+        display: grid;
+        gap: 0.5rem;
+        color: #555;
+        font-size: 0.95rem;
+      }
 
-    .detail-item {
-      display: flex;
-      gap: 0.5rem;
-    }
+      .detail-item {
+        display: flex;
+        gap: 0.5rem;
+      }
 
-    .detail-icon {
-      color: #000080;
-      font-weight: 600;
-    }
+      .detail-icon {
+        color: #000080;
+        font-weight: 600;
+      }
 
-    .detail-item a {
-      color: #000080;
-      text-decoration: none;
-    }
+      .detail-item a {
+        color: #000080;
+        text-decoration: none;
+      }
 
-    .detail-item a:hover {
-      text-decoration: underline;
-    }
+      .detail-item a:hover {
+        text-decoration: underline;
+      }
 
-    footer {
-      background: #333;
-      color: white;
-      text-align: center;
-      padding: 2rem;
-      margin-top: 3rem;
-    }
+      footer {
+        background: #333;
+        color: white;
+        text-align: center;
+        padding: 2rem;
+        margin-top: 3rem;
+      }
 
-    footer a {
-      color: white;
-      text-decoration: none;
-      margin: 0 1rem;
-    }
+      footer a {
+        color: white;
+        text-decoration: none;
+        margin: 0 1rem;
+      }
 
-    footer a:hover {
-      text-decoration: underline;
-    }
+      footer a:hover {
+        text-decoration: underline;
+      }
 
-    .certification-disclaimer {
-      background: linear-gradient(135deg, #fff9e6 0%, #ffe8cc 100%);
-      border: 2px solid #ffc107;
-      border-radius: 8px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-    }
-
-    .disclaimer-icon {
-      font-size: 1.5rem;
-      flex-shrink: 0;
-      margin-top: 0.25rem;
-    }
-
-    .disclaimer-content {
-      flex: 1;
-    }
-
-    .disclaimer-content p {
-      margin: 0;
-      font-size: 0.95rem;
-      color: #333;
-      line-height: 1.5;
-    }
-
-    @media (max-width: 768px) {
       .certification-disclaimer {
-        flex-direction: column;
-        gap: 0.75rem;
+        background: linear-gradient(135deg, #fff9e6 0%, #ffe8cc 100%);
+        border: 2px solid #ffc107;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
       }
 
       .disclaimer-icon {
-        margin-top: 0;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+        margin-top: 0.25rem;
       }
-    }
-  </style>
-  <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
-</head>
-<body>
-  <header>
-    <h1>Testing Laboratories in {countryName}</h1>
-    <p class="breadcrumb">
-      <a href="/">Home</a> / <a href="/browse">Browse</a> / {countryName}
-    </p>
-  </header>
 
-  <main>
-    <div class="intro">
-      <h2>{totalListings} Verified Testing Service Providers</h2>
-      <p>Find accredited testing laboratories in {countryName} for Oil & Gas, Pharmaceutical, Biotech, Environmental, and Materials Testing.</p>
-    </div>
+      .disclaimer-content {
+        flex: 1;
+      }
 
-    <div class="certification-disclaimer">
-      <div class="disclaimer-icon">⚠️</div>
-      <div class="disclaimer-content">
-        <p>{CONTENT.disclaimer}</p>
-        <p style="margin-top: 0.75rem;">
-          <strong><a href={CONTENT.disclaimerLink.href}>{CONTENT.disclaimerLink.text}</a></strong>
+      .disclaimer-content p {
+        margin: 0;
+        font-size: 0.95rem;
+        color: #333;
+        line-height: 1.5;
+      }
+
+      @media (max-width: 768px) {
+        .certification-disclaimer {
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+
+        .disclaimer-icon {
+          margin-top: 0;
+        }
+      }
+    </style>
+    <script>
+      function initApollo() {
+        var n = Math.random().toString(36).substring(7),
+          o = document.createElement('script');
+        ((o.src = 'https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache=' + n),
+          (o.async = !0),
+          (o.defer = !0),
+          (o.onload = function () {
+            window.trackingFunctions.onLoad({ appId: '6979e8021ac917001927e9b2' });
+          }),
+          document.head.appendChild(o));
+      }
+      initApollo();
+    </script>
+  </head>
+  <body>
+    <header>
+      <h1>Testing Laboratories in {countryName}</h1>
+      <p class="breadcrumb">
+        <a href="/">Home</a> / <a href="/browse">Browse</a> / {countryName}
+      </p>
+    </header>
+
+    <main>
+      <div class="intro">
+        <h2>{totalListings} testing service providers</h2>
+        <p>
+          Find accredited testing laboratories in {countryName} for Oil & Gas, Pharmaceutical, Biotech,
+          Environmental, and Materials Testing.
         </p>
       </div>
-    </div>
 
-    <div class="listings-grid">
-      {listings?.map((lab) => (
-        <div class="listing-card">
-          <div class="listing-header">
-            <div>
-              <h3 class="listing-title">{lab.business_name}</h3>
-              {lab.category && <span class="category-badge">{lab.category}</span>}
-            </div>
-            {lab.website_verified && (
-              <span class="verified-badge">✓ Verified</span>
-            )}
-          </div>
-
-          {lab.description && (
-            <p class="listing-description">{lab.description}</p>
-          )}
-
-          <div class="listing-details">
-            {lab.address && (
-              <div class="detail-item">
-                <span class="detail-icon">📍</span>
-                <span>{lab.address}</span>
-              </div>
-            )}
-            {lab.phone && (
-              <div class="detail-item">
-                <span class="detail-icon">📞</span>
-                <span>{lab.phone}</span>
-              </div>
-            )}
-            {lab.email && (
-              <div class="detail-item">
-                <span class="detail-icon">✉️</span>
-                <a href={`mailto:${lab.email}`}>{lab.email}</a>
-              </div>
-            )}
-            {lab.website && (
-              <div class="detail-item">
-                <span class="detail-icon">🌐</span>
-                <a href={getRedirectUrl(lab.website, lab.id)} target="_blank" rel="noopener noreferrer">{lab.website}</a>
-              </div>
-            )}
-          </div>
+      <div class="certification-disclaimer">
+        <div class="disclaimer-icon">⚠️</div>
+        <div class="disclaimer-content">
+          <p>{CONTENT.disclaimer}</p>
+          <p style="margin-top: 0.75rem;">
+            <strong><a href={CONTENT.disclaimerLink.href}>{CONTENT.disclaimerLink.text}</a></strong>
+          </p>
         </div>
-      ))}
-    </div>
-  </main>
+      </div>
 
-  <Footer />
-</body>
+      <div class="listings-grid">
+        {
+          listings?.map((lab) => (
+            <div class="listing-card">
+              <div class="listing-header">
+                <div>
+                  <h3 class="listing-title">{lab.business_name}</h3>
+                  {lab.category && <span class="category-badge">{lab.category}</span>}
+                </div>
+                {lab.website_verified && <span class="verified-badge">✓ Verified</span>}
+              </div>
+
+              {lab.description && <p class="listing-description">{lab.description}</p>}
+
+              <div class="listing-details">
+                {lab.address && (
+                  <div class="detail-item">
+                    <span class="detail-icon">📍</span>
+                    <span>{lab.address}</span>
+                  </div>
+                )}
+                {lab.phone && (
+                  <div class="detail-item">
+                    <span class="detail-icon">📞</span>
+                    <span>{lab.phone}</span>
+                  </div>
+                )}
+                {lab.email && (
+                  <div class="detail-item">
+                    <span class="detail-icon">✉️</span>
+                    <a href={`mailto:${lab.email}`}>{lab.email}</a>
+                  </div>
+                )}
+                {lab.website && (
+                  <div class="detail-item">
+                    <span class="detail-icon">🌐</span>
+                    <a
+                      href={getRedirectUrl(lab.website, lab.id)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {lab.website}
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </main>
+
+    <Footer />
+  </body>
 </html>
