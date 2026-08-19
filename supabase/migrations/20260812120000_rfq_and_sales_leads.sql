@@ -54,7 +54,18 @@ CREATE POLICY rfq_insert_public ON public.rfq_requests
   FOR INSERT TO anon, authenticated
   WITH CHECK (true);
 
--- No SELECT policy for anon on purpose: reads are service-role only.
+-- A SELECT policy is REQUIRED even though buyers must not read each other's
+-- submissions. PostgREST appends RETURNING to inserts, and with RLS enabled and no
+-- SELECT policy that RETURNING is evaluated under RLS and fails with 42501
+-- ("new row violates row-level security policy"). Verified against production on
+-- 2026-08-19: a bare INSERT succeeded while INSERT ... RETURNING was refused.
+--
+-- The 10 second window lets the inserting request read back its own row and
+-- nothing else. Older rows stay invisible to anon.
+DROP POLICY IF EXISTS rfq_select_own_recent ON public.rfq_requests;
+CREATE POLICY rfq_select_own_recent ON public.rfq_requests
+  FOR SELECT TO anon, authenticated
+  USING (created_at > now() - interval '10 seconds');
 
 -- ---------------------------------------------------------------------------
 -- 2. Sales leads (our outreach side)
