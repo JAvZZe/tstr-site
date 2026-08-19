@@ -26,60 +26,60 @@ export const GET: APIRoute = async () => {
     .eq('is_active', true)
     .not('slug', 'is', null);
 
-  const dynamicStandardPages = (standards || []).map(std => ({
+  const dynamicStandardPages = (standards || []).map((std) => ({
     url: `/standards/${std.slug}`,
     priority: '0.8',
-    changefreq: 'weekly'
+    changefreq: 'weekly',
   }));
 
   // Fetch categories with active listing counts (exclude empty categories)
-  const { data: categoryData } = await supabase
-    .from('categories')
-    .select(`
+  const { data: categoryData } = await supabase.from('categories').select(`
       slug,
       listings:listings!category_id(count)
     `);
 
   // Filter out categories with 0 listings
   const categories = (categoryData || [])
-    .filter(cat => cat.listings && cat.listings[0]?.count > 0)
-    .map(cat => ({ slug: cat.slug }));
+    .filter((cat) => cat.listings && cat.listings[0]?.count > 0)
+    .map((cat) => ({ slug: cat.slug }));
 
   // Category overview pages (/category)
-  const categoryPages = categories.map(cat => ({
+  const categoryPages = categories.map((cat) => ({
     url: `/${cat.slug}`,
     priority: '0.9',
-    changefreq: 'weekly'
+    changefreq: 'weekly',
   }));
 
   // Legacy category query param pages
-  const categoryBrowsePages = categories.map(cat => ({
+  const categoryBrowsePages = categories.map((cat) => ({
     url: `/browse?category=${encodeURIComponent(cat.slug)}`,
     priority: '0.7',
-    changefreq: 'daily'
+    changefreq: 'daily',
   }));
 
   // Fetch all active listings to build category+region pages
   const { data: listings } = await supabase
     .from('listings')
-    .select(`
+    .select(
+      `
       region,
       category:category_id (slug)
-    `)
+    `
+    )
     .eq('status', 'active');
 
   // Build unique category/region combinations
   const categoryRegionPairs = new Set<string>();
-  listings?.forEach(listing => {
+  listings?.forEach((listing) => {
     if (listing.category?.slug && listing.region) {
       categoryRegionPairs.add(`${listing.category.slug}/${listing.region.toLowerCase()}`);
     }
   });
 
-  const categoryRegionPages = Array.from(categoryRegionPairs).map(pair => ({
+  const categoryRegionPages = Array.from(categoryRegionPairs).map((pair) => ({
     url: `/${pair}`,
     priority: '0.8',
-    changefreq: 'weekly'
+    changefreq: 'weekly',
   }));
 
   // Environmental testing subcategory pages
@@ -88,13 +88,13 @@ export const GET: APIRoute = async () => {
     'water-quality',
     'soil-testing',
     'noise-vibration',
-    'esg-sustainability'
+    'esg-sustainability',
   ];
 
-  const subcategoryPages = environmentalSubcategories.map(subcat => ({
+  const subcategoryPages = environmentalSubcategories.map((subcat) => ({
     url: `/environmental-testing/${subcat}`,
     priority: '0.8',
-    changefreq: 'weekly'
+    changefreq: 'weekly',
   }));
 
   // Fetch published blog posts
@@ -103,31 +103,33 @@ export const GET: APIRoute = async () => {
     .select('slug, published_at')
     .eq('is_published', true);
 
-  const blogPages = (blogPosts || []).map(post => ({
+  const blogPages = (blogPosts || []).map((post) => ({
     url: `/blog/${post.slug}`,
     priority: '0.7',
     changefreq: 'weekly',
-    lastmod: post.published_at ? post.published_at.split('T')[0] : currentDate
+    lastmod: post.published_at ? post.published_at.split('T')[0] : currentDate,
   }));
 
   // Fetch all active listings with their categories and standards to build PSEO testing pages
   // Route: /testing/[industry]/[standard]-in-[region]
   const { data: pseoData } = await supabase
     .from('listings')
-    .select(`
+    .select(
+      `
       region,
       category:category_id (slug),
       listing_capabilities (
         standard:standard_id (slug)
       )
-    `)
+    `
+    )
     .eq('status', 'active');
 
   const pseoTestingPagesSet = new Set<string>();
-  pseoData?.forEach(listing => {
+  pseoData?.forEach((listing) => {
     const categorySlug = listing.category?.slug;
     const region = listing.region;
-    
+
     if (categorySlug && region && listing.listing_capabilities) {
       const regionSlug = region.toLowerCase().replace(/\s+/g, '-');
       listing.listing_capabilities.forEach((cap: any) => {
@@ -139,11 +141,42 @@ export const GET: APIRoute = async () => {
     }
   });
 
-  const pseoTestingPages = Array.from(pseoTestingPagesSet).map(url => ({
+  const pseoTestingPages = Array.from(pseoTestingPagesSet).map((url) => ({
     url,
     priority: '0.8',
-    changefreq: 'weekly'
+    changefreq: 'weekly',
   }));
+
+  // Individual listing pages.
+  //
+  // These were missing entirely: 793 listings, 0 in the sitemap. They are the
+  // pages a lab claims and a buyer lands on, so leaving them out meant Google
+  // could only reach them by crawling internal links.
+  //
+  // Guards: skip blank slugs (one row has an empty name and slug) and dedupe,
+  // since 7 business names appear more than once.
+  const { data: listingPages } = await supabase
+    .from('listings')
+    .select('slug, updated_at, verified, claimed')
+    .eq('status', 'active')
+    .not('slug', 'is', null);
+
+  const seenSlugs = new Set<string>();
+  const individualListingPages = (listingPages || [])
+    .filter((l) => {
+      const slug = (l.slug || '').trim();
+      if (!slug || seenSlugs.has(slug)) return false;
+      seenSlugs.add(slug);
+      return true;
+    })
+    .map((l) => ({
+      url: `/listing/${l.slug}`,
+      // A claimed or verified profile carries real information, so it earns a
+      // higher priority than an unclaimed stub.
+      priority: l.claimed || l.verified ? '0.8' : '0.6',
+      changefreq: 'monthly',
+      lastmod: l.updated_at ? l.updated_at.split('T')[0] : currentDate,
+    }));
 
   // Combine all pages
   const allPages = [
@@ -156,24 +189,30 @@ export const GET: APIRoute = async () => {
     ...categoryRegionPages,
     ...subcategoryPages,
     ...categoryBrowsePages,
-    ...pseoTestingPages
+    ...pseoTestingPages,
+    ...individualListingPages,
   ];
 
-  // Generate XML
+  // Generate XML. Use each page's own lastmod where it has one (blog posts and
+  // listings do); fall back to today for pages with no meaningful timestamp.
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${allPages.map(page => `  <url>
+${allPages
+  .map(
+    (page) => `  <url>
     <loc>${baseUrl}${page.url}</loc>
-    <lastmod>${currentDate}</lastmod>
+    <lastmod>${(page as { lastmod?: string }).lastmod || currentDate}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
-  </url>`).join('\n')}
+  </url>`
+  )
+  .join('\n')}
 </urlset>`;
 
   return new Response(sitemap, {
     headers: {
       'Content-Type': 'application/xml',
-      'Cache-Control': 'public, max-age=3600'
-    }
+      'Cache-Control': 'public, max-age=3600',
+    },
   });
 };
