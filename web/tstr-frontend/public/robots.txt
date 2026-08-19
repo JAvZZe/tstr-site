@@ -1,24 +1,119 @@
+# robots.txt for tstr.directory
+#
+# Strategy, set 2026-08-19.
+#
+# TSTR earns nothing from a page being read. It earns when a buyer sends an
+# enquiry through us and we forward it to a laboratory. So visibility is worth
+# more than secrecy for anything that helps a buyer find a lab, and the things
+# worth protecting are the parts a competitor could copy wholesale or that
+# expose a person's details.
+#
+# Two audiences, deliberately treated the same for now:
+#   Search crawlers (Google, Bing) send buyers who click through.
+#   AI assistants (ChatGPT, Claude, Perplexity) increasingly answer
+#   "who can test X to standard Y" directly. Being the cited source there is
+#   worth more at this stage than withholding the content, because nobody is
+#   paying us for it yet.
+#
+# When there is something to charge for, the levers are already in place:
+# block the aggregate pages that could be scraped into a rival directory, keep
+# individual profiles open, and put anything genuinely paid behind auth so
+# robots.txt is not the control at all.
+
+# ---------------------------------------------------------------------------
+# All well-behaved crawlers
+# ---------------------------------------------------------------------------
 User-agent: *
 Allow: /
+
+# Private or pointless to index
 Disallow: /account
+Disallow: /admin
 Disallow: /api/
-# Disallow WordPress/ListingPro legacy pages that are no longer relevant
-Disallow: /contact-us/
-Disallow: /grid/
-Disallow: /labels/
-Disallow: /carousel/
-Disallow: /the-beginning-of-something-new-welcome-to-my-blog/
-Disallow: /features/
-Disallow: /locations/
-Disallow: /listings/sample-
-Disallow: /listings/jim-rohn
-Disallow: /tags/
-Disallow: /customized-archive/
-Disallow: /category/
-Disallow: /label-shortcode/
-Disallow: /categories/
-Disallow: /all-listings-in-side-by-side-skin-
-Disallow: /2025/
-Disallow: /feed/
+Disallow: /auth/
+Disallow: /login
+Disallow: /signup
+Disallow: /verify-claim
+Disallow: /claim?
+Disallow: /out?
+
+# Query-string variants of pages that already exist as clean URLs.
+# Keeps duplicate content out of the index without hiding the content itself.
+Disallow: /browse?
+Disallow: /search?
+Disallow: /*?page=
+Disallow: /*?sort=
+Disallow: /*?utm_
+
+# ---------------------------------------------------------------------------
+# AI assistants and training crawlers: allowed
+# ---------------------------------------------------------------------------
+# Being the source an assistant cites when someone asks for a lab is worth more
+# than protecting directory content that is already public. Revisit once
+# listings carry registry-verified accreditations, which is the data a
+# competitor cannot simply recreate.
+#
+# Named explicitly rather than relying on the wildcard, so the decision is
+# visible and easy to reverse per crawler.
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+# ---------------------------------------------------------------------------
+# Still blocked: crawlers that offer nothing back
+# ---------------------------------------------------------------------------
+# These are SEO tools that harvest competitive data. They send no buyers and
+# no citations, and they cost crawl budget.
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
 
 Sitemap: https://tstr.directory/sitemap.xml
