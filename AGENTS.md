@@ -125,7 +125,25 @@ Before confirming any infrastructure-related task (Keys, URLs, Auth, Database), 
     - If you change a database schema, check if **RLS Policies** or **Views** need updating.
     - If you change a script path, check **systemd timers** or **crontabs** on OCI.
 
-3.  **The "If This, Then That" (ITTT) Analysis**:
+3.  **Local Supabase stack — ALWAYS STOP WHAT YOU START**:
+    The local stack (11 containers, ~1.07GB RAM) exists **for agents doing local dev**. Al does not use it.
+    On 2026-08-19 it was found running for **43 hours serving nothing** — 0 rows, 0 client connections,
+    and every real `.env` pointing at the LIVE remote project. An agent started it and never stopped it.
+
+    Use the wrapper, which stops the stack on **every** exit path including command failure:
+    ```bash
+    ./scripts/supabase-session run "<your command>"   # preferred — start, run, always stop
+    ./scripts/supabase-session up --minutes 30        # interactive, watchdog auto-stops
+    ./scripts/supabase-session down                   # stop now
+    ./scripts/supabase-session status                 # up/down + watchdog state
+    ```
+    Do **not** call bare `supabase start` unless you pair it with `supabase stop` in the same task.
+
+    **LOCAL vs LIVE**: always state which you are targeting. Real `.env` files point at LIVE
+    (`haimjeaetrsaauitrhfy.supabase.co`); local holds the 28-table schema with **no data**.
+    Confirm with al before touching LIVE.
+
+4.  **The "If This, Then That" (ITTT) Analysis**:
     - "If I rotate Supabase keys, I MUST update: Local .env, OCI .env, Cloudflare Dashboard, and GitHub Secrets."
 
 ## 📊 PROJECT STATUS PROTOCOL (MANDATORY)
