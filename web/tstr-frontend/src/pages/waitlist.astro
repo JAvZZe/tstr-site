@@ -3,202 +3,262 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/global.css';
 import { formatTitle, formatDescription } from '../lib/seo';
 ---
+
 <BaseLayout
-  title={formatTitle(["Join the TSTR.directory Waitlist"])}
-  description={formatDescription("Be the first to access the comprehensive testing laboratory directory. Join our waitlist for early access.")}
+  title={formatTitle(['Join the TSTR.directory Waitlist'])}
+  description={formatDescription(
+    'Join the waitlist for early access to the TSTR.directory testing laboratory directory.'
+  )}
 >
-  <body class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen flex items-center justify-center p-4 md:p-8">
-    <div class="max-w-5xl w-full">
-        <!-- Hero Section -->
-        <div class="text-center mb-8 md:mb-12">
-            <div class="inline-block mb-4 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
-                🚀 Coming Soon
-            </div>
-            <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
-                The Complete Testing Lab Directory
-            </h1>
-            <p class="text-lg md:text-xl text-gray-600 mb-3 max-w-2xl mx-auto">
-                Find certified labs for hydrogen testing, EMC compliance, biotech services, and more.
-            </p>
-            <p class="text-base md:text-lg text-gray-500">
-                Search by ISO/SAE standards • 180+ verified labs • Free forever
-            </p>
+  <body
+    class="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-blue-50 p-4 md:p-8"
+  >
+    <div class="w-full max-w-5xl">
+      <!-- Hero Section -->
+      <div class="mb-8 text-center md:mb-12">
+        <div
+          class="mb-4 inline-block rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-700"
+        >
+          🚀 Coming Soon
         </div>
+        <h1 class="mb-4 text-3xl font-bold leading-tight text-gray-900 md:text-5xl">
+          The Complete Testing Lab Directory
+        </h1>
+        <p class="mx-auto mb-3 max-w-2xl text-lg text-gray-600 md:text-xl">
+          Find certified labs for hydrogen testing, EMC compliance, biotech services, and more.
+        </p>
+        <p class="text-base text-gray-500 md:text-lg">
+          Search by ISO/SAE standards • 180+ verified labs • Free forever
+        </p>
+      </div>
 
-        <!-- Lead Capture Form (Inline, not component) -->
-        <div class="max-w-2xl mx-auto mb-12">
-            <div class="bg-white rounded-2xl shadow-2xl p-6 md:p-10 border border-gray-100">
-                <div class="text-center mb-6">
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-                        Get Early Access
-                    </h2>
-                    <p class="text-gray-600 text-base md:text-lg">
-                        Join 500+ engineers already on the waitlist
-                    </p>
-                </div>
+      <!-- Lead Capture Form (Inline, not component) -->
+      <div class="mx-auto mb-12 max-w-2xl">
+        <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-2xl md:p-10">
+          <div class="mb-6 text-center">
+            <h2 class="mb-2 text-2xl font-bold text-gray-900 md:text-3xl">Get Early Access</h2>
+            <p class="text-base text-gray-600 md:text-lg">
+              Join 500+ engineers already on the waitlist
+            </p>
+          </div>
 
-                <form id="waitlist-form" class="space-y-4">
-                    <div>
-                        <label for="email-input" class="block text-sm font-semibold text-gray-700 mb-2">
-                            Email Address
-                        </label>
-                        <input
-                            id="email-input"
-                            type="email"
-                            name="email"
-                            placeholder="you@company.com"
-                            required
-                            autocomplete="email"
-                            class="w-full px-4 py-4 text-base border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition duration-200 outline-none"
-                        />
-                    </div>
-                    
-                    <button
-                        type="submit"
-                        id="submit-btn"
-                        class="w-full px-6 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-200 transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                    >
-                        <span id="btn-text">Join Waitlist - It's Free</span>
-                        <span id="btn-loading" class="hidden">
-                            <svg class="animate-spin h-5 w-5 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            Submitting...
-                        </span>
-                    </button>
-
-                    <div id="form-message" class="text-center text-sm font-medium min-h-[24px]"></div>
-                </form>
-
-                <div class="mt-6 pt-6 border-t border-gray-100">
-                    <ul class="space-y-2 text-sm text-gray-600">
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            Instant access when we launch
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            No spam, unsubscribe anytime
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            Free forever, no credit card required
-                        </li>
-                    </ul>
-                </div>
+          <form id="waitlist-form" class="space-y-4">
+            <div>
+              <label for="email-input" class="mb-2 block text-sm font-semibold text-gray-700">
+                Email Address
+              </label>
+              <input
+                id="email-input"
+                type="email"
+                name="email"
+                placeholder="you@company.com"
+                required
+                autocomplete="email"
+                class="w-full rounded-xl border-2 border-gray-200 px-4 py-4 text-base outline-none transition duration-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+              />
             </div>
+
+            <button
+              type="submit"
+              id="submit-btn"
+              class="w-full transform rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 text-lg font-semibold text-white shadow-lg transition duration-200 hover:-translate-y-0.5 hover:from-blue-700 hover:to-blue-800 hover:shadow-xl focus:ring-4 focus:ring-blue-200"
+            >
+              <span id="btn-text">Join Waitlist - It's Free</span>
+              <span id="btn-loading" class="hidden">
+                <svg
+                  class="inline-block h-5 w-5 animate-spin"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Submitting...
+              </span>
+            </button>
+
+            <div id="form-message" class="min-h-[24px] text-center text-sm font-medium"></div>
+          </form>
+
+          <div class="mt-6 border-t border-gray-100 pt-6">
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li class="flex items-center">
+                <svg
+                  class="mr-2 h-5 w-5 flex-shrink-0 text-green-500"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd"></path>
+                </svg>
+                Instant access when we launch
+              </li>
+              <li class="flex items-center">
+                <svg
+                  class="mr-2 h-5 w-5 flex-shrink-0 text-green-500"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd"></path>
+                </svg>
+                No spam, unsubscribe anytime
+              </li>
+              <li class="flex items-center">
+                <svg
+                  class="mr-2 h-5 w-5 flex-shrink-0 text-green-500"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd"></path>
+                </svg>
+                Free forever, no credit card required
+              </li>
+            </ul>
+          </div>
         </div>
+      </div>
 
-        <script>
-            const form = document.getElementById('waitlist-form');
-            const emailInput = document.getElementById('email-input');
-            const submitBtn = document.getElementById('submit-btn');
-            const btnText = document.getElementById('btn-text');
-            const btnLoading = document.getElementById('btn-loading');
-            const messageEl = document.getElementById('form-message');
+      <script>
+        const form = document.getElementById('waitlist-form');
+        const emailInput = document.getElementById('email-input');
+        const submitBtn = document.getElementById('submit-btn');
+        const btnText = document.getElementById('btn-text');
+        const btnLoading = document.getElementById('btn-loading');
+        const messageEl = document.getElementById('form-message');
 
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const email = emailInput.value.trim();
-                if (!email) return;
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
 
-                // Disable form
-                submitBtn.disabled = true;
-                btnText.classList.add('hidden');
-                btnLoading.classList.remove('hidden');
-                messageEl.textContent = '';
-                messageEl.className = 'text-center text-sm font-medium min-h-[24px]';
+          const email = emailInput.value.trim();
+          if (!email) return;
 
-                try {
-                    const response = await fetch('/api/submit', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email }),
-                    });
+          // Disable form
+          submitBtn.disabled = true;
+          btnText.classList.add('hidden');
+          btnLoading.classList.remove('hidden');
+          messageEl.textContent = '';
+          messageEl.className = 'text-center text-sm font-medium min-h-[24px]';
 
-                    const data = await response.json();
-
-                    if (response.ok) {
-                        // Success
-                        messageEl.textContent = '🎉 Success! Check your email for confirmation.';
-                        messageEl.className = 'text-center text-sm font-semibold text-green-600 bg-green-50 rounded-lg py-3 px-4';
-                        form.reset();
-                        
-                        // Confetti effect (optional)
-                        setTimeout(() => {
-                            messageEl.textContent = '✅ You\'re on the list! We\'ll notify you soon.';
-                        }, 3000);
-                    } else {
-                        // Error from server
-                        messageEl.textContent = data.error || 'Something went wrong. Please try again.';
-                        messageEl.className = 'text-center text-sm font-semibold text-red-600 bg-red-50 rounded-lg py-3 px-4';
-                    }
-                } catch (error) {
-                    // Network error
-                    messageEl.textContent = '❌ Network error. Please check your connection and try again.';
-                    messageEl.className = 'text-center text-sm font-semibold text-red-600 bg-red-50 rounded-lg py-3 px-4';
-                    console.error('Error:', error);
-                } finally {
-                    // Re-enable form
-                    submitBtn.disabled = false;
-                    btnText.classList.remove('hidden');
-                    btnLoading.classList.add('hidden');
-                }
+          try {
+            const response = await fetch('/api/submit', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email }),
             });
 
-            // Auto-focus email input on page load
-            window.addEventListener('load', () => {
-                emailInput.focus();
-            });
-        </script>
+            const data = await response.json();
 
-        <!-- Social Proof -->
-        <div class="mt-8 md:mt-12 text-center">
-            <p class="text-sm font-semibold text-gray-500 mb-4 uppercase tracking-wide">Trusted by engineers at:</p>
-            <div class="flex flex-wrap justify-center gap-4 md:gap-8 text-base md:text-lg font-medium text-gray-500">
-                <span class="hover:text-gray-700 transition">TÜV SÜD</span>
-                <span class="text-gray-300">•</span>
-                <span class="hover:text-gray-700 transition">Element</span>
-                <span class="text-gray-300">•</span>
-                <span class="hover:text-gray-700 transition">Intertek</span>
-                <span class="text-gray-300">•</span>
-                <span class="hover:text-gray-700 transition">UL Solutions</span>
-            </div>
-        </div>
+            if (response.ok) {
+              // Success
+              messageEl.textContent = '🎉 Success! Check your email for confirmation.';
+              messageEl.className =
+                'text-center text-sm font-semibold text-green-600 bg-green-50 rounded-lg py-3 px-4';
+              form.reset();
 
-        <!-- Features -->
-        <div class="mt-12 md:mt-20 grid md:grid-cols-3 gap-6 md:gap-10">
-            <div class="bg-white rounded-xl p-6 text-center hover:shadow-lg transition duration-300 border border-gray-100">
-                <div class="text-4xl mb-3">⚡</div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Standards-Based Search</h3>
-                <p class="text-sm text-gray-600 leading-relaxed">Find labs by ISO 19880-3, SAE J2601, or any certification standard</p>
-            </div>
-            <div class="bg-white rounded-xl p-6 text-center hover:shadow-lg transition duration-300 border border-gray-100">
-                <div class="text-4xl mb-3">✅</div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Verified Capabilities</h3>
-                <p class="text-sm text-gray-600 leading-relaxed">Every lab listing includes certifications and technical specifications</p>
-            </div>
-            <div class="bg-white rounded-xl p-6 text-center hover:shadow-lg transition duration-300 border border-gray-100">
-                <div class="text-4xl mb-3">🌍</div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Global Coverage</h3>
-                <p class="text-sm text-gray-600 leading-relaxed">Labs across USA, Europe, Asia, and more for your testing needs</p>
-            </div>
-        </div>
+              // Confetti effect (optional)
+              setTimeout(() => {
+                messageEl.textContent = "✅ You're on the list! We'll notify you soon.";
+              }, 3000);
+            } else {
+              // Error from server
+              messageEl.textContent = data.error || 'Something went wrong. Please try again.';
+              messageEl.className =
+                'text-center text-sm font-semibold text-red-600 bg-red-50 rounded-lg py-3 px-4';
+            }
+          } catch (error) {
+            // Network error
+            messageEl.textContent = '❌ Network error. Please check your connection and try again.';
+            messageEl.className =
+              'text-center text-sm font-semibold text-red-600 bg-red-50 rounded-lg py-3 px-4';
+            console.error('Error:', error);
+          } finally {
+            // Re-enable form
+            submitBtn.disabled = false;
+            btnText.classList.remove('hidden');
+            btnLoading.classList.add('hidden');
+          }
+        });
 
-        <!-- Footer -->
-        <div class="mt-12 md:mt-16 text-center">
-            <p class="text-sm text-gray-500">
-                <a href="/" class="text-blue-600 hover:text-blue-700 font-medium">← Back to Home</a>
-            </p>
+        // Auto-focus email input on page load
+        window.addEventListener('load', () => {
+          emailInput.focus();
+        });
+      </script>
+
+      <!-- Social Proof -->
+      <div class="mt-8 text-center md:mt-12">
+        <p class="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-500">
+          Trusted by engineers at:
+        </p>
+        <div
+          class="flex flex-wrap justify-center gap-4 text-base font-medium text-gray-500 md:gap-8 md:text-lg"
+        >
+          <span class="transition hover:text-gray-700">TÜV SÜD</span>
+          <span class="text-gray-300">•</span>
+          <span class="transition hover:text-gray-700">Element</span>
+          <span class="text-gray-300">•</span>
+          <span class="transition hover:text-gray-700">Intertek</span>
+          <span class="text-gray-300">•</span>
+          <span class="transition hover:text-gray-700">UL Solutions</span>
         </div>
+      </div>
+
+      <!-- Features -->
+      <div class="mt-12 grid gap-6 md:mt-20 md:grid-cols-3 md:gap-10">
+        <div
+          class="rounded-xl border border-gray-100 bg-white p-6 text-center transition duration-300 hover:shadow-lg"
+        >
+          <div class="mb-3 text-4xl">⚡</div>
+          <h3 class="mb-2 text-lg font-bold text-gray-900">Standards-Based Search</h3>
+          <p class="text-sm leading-relaxed text-gray-600">
+            Find labs by ISO 19880-3, SAE J2601, or any certification standard
+          </p>
+        </div>
+        <div
+          class="rounded-xl border border-gray-100 bg-white p-6 text-center transition duration-300 hover:shadow-lg"
+        >
+          <div class="mb-3 text-4xl">✅</div>
+          <h3 class="mb-2 text-lg font-bold text-gray-900">Verified Capabilities</h3>
+          <p class="text-sm leading-relaxed text-gray-600">
+            Every lab listing includes certifications and technical specifications
+          </p>
+        </div>
+        <div
+          class="rounded-xl border border-gray-100 bg-white p-6 text-center transition duration-300 hover:shadow-lg"
+        >
+          <div class="mb-3 text-4xl">🌍</div>
+          <h3 class="mb-2 text-lg font-bold text-gray-900">Global Coverage</h3>
+          <p class="text-sm leading-relaxed text-gray-600">
+            Labs across USA, Europe, Asia, and more for your testing needs
+          </p>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="mt-12 text-center md:mt-16">
+        <p class="text-sm text-gray-500">
+          <a href="/" class="font-medium text-blue-600 hover:text-blue-700">← Back to Home</a>
+        </p>
+      </div>
     </div>
-</body>
-</html>
+  </body>
+</BaseLayout>

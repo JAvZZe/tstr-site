@@ -257,6 +257,36 @@ Covered:
 - API response messages
 - Docs, README files, commit messages, code comments
 
+### SEO and PSEO carry the highest risk
+Templated routes multiply one bad phrase across hundreds of generated pages, which is the
+footprint a spam classifier looks for. Treat every string in a dynamic route as published
+copy.
+
+Templated routes in this project. Audit all of them when you touch shared copy:
+`[category]/index`, `[category]/[region]`, `[category]/[standard]/[region]`,
+`browse/[country]`, `browse/city/[city]`, `company/[slug]`, `group/[slug]`,
+`listing/[slug]`, `standards/[slug]`, `testing/[industry]/[slug]`,
+`testing/standards/[code]`, `blog/[slug]`.
+
+Rules for these:
+- Never write a fabricated fallback description and present it as the company's own words.
+  A page with no description says it has none. This happened once already: a route wrapped
+  an invented sentence in quotation marks and rendered it as the laboratory's description.
+- Page titles and meta descriptions must not contain em dashes. Google renders them.
+- Do not repeat the same adjective across a generated set. If a phrase lands on 300 pages,
+  it reads as machine output because it is.
+
+Audit before committing template changes:
+```bash
+cd web/tstr-frontend
+grep -rn "—" src/pages --include="*.astro" | grep -v "^\s*//"
+grep -rniE "\b(crucial|leverage|seamless|robust|unlock|comprehensive|world-class|premier)\b" \
+  src/pages --include="*.astro"
+grep -rn "verified" src/pages --include="*.astro" | grep -iE 'description|"text":|<h1|<h2|formatTitle'
+```
+The last command should return nothing except claim-ownership logic such as `Verified Owner`
+and `claims.status`.
+
 Format follows the consumer: HTML for pages, JSON-LD for crawlers, Markdown for docs,
 whatever suits future agents. The prose style rule does not change with the format.
 
