@@ -690,7 +690,7 @@ import { supabaseBrowser } from '../lib/supabase-browser';
           const benefitsHtml = benefits.map((b) => `<li>${b}</li>`).join('');
 
           // Helper function for claim status
-          function getClaimStatusInfo(status) {
+          const getClaimStatusInfo = (status) => {
             switch (status) {
               case 'verified':
                 return { text: 'Verified', color: 'green', icon: '✓' };
@@ -701,7 +701,7 @@ import { supabaseBrowser } from '../lib/supabase-browser';
               default:
                 return { text: 'Unknown', color: 'gray', icon: '?' };
             }
-          }
+          };
 
           contentDiv.innerHTML = `
           <div class="dashboard-grid">

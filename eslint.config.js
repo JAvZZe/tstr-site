@@ -14,6 +14,10 @@ export default [
       "**/.astro/**",
       "**/.venv/**",
       "**/venv/**",
+      "**/fresh_venv/**",
+      "**/_crawl4ai_venv/**",
+      "web/tstr-automation/**",
+      "**/.syncause/**",
       "**/salesmark/.venv/**",
       "web/tstr-frontend/dist/**",
       "web/tstr-frontend/.astro/**",
@@ -30,7 +34,11 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
-        ...globals.es2021
+        ...globals.es2021,
+        "NodeJS": "readonly",
+        "google": "readonly",
+        "adsbygoogle": "writable",
+        "escapeHtml": "readonly"
       }
     }
   },
