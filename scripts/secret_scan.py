@@ -29,7 +29,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Ignore globs (relative to repo root). Vendored deps + local secrets never scanned.
 IGNORE_DIRS = [
-    "node_modules", "fresh_venv", ".venv", "venv", ".git", "dist", "build",
+    "node_modules", "fresh_venv", ".venv", "venv", "_crawl4ai_venv", ".git", "dist", "build",
     ".astro", ".claude", "supabase/.temp", "_ARCHIVE",
 ]
 IGNORE_FILE_GLOB = [".env", ".env.example", "package-lock.json", "pnpm-lock.yaml",
