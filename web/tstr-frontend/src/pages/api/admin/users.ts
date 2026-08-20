@@ -1,110 +1,117 @@
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co';
+const SUPABASE_URL =
+  import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co';
 const SERVICE_KEY = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!SERVICE_KEY) {
-    throw new Error('SUPABASE_SERVICE_ROLE_KEY is required');
+  throw new Error('SUPABASE_SERVICE_ROLE_KEY is required');
 }
 
 const supabaseAdmin = createClient(SUPABASE_URL, SERVICE_KEY);
 
 async function verifySuperAdmin(request: Request) {
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader) return null;
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
-    if (error || !user) return null;
-    const role = user.user_metadata?.role;
-    return role === 'super_admin' ? user : null;
+  const authHeader = request.headers.get('Authorization');
+  if (!authHeader) return null;
+  const token = authHeader.replace('Bearer ', '');
+  const {
+    data: { user },
+    error,
+  } = await supabaseAdmin.auth.getUser(token);
+  if (error || !user) return null;
+  const role = user.app_metadata?.role;
+  return role === 'super_admin' ? user : null;
 }
 
 export const GET: APIRoute = async ({ request }) => {
-    const user = await verifySuperAdmin(request);
-    if (!user) return new Response('Unauthorized: Super Admin Access Required', { status: 403 });
+  const user = await verifySuperAdmin(request);
+  if (!user) return new Response('Unauthorized: Super Admin Access Required', { status: 403 });
 
-    try {
-        const { data: { users }, error } = await supabaseAdmin.auth.admin.listUsers();
-        if (error) throw error;
+  try {
+    const {
+      data: { users },
+      error,
+    } = await supabaseAdmin.auth.admin.listUsers();
+    if (error) throw error;
 
-        const staffUsers = users.filter(u =>
-            u.user_metadata?.role === 'staff' || u.user_metadata?.role === 'super_admin'
-        );
+    const staffUsers = users.filter(
+      (u) => u.app_metadata?.role === 'staff' || u.app_metadata?.role === 'super_admin'
+    );
 
-        return new Response(JSON.stringify({ users: staffUsers }), {
-            headers: { 'Content-Type': 'application/json' }
-        });
-    } catch (e: any) {
-        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
-    }
-}
+    return new Response(JSON.stringify({ users: staffUsers }), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (e: any) {
+    return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+  }
+};
 
 export const POST: APIRoute = async ({ request }) => {
-    const user = await verifySuperAdmin(request);
-    if (!user) return new Response('Unauthorized: Super Admin Access Required', { status: 403 });
+  const user = await verifySuperAdmin(request);
+  if (!user) return new Response('Unauthorized: Super Admin Access Required', { status: 403 });
 
-    try {
-        const body = await request.json();
-        const { email, password, role } = body;
+  try {
+    const body = await request.json();
+    const { email, password, role } = body;
 
-        if (!email || !password || !role) {
-            return new Response(JSON.stringify({ error: 'Missing fields' }), { status: 400 });
-        }
-
-        const { data, error } = await supabaseAdmin.auth.admin.createUser({
-            email,
-            password,
-            email_confirm: true,
-            user_metadata: { role }
-        });
-
-        if (error) throw error;
-
-        return new Response(JSON.stringify({ user: data.user }), { status: 200 });
-    } catch (e: any) {
-        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+    if (!email || !password || !role) {
+      return new Response(JSON.stringify({ error: 'Missing fields' }), { status: 400 });
     }
-}
+
+    const { data, error } = await supabaseAdmin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+      app_metadata: { role },
+    });
+
+    if (error) throw error;
+
+    return new Response(JSON.stringify({ user: data.user }), { status: 200 });
+  } catch (e: any) {
+    return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+  }
+};
 
 export const DELETE: APIRoute = async ({ request }) => {
-    const user = await verifySuperAdmin(request);
-    if (!user) return new Response('Unauthorized: Super Admin Access Required', { status: 403 });
+  const user = await verifySuperAdmin(request);
+  if (!user) return new Response('Unauthorized: Super Admin Access Required', { status: 403 });
 
-    try {
-        const url = new URL(request.url);
-        const id = url.searchParams.get('id');
+  try {
+    const url = new URL(request.url);
+    const id = url.searchParams.get('id');
 
-        if (!id) return new Response('Missing ID', { status: 400 });
+    if (!id) return new Response('Missing ID', { status: 400 });
 
-        const { error } = await supabaseAdmin.auth.admin.deleteUser(id);
-        if (error) throw error;
+    const { error } = await supabaseAdmin.auth.admin.deleteUser(id);
+    if (error) throw error;
 
-        return new Response(JSON.stringify({ success: true }), { status: 200 });
-    } catch (e: any) {
-        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
-    }
+    return new Response(JSON.stringify({ success: true }), { status: 200 });
+  } catch (e: any) {
+    return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+  }
 };
 
 export const PUT: APIRoute = async ({ request }) => {
-    const user = await verifySuperAdmin(request);
-    if (!user) return new Response('Unauthorized: Super Admin Access Required', { status: 403 });
+  const user = await verifySuperAdmin(request);
+  if (!user) return new Response('Unauthorized: Super Admin Access Required', { status: 403 });
 
-    try {
-        const body = await request.json();
-        const { id, role, password } = body;
+  try {
+    const body = await request.json();
+    const { id, role, password } = body;
 
-        if (!id) return new Response('Missing ID', { status: 400 });
+    if (!id) return new Response('Missing ID', { status: 400 });
 
-        const updates: any = {};
-        if (role) updates.user_metadata = { role };
-        if (password) updates.password = password;
+    const updates: any = {};
+    if (role) updates.user_metadata = { role };
+    if (password) updates.password = password;
 
-        const { data, error } = await supabaseAdmin.auth.admin.updateUserById(id, updates);
-        if (error) throw error;
+    const { data, error } = await supabaseAdmin.auth.admin.updateUserById(id, updates);
+    if (error) throw error;
 
-        return new Response(JSON.stringify({ user: data.user }), { status: 200 });
-    } catch (e: any) {
-        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
-    }
+    return new Response(JSON.stringify({ user: data.user }), { status: 200 });
+  } catch (e: any) {
+    return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+  }
 };
