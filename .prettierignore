@@ -1,0 +1,14 @@
+**/node_modules/**
+**/dist/**
+**/.astro/**
+**/.venv/**
+**/venv/**
+**/fresh_venv/**
+**/_crawl4ai_venv/**
+web/tstr-automation/**
+web/tstr-frontend/dist/**
+web/tstr-frontend/.astro/**
+**/*.fixed
+**/package-lock.json
+**/pnpm-lock.yaml
+**/yarn.lock
