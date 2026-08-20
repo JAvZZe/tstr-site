@@ -1,86 +1,87 @@
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co';
+const SUPABASE_URL =
+  import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co';
 const SERVICE_KEY = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!SERVICE_KEY) {
-    throw new Error('SUPABASE_SERVICE_ROLE_KEY is required');
+  throw new Error('SUPABASE_SERVICE_ROLE_KEY is required');
 }
 
 const supabaseAdmin = createClient(SUPABASE_URL, SERVICE_KEY);
 
 async function verifyAuth(request: Request) {
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader) return null;
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
-    if (error || !user) return null;
-    const role = user.user_metadata?.role;
-    if (role !== 'staff' && role !== 'super_admin') return null;
-    return user;
+  const authHeader = request.headers.get('Authorization');
+  if (!authHeader) return null;
+  const token = authHeader.replace('Bearer ', '');
+  const {
+    data: { user },
+    error,
+  } = await supabaseAdmin.auth.getUser(token);
+  if (error || !user) return null;
+  const role = user.app_metadata?.role;
+  if (role !== 'staff' && role !== 'super_admin') return null;
+  return user;
 }
 
 export const GET: APIRoute = async ({ request }) => {
-    const user = await verifyAuth(request);
-    if (!user) return new Response('Unauthorized', { status: 401 });
+  const user = await verifyAuth(request);
+  if (!user) return new Response('Unauthorized', { status: 401 });
 
-    try {
-        const url = new URL(request.url);
-        const statusFilter = url.searchParams.get('status');
+  try {
+    const url = new URL(request.url);
+    const statusFilter = url.searchParams.get('status');
 
-        let query = supabaseAdmin
-            .from('listings')
-            .select('id, business_name, website, category:category_id(name), status, created_at, source_script')
-            .order('created_at', { ascending: false });
+    let query = supabaseAdmin
+      .from('listings')
+      .select(
+        'id, business_name, website, category:category_id(name), status, created_at, source_script'
+      )
+      .order('created_at', { ascending: false });
 
-        if (statusFilter) {
-            query = query.eq('status', statusFilter);
-        }
-
-        const { data: listings, error } = await query;
-
-        if (error) throw error;
-
-        return new Response(JSON.stringify(listings), {
-            headers: { 'Content-Type': 'application/json' }
-        });
-
-    } catch (e: any) {
-        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+    if (statusFilter) {
+      query = query.eq('status', statusFilter);
     }
+
+    const { data: listings, error } = await query;
+
+    if (error) throw error;
+
+    return new Response(JSON.stringify(listings), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (e: any) {
+    return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+  }
 };
 
 export const POST: APIRoute = async ({ request }) => {
-    const user = await verifyAuth(request);
-    if (!user) return new Response('Unauthorized', { status: 401 });
+  const user = await verifyAuth(request);
+  if (!user) return new Response('Unauthorized', { status: 401 });
 
-    try {
-        const body = await request.json();
-        const { id, ...updates } = body;
+  try {
+    const body = await request.json();
+    const { id, ...updates } = body;
 
-        if (!id) return new Response('Missing ID', { status: 400 });
+    if (!id) return new Response('Missing ID', { status: 400 });
 
-        // Allowed fields to update
-        const allowed = ['business_name', 'status', 'website', 'category_id'];
-        const payload: any = {};
+    // Allowed fields to update
+    const allowed = ['business_name', 'status', 'website', 'category_id'];
+    const payload: any = {};
 
-        for (const key of allowed) {
-            if (updates[key] !== undefined) payload[key] = updates[key];
-        }
-
-        const { error } = await supabaseAdmin
-            .from('listings')
-            .update(payload)
-            .eq('id', id);
-
-        if (error) throw error;
-
-        return new Response(JSON.stringify({ success: true }), {
-            headers: { 'Content-Type': 'application/json' }
-        });
-
-    } catch (e: any) {
-        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+    for (const key of allowed) {
+      if (updates[key] !== undefined) payload[key] = updates[key];
     }
-}
+
+    const { error } = await supabaseAdmin.from('listings').update(payload).eq('id', id);
+
+    if (error) throw error;
+
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (e: any) {
+    return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+  }
+};
