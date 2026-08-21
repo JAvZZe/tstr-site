@@ -1,24 +1,25 @@
-import { Resend } from 'resend'
+import { Resend } from 'resend';
 
-let resend: Resend | null = null
+let resend: Resend | null = null;
 
 function getResendClient(): Resend {
   if (!resend) {
-    const apiKey = import.meta.env.RESEND_API_KEY ||
+    const apiKey =
+      import.meta.env.RESEND_API_KEY ||
       import.meta.env.PUBLIC_RESEND_API_KEY ||
-      'REMOVED_FROM_HISTORY'
+      'REMOVED_FROM_HISTORY';
     if (!apiKey) {
-      throw new Error('RESEND_API_KEY environment variable is not set')
+      throw new Error('RESEND_API_KEY environment variable is not set');
     }
-    resend = new Resend(apiKey)
+    resend = new Resend(apiKey);
   }
-  return resend
+  return resend;
 }
 
 export interface EmailTemplate {
-  subject: string
-  html: string
-  text?: string
+  subject: string;
+  html: string;
+  text?: string;
 }
 
 export const sendEmail = async (
@@ -26,28 +27,28 @@ export const sendEmail = async (
   template: EmailTemplate
 ): Promise<{ success: boolean; error?: string }> => {
   try {
-    const resendClient = getResendClient()
-    const fromEmail = import.meta.env.RESEND_FROM_EMAIL || 'noreply@tstr.directory'
+    const resendClient = getResendClient();
+    const fromEmail = import.meta.env.RESEND_FROM_EMAIL || 'noreply@tstr.directory';
     const { error } = await resendClient.emails.send({
       from: fromEmail,
       to: [to],
       subject: template.subject,
       html: template.html,
       text: template.text,
-    })
+    });
 
     if (error) {
-      console.error('Email send error:', error)
-      return { success: false, error: error.message }
+      console.error('Email send error:', error);
+      return { success: false, error: error.message };
     }
 
-    return { success: true }
+    return { success: true };
   } catch (err: unknown) {
-    const errorMsg = err instanceof Error ? err.message : String(err)
-    console.error('Email service error:', err)
-    return { success: false, error: `Email service unavailable: ${errorMsg}` }
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    console.error('Email service error:', err);
+    return { success: false, error: `Email service unavailable: ${errorMsg}` };
   }
-}
+};
 
 export const createDraftSaveEmail = (resumeToken: string, expiresAt: string): EmailTemplate => ({
   subject: 'Resume Your TSTR.directory Claim',
@@ -74,11 +75,11 @@ export const createDraftSaveEmail = (resumeToken: string, expiresAt: string): Em
         <div style="background-color: white; padding: 20px; border-radius: 6px; border-left: 4px solid #000080;">
           <p style="margin: 0; color: #374151; font-size: 14px;">
             <strong>Expires:</strong> ${new Date(expiresAt).toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })}
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}
           </p>
           <p style="margin: 10px 0 0 0; color: #6B7280; font-size: 14px;">
             Save this email for your records. If you didn't save this draft, you can safely ignore this message.
@@ -95,8 +96,8 @@ export const createDraftSaveEmail = (resumeToken: string, expiresAt: string): Em
 
 Expires: ${new Date(expiresAt).toLocaleDateString()}
 
-This is an automated message from TSTR.directory. If you didn't save this draft, you can safely ignore this email.`
-})
+This is an automated message from TSTR.directory. If you didn't save this draft, you can safely ignore this email.`,
+});
 
 export const createVerificationEmail = (
   providerName: string,
@@ -128,12 +129,14 @@ export const createVerificationEmail = (
 
         <div style="background-color: #FEF3C7; padding: 20px; border-radius: 6px; border-left: 4px solid #F59E0B;">
           <p style="margin: 0; color: #92400E; font-size: 14px;">
-            <strong>Important:</strong> This code expires on ${new Date(expiresAt).toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })}. For security reasons, verification codes are only valid for 24 hours.
+            <strong>Important:</strong> This code expires on ${new Date(
+              expiresAt
+            ).toLocaleDateString('en-US', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}. For security reasons, verification codes are only valid for 24 hours.
           </p>
         </div>
       </div>
@@ -166,18 +169,18 @@ What happens next:
 3. You'll receive confirmation once approved
 4. Your listing will be marked as verified
 
-This is an automated message from TSTR.directory. If you didn't submit this claim, you can safely ignore this message.`
-})
+This is an automated message from TSTR.directory. If you didn't submit this claim, you can safely ignore this message.`,
+});
 
 export const generateVerificationToken = (): string => {
   // Generate a 6-character alphanumeric token
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-  let token = ''
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let token = '';
   for (let i = 0; i < 6; i++) {
-    token += chars.charAt(Math.floor(Math.random() * chars.length))
+    token += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-  return token
-}
+  return token;
+};
 
 export const createEFTPaymentEmail = (
   reference: string,
@@ -253,8 +256,8 @@ Branch Code: 250655
 SWIFT: FIRNZAJJ
 Reference: ${reference}
 
-Please email proof of payment to sales@tstr.directory. Your account will be upgraded once funds clear.`
-})
+Please email proof of payment to sales@tstr.directory. Your account will be upgraded once funds clear.`,
+});
 
 export const createCryptoPaymentEmail = (
   reference: string,
@@ -308,5 +311,47 @@ Reference: ${reference}
 Bitcoin Wallet Address:
 ${walletAddress}
 
-Please email proof of payment or transaction hash to sales@tstr.directory. Your account will be upgraded once the transaction has 3 confirmations.`
-})
+Please email proof of payment or transaction hash to sales@tstr.directory. Your account will be upgraded once the transaction has 3 network confirmations.`,
+});
+
+export const createClaimStatusEmail = (
+  providerName: string,
+  status: 'approved' | 'rejected'
+): EmailTemplate => ({
+  subject: `Your TSTR.directory Claim: ${status === 'approved' ? 'Approved' : 'Update'}`,
+  html: `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: #000080; margin: 0;">TSTR.directory</h1>
+        <p style="color: #6B7280; margin: 5px 0;">Testing Services Directory</p>
+      </div>
+      <div style="background-color: #F9FAFB; padding: 30px; border-radius: 8px;">
+        <h2 style="color: #1F2937; margin-top: 0;">Claim ${status === 'approved' ? 'Approved' : 'Update'}</h2>
+        <p style="color: #4B5563; line-height: 1.6;">
+          ${
+            status === 'approved'
+              ? `Your claim for <strong>${providerName}</strong> has been approved. Your listing is now marked as claimed and can be edited from your account.`
+              : `Your claim for <strong>${providerName}</strong> has been reviewed and cannot be approved at this time. Please contact sales@tstr.directory if you believe this is an error.`
+          }
+        </p>
+        ${
+          status === 'approved'
+            ? `<div style="text-align: center; margin: 30px 0;">
+                <a href="https://tstr.directory/claim" style="background-color: #000080; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
+                  Manage Your Listing
+                </a>
+              </div>`
+            : ''
+        }
+      </div>
+      <div style="text-align: center; color: #9CA3AF; font-size: 12px; margin-top: 20px;">
+        <p>This is an automated message from TSTR.directory. Please do not reply.</p>
+      </div>
+    </div>
+  `,
+  text: `Your TSTR.directory claim for ${providerName} has been ${status}. ${
+    status === 'approved'
+      ? 'You can now manage your listing at https://tstr.directory/claim.'
+      : 'Please contact sales@tstr.directory if you have questions.'
+  }`,
+});

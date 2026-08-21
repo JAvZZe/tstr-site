@@ -1,15 +1,32 @@
-import type { APIRoute } from 'astro'
-import { supabase } from '../../lib/supabase'
-import { generateVerificationToken } from '../../lib/domain-verification'
-import { sendEmail, createDraftSaveEmail, createVerificationEmail } from '../../lib/email'
+import type { APIRoute } from 'astro';
+import { createClient } from '@supabase/supabase-js';
+import { canAutoClaim, generateVerificationToken } from '../../lib/domain-verification';
+import {
+  sendEmail,
+  createDraftSaveEmail,
+  createVerificationEmail,
+  createClaimStatusEmail,
+} from '../../lib/email';
+
+const SUPABASE_URL =
+  import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co';
+const SERVICE_KEY = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!SERVICE_KEY) {
+  throw new Error('SUPABASE_SERVICE_ROLE_KEY is required');
+}
+
+const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const data = await request.json()
-    const { mode = 'claim', listingId, resumeToken, ...claimData } = data
+    const data = await request.json();
+    const { mode = 'claim', listingId, resumeToken, ...claimData } = data;
 
     // Get authenticated user (may be null for anonymous claims)
-    const { data: { user } } = await supabase.auth.getUser()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     // Handle resume token for draft access
     if (resumeToken && !user) {
@@ -18,235 +35,215 @@ export const POST: APIRoute = async ({ request }) => {
         .select('*')
         .eq('resume_token', resumeToken)
         .gt('draft_expires_at', new Date().toISOString())
-        .single()
+        .single();
 
       if (!draftClaim) {
-        return new Response(JSON.stringify({
-          error: 'Invalid or expired resume token'
-        }), {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' }
-        })
+        return new Response(
+          JSON.stringify({
+            error: 'Invalid or expired resume token',
+          }),
+          {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
       }
 
-      // Return draft data for form population
-      return new Response(JSON.stringify({
-        success: true,
-        mode: 'resume',
-        draft: draftClaim.draft_data,
-        expires_at: draftClaim.draft_expires_at
-      }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      })
+      return new Response(
+        JSON.stringify({
+          success: true,
+          mode: 'resume',
+          draft: draftClaim.draft_data,
+          expires_at: draftClaim.draft_expires_at,
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     // Handle draft saving
     if (mode === 'save_draft') {
-      const { data: resumeToken, error: tokenError } = await supabase.rpc('generate_resume_token')
-      const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+      const { data: resumeToken, error: tokenError } = await supabase.rpc('generate_resume_token');
+      const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
 
       if (tokenError || !resumeToken) {
-        console.error('Token generation error:', tokenError)
-        return new Response(JSON.stringify({ error: 'Failed to generate resume token' }), { status: 500 })
+        console.error('Token generation error:', tokenError);
+        return new Response(JSON.stringify({ error: 'Failed to generate resume token' }), {
+          status: 500,
+        });
       }
 
-      const { error } = await supabase
-        .from('claims')
-        .insert({
-          provider_name: claimData.provider_name,
-          contact_name: claimData.contact_name,
-          business_email: claimData.business_email,
-          phone: claimData.phone,
-          draft_data: claimData,
-          resume_token: resumeToken,
-          draft_expires_at: expiresAt.toISOString(),
-          verification_status: 'pending'
-        })
-        .select()
-        .single()
+      const { error } = await supabase.from('claims').insert({
+        provider_name: claimData.provider_name,
+        contact_name: claimData.contact_name,
+        business_email: claimData.business_email,
+        phone: claimData.phone,
+        draft_data: claimData,
+        resume_token: resumeToken,
+        draft_expires_at: expiresAt.toISOString(),
+        status: 'pending',
+      });
 
       if (error) {
-        console.error('Draft save error:', error)
-        return new Response(JSON.stringify({
-          error: 'Failed to save draft'
-        }), {
-          status: 500,
-          headers: { 'Content-Type': 'application/json' }
-        })
+        console.error('Draft save error:', error);
+        return new Response(JSON.stringify({ error: 'Failed to save draft' }), { status: 500 });
       }
 
-      // Send draft save email with resume link
-      const emailTemplate = createDraftSaveEmail(resumeToken, expiresAt.toISOString())
-      const emailResult = await sendEmail(claimData.business_email, emailTemplate)
+      const emailTemplate = createDraftSaveEmail(resumeToken, expiresAt.toISOString());
+      const emailResult = await sendEmail(claimData.business_email, emailTemplate);
 
-      if (!emailResult.success) {
-        console.error('Draft email failed:', emailResult.error)
-        // Don't fail the draft save if email fails - log and continue
-      }
-
-      return new Response(JSON.stringify({
-        success: true,
-        mode: 'draft_saved',
-        resume_token: resumeToken,
-        expires_at: expiresAt.toISOString(),
-        message: emailResult.success
-          ? 'Draft saved successfully. Check your email for a resume link.'
-          : 'Draft saved successfully. Email delivery failed - save your resume token.'
-      }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      })
+      return new Response(
+        JSON.stringify({
+          success: true,
+          mode: 'draft_saved',
+          resume_token: resumeToken,
+          expires_at: expiresAt.toISOString(),
+          message: emailResult.success
+            ? 'Draft saved successfully. Check your email for a resume link.'
+            : 'Draft saved successfully. Email delivery failed - save your resume token.',
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
     }
 
-    // Handle claim submission (authenticated or anonymous)
+    // Handle claim submission
     if (!claimData.business_email || !claimData.provider_name || !claimData.contact_name) {
-      return new Response(JSON.stringify({
-        error: 'Missing required fields: provider_name, contact_name, and business_email are required'
-      }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' }
-      })
+      return new Response(
+        JSON.stringify({
+          error:
+            'Missing required fields: provider_name, contact_name, and business_email are required',
+        }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
     }
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(claimData.business_email)) {
-      return new Response(JSON.stringify({
-        error: 'Invalid email format'
-      }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' }
-      })
+      return new Response(
+        JSON.stringify({
+          error: 'Invalid email format',
+        }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
     }
 
-    // Check domain verification for ALL claims
-    // Temporarily disabled until migration is applied
-    const domainVerified = false
-    const verificationMethod = 'manual_review'
+    // Domain verification
+    let domainVerified = false;
+    let verificationMethod = 'admin_approval';
 
-    // TODO: Re-enable domain verification after migration
-    /*
     if (user) {
-      // For authenticated users, check against their email domain
-      domainVerified = canAutoClaim(user.email, claimData.website || '')
-      if (domainVerified) {
-        verificationMethod = 'domain_match'
-      }
+      domainVerified = canAutoClaim(user.email, claimData.website || '');
+      if (domainVerified) verificationMethod = 'domain_match';
     } else {
-      // For anonymous claims, check business email domain
-      // This is a simplified check - in production, you'd verify domain ownership
-      const emailDomain = claimData.business_email.split('@')[1]
+      const emailDomain = claimData.business_email.split('@')[1];
       if (emailDomain && claimData.website) {
-        const websiteDomain = new URL(claimData.website).hostname.replace('www.', '')
-        domainVerified = emailDomain === websiteDomain
-        if (domainVerified) {
-          verificationMethod = 'domain_match'
+        try {
+          const websiteDomain = new URL(claimData.website).hostname.replace('www.', '');
+          domainVerified = emailDomain === websiteDomain;
+          if (domainVerified) verificationMethod = 'domain_match';
+        } catch {
+          // Invalid URL, fall through to manual verification
         }
       }
     }
-    */
 
-    // Handle existing listing claims (authenticated users only)
+    // Handle existing listing claims (authenticated users)
     if (listingId && user) {
       const { data: listing } = await supabase
         .from('listings')
         .select('id, name, website, claimed')
         .eq('id', listingId)
-        .single()
+        .single();
 
       if (!listing) {
-        return new Response(JSON.stringify({
-          error: 'Listing not found'
-        }), {
-          status: 404,
-          headers: { 'Content-Type': 'application/json' }
-        })
+        return new Response(JSON.stringify({ error: 'Listing not found' }), { status: 404 });
       }
 
       if (listing.claimed) {
-        return new Response(JSON.stringify({
-          error: 'This listing has already been claimed'
-        }), {
+        return new Response(JSON.stringify({ error: 'This listing has already been claimed' }), {
           status: 409,
-          headers: { 'Content-Type': 'application/json' }
-        })
+        });
       }
 
-      // Check existing claim
       const { data: existingClaim } = await supabase
         .from('listing_owners')
         .select('id, status')
         .eq('user_id', user.id)
         .eq('listing_id', listingId)
-        .single()
+        .single();
 
       if (existingClaim) {
-        return new Response(JSON.stringify({
-          error: existingClaim.status === 'pending'
-            ? 'You already have a pending claim on this listing'
-            : 'You are already the owner of this listing'
-        }), {
-          status: 409,
-          headers: { 'Content-Type': 'application/json' }
-        })
+        return new Response(
+          JSON.stringify({
+            error:
+              existingClaim.status === 'pending'
+                ? 'You already have a pending claim on this listing'
+                : 'You are already the owner of this listing',
+          }),
+          { status: 409 }
+        );
       }
 
-      // Insert listing owner claim
       const listingOwnerClaim = {
         user_id: user.id,
         listing_id: listingId,
         status: domainVerified ? 'verified' : 'pending',
         verification_method: verificationMethod,
-        verified_at: domainVerified ? new Date().toISOString() : null
-      }
+        verified_at: domainVerified ? new Date().toISOString() : null,
+      };
 
-      const { error: claimError } = await supabase
-        .from('listing_owners')
-        .insert(listingOwnerClaim)
+      const { error: claimError } = await supabase.from('listing_owners').insert(listingOwnerClaim);
 
       if (claimError) {
-        console.error('Claim error:', claimError)
-        return new Response(JSON.stringify({
-          error: 'Failed to process claim'
-        }), {
-          status: 500,
-          headers: { 'Content-Type': 'application/json' }
-        })
+        console.error('Claim error:', claimError);
+        return new Response(JSON.stringify({ error: 'Failed to process claim' }), { status: 500 });
       }
 
       if (domainVerified) {
-        // Mark listing as claimed
         await supabase
           .from('listings')
-          .update({
-            claimed: true,
-            claimed_at: new Date().toISOString()
-          })
-          .eq('id', listingId)
+          .update({ claimed: true, claimed_at: new Date().toISOString() })
+          .eq('id', listingId);
       }
 
-      return new Response(JSON.stringify({
-        success: true,
-        method: domainVerified ? 'auto' : 'manual',
-        message: domainVerified
-          ? `Successfully claimed "${listing.name}"! You are now the verified owner.`
-          : `Claim submitted for "${listing.name}". ${domainVerified ? 'Verified automatically.' : 'Manual verification required.'}`,
-        claim: {
-          status: domainVerified ? 'verified' : 'pending',
-          method: verificationMethod,
-          verified_at: domainVerified ? new Date().toISOString() : null
-        }
-      }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      })
+      // Notify admin
+      await sendEmail('sales@tstr.directory', {
+        subject: `New Claim: ${listing.name}`,
+        html: `<p>A new claim was submitted for <strong>${listing.name}</strong> by ${claimData.contact_name} (${claimData.business_email}). ${domainVerified ? 'Auto-verified.' : 'Manual review required.'}</p>`,
+        text: `New claim for ${listing.name} by ${claimData.contact_name} (${claimData.business_email}). ${domainVerified ? 'Auto-verified.' : 'Manual review required.'}`,
+      });
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          method: domainVerified ? 'auto' : 'manual',
+          message: domainVerified
+            ? `Successfully claimed "${listing.name}"! You are now the verified owner.`
+            : `Claim submitted for "${listing.name}". We'll review it shortly.`,
+          claim: {
+            status: domainVerified ? 'verified' : 'pending',
+            method: verificationMethod,
+            verified_at: domainVerified ? new Date().toISOString() : null,
+          },
+        }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
     }
 
-    // Handle new claim submissions (anonymous or authenticated)
-    // Temporarily simplified until migration applied
-    const verificationToken = generateVerificationToken() // Using email utility function
-    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+    // Handle anonymous claims (no listingId, or no user)
+    const verificationToken = generateVerificationToken();
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
     const newClaim = {
       provider_name: claimData.provider_name,
@@ -254,86 +251,64 @@ export const POST: APIRoute = async ({ request }) => {
       business_email: claimData.business_email,
       phone: claimData.phone,
       website: claimData.website,
-      // Note: New columns (verification_status, etc.) will be added after migration
-      // For now, using basic insert
-    }
+      status: domainVerified ? 'verified' : 'pending',
+      verification_token: verificationToken,
+      token_expires_at: expiresAt.toISOString(),
+    };
 
     const { data: insertedClaim, error } = await supabase
       .from('claims')
       .insert(newClaim)
       .select()
-      .single()
+      .single();
 
     if (error) {
-      console.error('Claim submission error:', error)
-      return new Response(JSON.stringify({
-        error: 'Failed to submit claim'
-      }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      })
+      console.error('Claim submission error:', error);
+      return new Response(JSON.stringify({ error: 'Failed to submit claim' }), { status: 500 });
     }
 
-    // Send verification email if manual verification required
-    if (!domainVerified && verificationToken) {
+    // Send verification email if manual
+    if (!domainVerified) {
       const emailTemplate = createVerificationEmail(
         claimData.provider_name,
         verificationToken,
         expiresAt.toISOString()
-      )
-      const emailResult = await sendEmail(claimData.business_email, emailTemplate)
-
-      if (!emailResult.success) {
-        console.error('Verification email failed:', emailResult.error)
-        // Log error but don't fail the claim submission
-      }
+      );
+      await sendEmail(claimData.business_email, emailTemplate);
     }
 
-    // Determine if email was sent successfully
-    let emailSent = false
-    if (!domainVerified && verificationToken) {
-      const emailTemplate = createVerificationEmail(
-        claimData.provider_name,
-        verificationToken,
-        expiresAt.toISOString()
-      )
-      const emailResult = await sendEmail(claimData.business_email, emailTemplate)
-      emailSent = emailResult.success
+    // Notify admin
+    await sendEmail('sales@tstr.directory', {
+      subject: `New Claim: ${claimData.provider_name}`,
+      html: `<p>A new claim was submitted for <strong>${claimData.provider_name}</strong> by ${claimData.contact_name} (${claimData.business_email}). ${domainVerified ? 'Auto-verified.' : 'Manual review required.'}</p>`,
+      text: `New claim for ${claimData.provider_name} by ${claimData.contact_name} (${claimData.business_email}). ${domainVerified ? 'Auto-verified.' : 'Manual review required.'}`,
+    });
 
-      if (!emailResult.success) {
-        console.error('Verification email failed:', emailResult.error)
-      }
-    }
-
-    return new Response(JSON.stringify({
-      success: true,
-      method: domainVerified ? 'auto' : 'manual',
-      message: domainVerified
-        ? 'Claim verified automatically! Your listing will be processed shortly.'
-        : emailSent
-          ? 'Claim submitted successfully. A verification email has been sent.'
-          : 'Claim submitted successfully. Email delivery failed - please contact support.',
-      claim: {
-        id: insertedClaim.id,
-        status: domainVerified ? 'verified' : 'pending',
-        method: verificationMethod,
-        ...(verificationToken && {
-          token: verificationToken, // Remove in production
-          expires_at: expiresAt.toISOString()
-        })
-      }
-    }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    })
-
+    return new Response(
+      JSON.stringify({
+        success: true,
+        method: domainVerified ? 'auto' : 'manual',
+        message: domainVerified
+          ? 'Claim verified automatically! Your listing will be processed shortly.'
+          : 'Claim submitted successfully. A verification email has been sent.',
+        claim: {
+          id: insertedClaim.id,
+          status: domainVerified ? 'verified' : 'pending',
+          method: verificationMethod,
+        },
+      }),
+      { status: 200, headers: { 'Content-Type': 'application/json' } }
+    );
   } catch (error) {
-    console.error('Unified claim API error:', error)
-    return new Response(JSON.stringify({
-      error: 'Internal server error'
-    }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    })
+    console.error('Unified claim API error:', error);
+    return new Response(
+      JSON.stringify({
+        error: 'Internal server error',
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
   }
-}
+};

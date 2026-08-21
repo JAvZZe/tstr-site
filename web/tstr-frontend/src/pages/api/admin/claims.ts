@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
+import { sendEmail, createClaimStatusEmail } from '../../../lib/email';
 
 const SUPABASE_URL =
   import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co';
@@ -51,9 +52,28 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response('Invalid Request', { status: 400 });
     }
 
+    const { data: claim, error: fetchError } = await supabaseAdmin
+      .from('claims')
+      .select('id, provider_name, business_email, status')
+      .eq('id', id)
+      .single();
+
+    if (fetchError || !claim) {
+      return new Response(JSON.stringify({ error: 'Claim not found' }), { status: 404 });
+    }
+
     const { error } = await supabaseAdmin.from('claims').update({ status }).eq('id', id);
 
     if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+
+    // Notify claimant of status change
+    if (claim.business_email) {
+      const emailTemplate = createClaimStatusEmail(
+        claim.provider_name,
+        status as 'approved' | 'rejected'
+      );
+      await sendEmail(claim.business_email, emailTemplate);
+    }
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { 'Content-Type': 'application/json' },
