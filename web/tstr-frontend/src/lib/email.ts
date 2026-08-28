@@ -4,10 +4,7 @@ let resend: Resend | null = null;
 
 function getResendClient(): Resend {
   if (!resend) {
-    const apiKey =
-      import.meta.env.RESEND_API_KEY ||
-      import.meta.env.PUBLIC_RESEND_API_KEY ||
-      'REMOVED_FROM_HISTORY';
+    const apiKey = import.meta.env.RESEND_API_KEY || import.meta.env.PUBLIC_RESEND_API_KEY;
     if (!apiKey) {
       throw new Error('RESEND_API_KEY environment variable is not set');
     }
