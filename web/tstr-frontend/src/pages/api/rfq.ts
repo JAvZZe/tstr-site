@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
 import { sendEmail, type EmailTemplate } from '../../lib/email';
 import { requiredString, optionalString } from '../../lib/validate';
+import { getServiceKey } from '../../lib/supabase-admin';
 
 /**
  * Gated RFQ intake.
@@ -97,7 +98,7 @@ function createRfqAlertEmail(d: {
   };
 }
 
-export const POST: APIRoute = async ({ request, clientAddress }) => {
+export const POST: APIRoute = async ({ request, clientAddress, locals }) => {
   try {
     const ct = request.headers.get('content-type') || '';
     const body: Record<string, string> = {};
@@ -149,9 +150,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     const listingSlug = optionalString(body.listing_slug, { max: 200 });
 
     // Persist first — never lose a lead because email failed.
-    const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-    const serviceKey =
-      import.meta.env.SUPABASE_SERVICE_ROLE_KEY || import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+    const supabaseUrl =
+      import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co';
+    const serviceKey = getServiceKey(locals) || import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
     let stored = false;
     if (supabaseUrl && serviceKey) {
