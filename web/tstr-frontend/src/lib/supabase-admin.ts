@@ -6,13 +6,29 @@ const SUPABASE_URL =
 /**
  * Get the Supabase service-role key.
  *
- * Cloudflare Pages injects secrets at runtime via locals.runtime.env, NOT
- * import.meta.env (which is build-time only and empty for secrets). Check
- * there first, then fall back to the build-time value for local dev.
+ * Cloudflare Pages injects secrets at runtime. Try multiple sources:
+ * 1. locals.runtime.env (Astro Cloudflare adapter way)
+ * 2. process.env (Cloudflare Workers native way)
+ * 3. import.meta.env (build-time, for local dev)
  */
 export function getServiceKey(locals?: unknown): string | null {
-  const env = (locals as { runtime?: { env?: Record<string, string> } } | undefined)?.runtime?.env;
-  return env?.SUPABASE_SERVICE_ROLE_KEY || import.meta.env.SUPABASE_SERVICE_ROLE_KEY || null;
+  // Astro Cloudflare adapter way
+  if (locals) {
+    const env = (locals as { runtime?: { env?: Record<string, string> } }).runtime?.env;
+    if (env?.SUPABASE_SERVICE_ROLE_KEY) return env.SUPABASE_SERVICE_ROLE_KEY;
+  }
+
+  // Cloudflare Workers native way
+  if (typeof process !== 'undefined' && process.env?.SUPABASE_SERVICE_ROLE_KEY) {
+    return process.env.SUPABASE_SERVICE_ROLE_KEY;
+  }
+
+  // Build-time fallback (local dev)
+  if (import.meta.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
+  }
+
+  return null;
 }
 
 export function createAdminClient(locals?: unknown): SupabaseClient | null {
