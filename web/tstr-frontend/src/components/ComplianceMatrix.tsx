@@ -19,41 +19,49 @@ interface ComplianceMatrixProps {
 const ComplianceMatrix: React.FC<ComplianceMatrixProps> = ({ capabilities }) => {
   if (!capabilities || capabilities.length === 0) {
     return (
-      <div className="p-8 text-center bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+      <div className="rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 p-8 text-center">
         <p className="text-gray-500">No verified capabilities listed for this facility.</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md">
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <thead className="bg-gray-50 border-b border-gray-200">
+        <table className="w-full border-collapse text-left">
+          <thead className="border-b border-gray-200 bg-gray-50">
             <tr>
-              <th className="p-4 font-bold text-gray-700 text-sm uppercase tracking-wider">Standard / Code</th>
-              <th className="p-4 font-bold text-gray-700 text-sm uppercase tracking-wider">Scope of Accreditation</th>
-              <th className="p-4 font-bold text-gray-700 text-sm uppercase tracking-wider text-center">Trust Status</th>
+              <th className="p-4 text-sm font-bold uppercase tracking-wider text-gray-700">
+                Standard / Code
+              </th>
+              <th className="p-4 text-sm font-bold uppercase tracking-wider text-gray-700">
+                Scope of Accreditation
+              </th>
+              <th className="p-4 text-center text-sm font-bold uppercase tracking-wider text-gray-700">
+                Trust Status
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
             {capabilities.map((cap) => (
-              <tr key={cap.id} className="hover:bg-blue-50/30 transition-colors">
+              <tr key={cap.id} className="transition-colors hover:bg-blue-50/30">
                 <td className="p-4 align-top">
                   <div className="font-mono font-bold text-blue-700">{cap.standard.code}</div>
                 </td>
                 <td className="p-4 align-top">
-                  <div className="font-bold text-gray-900 mb-1">{cap.standard.name}</div>
+                  <div className="mb-1 font-bold text-gray-900">{cap.standard.name}</div>
                   {cap.standard.description && (
-                    <p className="text-xs text-gray-500 leading-relaxed">{cap.standard.description}</p>
+                    <p className="text-xs leading-relaxed text-gray-500">
+                      {cap.standard.description}
+                    </p>
                   )}
                   {cap.notes && (
-                    <div className="mt-2 p-2 bg-yellow-50 text-yellow-800 text-[10px] rounded border border-yellow-100 italic">
+                    <div className="mt-2 rounded border border-yellow-100 bg-yellow-50 p-2 text-[10px] italic text-yellow-800">
                       Note: {cap.notes}
                     </div>
                   )}
                 </td>
-                <td className="p-4 align-middle text-center">
+                <td className="p-4 text-center align-middle">
                   <TrustBadge level={cap.verified ? 'verified' : 'aggregated'} size="md" />
                 </td>
               </tr>
@@ -61,7 +69,7 @@ const ComplianceMatrix: React.FC<ComplianceMatrixProps> = ({ capabilities }) => 
           </tbody>
         </table>
       </div>
-      <div className="bg-gray-50 p-3 text-[10px] text-gray-400 border-t border-gray-100 text-center">
+      <div className="border-t border-gray-100 bg-gray-50 p-3 text-center text-[10px] text-gray-400">
         * TSTR Verified means documentation has been reviewed by our technical team.
       </div>
     </div>

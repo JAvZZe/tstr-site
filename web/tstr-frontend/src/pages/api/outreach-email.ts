@@ -123,10 +123,13 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     if (!listings || listings.length === 0) {
-      return new Response(JSON.stringify({ success: true, sent: 0, message: 'No eligible listings found' }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return new Response(
+        JSON.stringify({ success: true, sent: 0, message: 'No eligible listings found' }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     const results = await Promise.allSettled(
@@ -142,18 +145,23 @@ export const POST: APIRoute = async ({ request }) => {
       })
     );
 
-    const succeeded = results.filter(r => r.status === 'fulfilled' && (r.value as {success: boolean}).success).length;
+    const succeeded = results.filter(
+      (r) => r.status === 'fulfilled' && (r.value as { success: boolean }).success
+    ).length;
     const failed = results.length - succeeded;
 
-    return new Response(JSON.stringify({
-      success: true,
-      sent: succeeded,
-      failed,
-      total: listings.length,
-    }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(
+      JSON.stringify({
+        success: true,
+        sent: succeeded,
+        failed,
+        total: listings.length,
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
   }
 
   return new Response(JSON.stringify({ error: 'Provide listingId or batch:true' }), {

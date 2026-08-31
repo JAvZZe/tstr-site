@@ -9,4 +9,5 @@ interface Props {
 const { data } = Astro.props;
 const json = JSON.stringify(data);
 ---
-<script type="application/ld+json" set:html={json}></script>
+
+<script type="application/ld+json" set:html={json} />

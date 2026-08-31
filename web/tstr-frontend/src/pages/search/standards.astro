@@ -1,6 +1,6 @@
 ---
-import { supabase } from '../../lib/supabase'
-import Footer from '../../components/Footer.astro'
+import { supabase } from '../../lib/supabase';
+import Footer from '../../components/Footer.astro';
 
 // Fetch all active standards grouped by issuing body
 const { data: standards, error: standardsError } = await supabase
@@ -8,20 +8,24 @@ const { data: standards, error: standardsError } = await supabase
   .select('id, code, name, issuing_body, category:category_id(name)')
   .eq('is_active', true)
   .order('issuing_body', { ascending: true })
-  .order('code', { ascending: true })
+  .order('code', { ascending: true });
 
 // Group standards by issuing body for better organization
-const standardsByBody = standards?.reduce((acc, std) => {
-  const body = std.issuing_body || 'Other'
-  if (!acc[body]) acc[body] = []
-  acc[body].push(std)
-  return acc
-}, {} as Record<string, typeof standards>)
+const standardsByBody = standards?.reduce(
+  (acc, std) => {
+    const body = std.issuing_body || 'Other';
+    if (!acc[body]) acc[body] = [];
+    acc[body].push(std);
+    return acc;
+  },
+  {} as Record<string, typeof standards>
+);
 
 // Fetch all active listings with location data for city/country extraction
 const { data: listings } = await supabase
   .from('listings')
-  .select(`
+  .select(
+    `
     location:location_id (
       id,
       name,
@@ -38,797 +42,875 @@ const { data: listings } = await supabase
       )
     ),
     address
-  `)
-  .eq('status', 'active')
+  `
+  )
+  .eq('status', 'active');
 
-  // Extract unique countries and cities from location hierarchy and address
-  const getCountryFromLocation = (location) => {
-    if (!location) return null
-    if (location.level === 'country') return { name: location.name, slug: location.name.toLowerCase().replace(/\s+/g, '-') }
-    if (location.parent?.level === 'country') return { name: location.parent.name, slug: location.parent.name.toLowerCase().replace(/\s+/g, '-') }
-    if (location.parent?.parent?.level === 'country') return { name: location.parent.parent.name, slug: location.parent.parent.name.toLowerCase().replace(/\s+/g, '-') }
-    return null
+// Extract unique countries and cities from location hierarchy and address
+const getCountryFromLocation = (location) => {
+  if (!location) return null;
+  if (location.level === 'country')
+    return { name: location.name, slug: location.name.toLowerCase().replace(/\s+/g, '-') };
+  if (location.parent?.level === 'country')
+    return {
+      name: location.parent.name,
+      slug: location.parent.name.toLowerCase().replace(/\s+/g, '-'),
+    };
+  if (location.parent?.parent?.level === 'country')
+    return {
+      name: location.parent.parent.name,
+      slug: location.parent.parent.name.toLowerCase().replace(/\s+/g, '-'),
+    };
+  return null;
+};
+
+const getCityFromLocation = (location) => {
+  if (!location) return null;
+  if (location.level === 'city')
+    return { name: location.name, slug: location.name.toLowerCase().replace(/\s+/g, '-') };
+  return null;
+};
+
+// Improved address parsing to avoid extracting street addresses as cities/countries
+const extractLocationFromAddress = (address) => {
+  if (!address) return { city: null, country: null };
+
+  // Clean the address
+  let cleanAddress = address.trim();
+
+  // Handle Singapore addresses: "Street, Singapore POSTAL_CODE"
+  if (cleanAddress.includes('Singapore')) {
+    const singaporeMatch = cleanAddress.match(/,\s*Singapore\s*\d{6}/i);
+    if (singaporeMatch) {
+      return {
+        city: 'Singapore',
+        country: 'Singapore',
+      };
+    }
   }
 
-  const getCityFromLocation = (location) => {
-    if (!location) return null
-    if (location.level === 'city') return { name: location.name, slug: location.name.toLowerCase().replace(/\s+/g, '-') }
-    return null
+  // Standard format: "City, State, Country" or "City, Country"
+  const parts = cleanAddress
+    .split(',')
+    .map((p) => p.trim())
+    .filter((p) => p.length > 0);
+
+  if (parts.length >= 2) {
+    const lastPart = parts[parts.length - 1];
+    const secondLastPart = parts[parts.length - 2];
+
+    // Check if last part looks like a country
+    const countryNames = [
+      'USA',
+      'United States',
+      'Canada',
+      'Germany',
+      'Netherlands',
+      'Singapore',
+      'Thailand',
+      'United Kingdom',
+      'UK',
+      'United Arab Emirates',
+      'UAE',
+      'Kuwait',
+    ];
+    const isCountry = countryNames.some((country) =>
+      lastPart.toLowerCase().includes(country.toLowerCase())
+    );
+
+    // Only extract if it looks like a proper city/country format
+    // Avoid street addresses by checking if the "city" part looks like an address
+    const looksLikeStreetAddress =
+      /^\d+\s+[A-Za-z]|\b(street|avenue|road|drive|lane|way|place|court)\b/i.test(secondLastPart);
+
+    if (
+      isCountry &&
+      !looksLikeStreetAddress &&
+      secondLastPart.length > 2 &&
+      secondLastPart.length < 50
+    ) {
+      return {
+        city: secondLastPart,
+        country: lastPart,
+      };
+    }
   }
 
-  // Improved address parsing to avoid extracting street addresses as cities/countries
-  const extractLocationFromAddress = (address) => {
-    if (!address) return { city: null, country: null }
+  // If we can't parse it reliably, don't extract from address
+  return { city: null, country: null };
+};
 
-    // Clean the address
-    let cleanAddress = address.trim()
+const countryMap = new Map();
+const cityMap = new Map();
 
-    // Handle Singapore addresses: "Street, Singapore POSTAL_CODE"
-    if (cleanAddress.includes('Singapore')) {
-      const singaporeMatch = cleanAddress.match(/,\s*Singapore\s*\d{6}/i)
-      if (singaporeMatch) {
-        return {
-          city: 'Singapore',
-          country: 'Singapore'
-        }
-      }
-    }
+listings?.forEach((listing) => {
+  // From location hierarchy (primary source)
+  const country = getCountryFromLocation(listing.location);
+  if (country) countryMap.set(country.slug, country.name);
 
-    // Standard format: "City, State, Country" or "City, Country"
-    const parts = cleanAddress.split(',').map(p => p.trim()).filter(p => p.length > 0)
+  const city = getCityFromLocation(listing.location);
+  if (city) cityMap.set(city.slug, city.name);
 
-    if (parts.length >= 2) {
-      const lastPart = parts[parts.length - 1]
-      const secondLastPart = parts[parts.length - 2]
-
-      // Check if last part looks like a country
-      const countryNames = ['USA', 'United States', 'Canada', 'Germany', 'Netherlands', 'Singapore', 'Thailand', 'United Kingdom', 'UK', 'United Arab Emirates', 'UAE', 'Kuwait']
-      const isCountry = countryNames.some(country => lastPart.toLowerCase().includes(country.toLowerCase()))
-
-      // Only extract if it looks like a proper city/country format
-      // Avoid street addresses by checking if the "city" part looks like an address
-      const looksLikeStreetAddress = /^\d+\s+[A-Za-z]|\b(street|avenue|road|drive|lane|way|place|court)\b/i.test(secondLastPart)
-
-      if (isCountry && !looksLikeStreetAddress && secondLastPart.length > 2 && secondLastPart.length < 50) {
-        return {
-          city: secondLastPart,
-          country: lastPart
-        }
-      }
-    }
-
-    // If we can't parse it reliably, don't extract from address
-    return { city: null, country: null }
+  // From address field as fallback (improved parsing)
+  const addressLocation = extractLocationFromAddress(listing.address);
+  if (
+    addressLocation.country &&
+    !countryMap.has(addressLocation.country.toLowerCase().replace(/\s+/g, '-'))
+  ) {
+    countryMap.set(
+      addressLocation.country.toLowerCase().replace(/\s+/g, '-'),
+      addressLocation.country
+    );
   }
 
-const countryMap = new Map()
-const cityMap = new Map()
-
-  listings?.forEach(listing => {
-    // From location hierarchy (primary source)
-    const country = getCountryFromLocation(listing.location)
-    if (country) countryMap.set(country.slug, country.name)
-
-    const city = getCityFromLocation(listing.location)
-    if (city) cityMap.set(city.slug, city.name)
-
-    // From address field as fallback (improved parsing)
-    const addressLocation = extractLocationFromAddress(listing.address)
-    if (addressLocation.country && !countryMap.has(addressLocation.country.toLowerCase().replace(/\s+/g, '-'))) {
-      countryMap.set(addressLocation.country.toLowerCase().replace(/\s+/g, '-'), addressLocation.country)
-    }
-
-    if (addressLocation.city && !cityMap.has(addressLocation.city.toLowerCase().replace(/\s+/g, '-'))) {
-      cityMap.set(addressLocation.city.toLowerCase().replace(/\s+/g, '-'), addressLocation.city)
-    }
-  })
+  if (
+    addressLocation.city &&
+    !cityMap.has(addressLocation.city.toLowerCase().replace(/\s+/g, '-'))
+  ) {
+    cityMap.set(addressLocation.city.toLowerCase().replace(/\s+/g, '-'), addressLocation.city);
+  }
+});
 
 // Create combined location options for fuzzy search
-const locationOptions = []
+const locationOptions = [];
 countryMap.forEach((name, slug) => {
-  locationOptions.push({ name, type: 'country', displayName: `${name} (Country)` })
-})
+  locationOptions.push({ name, type: 'country', displayName: `${name} (Country)` });
+});
 cityMap.forEach((name, slug) => {
-  locationOptions.push({ name, type: 'city', displayName: `${name} (City)` })
-})
+  locationOptions.push({ name, type: 'city', displayName: `${name} (City)` });
+});
 
-const totalStandards = standards?.length || 0
+const totalStandards = standards?.length || 0;
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Search by Standard | TSTR Hub</title>
-  <meta name="description" content="Find testing laboratories by specific certifications and standards. Search across {totalStandards} standards including ISO, API, USP, ASTM, and more.">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
-     crossorigin="anonymous"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search by Standard | TSTR Hub</title>
+    <meta
+      name="description"
+      content="Find testing laboratories by specific certifications and standards. Search across {totalStandards} standards including ISO, API, USP, ASTM, and more."
+    />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
+      crossorigin="anonymous"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #f5f5f5;
-    }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+          sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #f5f5f5;
+      }
 
-    header {
-      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
-      color: white;
-      padding: 2rem;
-      text-align: center;
-    }
+      header {
+        background: linear-gradient(135deg, #000080 0%, #32cd32 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+      }
 
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-    }
-
-    header p {
-      font-size: 1.1rem;
-      opacity: 0.95;
-    }
-
-    .breadcrumb {
-      margin-top: 1rem;
-      opacity: 0.9;
-    }
-
-    .breadcrumb a {
-      color: white;
-      text-decoration: none;
-    }
-
-    .breadcrumb a:hover {
-      text-decoration: underline;
-    }
-
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 3rem 2rem;
-    }
-
-    .search-card {
-      background: white;
-      padding: 2.5rem;
-      border-radius: 12px;
-      margin-bottom: 2rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .search-form {
-      display: grid;
-      gap: 1.5rem;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .form-group label {
-      font-weight: 600;
-      color: #000080;
-      margin-bottom: 0.5rem;
-      font-size: 1rem;
-    }
-
-    /* Autocomplete Dropdown Styles */
-    .autocomplete-container {
-      position: relative;
-      width: 100%;
-    }
-
-    .autocomplete-input {
-      width: 100%;
-      padding: 0.75rem 2.5rem 0.75rem 0.75rem;
-      border: 2px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 1rem;
-      background: white;
-      cursor: text;
-      transition: border-color 0.2s ease;
-    }
-
-    .autocomplete-input:focus {
-      outline: none;
-      border-color: #000080;
-      box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
-    }
-
-    .autocomplete-input::placeholder {
-      color: #a0aec0;
-    }
-
-    .autocomplete-clear {
-      position: absolute;
-      right: 0.75rem;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: #a0aec0;
-      cursor: pointer;
-      padding: 0.25rem;
-      border-radius: 4px;
-      font-size: 1.2rem;
-      line-height: 1;
-      opacity: 0;
-      transition: opacity 0.2s ease, color 0.2s ease;
-    }
-
-    .autocomplete-clear:hover {
-      color: #4a5568;
-      background: #f7fafc;
-    }
-
-    .autocomplete-clear.visible {
-      opacity: 1;
-    }
-
-    .autocomplete-dropdown {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: white;
-      border: 2px solid #e2e8f0;
-      border-top: none;
-      border-radius: 0 0 8px 8px;
-      max-height: 200px;
-      overflow-y: auto;
-      z-index: 1000;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-
-    .autocomplete-option {
-      padding: 0.75rem;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-      border-bottom: 1px solid #f7fafc;
-    }
-
-    .autocomplete-option:last-child {
-      border-bottom: none;
-    }
-
-    .autocomplete-option:hover,
-    .autocomplete-option.selected {
-      background-color: #f7fafc;
-    }
-
-    .autocomplete-option.highlighted {
-      background-color: #edf2f7;
-    }
-
-    .autocomplete-no-results {
-      padding: 0.75rem;
-      color: #a0aec0;
-      font-style: italic;
-    }
-
-    .autocomplete-match {
-      font-weight: 600;
-      color: #000080;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .btn {
-      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
-      color: white;
-      padding: 0.9rem 2rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102,126,234,0.3);
-    }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .results-section {
-      display: none;
-    }
-
-    .results-section.active {
-      display: block;
-    }
-
-    .results-count {
-      background: white;
-      padding: 1rem 2rem;
-      border-radius: 8px;
-      margin-bottom: 1.5rem;
-      text-align: center;
-      font-weight: 600;
-      color: #000080;
-    }
-
-    .listings-grid {
-      display: grid;
-      gap: 1.5rem;
-    }
-
-    .listing-card {
-      background: white;
-      border: 2px solid #e0e0e0;
-      border-radius: 12px;
-      padding: 2rem;
-      transition: all 0.3s ease;
-    }
-
-    .listing-card:hover {
-      border-color: #000080;
-      box-shadow: 0 4px 12px rgba(102,126,234,0.2);
-      transform: translateY(-2px);
-    }
-
-    .listing-title {
-      color: #000080;
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-    }
-
-    .listing-info {
-      color: #666;
-      margin-bottom: 0.5rem;
-    }
-
-    .standard-badge {
-      background: #000080;
-      color: white;
-      padding: 0.25rem 0.75rem;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      display: inline-block;
-      margin-right: 0.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 3rem;
-      color: #000080;
-      font-size: 1.1rem;
-    }
-
-    .error {
-      background: #fff3cd;
-      border: 2px solid #ffc107;
-      border-radius: 8px;
-      padding: 1.5rem;
-      color: #856404;
-      text-align: center;
-    }
-
-    .no-results {
-      background: white;
-      border-radius: 12px;
-      padding: 3rem 2rem;
-      text-align: center;
-      color: #666;
-    }
-
-    .no-results h3 {
-      color: #000080;
-      margin-bottom: 1rem;
-    }
-
-    @media (max-width: 768px) {
       header h1 {
-        font-size: 1.8rem;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+      }
+
+      header p {
+        font-size: 1.1rem;
+        opacity: 0.95;
+      }
+
+      .breadcrumb {
+        margin-top: 1rem;
+        opacity: 0.9;
+      }
+
+      .breadcrumb a {
+        color: white;
+        text-decoration: none;
+      }
+
+      .breadcrumb a:hover {
+        text-decoration: underline;
       }
 
       main {
-        padding: 2rem 1rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
       }
 
       .search-card {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-form {
+        display: grid;
+        gap: 1.5rem;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group label {
+        font-weight: 600;
+        color: #000080;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+      }
+
+      /* Autocomplete Dropdown Styles */
+      .autocomplete-container {
+        position: relative;
+        width: 100%;
+      }
+
+      .autocomplete-input {
+        width: 100%;
+        padding: 0.75rem 2.5rem 0.75rem 0.75rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1rem;
+        background: white;
+        cursor: text;
+        transition: border-color 0.2s ease;
+      }
+
+      .autocomplete-input:focus {
+        outline: none;
+        border-color: #000080;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .autocomplete-input::placeholder {
+        color: #a0aec0;
+      }
+
+      .autocomplete-clear {
+        position: absolute;
+        right: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #a0aec0;
+        cursor: pointer;
+        padding: 0.25rem;
+        border-radius: 4px;
+        font-size: 1.2rem;
+        line-height: 1;
+        opacity: 0;
+        transition:
+          opacity 0.2s ease,
+          color 0.2s ease;
+      }
+
+      .autocomplete-clear:hover {
+        color: #4a5568;
+        background: #f7fafc;
+      }
+
+      .autocomplete-clear.visible {
+        opacity: 1;
+      }
+
+      .autocomplete-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .autocomplete-option {
+        padding: 0.75rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        border-bottom: 1px solid #f7fafc;
+      }
+
+      .autocomplete-option:last-child {
+        border-bottom: none;
+      }
+
+      .autocomplete-option:hover,
+      .autocomplete-option.selected {
+        background-color: #f7fafc;
+      }
+
+      .autocomplete-option.highlighted {
+        background-color: #edf2f7;
+      }
+
+      .autocomplete-no-results {
+        padding: 0.75rem;
+        color: #a0aec0;
+        font-style: italic;
+      }
+
+      .autocomplete-match {
+        font-weight: 600;
+        color: #000080;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .btn {
+        background: linear-gradient(135deg, #000080 0%, #32cd32 100%);
+        color: white;
+        padding: 0.9rem 2rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .results-section {
+        display: none;
+      }
+
+      .results-section.active {
+        display: block;
+      }
+
+      .results-count {
+        background: white;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        font-weight: 600;
+        color: #000080;
+      }
+
+      .listings-grid {
+        display: grid;
+        gap: 1.5rem;
+      }
+
+      .listing-card {
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+      }
+
+      .listing-card:hover {
+        border-color: #000080;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        transform: translateY(-2px);
+      }
+
+      .listing-title {
+        color: #000080;
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
+
+      .listing-info {
+        color: #666;
+        margin-bottom: 0.5rem;
+      }
+
+      .standard-badge {
+        background: #000080;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        display: inline-block;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 3rem;
+        color: #000080;
+        font-size: 1.1rem;
+      }
+
+      .error {
+        background: #fff3cd;
+        border: 2px solid #ffc107;
+        border-radius: 8px;
         padding: 1.5rem;
+        color: #856404;
+        text-align: center;
       }
-    }
-  </style>
-  <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
-</head>
-<body>
-  <header>
-    <h1>🔬 Search by Standard</h1>
-    <p>Find testing laboratories by specific certifications and standards</p>
-    <div class="breadcrumb">
-      <a href="/">Home</a> / <a href="/browse">Browse</a> / Search by Standard
-    </div>
-  </header>
 
-  <main>
-    <div class="search-card">
-      <form class="search-form" id="search-form">
-        <div class="form-group">
-          <label for="standard-select">Standard or Certification</label>
-          <div class="autocomplete-container">
-            <input
-              type="text"
-              id="standard-select"
-              class="autocomplete-input"
-              placeholder="Type to search standards..."
-              autocomplete="off"
-              role="combobox"
-              aria-expanded="false"
-              aria-autocomplete="list"
-              aria-label="Standard or Certification"
-            >
-            <button type="button" class="autocomplete-clear" aria-label="Clear selection">×</button>
-            <div class="autocomplete-dropdown hidden" role="listbox"></div>
+      .no-results {
+        background: white;
+        border-radius: 12px;
+        padding: 3rem 2rem;
+        text-align: center;
+        color: #666;
+      }
+
+      .no-results h3 {
+        color: #000080;
+        margin-bottom: 1rem;
+      }
+
+      @media (max-width: 768px) {
+        header h1 {
+          font-size: 1.8rem;
+        }
+
+        main {
+          padding: 2rem 1rem;
+        }
+
+        .search-card {
+          padding: 1.5rem;
+        }
+      }
+    </style>
+    <script>
+      function initApollo() {
+        var n = Math.random().toString(36).substring(7),
+          o = document.createElement('script');
+        ((o.src = 'https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache=' + n),
+          (o.async = !0),
+          (o.defer = !0),
+          (o.onload = function () {
+            window.trackingFunctions.onLoad({ appId: '6979e8021ac917001927e9b2' });
+          }),
+          document.head.appendChild(o));
+      }
+      initApollo();
+    </script>
+  </head>
+  <body>
+    <header>
+      <h1>🔬 Search by Standard</h1>
+      <p>Find testing laboratories by specific certifications and standards</p>
+      <div class="breadcrumb">
+        <a href="/">Home</a> / <a href="/browse">Browse</a> / Search by Standard
+      </div>
+    </header>
+
+    <main>
+      <div class="search-card">
+        <form class="search-form" id="search-form">
+          <div class="form-group">
+            <label for="standard-select">Standard or Certification</label>
+            <div class="autocomplete-container">
+              <input
+                type="text"
+                id="standard-select"
+                class="autocomplete-input"
+                placeholder="Type to search standards..."
+                autocomplete="off"
+                role="combobox"
+                aria-expanded="false"
+                aria-autocomplete="list"
+                aria-label="Standard or Certification"
+              />
+              <button type="button" class="autocomplete-clear" aria-label="Clear selection"
+                >×</button
+              >
+              <div class="autocomplete-dropdown hidden" role="listbox"></div>
+            </div>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label for="location-select">Location</label>
-          <div class="autocomplete-container">
-            <input
-              type="text"
-              id="location-select"
-              class="autocomplete-input"
-              placeholder="Type to search cities or countries..."
-              autocomplete="off"
-              role="combobox"
-              aria-expanded="false"
-              aria-autocomplete="list"
-              aria-label="Location"
-            >
-            <button type="button" class="autocomplete-clear" aria-label="Clear selection">×</button>
-            <div class="autocomplete-dropdown hidden" role="listbox"></div>
+          <div class="form-group">
+            <label for="location-select">Location</label>
+            <div class="autocomplete-container">
+              <input
+                type="text"
+                id="location-select"
+                class="autocomplete-input"
+                placeholder="Type to search cities or countries..."
+                autocomplete="off"
+                role="combobox"
+                aria-expanded="false"
+                aria-autocomplete="list"
+                aria-label="Location"
+              />
+              <button type="button" class="autocomplete-clear" aria-label="Clear selection"
+                >×</button
+              >
+              <div class="autocomplete-dropdown hidden" role="listbox"></div>
+            </div>
           </div>
-        </div>
 
-        <button type="submit" class="btn" id="search-btn">
-          Search Laboratories
-        </button>
-      </form>
-    </div>
+          <button type="submit" class="btn" id="search-btn"> Search Laboratories </button>
+        </form>
+      </div>
 
-    <div class="results-section" id="results-section">
-      <div class="results-count" id="results-count"></div>
-      <div class="listings-grid" id="results-grid"></div>
-    </div>
-  </main>
+      <div class="results-section" id="results-section">
+        <div class="results-count" id="results-count"></div>
+        <div class="listings-grid" id="results-grid"></div>
+      </div>
+    </main>
 
-  <Footer />
+    <Footer />
 
-  <script define:vars={{ standards, locationOptions }}>
-    // Standards data for autocomplete
-    const standardsData = standards?.map(std => ({
-      id: std.id,
-      code: std.code,
-      displayName: `${std.code} - ${std.name}`
-    })) || []
-    console.log('Standards data loaded:', standardsData.length)
+    <script define:vars={{ standards, locationOptions }}>
+      // Standards data for autocomplete
+      const standardsData =
+        standards?.map((std) => ({
+          id: std.id,
+          code: std.code,
+          displayName: `${std.code} - ${std.name}`,
+        })) || [];
+      console.log('Standards data loaded:', standardsData.length);
 
-    // Location data for autocomplete
-    const locationData = locationOptions || []
-    console.log('Location data loaded:', locationData.length)
+      // Location data for autocomplete
+      const locationData = locationOptions || [];
+      console.log('Location data loaded:', locationData.length);
 
-    // Autocomplete class for intelligent dropdowns
-    class AutocompleteDropdown {
-      constructor(inputElement, options, displayField = 'name') {
-        this.input = inputElement
-        this.options = options
-        this.displayField = displayField
-        this.container = inputElement.parentElement
-        this.dropdown = this.container.querySelector('.autocomplete-dropdown')
-        this.clearBtn = this.container.querySelector('.autocomplete-clear')
-        this.filteredOptions = []
-        this.selectedIndex = -1
-        this.isExpanded = false
+      // Autocomplete class for intelligent dropdowns
+      class AutocompleteDropdown {
+        constructor(inputElement, options, displayField = 'name') {
+          this.input = inputElement;
+          this.options = options;
+          this.displayField = displayField;
+          this.container = inputElement.parentElement;
+          this.dropdown = this.container.querySelector('.autocomplete-dropdown');
+          this.clearBtn = this.container.querySelector('.autocomplete-clear');
+          this.filteredOptions = [];
+          this.selectedIndex = -1;
+          this.isExpanded = false;
 
-        this.init()
-      }
-
-      init() {
-        // Input event listeners
-        this.input.addEventListener('input', this.debounce(() => this.handleInput(), 150))
-        this.input.addEventListener('focus', () => this.showDropdown())
-        this.input.addEventListener('keydown', (e) => this.handleKeydown(e))
-        this.input.addEventListener('blur', () => {
-          setTimeout(() => this.hideDropdown(), 200) // Delay to allow option click
-        })
-
-        // Clear button
-        this.clearBtn.addEventListener('click', () => this.clearSelection())
-
-        // Click outside to close
-        document.addEventListener('click', (e) => {
-          if (!this.container.contains(e.target)) {
-            this.hideDropdown()
-          }
-        })
-      }
-
-      debounce(func, wait) {
-        let timeout
-        return function executedFunction(...args) {
-          const later = () => {
-            clearTimeout(timeout)
-            func(...args)
-          }
-          clearTimeout(timeout)
-          timeout = setTimeout(later, wait)
-        }
-      }
-
-      handleInput() {
-        const query = this.input.value.toLowerCase().trim()
-
-        if (query === '') {
-          this.filteredOptions = [...this.options]
-        } else {
-          this.filteredOptions = this.options.filter(option => {
-            const text = this.getDisplayText(option).toLowerCase()
-            return this.fuzzyMatch(query, text)
-          }).sort((a, b) => {
-            const scoreA = this.getMatchScore(query, this.getDisplayText(a).toLowerCase())
-            const scoreB = this.getMatchScore(query, this.getDisplayText(b).toLowerCase())
-            return scoreB - scoreA
-          })
+          this.init();
         }
 
-        this.selectedIndex = -1
-        this.renderOptions()
-        this.showDropdown()
-        this.updateClearButton()
-      }
+        init() {
+          // Input event listeners
+          this.input.addEventListener(
+            'input',
+            this.debounce(() => this.handleInput(), 150)
+          );
+          this.input.addEventListener('focus', () => this.showDropdown());
+          this.input.addEventListener('keydown', (e) => this.handleKeydown(e));
+          this.input.addEventListener('blur', () => {
+            setTimeout(() => this.hideDropdown(), 200); // Delay to allow option click
+          });
 
-      escapeRegex(string) {
-        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-      }
+          // Clear button
+          this.clearBtn.addEventListener('click', () => this.clearSelection());
 
-      fuzzyMatch(query, text) {
-        if (query.length === 0) return true
-        if (text.length === 0) return false
-
-        // Convert to lowercase for case-insensitive matching
-        const lowerQuery = query.toLowerCase()
-        const lowerText = text.toLowerCase()
-
-        // Check if query matches from the beginning
-        if (lowerText.startsWith(lowerQuery)) return true
-
-        // Check if query matches as a word (preceded by space, dash, or start)
-        const wordRegex = new RegExp(`(?:^|[\\s\\-])(${this.escapeRegex(lowerQuery)})`, 'i')
-        return wordRegex.test(lowerText)
-      }
-
-      getMatchScore(query, text) {
-        if (query === text) return 100
-        if (text.startsWith(query)) return 80
-        if (text.includes(query)) return 60
-
-        // Score based on character positions
-        let score = 0
-        let queryIndex = 0
-        for (let i = 0; i < text.length && queryIndex < query.length; i++) {
-          if (text[i] === query[queryIndex]) {
-            score += (100 - i) // Higher score for earlier matches
-            queryIndex++
-          }
-        }
-        return queryIndex === query.length ? score : 0
-      }
-
-      getDisplayText(option) {
-        return option[this.displayField] || option.name || option.displayName || ''
-      }
-
-      renderOptions() {
-        this.dropdown.innerHTML = ''
-
-        if (this.filteredOptions.length === 0) {
-          this.dropdown.innerHTML = '<div class="autocomplete-no-results">No matches found</div>'
-          return
-        }
-
-        this.filteredOptions.forEach((option, index) => {
-          const optionElement = document.createElement('div')
-          optionElement.className = 'autocomplete-option'
-          optionElement.setAttribute('role', 'option')
-          optionElement.setAttribute('data-index', index)
-
-          const displayText = this.getDisplayText(option)
-          const highlightedText = this.highlightMatch(this.input.value.toLowerCase(), displayText)
-          optionElement.innerHTML = highlightedText
-
-          optionElement.addEventListener('click', () => this.selectOption(option))
-          optionElement.addEventListener('mouseenter', () => this.selectIndex(index))
-
-          this.dropdown.appendChild(optionElement)
-        })
-      }
-
-      highlightMatch(query, text) {
-        if (!query) return text
-
-        const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
-        return text.replace(regex, '<span class="autocomplete-match">$1</span>')
-      }
-
-      handleKeydown(e) {
-        if (!this.isExpanded) {
-          if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter') {
-            e.preventDefault()
-            this.showDropdown()
-          }
-          return
-        }
-
-        switch (e.key) {
-          case 'ArrowDown':
-            e.preventDefault()
-            this.selectIndex(Math.min(this.selectedIndex + 1, this.filteredOptions.length - 1))
-            break
-          case 'ArrowUp':
-            e.preventDefault()
-            this.selectIndex(Math.max(this.selectedIndex - 1, -1))
-            break
-          case 'Enter':
-            e.preventDefault()
-            if (this.selectedIndex >= 0) {
-              this.selectOption(this.filteredOptions[this.selectedIndex])
+          // Click outside to close
+          document.addEventListener('click', (e) => {
+            if (!this.container.contains(e.target)) {
+              this.hideDropdown();
             }
-            break
-          case 'Escape':
-            this.hideDropdown()
-            this.input.focus()
-            break
+          });
+        }
+
+        debounce(func, wait) {
+          let timeout;
+          return function executedFunction(...args) {
+            const later = () => {
+              clearTimeout(timeout);
+              func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+          };
+        }
+
+        handleInput() {
+          const query = this.input.value.toLowerCase().trim();
+
+          if (query === '') {
+            this.filteredOptions = [...this.options];
+          } else {
+            this.filteredOptions = this.options
+              .filter((option) => {
+                const text = this.getDisplayText(option).toLowerCase();
+                return this.fuzzyMatch(query, text);
+              })
+              .sort((a, b) => {
+                const scoreA = this.getMatchScore(query, this.getDisplayText(a).toLowerCase());
+                const scoreB = this.getMatchScore(query, this.getDisplayText(b).toLowerCase());
+                return scoreB - scoreA;
+              });
+          }
+
+          this.selectedIndex = -1;
+          this.renderOptions();
+          this.showDropdown();
+          this.updateClearButton();
+        }
+
+        escapeRegex(string) {
+          return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        fuzzyMatch(query, text) {
+          if (query.length === 0) return true;
+          if (text.length === 0) return false;
+
+          // Convert to lowercase for case-insensitive matching
+          const lowerQuery = query.toLowerCase();
+          const lowerText = text.toLowerCase();
+
+          // Check if query matches from the beginning
+          if (lowerText.startsWith(lowerQuery)) return true;
+
+          // Check if query matches as a word (preceded by space, dash, or start)
+          const wordRegex = new RegExp(`(?:^|[\\s\\-])(${this.escapeRegex(lowerQuery)})`, 'i');
+          return wordRegex.test(lowerText);
+        }
+
+        getMatchScore(query, text) {
+          if (query === text) return 100;
+          if (text.startsWith(query)) return 80;
+          if (text.includes(query)) return 60;
+
+          // Score based on character positions
+          let score = 0;
+          let queryIndex = 0;
+          for (let i = 0; i < text.length && queryIndex < query.length; i++) {
+            if (text[i] === query[queryIndex]) {
+              score += 100 - i; // Higher score for earlier matches
+              queryIndex++;
+            }
+          }
+          return queryIndex === query.length ? score : 0;
+        }
+
+        getDisplayText(option) {
+          return option[this.displayField] || option.name || option.displayName || '';
+        }
+
+        renderOptions() {
+          this.dropdown.innerHTML = '';
+
+          if (this.filteredOptions.length === 0) {
+            this.dropdown.innerHTML = '<div class="autocomplete-no-results">No matches found</div>';
+            return;
+          }
+
+          this.filteredOptions.forEach((option, index) => {
+            const optionElement = document.createElement('div');
+            optionElement.className = 'autocomplete-option';
+            optionElement.setAttribute('role', 'option');
+            optionElement.setAttribute('data-index', index);
+
+            const displayText = this.getDisplayText(option);
+            const highlightedText = this.highlightMatch(
+              this.input.value.toLowerCase(),
+              displayText
+            );
+            optionElement.innerHTML = highlightedText;
+
+            optionElement.addEventListener('click', () => this.selectOption(option));
+            optionElement.addEventListener('mouseenter', () => this.selectIndex(index));
+
+            this.dropdown.appendChild(optionElement);
+          });
+        }
+
+        highlightMatch(query, text) {
+          if (!query) return text;
+
+          const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+          return text.replace(regex, '<span class="autocomplete-match">$1</span>');
+        }
+
+        handleKeydown(e) {
+          if (!this.isExpanded) {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter') {
+              e.preventDefault();
+              this.showDropdown();
+            }
+            return;
+          }
+
+          switch (e.key) {
+            case 'ArrowDown':
+              e.preventDefault();
+              this.selectIndex(Math.min(this.selectedIndex + 1, this.filteredOptions.length - 1));
+              break;
+            case 'ArrowUp':
+              e.preventDefault();
+              this.selectIndex(Math.max(this.selectedIndex - 1, -1));
+              break;
+            case 'Enter':
+              e.preventDefault();
+              if (this.selectedIndex >= 0) {
+                this.selectOption(this.filteredOptions[this.selectedIndex]);
+              }
+              break;
+            case 'Escape':
+              this.hideDropdown();
+              this.input.focus();
+              break;
+          }
+        }
+
+        selectIndex(index) {
+          this.selectedIndex = index;
+          const options = this.dropdown.querySelectorAll('.autocomplete-option');
+
+          options.forEach((option, i) => {
+            option.classList.toggle('selected', i === index);
+            option.classList.toggle('highlighted', i === index);
+          });
+
+          // Scroll into view if needed
+          if (index >= 0 && options[index]) {
+            options[index].scrollIntoView({ block: 'nearest' });
+          }
+        }
+
+        selectOption(option) {
+          const displayText = this.getDisplayText(option);
+          this.input.value = displayText;
+          this.input.setAttribute('data-selected-value', displayText);
+          this.hideDropdown();
+          this.updateClearButton();
+        }
+
+        clearSelection() {
+          this.input.value = '';
+          this.input.removeAttribute('data-selected-value');
+          this.hideDropdown();
+          this.updateClearButton();
+        }
+
+        updateClearButton() {
+          this.clearBtn.classList.toggle('visible', this.input.value.length > 0);
+        }
+
+        showDropdown() {
+          if (this.filteredOptions.length === 0 && this.input.value === '') {
+            this.hideDropdown();
+            return;
+          }
+
+          this.dropdown.classList.remove('hidden');
+          this.input.setAttribute('aria-expanded', 'true');
+          this.isExpanded = true;
+        }
+
+        hideDropdown() {
+          this.dropdown.classList.add('hidden');
+          this.input.setAttribute('aria-expanded', 'false');
+          this.isExpanded = false;
+          this.selectedIndex = -1;
+        }
+
+        getValue() {
+          return this.input.getAttribute('data-selected-value') || this.input.value;
         }
       }
 
-      selectIndex(index) {
-        this.selectedIndex = index
-        const options = this.dropdown.querySelectorAll('.autocomplete-option')
+      const form = document.getElementById('search-form');
+      const searchBtn = document.getElementById('search-btn');
+      const resultsSection = document.getElementById('results-section');
+      const resultsCount = document.getElementById('results-count');
+      const resultsGrid = document.getElementById('results-grid');
 
-        options.forEach((option, i) => {
-          option.classList.toggle('selected', i === index)
-          option.classList.toggle('highlighted', i === index)
-        })
-
-        // Scroll into view if needed
-        if (index >= 0 && options[index]) {
-          options[index].scrollIntoView({ block: 'nearest' })
-        }
-      }
-
-      selectOption(option) {
-        const displayText = this.getDisplayText(option)
-        this.input.value = displayText
-        this.input.setAttribute('data-selected-value', displayText)
-        this.hideDropdown()
-        this.updateClearButton()
-      }
-
-      clearSelection() {
-        this.input.value = ''
-        this.input.removeAttribute('data-selected-value')
-        this.hideDropdown()
-        this.updateClearButton()
-      }
-
-      updateClearButton() {
-        this.clearBtn.classList.toggle('visible', this.input.value.length > 0)
-      }
-
-      showDropdown() {
-        if (this.filteredOptions.length === 0 && this.input.value === '') {
-          this.hideDropdown()
-          return
-        }
-
-        this.dropdown.classList.remove('hidden')
-        this.input.setAttribute('aria-expanded', 'true')
-        this.isExpanded = true
-      }
-
-      hideDropdown() {
-        this.dropdown.classList.add('hidden')
-        this.input.setAttribute('aria-expanded', 'false')
-        this.isExpanded = false
-        this.selectedIndex = -1
-      }
-
-      getValue() {
-        return this.input.getAttribute('data-selected-value') || this.input.value
-      }
-    }
-
-    const form = document.getElementById('search-form')
-    const searchBtn = document.getElementById('search-btn')
-    const resultsSection = document.getElementById('results-section')
-    const resultsCount = document.getElementById('results-count')
-    const resultsGrid = document.getElementById('results-grid')
-
-    // Initialize autocomplete
-    let standardAutocomplete = null
-    let locationAutocomplete = null
-    try {
-      const standardInput = document.getElementById('standard-select')
-      standardAutocomplete = new AutocompleteDropdown(standardInput, standardsData, 'displayName')
-
-      const locationInput = document.getElementById('location-select')
-      locationAutocomplete = new AutocompleteDropdown(locationInput, locationData, 'displayName')
-
-      console.log('Autocomplete initialized successfully')
-    } catch (error) {
-      console.error('Failed to initialize autocomplete:', error)
-    }
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault()
-
+      // Initialize autocomplete
+      let standardAutocomplete = null;
+      let locationAutocomplete = null;
       try {
-        const standard = standardAutocomplete ? standardAutocomplete.getValue() : 'ISO 17025'
-        const location = locationAutocomplete ? locationAutocomplete.getValue() : ''
+        const standardInput = document.getElementById('standard-select');
+        standardAutocomplete = new AutocompleteDropdown(
+          standardInput,
+          standardsData,
+          'displayName'
+        );
 
-        if (!standard) return
+        const locationInput = document.getElementById('location-select');
+        locationAutocomplete = new AutocompleteDropdown(locationInput, locationData, 'displayName');
 
-        // Extract the standard code from the display name (format: "CODE - Name")
-        const standardCode = standard.split(' - ')[0]
+        console.log('Autocomplete initialized successfully');
+      } catch (error) {
+        console.error('Failed to initialize autocomplete:', error);
+      }
 
-        if (!standardCode) return
-
-        // Show loading state
-        searchBtn.disabled = true
-        searchBtn.textContent = 'Searching...'
-        resultsSection.classList.add('active')
-        resultsCount.textContent = 'Searching laboratories...'
-        resultsGrid.innerHTML = '<div class="loading">🔍 Searching...</div>'
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
         try {
-          // Build API URL with parameters
-          let apiUrl = `/api/search/by-standard?standard=${encodeURIComponent(standardCode)}`
-          if (location) {
-            // Extract location name without type suffix (remove " (Country)" or " (City)")
-            const locationName = location.replace(/\s*\([^)]*\)$/, '')
-            apiUrl += `&location=${encodeURIComponent(locationName)}`
-          }
+          const standard = standardAutocomplete ? standardAutocomplete.getValue() : 'ISO 17025';
+          const location = locationAutocomplete ? locationAutocomplete.getValue() : '';
 
-          // Call the API endpoint
-          const response = await fetch(apiUrl)
-          const data = await response.json()
+          if (!standard) return;
 
-          if (!response.ok) {
-            throw new Error(data.error || 'Search failed')
-          }
+          // Extract the standard code from the display name (format: "CODE - Name")
+          const standardCode = standard.split(' - ')[0];
 
-          // Update results count
-          const locationText = location ? ` in ${location}` : ''
-          resultsCount.textContent = `Found ${data.count} ${data.count === 1 ? 'laboratory' : 'laboratories'} for ${standard}${locationText}`
+          if (!standardCode) return;
 
-          // Display results
-          if (data.count === 0) {
-            resultsGrid.innerHTML = `
+          // Show loading state
+          searchBtn.disabled = true;
+          searchBtn.textContent = 'Searching...';
+          resultsSection.classList.add('active');
+          resultsCount.textContent = 'Searching laboratories...';
+          resultsGrid.innerHTML = '<div class="loading">🔍 Searching...</div>';
+
+          try {
+            // Build API URL with parameters
+            let apiUrl = `/api/search/by-standard?standard=${encodeURIComponent(standardCode)}`;
+            if (location) {
+              // Extract location name without type suffix (remove " (Country)" or " (City)")
+              const locationName = location.replace(/\s*\([^)]*\)$/, '');
+              apiUrl += `&location=${encodeURIComponent(locationName)}`;
+            }
+
+            // Call the API endpoint
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            if (!response.ok) {
+              throw new Error(data.error || 'Search failed');
+            }
+
+            // Update results count
+            const locationText = location ? ` in ${location}` : '';
+            resultsCount.textContent = `Found ${data.count} ${data.count === 1 ? 'laboratory' : 'laboratories'} for ${standard}${locationText}`;
+
+            // Display results
+            if (data.count === 0) {
+              resultsGrid.innerHTML = `
               <div class="no-results">
                 <h3>No Laboratories Found</h3>
                 <p>We don't have any laboratories certified for <strong>${standard}</strong>${location ? ` in <strong>${location}</strong>` : ''} yet.</p>
@@ -838,9 +920,11 @@ const totalStandards = standards?.length || 0
                   </a>
                 </p>
               </div>
-            `
-          } else {
-            resultsGrid.innerHTML = data.results.map((result) => `
+            `;
+            } else {
+              resultsGrid.innerHTML = data.results
+                .map(
+                  (result) => `
               <div class="listing-card">
                 <div class="listing-title">
                   <a href="/listing/${result.listing_id}">${result.business_name}</a>
@@ -853,25 +937,26 @@ const totalStandards = standards?.length || 0
                   ${result.verified ? '<span style="color: #4caf50;">✓ Verified</span>' : ''}
                 </div>
               </div>
-            `).join('')
-          }
-
-        } catch (error) {
-          console.error('Search error:', error)
-          resultsGrid.innerHTML = `
+            `
+                )
+                .join('');
+            }
+          } catch (error) {
+            console.error('Search error:', error);
+            resultsGrid.innerHTML = `
             <div class="error">
               <strong>Search Error</strong><br>
               ${error.message || 'An unexpected error occurred. Please try again.'}
             </div>
-          `
-        } finally {
-          searchBtn.disabled = false
-          searchBtn.textContent = 'Search Laboratories'
+          `;
+          } finally {
+            searchBtn.disabled = false;
+            searchBtn.textContent = 'Search Laboratories';
+          }
+        } catch (error) {
+          console.error('Form submission error:', error);
         }
-      } catch (error) {
-        console.error('Form submission error:', error)
-      }
-    })
-  </script>
-</body>
+      });
+    </script>
+  </body>
 </html>

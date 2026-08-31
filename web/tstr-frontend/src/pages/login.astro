@@ -1,396 +1,418 @@
 ---
-export const prerender = false // Force SSR for auth page
+export const prerender = false; // Force SSR for auth page
 
 // Check if user is already logged in
-import { supabaseBrowser } from '../lib/supabase-browser'
-import Footer from '../components/Footer.astro'
+import { supabaseBrowser } from '../lib/supabase-browser';
+import Footer from '../components/Footer.astro';
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In - TSTR Hub</title>
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Sign In - TSTR Hub",
-    "description": "Sign in to your TSTR Hub account to access testing services directory",
-    "url": "https://tstr.directory/login"
-  })} />
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In - TSTR Hub</title>
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: 'Sign In - TSTR Hub',
+        description: 'Sign in to your TSTR Hub account to access testing services directory',
+        url: 'https://tstr.directory/login',
+      })}
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+          sans-serif;
+        background: linear-gradient(135deg, #000080 0%, #32cd32 100%);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
 
-    header {
-      background: rgba(255, 255, 255, 0.95);
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
+      header {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
 
-    header h1 a {
-      color: #000080;
-      text-decoration: none;
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
+      header h1 a {
+        color: #000080;
+        text-decoration: none;
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
 
-    .container {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-    }
+      .container {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+      }
 
-    .login-card {
-      background: white;
-      border-radius: 12px;
-      padding: 3rem;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-      max-width: 450px;
-      width: 100%;
-    }
-
-    .login-card h2 {
-      font-size: 2rem;
-      color: #333;
-      margin-bottom: 0.5rem;
-    }
-
-    .login-card p {
-      color: #666;
-      margin-bottom: 2rem;
-    }
-
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-
-    label {
-      display: block;
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 0.5rem;
-      font-size: 0.9rem;
-    }
-
-    input {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 2px solid #e0e0e0;
-      border-radius: 6px;
-      font-size: 1rem;
-      transition: border-color 0.2s;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: #000080;
-    }
-
-    .btn {
-      width: 100%;
-      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
-      color: white;
-      padding: 1rem;
-      border: none;
-      border-radius: 6px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-    }
-
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .btn-linkedin {
-      background: #0077b5;
-      color: white;
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn-linkedin:hover {
-      background: #005885;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 20px rgba(0, 119, 181, 0.4);
-    }
-
-    .message {
-      padding: 1rem;
-      border-radius: 6px;
-      margin-bottom: 1.5rem;
-      font-size: 0.9rem;
-    }
-
-    .message.error {
-      background: #fee;
-      border: 1px solid #fcc;
-      color: #c33;
-    }
-
-    .message.success {
-      background: #efe;
-      border: 1px solid #cfc;
-      color: #3c3;
-    }
-
-    .message.info {
-      background: #eef;
-      border: 1px solid #ccf;
-      color: #33c;
-    }
-
-    .divider {
-      text-align: center;
-      margin: 2rem 0;
-      color: #999;
-      position: relative;
-    }
-
-    .divider::before,
-    .divider::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      width: 40%;
-      height: 1px;
-      background: #ddd;
-    }
-
-    .divider::before {
-      left: 0;
-    }
-
-    .divider::after {
-      right: 0;
-    }
-
-    .signup-link {
-      text-align: center;
-      margin-top: 1.5rem;
-      color: #666;
-    }
-
-    .signup-link a {
-      color: #000080;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .signup-link a:hover {
-      text-decoration: underline;
-    }
-
-    footer {
-      background: rgba(0, 0, 0, 0.2);
-      color: white;
-      text-align: center;
-      padding: 1.5rem;
-    }
-
-    @media (max-width: 600px) {
       .login-card {
-        padding: 2rem 1.5rem;
+        background: white;
+        border-radius: 12px;
+        padding: 3rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        max-width: 450px;
+        width: 100%;
       }
 
       .login-card h2 {
-        font-size: 1.5rem;
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 0.5rem;
       }
-    }
-  </style>
-  <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
-</head>
-<body>
-  <header>
-    <h1><a href="/">TSTR Hub</a></h1>
-  </header>
 
-  <div class="container">
-    <div class="login-card">
-      <h2>Sign In</h2>
-      <p>Access your listings and account settings</p>
+      .login-card p {
+        color: #666;
+        margin-bottom: 2rem;
+      }
 
-      <div id="message-container"></div>
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
 
-      <form id="login-form">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required autocomplete="email">
+      label {
+        display: block;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: border-color 0.2s;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #000080;
+      }
+
+      .btn {
+        width: 100%;
+        background: linear-gradient(135deg, #000080 0%, #32cd32 100%);
+        color: white;
+        padding: 1rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .btn-linkedin {
+        background: #0077b5;
+        color: white;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .btn-linkedin:hover {
+        background: #005885;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(0, 119, 181, 0.4);
+      }
+
+      .message {
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+      }
+
+      .message.error {
+        background: #fee;
+        border: 1px solid #fcc;
+        color: #c33;
+      }
+
+      .message.success {
+        background: #efe;
+        border: 1px solid #cfc;
+        color: #3c3;
+      }
+
+      .message.info {
+        background: #eef;
+        border: 1px solid #ccf;
+        color: #33c;
+      }
+
+      .divider {
+        text-align: center;
+        margin: 2rem 0;
+        color: #999;
+        position: relative;
+      }
+
+      .divider::before,
+      .divider::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 40%;
+        height: 1px;
+        background: #ddd;
+      }
+
+      .divider::before {
+        left: 0;
+      }
+
+      .divider::after {
+        right: 0;
+      }
+
+      .signup-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: #666;
+      }
+
+      .signup-link a {
+        color: #000080;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .signup-link a:hover {
+        text-decoration: underline;
+      }
+
+      footer {
+        background: rgba(0, 0, 0, 0.2);
+        color: white;
+        text-align: center;
+        padding: 1.5rem;
+      }
+
+      @media (max-width: 600px) {
+        .login-card {
+          padding: 2rem 1.5rem;
+        }
+
+        .login-card h2 {
+          font-size: 1.5rem;
+        }
+      }
+    </style>
+    <script>
+      function initApollo() {
+        var n = Math.random().toString(36).substring(7),
+          o = document.createElement('script');
+        ((o.src = 'https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache=' + n),
+          (o.async = !0),
+          (o.defer = !0),
+          (o.onload = function () {
+            window.trackingFunctions.onLoad({ appId: '6979e8021ac917001927e9b2' });
+          }),
+          document.head.appendChild(o));
+      }
+      initApollo();
+    </script>
+  </head>
+  <body>
+    <header>
+      <h1><a href="/">TSTR Hub</a></h1>
+    </header>
+
+    <div class="container">
+      <div class="login-card">
+        <h2>Sign In</h2>
+        <p>Access your listings and account settings</p>
+
+        <div id="message-container"></div>
+
+        <form id="login-form">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required autocomplete="email" />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              autocomplete="current-password"
+            />
+          </div>
+
+          <button type="submit" class="btn" id="submit-btn">Sign In</button>
+        </form>
+
+        <div class="divider">or</div>
+
+        <button type="button" class="btn btn-linkedin" id="linkedin-login">
+          <svg width="20" height="20" viewBox="0 0 24 24" style="margin-right: 8px;">
+            <path
+              fill="currentColor"
+              d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+            ></path>
+          </svg>
+          Continue with LinkedIn
+        </button>
+
+        <div class="signup-link">
+          Don't have an account? <a href="/signup">Create one</a>
         </div>
-
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" name="password" required autocomplete="current-password">
-        </div>
-
-        <button type="submit" class="btn" id="submit-btn">Sign In</button>
-      </form>
-
-       <div class="divider">or</div>
-
-       <button type="button" class="btn btn-linkedin" id="linkedin-login">
-         <svg width="20" height="20" viewBox="0 0 24 24" style="margin-right: 8px;">
-           <path fill="currentColor" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-         </svg>
-         Continue with LinkedIn
-       </button>
-
-       <div class="signup-link">
-         Don't have an account? <a href="/signup">Create one</a>
-       </div>
+      </div>
     </div>
-  </div>
 
-  <Footer />
+    <Footer />
 
-  <script>
-    import { supabaseBrowser } from '../lib/supabase-browser'
+    <script>
+      import { supabaseBrowser } from '../lib/supabase-browser';
 
-    const form = document.getElementById('login-form')
-    const submitBtn = document.getElementById('submit-btn')
-    const messageContainer = document.getElementById('message-container')
+      const form = document.getElementById('login-form');
+      const submitBtn = document.getElementById('submit-btn');
+      const messageContainer = document.getElementById('message-container');
 
-    function showMessage(message, type = 'info') {
-      messageContainer.innerHTML = `<div class="message ${type}">${message}</div>`
-    }
-
-    // Check for registered query param
-    const urlParams = new URLSearchParams(window.location.search)
-    if (urlParams.get('registered') === 'true') {
-      showMessage(
-        'Account created! Please sign in with your credentials.',
-        'success'
-      )
-    }
-
-    form?.addEventListener('submit', async (e) => {
-      e.preventDefault()
-
-      const email = document.getElementById('email').value
-      const password = document.getElementById('password').value
-
-      submitBtn.disabled = true
-      submitBtn.textContent = 'Signing in...'
-
-      try {
-        const { data, error } = await supabaseBrowser.auth.signInWithPassword({
-          email,
-          password
-        })
-
-        if (error) {
-          showMessage(error.message, 'error')
-          submitBtn.disabled = false
-          submitBtn.textContent = 'Sign In'
-          return
-        }
-
-        if (data.user) {
-          // Check for redirect_to parameter
-          const urlParams = new URLSearchParams(window.location.search)
-          const redirectTo = urlParams.get('redirect_to')
-
-          if (redirectTo) {
-            showMessage('Sign in successful! Redirecting to claim page...', 'success')
-            setTimeout(() => {
-              window.location.href = redirectTo
-            }, 1000)
-          } else {
-            showMessage('Sign in successful! Redirecting...', 'success')
-            setTimeout(() => {
-              window.location.href = '/account'
-            }, 1000)
-          }
-        }
-
-      } catch (err) {
-        showMessage('An unexpected error occurred. Please try again.', 'error')
-        submitBtn.disabled = false
-        submitBtn.textContent = 'Sign In'
-        console.error('Login error:', err)
+      function showMessage(message, type = 'info') {
+        messageContainer.innerHTML = `<div class="message ${type}">${message}</div>`;
       }
-    })
 
-    // LinkedIn OAuth handler
-    const linkedinBtn = document.getElementById('linkedin-login')
-    linkedinBtn?.addEventListener('click', async () => {
-      linkedinBtn.disabled = true
-      linkedinBtn.textContent = 'Connecting...'
+      // Check for registered query param
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('registered') === 'true') {
+        showMessage('Account created! Please sign in with your credentials.', 'success');
+      }
 
-      // Check for redirect_to parameter
-      const urlParams = new URLSearchParams(window.location.search)
-      const redirectTo = urlParams.get('redirect_to')
-      const redirectUrl = redirectTo ? redirectTo : '/account'
+      form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-      try {
-        console.log('[Auth] Initiating LinkedIn login...');
-        console.log('[Auth] Redirect URL:', `${window.location.origin}${redirectUrl}`);
-        
-        const { data, error } = await supabaseBrowser.auth.signInWithOAuth({
-          provider: 'linkedin_oidc',
-          options: {
-            redirectTo: `${window.location.origin}${redirectUrl}`
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Signing in...';
+
+        try {
+          const { data, error } = await supabaseBrowser.auth.signInWithPassword({
+            email,
+            password,
+          });
+
+          if (error) {
+            showMessage(error.message, 'error');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Sign In';
+            return;
           }
-        })
 
-        if (error) {
-          showMessage(error.message, 'error')
-          linkedinBtn.disabled = false
-          linkedinBtn.innerHTML = `
+          if (data.user) {
+            // Check for redirect_to parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectTo = urlParams.get('redirect_to');
+
+            if (redirectTo) {
+              showMessage('Sign in successful! Redirecting to claim page...', 'success');
+              setTimeout(() => {
+                window.location.href = redirectTo;
+              }, 1000);
+            } else {
+              showMessage('Sign in successful! Redirecting...', 'success');
+              setTimeout(() => {
+                window.location.href = '/account';
+              }, 1000);
+            }
+          }
+        } catch (err) {
+          showMessage('An unexpected error occurred. Please try again.', 'error');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Sign In';
+          console.error('Login error:', err);
+        }
+      });
+
+      // LinkedIn OAuth handler
+      const linkedinBtn = document.getElementById('linkedin-login');
+      linkedinBtn?.addEventListener('click', async () => {
+        linkedinBtn.disabled = true;
+        linkedinBtn.textContent = 'Connecting...';
+
+        // Check for redirect_to parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectTo = urlParams.get('redirect_to');
+        const redirectUrl = redirectTo ? redirectTo : '/account';
+
+        try {
+          console.log('[Auth] Initiating LinkedIn login...');
+          console.log('[Auth] Redirect URL:', `${window.location.origin}${redirectUrl}`);
+
+          const { data, error } = await supabaseBrowser.auth.signInWithOAuth({
+            provider: 'linkedin_oidc',
+            options: {
+              redirectTo: `${window.location.origin}${redirectUrl}`,
+            },
+          });
+
+          if (error) {
+            showMessage(error.message, 'error');
+            linkedinBtn.disabled = false;
+            linkedinBtn.innerHTML = `
             <svg width="20" height="20" viewBox="0 0 24 24" style="margin-right: 8px;">
               <path fill="currentColor" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
             </svg>
             Continue with LinkedIn
-          `
-        }
-      } catch (err) {
-        showMessage('An unexpected error occurred. Please try again.', 'error')
-        linkedinBtn.disabled = false
-        linkedinBtn.innerHTML = `
+          `;
+          }
+        } catch (err) {
+          showMessage('An unexpected error occurred. Please try again.', 'error');
+          linkedinBtn.disabled = false;
+          linkedinBtn.innerHTML = `
           <svg width="20" height="20" viewBox="0 0 24 24" style="margin-right: 8px;">
             <path fill="currentColor" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
           </svg>
           Continue with LinkedIn
-        `
-        console.error('LinkedIn OAuth error:', err)
-      }
-    })
+        `;
+          console.error('LinkedIn OAuth error:', err);
+        }
+      });
 
-    // Check if user is already logged in
-    supabaseBrowser.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        window.location.href = '/account'
-      }
-    })
-  </script>
-</body>
+      // Check if user is already logged in
+      supabaseBrowser.auth.getSession().then(({ data: { session } }) => {
+        if (session) {
+          window.location.href = '/account';
+        }
+      });
+    </script>
+  </body>
 </html>

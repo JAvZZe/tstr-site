@@ -2,124 +2,143 @@
 import AdminLayout from '../../layouts/AdminLayout.astro';
 
 // Force SSR to ensure fresh delivery of the shell (though logic is client-side)
-export const prerender = false; 
+export const prerender = false;
 ---
 
 <AdminLayout title="Dashboard">
-    <div id="loading" class="flex items-center justify-center h-full min-h-[50vh]">
-        <div class="text-center">
-            <svg class="animate-spin h-10 w-10 text-blue-500 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <p class="text-gray-500 text-lg">Verifying Access...</p>
-        </div>
+  <div id="loading" class="flex h-full min-h-[50vh] items-center justify-center">
+    <div class="text-center">
+      <svg
+        class="mx-auto mb-4 h-10 w-10 animate-spin text-blue-500"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+      <p class="text-lg text-gray-500">Verifying Access...</p>
+    </div>
+  </div>
+
+  <div id="dashboard-content" class="hidden space-y-8">
+    <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+
+    <!-- Metrics Grid -->
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div class="rounded-lg border-l-4 border-blue-500 bg-white p-6 shadow-md">
+        <h3 class="text-sm font-medium uppercase text-gray-500">Total Listings</h3>
+        <p class="mt-2 text-3xl font-bold text-gray-900" id="stat-total-listings">-</p>
+      </div>
+      <div class="rounded-lg border-l-4 border-orange-500 bg-white p-6 shadow-md">
+        <h3 class="text-sm font-medium uppercase text-gray-500">Pending Review</h3>
+        <p class="mt-2 text-3xl font-bold text-gray-900" id="stat-pending">-</p>
+      </div>
+      <div class="rounded-lg border-l-4 border-red-500 bg-white p-6 shadow-md">
+        <h3 class="text-sm font-medium uppercase text-gray-500">Failed URLs</h3>
+        <p class="mt-2 text-3xl font-bold text-gray-900" id="stat-failed">-</p>
+      </div>
+      <div class="rounded-lg border-l-4 border-green-500 bg-white p-6 shadow-md">
+        <h3 class="text-sm font-medium uppercase text-gray-500">Claims</h3>
+        <p class="mt-2 text-3xl font-bold text-gray-900" id="stat-claims">-</p>
+      </div>
     </div>
 
-    <div id="dashboard-content" class="hidden space-y-8">
-        <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
-
-        <!-- Metrics Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
-                <h3 class="text-gray-500 text-sm font-medium uppercase">Total Listings</h3>
-                <p class="text-3xl font-bold text-gray-900 mt-2" id="stat-total-listings">-</p>
-            </div>
-            <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-orange-500">
-                <h3 class="text-gray-500 text-sm font-medium uppercase">Pending Review</h3>
-                <p class="text-3xl font-bold text-gray-900 mt-2" id="stat-pending">-</p>
-            </div>
-             <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-500">
-                <h3 class="text-gray-500 text-sm font-medium uppercase">Failed URLs</h3>
-                <p class="text-3xl font-bold text-gray-900 mt-2" id="stat-failed">-</p>
-            </div>
-            <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
-                <h3 class="text-gray-500 text-sm font-medium uppercase">Claims</h3>
-                <p class="text-3xl font-bold text-gray-900 mt-2" id="stat-claims">-</p>
-            </div>
+    <!-- Recent Activity & Claims -->
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <!-- Recent Listings -->
+      <div class="overflow-hidden rounded-lg bg-white shadow-md">
+        <div
+          class="flex items-center justify-between border-b border-gray-100 bg-gray-50 px-6 py-4"
+        >
+          <h2 class="text-lg font-semibold text-gray-800">Recent Listings</h2>
+          <a href="/admin/listings" class="text-sm text-blue-600 hover:text-blue-800">View All</a>
         </div>
-
-        <!-- Recent Activity & Claims -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Recent Listings -->
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-                    <h2 class="text-lg font-semibold text-gray-800">Recent Listings</h2>
-                    <a href="/admin/listings" class="text-sm text-blue-600 hover:text-blue-800">View All</a>
-                </div>
-                <div id="recent-listings-list" class="divide-y divide-gray-100">
-                   <!-- Populated via JS -->
-                </div>
-            </div>
-
-            <!-- Recent Claims -->
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-                    <h2 class="text-lg font-semibold text-gray-800">Recent Claims</h2>
-                    <a href="/admin/claims" class="text-sm text-blue-600 hover:text-blue-800">Manage</a>
-                </div>
-                <div id="recent-claims-list" class="divide-y divide-gray-100">
-                   <!-- Populated via JS -->
-                </div>
-            </div>
+        <div id="recent-listings-list" class="divide-y divide-gray-100">
+          <!-- Populated via JS -->
         </div>
+      </div>
+
+      <!-- Recent Claims -->
+      <div class="overflow-hidden rounded-lg bg-white shadow-md">
+        <div
+          class="flex items-center justify-between border-b border-gray-100 bg-gray-50 px-6 py-4"
+        >
+          <h2 class="text-lg font-semibold text-gray-800">Recent Claims</h2>
+          <a href="/admin/claims" class="text-sm text-blue-600 hover:text-blue-800">Manage</a>
+        </div>
+        <div id="recent-claims-list" class="divide-y divide-gray-100">
+          <!-- Populated via JS -->
+        </div>
+      </div>
     </div>
+  </div>
 </AdminLayout>
 
 <script>
-    import { supabaseBrowser } from '../../lib/supabase-browser';
+  import { supabaseBrowser } from '../../lib/supabase-browser';
 
-    async function initDashboard() {
-        const loading = document.getElementById('loading');
-        const content = document.getElementById('dashboard-content');
-        
-        try {
-            // 1. Auth Check (Client-Side Stop to Redirect Loop)
-            const { data: { session } } = await supabaseBrowser.auth.getSession();
-            
-            if (!session) {
-                console.log('No session, redirecting to login');
-                window.location.href = '/admin/login';
-                return;
-            }
+  async function initDashboard() {
+    const loading = document.getElementById('loading');
+    const content = document.getElementById('dashboard-content');
 
-            const role = session.user?.user_metadata?.role;
-            if (role !== 'staff' && role !== 'super_admin') {
-                console.log('Invalid role:', role);
-                await supabaseBrowser.auth.signOut();
-                window.location.href = '/admin/login?error=unauthorized';
-                return;
-            }
+    try {
+      // 1. Auth Check (Client-Side Stop to Redirect Loop)
+      const {
+        data: { session },
+      } = await supabaseBrowser.auth.getSession();
 
-            // 2. Fetch Data via Secure API
-            const res = await fetch('/api/admin/stats', {
-                headers: {
-                    'Authorization': `Bearer ${session.access_token}`
-                }
-            });
+      if (!session) {
+        console.log('No session, redirecting to login');
+        window.location.href = '/admin/login';
+        return;
+      }
 
-            if (!res.ok) {
-                if (res.status === 401 || res.status === 403) {
-                     window.location.href = '/admin/login?error=session_expired';
-                     return;
-                }
-                throw new Error('Failed to load stats');
-            }
+      const role = session.user?.user_metadata?.role;
+      if (role !== 'staff' && role !== 'super_admin') {
+        console.log('Invalid role:', role);
+        await supabaseBrowser.auth.signOut();
+        window.location.href = '/admin/login?error=unauthorized';
+        return;
+      }
 
-            const data = await res.json();
-            
-            // 3. Render Data
-            document.getElementById('stat-total-listings').textContent = data.metrics.totalListings;
-            document.getElementById('stat-pending').textContent = data.metrics.pendingCount;
-            document.getElementById('stat-failed').textContent = data.metrics.failedUrls;
-            document.getElementById('stat-claims').textContent = data.metrics.totalClaims;
+      // 2. Fetch Data via Secure API
+      const res = await fetch('/api/admin/stats', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
 
-            // Render Recent Listings
-            const listingsContainer = document.getElementById('recent-listings-list');
-            if (data.recentListings.length === 0) {
-                listingsContainer.innerHTML = '<p class="p-4 text-center text-gray-500">No recent listings</p>';
-            } else {
-                listingsContainer.innerHTML = data.recentListings.map(l => `
+      if (!res.ok) {
+        if (res.status === 401 || res.status === 403) {
+          window.location.href = '/admin/login?error=session_expired';
+          return;
+        }
+        throw new Error('Failed to load stats');
+      }
+
+      const data = await res.json();
+
+      // 3. Render Data
+      document.getElementById('stat-total-listings').textContent = data.metrics.totalListings;
+      document.getElementById('stat-pending').textContent = data.metrics.pendingCount;
+      document.getElementById('stat-failed').textContent = data.metrics.failedUrls;
+      document.getElementById('stat-claims').textContent = data.metrics.totalClaims;
+
+      // Render Recent Listings
+      const listingsContainer = document.getElementById('recent-listings-list');
+      if (data.recentListings.length === 0) {
+        listingsContainer.innerHTML =
+          '<p class="p-4 text-center text-gray-500">No recent listings</p>';
+      } else {
+        listingsContainer.innerHTML = data.recentListings
+          .map(
+            (l) => `
                     <a href="/admin/listings" class="block px-6 py-3 hover:bg-gray-50 transition-colors">
                         <div class="flex justify-between items-center">
                             <div>
@@ -129,15 +148,19 @@ export const prerender = false;
                             <span class="text-xs text-gray-400">${new Date(l.created_at).toLocaleDateString()}</span>
                         </div>
                     </a>
-                `).join('');
-            }
+                `
+          )
+          .join('');
+      }
 
-            // Render Recent Claims
-            const claimsContainer = document.getElementById('recent-claims-list');
-             if (data.claims.length === 0) {
-                claimsContainer.innerHTML = '<p class="p-4 text-center text-gray-500">No recent claims</p>';
-            } else {
-                claimsContainer.innerHTML = data.claims.map(c => `
+      // Render Recent Claims
+      const claimsContainer = document.getElementById('recent-claims-list');
+      if (data.claims.length === 0) {
+        claimsContainer.innerHTML = '<p class="p-4 text-center text-gray-500">No recent claims</p>';
+      } else {
+        claimsContainer.innerHTML = data.claims
+          .map(
+            (c) => `
                     <div class="px-6 py-3 hover:bg-gray-50">
                         <div class="flex justify-between items-center">
                             <div>
@@ -145,24 +168,27 @@ export const prerender = false;
                                 <p class="text-xs text-gray-500">${c.business_email}</p>
                             </div>
                             <span class="px-2 py-1 rounded-full text-xs font-medium ${
-                                c.status === 'approved' ? 'bg-green-100 text-green-800' :
-                                c.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                                'bg-yellow-100 text-yellow-800'
+                              c.status === 'approved'
+                                ? 'bg-green-100 text-green-800'
+                                : c.status === 'rejected'
+                                  ? 'bg-red-100 text-red-800'
+                                  : 'bg-yellow-100 text-yellow-800'
                             }">${c.status || 'pending'}</span>
                         </div>
                     </div>
-                `).join('');
-            }
+                `
+          )
+          .join('');
+      }
 
-            // Show Content
-            loading.classList.add('hidden');
-            content.classList.remove('hidden');
-
-        } catch (e) {
-            console.error(e);
-            loading.innerHTML = `<p class="text-red-500">Error loading dashboard: ${e.message}</p>`;
-        }
+      // Show Content
+      loading.classList.add('hidden');
+      content.classList.remove('hidden');
+    } catch (e) {
+      console.error(e);
+      loading.innerHTML = `<p class="text-red-500">Error loading dashboard: ${e.message}</p>`;
     }
+  }
 
-    initDashboard();
+  initDashboard();
 </script>

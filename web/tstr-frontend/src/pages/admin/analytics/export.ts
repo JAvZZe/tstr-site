@@ -8,7 +8,8 @@ export const GET: APIRoute = async ({ request: _request }) => {
   // Fetch all clicks with listing details
   const { data: clicks, error } = await supabase
     .from('clicks')
-    .select(`
+    .select(
+      `
       id,
       url,
       user_agent,
@@ -19,7 +20,8 @@ export const GET: APIRoute = async ({ request: _request }) => {
         website,
         category:category_id(name)
       )
-    `)
+    `
+    )
     .order('created_at', { ascending: false });
 
   if (error || !clicks) {
@@ -28,22 +30,27 @@ export const GET: APIRoute = async ({ request: _request }) => {
 
   // Generate CSV
   const headers = ['ID', 'Timestamp', 'Listing', 'Category', 'URL', 'User Agent', 'Referrer'];
-  const rows = clicks.map(click => [
+  const rows = clicks.map((click) => [
     click.id,
     new Date(click.created_at).toISOString(),
     click.listings?.business_name || 'Unknown',
     click.listings?.category?.name || 'N/A',
     click.url,
     click.user_agent || '',
-    click.referrer || ''
+    click.referrer || '',
   ]);
 
   const csv = [
     headers.join(','),
-    ...rows.map(row => row.map(cell =>
-      // Escape commas and quotes in CSV
-      `"${String(cell).replace(/"/g, '""')}"`
-    ).join(','))
+    ...rows.map((row) =>
+      row
+        .map(
+          (cell) =>
+            // Escape commas and quotes in CSV
+            `"${String(cell).replace(/"/g, '""')}"`
+        )
+        .join(',')
+    ),
   ].join('\n');
 
   // Return CSV file
@@ -51,7 +58,7 @@ export const GET: APIRoute = async ({ request: _request }) => {
     status: 200,
     headers: {
       'Content-Type': 'text/csv',
-      'Content-Disposition': `attachment; filename="tstr-click-analytics-${new Date().toISOString().split('T')[0]}.csv"`
-    }
+      'Content-Disposition': `attachment; filename="tstr-click-analytics-${new Date().toISOString().split('T')[0]}.csv"`,
+    },
   });
 };

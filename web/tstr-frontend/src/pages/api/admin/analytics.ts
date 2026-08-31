@@ -1,40 +1,37 @@
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
+import { getServiceKey } from '../../../lib/supabase-admin';
 
 const SUPABASE_URL =
   import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co';
-const SERVICE_KEY = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!SERVICE_KEY) {
-  throw new Error('SUPABASE_SERVICE_ROLE_KEY is required');
+function getAdmin(locals: unknown) {
+  const key = getServiceKey(locals);
+  if (!key) return null;
+  return createClient(SUPABASE_URL, key);
 }
 
-const supabaseAdmin = createClient(SUPABASE_URL, SERVICE_KEY);
+export const GET: APIRoute = async ({ request, locals }) => {
+  const admin = getAdmin(locals);
+  if (!admin) return new Response('Service key not configured', { status: 500 });
 
-async function verifyAuth(request: Request) {
   const authHeader = request.headers.get('Authorization');
-  if (!authHeader) return null;
+  if (!authHeader) return new Response('Unauthorized', { status: 401 });
   const token = authHeader.replace('Bearer ', '');
   const {
     data: { user },
     error,
-  } = await supabaseAdmin.auth.getUser(token);
-  if (error || !user) return null;
+  } = await admin.auth.getUser(token);
+  if (error || !user) return new Response('Unauthorized', { status: 401 });
   const role = user.app_metadata?.role;
-  if (role !== 'staff' && role !== 'super_admin') return null;
-  return user;
-}
-
-export const GET: APIRoute = async ({ request }) => {
-  const user = await verifyAuth(request);
-  if (!user) return new Response('Unauthorized', { status: 401 });
+  if (role !== 'staff' && role !== 'super_admin')
+    return new Response('Unauthorized', { status: 401 });
 
   try {
     const now = new Date();
     const last30Days = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
     const last7Days = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-    // parallel requests
     const [
       { count: totalClicks },
       { count: clicks30d },
@@ -43,16 +40,16 @@ export const GET: APIRoute = async ({ request }) => {
       { data: dailyClicks },
       { data: topListingsByRPC },
     ] = await Promise.all([
-      supabaseAdmin.from('clicks').select('*', { count: 'exact', head: true }),
-      supabaseAdmin
+      admin.from('clicks').select('*', { count: 'exact', head: true }),
+      admin
         .from('clicks')
         .select('*', { count: 'exact', head: true })
         .gte('created_at', last30Days.toISOString()),
-      supabaseAdmin
+      admin
         .from('clicks')
         .select('*', { count: 'exact', head: true })
         .gte('created_at', last7Days.toISOString()),
-      supabaseAdmin
+      admin
         .from('clicks')
         .select(
           `
@@ -62,18 +59,17 @@ export const GET: APIRoute = async ({ request }) => {
         )
         .order('created_at', { ascending: false })
         .limit(20),
-      supabaseAdmin
+      admin
         .from('clicks')
         .select('created_at')
         .gte('created_at', last30Days.toISOString())
         .order('created_at', { ascending: true }),
-      supabaseAdmin.rpc('get_top_clicked_listings', { limit_count: 10 }),
+      admin.rpc('get_top_clicked_listings', { limit_count: 10 }),
     ]);
 
-    // Top Listings Fallback Logic
     let topListingsData = topListingsByRPC;
     if (!topListingsData) {
-      const { data: clicksWithListings } = await supabaseAdmin
+      const { data: clicksWithListings } = await admin
         .from('clicks')
         .select(`listing_id, listings ( id, business_name, website, category:category_id(name) )`)
         .not('listing_id', 'is', null)
@@ -96,7 +92,6 @@ export const GET: APIRoute = async ({ request }) => {
         .slice(0, 10);
     }
 
-    // Chart Data Processing
     const clicksByDay = new Map();
     dailyClicks?.forEach((click: any) => {
       const date = new Date(click.created_at).toISOString().split('T')[0];

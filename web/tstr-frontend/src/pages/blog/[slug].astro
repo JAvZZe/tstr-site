@@ -5,13 +5,10 @@ import { marked } from 'marked';
 
 // Required for SSG dynamic routes
 export async function getStaticPaths() {
-  const { data: posts } = await supabase
-    .from('blog_posts')
-    .select('slug')
-    .eq('is_published', true);
-    
-  return (posts || []).map(post => ({
-    params: { slug: post.slug }
+  const { data: posts } = await supabase.from('blog_posts').select('slug').eq('is_published', true);
+
+  return (posts || []).map((post) => ({
+    params: { slug: post.slug },
   }));
 }
 
@@ -20,7 +17,9 @@ const { slug } = Astro.params;
 // Fetch post details
 const { data: post } = await supabase
   .from('blog_posts')
-  .select('title, excerpt, body, category, author, published_at, cover_image_url, reading_time_mins, meta_title, meta_description, canonical_url, related_listings')
+  .select(
+    'title, excerpt, body, category, author, published_at, cover_image_url, reading_time_mins, meta_title, meta_description, canonical_url, related_listings'
+  )
   .eq('slug', slug)
   .single();
 
@@ -39,7 +38,7 @@ const formatDate = (dateStr: string) => {
   return new Date(dateStr).toLocaleDateString('en-GB', {
     day: 'numeric',
     month: 'long',
-    year: 'numeric'
+    year: 'numeric',
   });
 };
 ---
@@ -48,18 +47,24 @@ const formatDate = (dateStr: string) => {
   <article style="max-width: 800px; margin: 0 auto; padding: 4rem 2rem;">
     <header style="margin-bottom: 3rem;">
       <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem;">
-        <span style="background: #e0f2fe; color: #0369a1; padding: 0.25rem 1rem; border-radius: 9999px; font-size: 0.9rem; font-weight: 600;">
+        <span
+          style="background: #e0f2fe; color: #0369a1; padding: 0.25rem 1rem; border-radius: 9999px; font-size: 0.9rem; font-weight: 600;"
+        >
           {post.category}
         </span>
         <span style="color: #6b7280; font-size: 0.9rem;">
           {post.reading_time_mins} min read
         </span>
       </div>
-      
-      <h1 style="font-size: 3rem; color: #000080; margin-bottom: 1.5rem; line-height: 1.1;">{post.title}</h1>
-      
+
+      <h1 style="font-size: 3rem; color: #000080; margin-bottom: 1.5rem; line-height: 1.1;">
+        {post.title}
+      </h1>
+
       <div style="display: flex; align-items: center; gap: 1rem; color: #666;">
-        <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #000080;">
+        <div
+          style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #000080;"
+        >
           {post.author.charAt(0)}
         </div>
         <div>
@@ -69,21 +74,46 @@ const formatDate = (dateStr: string) => {
       </div>
     </header>
 
-    {post.cover_image_url && (
-      <img src={post.cover_image_url} alt={post.title} style="width: 100%; border-radius: 12px; margin-bottom: 3rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1);" />
-    )}
+    {
+      post.cover_image_url && (
+        <img
+          src={post.cover_image_url}
+          alt={post.title}
+          style="width: 100%; border-radius: 12px; margin-bottom: 3rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1);"
+        />
+      )
+    }
 
     <div class="blog-content" set:html={content} />
 
     <footer style="margin-top: 5rem; padding-top: 2rem; border-top: 1px solid #eee;">
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <a href="/blog" style="color: #000080; text-decoration: none; font-weight: 600; display: flex; align-items: center;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.5rem; transform: rotate(180deg);"><path d="m9 18 6-6-6-6"/></svg>
+        <a
+          href="/blog"
+          style="color: #000080; text-decoration: none; font-weight: 600; display: flex; align-items: center;"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            style="margin-right: 0.5rem; transform: rotate(180deg);"
+            ><path d="m9 18 6-6-6-6"></path></svg
+          >
           Back to Blog
         </a>
-        
+
         <div style="display: flex; gap: 1rem;">
-          <button onclick="window.print()" style="background: none; border: 1px solid #ddd; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; color: #666;">Print</button>
+          <button
+            onclick="window.print()"
+            style="background: none; border: 1px solid #ddd; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; color: #666;"
+            >Print</button
+          >
         </div>
       </div>
     </footer>
@@ -108,7 +138,8 @@ const formatDate = (dateStr: string) => {
     .blog-content p {
       margin-bottom: 1.5rem;
     }
-    .blog-content ul, .blog-content ol {
+    .blog-content ul,
+    .blog-content ol {
       margin-bottom: 1.5rem;
       padding-left: 1.5rem;
     }
@@ -116,7 +147,7 @@ const formatDate = (dateStr: string) => {
       margin-bottom: 0.5rem;
     }
     .blog-content blockquote {
-      border-left: 4px solid #32CD32;
+      border-left: 4px solid #32cd32;
       padding-left: 1.5rem;
       font-style: italic;
       color: #4b5563;
@@ -128,7 +159,7 @@ const formatDate = (dateStr: string) => {
       margin: 2rem 0;
     }
     .blog-content a {
-      color: #32CD32;
+      color: #32cd32;
       text-decoration: underline;
     }
   </style>

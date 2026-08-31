@@ -1,429 +1,518 @@
 ---
 // Submit page for company listings
-export const prerender = true
+export const prerender = true;
 ---
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>List Your Company - TSTR Hub</title>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
-     crossorigin="anonymous"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>List Your Company - TSTR Hub</title>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7003918988204966"
+      crossorigin="anonymous"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #f5f5f5;
-    }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+          sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #f5f5f5;
+      }
 
-    header {
-      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
-      color: white;
-      padding: 3rem 2rem;
-      text-align: center;
-    }
+      header {
+        background: linear-gradient(135deg, #000080 0%, #32cd32 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+      }
 
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-    }
+      header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+      }
 
-    header p {
-      font-size: 1.1rem;
-      opacity: 0.95;
-    }
+      header p {
+        font-size: 1.1rem;
+        opacity: 0.95;
+      }
 
-    main {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 3rem 2rem;
-    }
+      main {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+      }
 
-    .form-container {
-      background: white;
-      border-radius: 12px;
-      padding: 2rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
+      .form-container {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
 
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
 
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: #000080;
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #000080;
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
 
-    input, select, textarea {
-      width: 100%;
-      padding: 0.75rem;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-family: inherit;
-      transition: border-color 0.3s ease;
-    }
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: border-color 0.3s ease;
+      }
 
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: #000080;
-    }
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #000080;
+      }
 
-    textarea {
-      min-height: 150px;
-      resize: vertical;
-    }
+      textarea {
+        min-height: 150px;
+        resize: vertical;
+      }
 
-    .required {
-      color: #e74c3c;
-    }
+      .required {
+        color: #e74c3c;
+      }
 
-    .submit-button {
-      background: #000080;
-      color: white;
-      padding: 1rem 2rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      width: 100%;
-      margin-top: 1rem;
-    }
+      .submit-button {
+        background: #000080;
+        color: white;
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 1rem;
+      }
 
-    .submit-button:hover {
-      background: #32CD32;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    }
+      .submit-button:hover {
+        background: #32cd32;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      }
 
-    .back-link {
-      display: inline-block;
-      margin-bottom: 2rem;
-      color: #000080;
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.3s ease;
-    }
+      .back-link {
+        display: inline-block;
+        margin-bottom: 2rem;
+        color: #000080;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+      }
 
-    .back-link:hover {
-      color: #32CD32;
-    }
+      .back-link:hover {
+        color: #32cd32;
+      }
 
-    footer {
-      background: #333;
-      color: white;
-      text-align: center;
-      padding: 2rem;
-      margin-top: 3rem;
-    }
+      footer {
+        background: #333;
+        color: white;
+        text-align: center;
+        padding: 2rem;
+        margin-top: 3rem;
+      }
 
-    .info-text {
-      background: #f0f0f0;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 2rem;
-      color: #555;
-      font-size: 0.95rem;
-    }
+      .info-text {
+        background: #f0f0f0;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        color: #555;
+        font-size: 0.95rem;
+      }
 
-    option:disabled {
-      color: #999;
-      background-color: #f9f9f9;
-      font-style: italic;
-    }
-  </style>
-  <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
-  <!-- Apollo Form Enrichment -->
-  <script>(function initApolloInbound(){var TIMEOUT_MS=15000;var timeoutId;var style=document.createElement('style');style.id='apollo-form-prehide-css';style.textContent='form:has(input[type="email" i]),form:has(input[name="email" i]),.hs-form-iframe{position:relative!important}form:has(input[type="email" i])::before,form:has(input[name="email" i])::before,.hs-form-iframe::before{content:"";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;width:50px;height:50px;margin:auto;border:2.5px solid #e1e1e1;border-top:2.5px solid #9ea3a6;border-radius:50%;animation:spin 1s linear infinite;background-color:transparent;pointer-events:auto;z-index:999999;opacity:1}form:has(input[type="email" i]) *,form:has(input[name="email" i]) *,.hs-form-iframe *{opacity:0!important;user-select:none!important;pointer-events:none!important}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}';(document.head || document.documentElement).appendChild(style);function cleanup(){var styleEl=document.getElementById('apollo-form-prehide-css');if(styleEl)styleEl.remove();if(timeoutId)clearTimeout(timeoutId);}timeoutId=setTimeout(function(){console.warn('[Apollo] Form enrichment timeout after 5s - revealing forms. Check network and console for errors.');cleanup();},TIMEOUT_MS);var nocache=Math.random().toString(36).substring(7);var script=document.createElement('script');script.src='https://assets.apollo.io/js/apollo-inbound.js?nocache=' + nocache;script.defer=true;script.onerror=function(){console.error('[Apollo] Failed to load form enrichment script');cleanup();};script.onload=function(){try{window.ApolloInbound.formEnrichment.init({appId: '697aec66d25c8100195c344a',onReady: function(){cleanup();},onError: function(err){console.error('[Apollo] Form enrichment init error:',err);cleanup();}});}catch(err){console.error('[Apollo] Error initializing form enrichment:',err);cleanup();}};document.head.appendChild(script);})();</script>
-</head>
-<body>
-  <header>
-    <h1>List Your Company</h1>
-    <p>Join TSTR Hub and connect with clients seeking testing services</p>
-  </header>
+      option:disabled {
+        color: #999;
+        background-color: #f9f9f9;
+        font-style: italic;
+      }
+    </style>
+    <script>
+      function initApollo() {
+        var n = Math.random().toString(36).substring(7),
+          o = document.createElement('script');
+        ((o.src = 'https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache=' + n),
+          (o.async = !0),
+          (o.defer = !0),
+          (o.onload = function () {
+            window.trackingFunctions.onLoad({ appId: '6979e8021ac917001927e9b2' });
+          }),
+          document.head.appendChild(o));
+      }
+      initApollo();
+    </script>
+    <!-- Apollo Form Enrichment -->
+    <script>
+      (function initApolloInbound() {
+        var TIMEOUT_MS = 15000;
+        var timeoutId;
+        var style = document.createElement('style');
+        style.id = 'apollo-form-prehide-css';
+        style.textContent =
+          'form:has(input[type="email" i]),form:has(input[name="email" i]),.hs-form-iframe{position:relative!important}form:has(input[type="email" i])::before,form:has(input[name="email" i])::before,.hs-form-iframe::before{content:"";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;width:50px;height:50px;margin:auto;border:2.5px solid #e1e1e1;border-top:2.5px solid #9ea3a6;border-radius:50%;animation:spin 1s linear infinite;background-color:transparent;pointer-events:auto;z-index:999999;opacity:1}form:has(input[type="email" i]) *,form:has(input[name="email" i]) *,.hs-form-iframe *{opacity:0!important;user-select:none!important;pointer-events:none!important}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}';
+        (document.head || document.documentElement).appendChild(style);
+        function cleanup() {
+          var styleEl = document.getElementById('apollo-form-prehide-css');
+          if (styleEl) styleEl.remove();
+          if (timeoutId) clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(function () {
+          console.warn(
+            '[Apollo] Form enrichment timeout after 5s - revealing forms. Check network and console for errors.'
+          );
+          cleanup();
+        }, TIMEOUT_MS);
+        var nocache = Math.random().toString(36).substring(7);
+        var script = document.createElement('script');
+        script.src = 'https://assets.apollo.io/js/apollo-inbound.js?nocache=' + nocache;
+        script.defer = true;
+        script.onerror = function () {
+          console.error('[Apollo] Failed to load form enrichment script');
+          cleanup();
+        };
+        script.onload = function () {
+          try {
+            window.ApolloInbound.formEnrichment.init({
+              appId: '697aec66d25c8100195c344a',
+              onReady: function () {
+                cleanup();
+              },
+              onError: function (err) {
+                console.error('[Apollo] Form enrichment init error:', err);
+                cleanup();
+              },
+            });
+          } catch (err) {
+            console.error('[Apollo] Error initializing form enrichment:', err);
+            cleanup();
+          }
+        };
+        document.head.appendChild(script);
+      })();
+    </script>
+  </head>
+  <body>
+    <header>
+      <h1>List Your Company</h1>
+      <p>Join TSTR Hub and connect with clients seeking testing services</p>
+    </header>
 
-  <main>
-    <a href="/" class="back-link">← Back to Directory</a>
+    <main>
+      <a href="/" class="back-link">← Back to Directory</a>
 
-    <div class="form-container">
-      <div class="info-text">
-        Complete the form below to list your testing laboratory or service on TSTR Hub.
-        All fields marked with <span class="required">*</span> are required.
+      <div class="form-container">
+        <div class="info-text">
+          Complete the form below to list your testing laboratory or service on TSTR Hub. All fields
+          marked with <span class="required">*</span> are required.
+        </div>
+
+        <form id="submitForm">
+          <div class="form-group">
+            <label for="business_name">Company Name <span class="required">*</span></label>
+            <input type="text" id="business_name" name="business_name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="category">Category <span class="required">*</span></label>
+            <select id="category" name="category" required>
+              <option value="">Loading categories...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="website">Website <span class="required">*</span></label>
+            <input
+              type="url"
+              id="website"
+              name="website"
+              placeholder="https://example.com"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Contact Email <span class="required">*</span></label>
+            <input type="email" id="email" name="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" />
+          </div>
+
+          <div class="form-group">
+            <label for="address">Full Address <span class="required">*</span></label>
+            <input type="text" id="address" name="address" placeholder="City, Country" required />
+          </div>
+
+          <div class="form-group">
+            <label for="description">Company Profile</label>
+            <textarea
+              id="description"
+              name="description"
+              placeholder="Tell us about your company, services, certifications, specializations, and any additional information..."
+            ></textarea>
+          </div>
+
+          <button type="submit" class="submit-button">Submit Listing</button>
+        </form>
       </div>
+    </main>
 
-      <form id="submitForm">
-        <div class="form-group">
-          <label for="business_name">Company Name <span class="required">*</span></label>
-          <input type="text" id="business_name" name="business_name" required>
-        </div>
+    <footer
+      style="background: linear-gradient(135deg, #000080 0%, #32CD32 100%); color: white; text-align: center; padding: 2rem 1rem; margin-top: auto;"
+    >
+      <p>&copy; 2025 TSTR Hub - Specialist Testing Services, Products and Solutions Directory</p>
+      <p style="margin-top: 0.5rem; opacity: 0.8; font-size: 0.9rem;">
+        Connecting industries with certified testers worldwide
+      </p>
+      <p style="margin-top: 1rem;">
+        <a href="/terms" style="color: white; text-decoration: none; margin: 0 1rem;"
+          >Terms of Service</a
+        >
+        <a href="/privacy" style="color: white; text-decoration: none; margin: 0 1rem;"
+          >Privacy Policy</a
+        >
+        <a href="/pricing" style="color: white; text-decoration: none; margin: 0 1rem;">Pricing</a>
+        <a href="/submit" style="color: white; text-decoration: none; margin: 0 1rem;"
+          >List Your Company</a
+        >
+      </p>
+    </footer>
 
-        <div class="form-group">
-          <label for="category">Category <span class="required">*</span></label>
-             <select id="category" name="category" required>
-               <option value="">Loading categories...</option>
-             </select>
-        </div>
+    <script type="module" is:inline>
+      import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-        <div class="form-group">
-          <label for="website">Website <span class="required">*</span></label>
-          <input type="url" id="website" name="website" placeholder="https://example.com" required>
-        </div>
+      // Initialize Supabase client (using public credentials)
+      const supabaseUrl = 'https://haimjeaetrsaauitrhfy.supabase.co';
+      const supabaseKey = 'sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4';
+      const supabase = createClient(supabaseUrl, supabaseKey);
 
-        <div class="form-group">
-          <label for="email">Contact Email <span class="required">*</span></label>
-          <input type="email" id="email" name="email" required>
-        </div>
+      const categorySelect = document.getElementById('category');
+      const form = document.getElementById('submitForm');
+      const submitButton = form.querySelector('.submit-button');
 
-        <div class="form-group">
-          <label for="phone">Phone Number</label>
-          <input type="tel" id="phone" name="phone">
-        </div>
+      async function loadFormContext() {
+        try {
+          // 1. Get User Session and Profile
+          const {
+            data: { session },
+          } = await supabase.auth.getSession();
+          let userTier = 'free';
 
-        <div class="form-group">
-          <label for="address">Full Address <span class="required">*</span></label>
-          <input type="text" id="address" name="address" placeholder="City, Country" required>
-        </div>
+          if (session) {
+            const { data: profile } = await supabase
+              .from('user_profiles')
+              .select('subscription_tier')
+              .eq('id', session.user.id)
+              .maybeSingle();
 
-        <div class="form-group">
-          <label for="description">Company Profile</label>
-          <textarea id="description" name="description" placeholder="Tell us about your company, services, certifications, specializations, and any additional information..."></textarea>
-        </div>
-
-        <button type="submit" class="submit-button">Submit Listing</button>
-      </form>
-    </div>
-  </main>
-
-   <footer style="background: linear-gradient(135deg, #000080 0%, #32CD32 100%); color: white; text-align: center; padding: 2rem 1rem; margin-top: auto;">
-     <p>&copy; 2025 TSTR Hub - Specialist Testing Services, Products and Solutions Directory</p>
-     <p style="margin-top: 0.5rem; opacity: 0.8; font-size: 0.9rem;">
-       Connecting industries with certified testers worldwide
-     </p>
-     <p style="margin-top: 1rem;">
-       <a href="/terms" style="color: white; text-decoration: none; margin: 0 1rem;">Terms of Service</a>
-       <a href="/privacy" style="color: white; text-decoration: none; margin: 0 1rem;">Privacy Policy</a>
-       <a href="/pricing" style="color: white; text-decoration: none; margin: 0 1rem;">Pricing</a>
-       <a href="/submit" style="color: white; text-decoration: none; margin: 0 1rem;">List Your Company</a>
-     </p>
-   </footer>
-
-   <script type="module" is:inline>
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-
-    // Initialize Supabase client (using public credentials)
-    const supabaseUrl = 'https://haimjeaetrsaauitrhfy.supabase.co'
-    const supabaseKey = 'sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4'
-    const supabase = createClient(supabaseUrl, supabaseKey)
-
-    const categorySelect = document.getElementById('category')
-    const form = document.getElementById('submitForm')
-    const submitButton = form.querySelector('.submit-button')
-
-    async function loadFormContext() {
-      try {
-        // 1. Get User Session and Profile
-        const { data: { session } } = await supabase.auth.getSession()
-        let userTier = 'free'
-        
-        if (session) {
-          const { data: profile } = await supabase
-            .from('user_profiles')
-            .select('subscription_tier')
-            .eq('id', session.user.id)
-            .maybeSingle()
-          
-          if (profile) userTier = profile.subscription_tier
-        }
-
-        // 2. Load Categories
-        const { data: categories, error } = await supabase
-          .from('categories')
-          .select('id, name, min_tier_required')
-          .order('name')
-
-        if (error) throw error
-
-        // 3. Populate Dropdown
-        categorySelect.innerHTML = '<option value="">Select a category</option>'
-        const tierRank = {
-          'free': 0,
-          'basic': 1,
-          'professional': 2,
-          'premium': 3,
-          'enterprise': 4
-        }
-
-        categories.forEach(cat => {
-          const option = document.createElement('option')
-          option.value = cat.name // Keep name as value since the submission logic expects it
-          
-          const requiredTier = cat.min_tier_required || 'free'
-          const isLocked = tierRank[userTier] < tierRank[requiredTier]
-          
-          if (isLocked) {
-            option.textContent = `🔒 ${cat.name} (${requiredTier.charAt(0).toUpperCase() + requiredTier.slice(1)} Tier Required)`
-            option.disabled = true
-            option.title = `You need a ${requiredTier} subscription to list in this category.`
-          } else {
-            option.textContent = cat.name
+            if (profile) userTier = profile.subscription_tier;
           }
-          
-          categorySelect.appendChild(option)
-        })
 
-      } catch (err) {
-        console.error('Error loading form context:', err)
-        categorySelect.innerHTML = '<option value="">Error loading categories</option>'
-      }
-    }
-
-    // Initial load
-    loadFormContext()
-
-    form.addEventListener('submit', async function(e) {
-      e.preventDefault()
-
-      // Disable button and show loading state
-      submitButton.disabled = true
-      submitButton.textContent = 'Submitting...'
-
-      try {
-        // Get form data
-        const formData = new FormData(e.target)
-        const data = Object.fromEntries(formData)
-
-        // Step 1: Look up category_id by name
-        console.log('Looking for category:', data.category)
-
-        const { data: categoryData, error: categoryError } = await supabase
-          .from('categories')
-          .select('id, name')
-          .eq('name', data.category)
-          .single()
-
-        console.log('Category query result:', { categoryData, categoryError })
-
-        if (categoryError || !categoryData) {
-          // Debug: show all available categories
-          const { data: allCategories } = await supabase
+          // 2. Load Categories
+          const { data: categories, error } = await supabase
             .from('categories')
-            .select('name')
-          console.log('All available categories:', allCategories)
-          throw new Error(`Category not found. Looking for: "${data.category}". Error: ${categoryError?.message || 'No data'}`)
+            .select('id, name, min_tier_required')
+            .order('name');
+
+          if (error) throw error;
+
+          // 3. Populate Dropdown
+          categorySelect.innerHTML = '<option value="">Select a category</option>';
+          const tierRank = {
+            free: 0,
+            basic: 1,
+            professional: 2,
+            premium: 3,
+            enterprise: 4,
+          };
+
+          categories.forEach((cat) => {
+            const option = document.createElement('option');
+            option.value = cat.name; // Keep name as value since the submission logic expects it
+
+            const requiredTier = cat.min_tier_required || 'free';
+            const isLocked = tierRank[userTier] < tierRank[requiredTier];
+
+            if (isLocked) {
+              option.textContent = `🔒 ${cat.name} (${requiredTier.charAt(0).toUpperCase() + requiredTier.slice(1)} Tier Required)`;
+              option.disabled = true;
+              option.title = `You need a ${requiredTier} subscription to list in this category.`;
+            } else {
+              option.textContent = cat.name;
+            }
+
+            categorySelect.appendChild(option);
+          });
+        } catch (err) {
+          console.error('Error loading form context:', err);
+          categorySelect.innerHTML = '<option value="">Error loading categories</option>';
         }
-
-        // Step 2: Parse address and find/create location
-        // Parse city and country from address (format: "City, Country" or "Address, City, Country")
-        const addressParts = data.address.split(',').map(s => s.trim())
-        const country = addressParts[addressParts.length - 1] || 'Unknown'
-        const city = addressParts.length >= 2 ? addressParts[addressParts.length - 2] : 'Unknown'
-
-        let locationId
-
-        // First, try to find country location
-        const { data: countryLocation } = await supabase
-          .from('locations')
-          .select('id')
-          .eq('name', country)
-          .eq('level', 'country')
-          .single()
-
-        if (countryLocation) {
-          // Found country, now try to find city under this country
-          const { data: cityLocation } = await supabase
-            .from('locations')
-            .select('id')
-            .eq('name', city)
-            .eq('level', 'city')
-            .eq('parent_id', countryLocation.id)
-            .single()
-
-          if (cityLocation) {
-            locationId = cityLocation.id
-          } else {
-            // City not found, use country
-            locationId = countryLocation.id
-          }
-        } else {
-          // Country not found, use fallback
-          const { data: fallbackLocation } = await supabase
-            .from('locations')
-            .select('id')
-            .eq('level', 'country')
-            .limit(1)
-            .single()
-
-          if (!fallbackLocation) {
-            throw new Error('No default location found. Please contact support.')
-          }
-
-          locationId = fallbackLocation.id
-        }
-
-        // Step 3: Generate slug from business name
-        const slug = data.business_name
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '')
-
-        // Step 4: Insert listing with category_id and location_id
-        // Note: We don't use .select() because anon users can't SELECT pending listings (RLS policy)
-        // The insert will succeed (201) without returning data
-        const { error } = await supabase
-          .from('listings')
-          .insert([{
-            business_name: data.business_name,
-            slug: slug,
-            category_id: categoryData.id,
-            location_id: locationId,
-            website: data.website,
-            email: data.email,
-            phone: data.phone || null,
-            address: data.address,
-            description: data.description || null,
-            status: 'pending',
-            verified: false,
-            claimed: false,
-            created_at: new Date().toISOString()
-          }])
-
-        if (error) throw error
-
-        // Success
-        alert('✓ Thank you! Your listing has been submitted successfully.\n\nOur team will review it within 24-48 hours and it will appear on the directory once approved.')
-
-        // Redirect to home
-        setTimeout(() => {
-          window.location.href = '/'
-        }, 2000)
-
-      } catch (error) {
-        console.error('Submission error:', error)
-        alert('❌ Error submitting your listing. Please try again or contact support.\n\nError: ' + error.message)
-
-        // Re-enable button
-        submitButton.disabled = false
-        submitButton.textContent = 'Submit Listing'
       }
-    })
-  </script>
-</body>
+
+      // Initial load
+      loadFormContext();
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        // Disable button and show loading state
+        submitButton.disabled = true;
+        submitButton.textContent = 'Submitting...';
+
+        try {
+          // Get form data
+          const formData = new FormData(e.target);
+          const data = Object.fromEntries(formData);
+
+          // Step 1: Look up category_id by name
+          console.log('Looking for category:', data.category);
+
+          const { data: categoryData, error: categoryError } = await supabase
+            .from('categories')
+            .select('id, name')
+            .eq('name', data.category)
+            .single();
+
+          console.log('Category query result:', { categoryData, categoryError });
+
+          if (categoryError || !categoryData) {
+            // Debug: show all available categories
+            const { data: allCategories } = await supabase.from('categories').select('name');
+            console.log('All available categories:', allCategories);
+            throw new Error(
+              `Category not found. Looking for: "${data.category}". Error: ${categoryError?.message || 'No data'}`
+            );
+          }
+
+          // Step 2: Parse address and find/create location
+          // Parse city and country from address (format: "City, Country" or "Address, City, Country")
+          const addressParts = data.address.split(',').map((s) => s.trim());
+          const country = addressParts[addressParts.length - 1] || 'Unknown';
+          const city = addressParts.length >= 2 ? addressParts[addressParts.length - 2] : 'Unknown';
+
+          let locationId;
+
+          // First, try to find country location
+          const { data: countryLocation } = await supabase
+            .from('locations')
+            .select('id')
+            .eq('name', country)
+            .eq('level', 'country')
+            .single();
+
+          if (countryLocation) {
+            // Found country, now try to find city under this country
+            const { data: cityLocation } = await supabase
+              .from('locations')
+              .select('id')
+              .eq('name', city)
+              .eq('level', 'city')
+              .eq('parent_id', countryLocation.id)
+              .single();
+
+            if (cityLocation) {
+              locationId = cityLocation.id;
+            } else {
+              // City not found, use country
+              locationId = countryLocation.id;
+            }
+          } else {
+            // Country not found, use fallback
+            const { data: fallbackLocation } = await supabase
+              .from('locations')
+              .select('id')
+              .eq('level', 'country')
+              .limit(1)
+              .single();
+
+            if (!fallbackLocation) {
+              throw new Error('No default location found. Please contact support.');
+            }
+
+            locationId = fallbackLocation.id;
+          }
+
+          // Step 3: Generate slug from business name
+          const slug = data.business_name
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-|-$/g, '');
+
+          // Step 4: Insert listing with category_id and location_id
+          // Note: We don't use .select() because anon users can't SELECT pending listings (RLS policy)
+          // The insert will succeed (201) without returning data
+          const { error } = await supabase.from('listings').insert([
+            {
+              business_name: data.business_name,
+              slug: slug,
+              category_id: categoryData.id,
+              location_id: locationId,
+              website: data.website,
+              email: data.email,
+              phone: data.phone || null,
+              address: data.address,
+              description: data.description || null,
+              status: 'pending',
+              verified: false,
+              claimed: false,
+              created_at: new Date().toISOString(),
+            },
+          ]);
+
+          if (error) throw error;
+
+          // Success
+          alert(
+            '✓ Thank you! Your listing has been submitted successfully.\n\nOur team will review it within 24-48 hours and it will appear on the directory once approved.'
+          );
+
+          // Redirect to home
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 2000);
+        } catch (error) {
+          console.error('Submission error:', error);
+          alert(
+            '❌ Error submitting your listing. Please try again or contact support.\n\nError: ' +
+              error.message
+          );
+
+          // Re-enable button
+          submitButton.disabled = false;
+          submitButton.textContent = 'Submit Listing';
+        }
+      });
+    </script>
+  </body>
 </html>

@@ -14,11 +14,11 @@ interface Props {
 }
 
 const DARK_STYLES = [
-  { elementType: "geometry", stylers: [{ color: "#111827" }] },
-  { elementType: "labels.text.fill", stylers: [{ color: "#6B7280" }] },
-  { featureType: "road", elementType: "geometry", stylers: [{ color: "#1F2937" }] },
-  { featureType: "water", elementType: "geometry", stylers: [{ color: "#050505" }] },
-  { featureType: "poi", stylers: [{ visibility: "off" }] },
+  { elementType: 'geometry', stylers: [{ color: '#111827' }] },
+  { elementType: 'labels.text.fill', stylers: [{ color: '#6B7280' }] },
+  { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#1F2937' }] },
+  { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#050505' }] },
+  { featureType: 'poi', stylers: [{ visibility: 'off' }] },
 ];
 
 export default function PremiumLabMap({ lat, lng, labName, coverageRadiusKm }: Props) {
@@ -32,15 +32,19 @@ export default function PremiumLabMap({ lat, lng, labName, coverageRadiusKm }: P
     });
 
     loader.load().then(async () => {
-      const { Map } = await google.maps.importLibrary('maps') as google.maps.MapsLibrary;
-      const { AdvancedMarkerElement } = await google.maps.importLibrary('marker') as google.maps.MarkerLibrary;
+      const { Map } = (await google.maps.importLibrary('maps')) as google.maps.MapsLibrary;
+      const { AdvancedMarkerElement } = (await google.maps.importLibrary(
+        'marker'
+      )) as google.maps.MarkerLibrary;
       if (!mapRef.current) return;
 
       const map = new Map(mapRef.current, {
-        center: { lat, lng }, zoom: 13,
+        center: { lat, lng },
+        zoom: 13,
         mapId: 'DEMO_MAP_ID', // Replace with your Map ID if you have one
         styles: DARK_STYLES,
-        disableDefaultUI: true, zoomControl: true,
+        disableDefaultUI: true,
+        zoomControl: true,
       });
 
       // Indigo pin — matches Obsidian design system
@@ -61,17 +65,30 @@ export default function PremiumLabMap({ lat, lng, labName, coverageRadiusKm }: P
       // Emerald service radius — premium feature
       if (coverageRadiusKm && coverageRadiusKm > 0) {
         new google.maps.Circle({
-          map, center: { lat, lng }, radius: coverageRadiusKm * 1000,
-          strokeColor: '#10B981', strokeOpacity: 0.6, strokeWeight: 2,
-          fillColor: '#10B981', fillOpacity: 0.05,
+          map,
+          center: { lat, lng },
+          radius: coverageRadiusKm * 1000,
+          strokeColor: '#10B981',
+          strokeOpacity: 0.6,
+          strokeWeight: 2,
+          fillColor: '#10B981',
+          fillOpacity: 0.05,
         });
       }
     });
   }, [lat, lng, labName, coverageRadiusKm]);
 
   return (
-    <div ref={mapRef} aria-label={`Interactive map for ${labName}`}
-      style={{ width:'100%', height:'380px', borderRadius:'12px',
-               border:'1px solid rgba(255,255,255,0.08)', overflow:'hidden' }} />
+    <div
+      ref={mapRef}
+      aria-label={`Interactive map for ${labName}`}
+      style={{
+        width: '100%',
+        height: '380px',
+        borderRadius: '12px',
+        border: '1px solid rgba(255,255,255,0.08)',
+        overflow: 'hidden',
+      }}
+    />
   );
 }

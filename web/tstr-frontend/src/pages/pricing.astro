@@ -1,840 +1,918 @@
 ---
 // Pricing page for TSTR.directory
 // No Stripe integration yet - manual sales via contact form
-import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../lib/contacts'
-import Footer from '../components/Footer.astro'
+import { MAILTO_LINKS, CONTACTS, getMailtoLink } from '../lib/contacts';
+import Footer from '../components/Footer.astro';
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pricing Plans - Get More Leads | TSTR Hub</title>
-  <meta name="description" content="Choose the right plan for your testing laboratory. Free listings with upgrade options for lead generation, priority ranking, and exclusive features. Starting at $295/month.">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pricing Plans - Get More Leads | TSTR Hub</title>
+    <meta
+      name="description"
+      content="Choose the right plan for your testing laboratory. Free listings with upgrade options for lead generation, priority ranking, and exclusive features. Starting at $295/month."
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #f5f5f5;
-    }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+          sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #f5f5f5;
+      }
 
-    header {
-      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
-      color: white;
-      padding: 3rem 2rem;
-      text-align: center;
-    }
+      header {
+        background: linear-gradient(135deg, #000080 0%, #32cd32 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+      }
 
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-    }
-
-    header p {
-      font-size: 1.1rem;
-      opacity: 0.95;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .breadcrumb {
-      margin-top: 1.5rem;
-      opacity: 0.9;
-      font-size: 0.9rem;
-    }
-
-    .breadcrumb a {
-      color: white;
-      text-decoration: none;
-    }
-
-    .breadcrumb a:hover {
-      text-decoration: underline;
-    }
-
-    main {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 3rem 2rem;
-    }
-
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
-      margin-bottom: 4rem;
-    }
-
-    .pricing-card {
-      background: white;
-      border-radius: 16px;
-      padding: 2.5rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      position: relative;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-
-    .pricing-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 40px rgba(102, 126, 234, 0.15);
-    }
-
-    .pricing-card.featured {
-      border: 3px solid #000080;
-      transform: scale(1.05);
-    }
-
-    .pricing-card.featured::before {
-      content: "MOST POPULAR";
-      position: absolute;
-      top: -15px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #000080;
-      color: white;
-      padding: 0.4rem 1.5rem;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-    }
-
-    .pricing-card.premium::before {
-      content: "BEST VALUE";
-      background: #32CD32;
-    }
-
-    .tier-name {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: #333;
-    }
-
-    .tier-price {
-      font-size: 3rem;
-      font-weight: 800;
-      color: #000080;
-      margin: 1rem 0;
-    }
-
-    .tier-price sup {
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
-
-    .tier-price sub {
-      font-size: 1rem;
-      color: #666;
-      font-weight: 400;
-    }
-
-    .tier-description {
-      color: #666;
-      margin-bottom: 2rem;
-      min-height: 50px;
-      font-size: 0.95rem;
-    }
-
-    .features-list {
-      list-style: none;
-      margin-bottom: 2rem;
-    }
-
-    .features-list li {
-      padding: 0.75rem 0;
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-      font-size: 0.95rem;
-    }
-
-    .features-list li::before {
-      content: "✓";
-      color: #10b981;
-      font-weight: 700;
-      font-size: 1.2rem;
-      flex-shrink: 0;
-    }
-
-    .features-list li.not-included::before {
-      content: "✗";
-      color: #e5e7eb;
-    }
-
-    .features-list li.not-included {
-      color: #999;
-      text-decoration: line-through;
-    }
-
-    .cta-button {
-      display: block;
-      width: 100%;
-      padding: 1rem 2rem;
-      background: #000080;
-      color: white;
-      text-align: center;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 1rem;
-      transition: background 0.3s, transform 0.2s;
-      border: none;
-      cursor: pointer;
-    }
-
-    .cta-button:hover {
-      background: #5568d3;
-      transform: scale(1.02);
-    }
-
-    .cta-button.secondary {
-      background: white;
-      color: #000080;
-      border: 2px solid #000080;
-    }
-
-    .cta-button.secondary:hover {
-      background: #f5f7ff;
-    }
-
-    .comparison-section {
-      background: white;
-      border-radius: 16px;
-      padding: 3rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      margin-top: 4rem;
-    }
-
-    .comparison-section h2 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 2rem;
-      color: #333;
-    }
-
-    .comparison-table {
-      width: 100%;
-      border-collapse: collapse;
-      overflow-x: auto;
-    }
-
-    .comparison-table thead {
-      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
-      color: white;
-    }
-
-    .comparison-table th,
-    .comparison-table td {
-      padding: 1.25rem;
-      text-align: left;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    .comparison-table th {
-      font-weight: 600;
-    }
-
-    .comparison-table tbody tr:hover {
-      background: #f9fafb;
-    }
-
-    .comparison-table td {
-      font-size: 0.95rem;
-    }
-
-    .comparison-table .check {
-      color: #10b981;
-      font-weight: 700;
-      font-size: 1.2rem;
-    }
-
-    .comparison-table .cross {
-      color: #e5e7eb;
-      font-weight: 700;
-      font-size: 1.2rem;
-    }
-
-    .guarantee-section {
-      background: #f0f4ff;
-      border-left: 4px solid #000080;
-      padding: 2rem;
-      margin: 3rem 0;
-      border-radius: 8px;
-    }
-
-    .guarantee-section h3 {
-      color: #000080;
-      margin-bottom: 0.5rem;
-    }
-
-    .faq-section {
-      margin-top: 4rem;
-      background: white;
-      border-radius: 16px;
-      padding: 3rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    }
-
-    .faq-section h2 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 2rem;
-      color: #333;
-    }
-
-    .faq-item {
-      margin-bottom: 2rem;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    .faq-item:last-child {
-      border-bottom: none;
-    }
-
-    .faq-item h3 {
-      color: #000080;
-      margin-bottom: 0.75rem;
-      font-size: 1.2rem;
-    }
-
-    .faq-item p {
-      color: #666;
-      line-height: 1.8;
-    }
-
-    footer {
-      background: #1f2937;
-      color: white;
-      padding: 2rem;
-      text-align: center;
-      margin-top: 4rem;
-    }
-
-    footer a {
-      color: #000080;
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-   /* Bitcoin Modal Styles */
-  .btc-icon {
-    color: #F7931A;
-    background: #FFF5E6;
-  }
-  .btc-qr-container {
-    text-align: center;
-    margin: 20px 0;
-    padding: 15px;
-    background: white;
-    border-radius: 12px;
-    display: inline-block;
-    width: 100%;
-  }
-  .btc-qr-code {
-    max-width: 180px;
-    height: auto;
-    margin: 0 auto;
-    border: 1px solid #eee;
-    padding: 10px;
-    border-radius: 8px;
-  }
-  .btc-card {
-    border-color: #F7931A44;
-  }
-  .wallet-value {
-    font-size: 0.85em;
-    word-break: break-all;
-    font-family: monospace;
-    flex: 1;
-    margin-right: 10px;
-    text-align: left !important;
-  }
-  .copy-btn {
-    background: #f3f4f6;
-    border: 1px solid #d1d5db;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .copy-btn:hover {
-    background: #e5e7eb;
-  }
-  .btc-row {
-    flex-wrap: wrap;
-  }
-
-  /* Bitcoin Modal Styles */
-  .btc-icon {
-    color: #F7931A;
-    background: #FFF5E6;
-  }
-  .btc-qr-container {
-    text-align: center;
-    margin: 20px 0;
-    padding: 15px;
-    background: white;
-    border-radius: 12px;
-    display: inline-block;
-    width: 100%;
-  }
-  .btc-qr-code {
-    max-width: 180px;
-    height: auto;
-    margin: 0 auto;
-    border: 1px solid #eee;
-    padding: 10px;
-    border-radius: 8px;
-  }
-  .btc-card {
-    border-color: #F7931A44;
-  }
-  .wallet-value {
-    font-size: 0.85em;
-    word-break: break-all;
-    font-family: monospace;
-    flex: 1;
-    margin-right: 10px;
-    text-align: left !important;
-  }
-  .copy-btn {
-    background: #f3f4f6;
-    border: 1px solid #d1d5db;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .copy-btn:hover {
-    background: #e5e7eb;
-  }
-  .btc-row {
-    flex-wrap: wrap;
-  }
-
-  /* Responsive Adjustments */
-  @media (max-width: 640px) {
       header h1 {
-        font-size: 2rem;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+      }
+
+      header p {
+        font-size: 1.1rem;
+        opacity: 0.95;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      .breadcrumb {
+        margin-top: 1.5rem;
+        opacity: 0.9;
+        font-size: 0.9rem;
+      }
+
+      .breadcrumb a {
+        color: white;
+        text-decoration: none;
+      }
+
+      .breadcrumb a:hover {
+        text-decoration: underline;
+      }
+
+      main {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
       }
 
       .pricing-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-bottom: 4rem;
+      }
+
+      .pricing-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        position: relative;
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+      }
+
+      .pricing-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 40px rgba(102, 126, 234, 0.15);
       }
 
       .pricing-card.featured {
-        transform: scale(1);
+        border: 3px solid #000080;
+        transform: scale(1.05);
+      }
+
+      .pricing-card.featured::before {
+        content: 'MOST POPULAR';
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #000080;
+        color: white;
+        padding: 0.4rem 1.5rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+
+      .pricing-card.premium::before {
+        content: 'BEST VALUE';
+        background: #32cd32;
+      }
+
+      .tier-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: #333;
+      }
+
+      .tier-price {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #000080;
+        margin: 1rem 0;
+      }
+
+      .tier-price sup {
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+
+      .tier-price sub {
+        font-size: 1rem;
+        color: #666;
+        font-weight: 400;
+      }
+
+      .tier-description {
+        color: #666;
+        margin-bottom: 2rem;
+        min-height: 50px;
+        font-size: 0.95rem;
+      }
+
+      .features-list {
+        list-style: none;
+        margin-bottom: 2rem;
+      }
+
+      .features-list li {
+        padding: 0.75rem 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        font-size: 0.95rem;
+      }
+
+      .features-list li::before {
+        content: '✓';
+        color: #10b981;
+        font-weight: 700;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+      }
+
+      .features-list li.not-included::before {
+        content: '✗';
+        color: #e5e7eb;
+      }
+
+      .features-list li.not-included {
+        color: #999;
+        text-decoration: line-through;
+      }
+
+      .cta-button {
+        display: block;
+        width: 100%;
+        padding: 1rem 2rem;
+        background: #000080;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition:
+          background 0.3s,
+          transform 0.2s;
+        border: none;
+        cursor: pointer;
+      }
+
+      .cta-button:hover {
+        background: #5568d3;
+        transform: scale(1.02);
+      }
+
+      .cta-button.secondary {
+        background: white;
+        color: #000080;
+        border: 2px solid #000080;
+      }
+
+      .cta-button.secondary:hover {
+        background: #f5f7ff;
       }
 
       .comparison-section {
-        padding: 2rem 1rem;
+        background: white;
+        border-radius: 16px;
+        padding: 3rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        margin-top: 4rem;
+      }
+
+      .comparison-section h2 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        color: #333;
       }
 
       .comparison-table {
-        font-size: 0.85rem;
+        width: 100%;
+        border-collapse: collapse;
+        overflow-x: auto;
+      }
+
+      .comparison-table thead {
+        background: linear-gradient(135deg, #000080 0%, #32cd32 100%);
+        color: white;
       }
 
       .comparison-table th,
       .comparison-table td {
-        padding: 0.75rem 0.5rem;
+        padding: 1.25rem;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
       }
-    }
-    /* Modal Styles */
-    .modal {
-      border: none;
-      padding: 0;
-      border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-      max-width: 500px;
-      width: 90%;
-      background: white;
-    }
 
-    /* Verification Styling */
-    .verification-addon {
-      display: block;
-      margin-top: 0.5rem;
-      padding: 0.5rem;
-      background: #fffbeb;
-      border-left: 3px solid #f59e0b;
-      border-radius: 0 4px 4px 0;
-      font-size: 0.9rem;
-    }
+      .comparison-table th {
+        font-weight: 600;
+      }
 
-    .verification-included {
-      display: block;
-      margin-top: 0.5rem;
-      padding: 0.5rem;
-      background: #ecfdf5;
-      border-left: 3px solid #10b981;
-      border-radius: 0 4px 4px 0;
-      font-size: 0.9rem;
-    }
+      .comparison-table tbody tr:hover {
+        background: #f9fafb;
+      }
 
-    .verification-enterprise {
-      display: block;
-      margin-top: 0.5rem;
-      padding: 0.5rem;
-      background: #eff6ff;
-      border-left: 3px solid #3b82f6;
-      border-radius: 0 4px 4px 0;
-      font-size: 0.9rem;
-    }
+      .comparison-table td {
+        font-size: 0.95rem;
+      }
 
-    .modal::backdrop {
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(4px);
-    }
+      .comparison-table .check {
+        color: #10b981;
+        font-weight: 700;
+        font-size: 1.2rem;
+      }
 
-    .modal-content {
-      padding: 0;
-    }
+      .comparison-table .cross {
+        color: #e5e7eb;
+        font-weight: 700;
+        font-size: 1.2rem;
+      }
 
-    .modal-header {
-      padding: 1.5rem;
-      border-bottom: 1px solid #eee;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+      .guarantee-section {
+        background: #f0f4ff;
+        border-left: 4px solid #000080;
+        padding: 2rem;
+        margin: 3rem 0;
+        border-radius: 8px;
+      }
 
-    .modal-header h2 {
-      font-size: 1.25rem;
-      color: #000080;
-      margin: 0;
-    }
+      .guarantee-section h3 {
+        color: #000080;
+        margin-bottom: 0.5rem;
+      }
 
-    .close-modal {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: #666;
-    }
-    
-    .modal-body {
-      padding: 2rem;
-      text-align: center;
-    }
+      .faq-section {
+        margin-top: 4rem;
+        background: white;
+        border-radius: 16px;
+        padding: 3rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      }
 
-    .success-icon {
-      font-size: 3rem;
-      color: #32CD32;
-      margin-bottom: 1rem;
-    }
+      .faq-section h2 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        color: #333;
+      }
 
-    .instruction-text {
-      color: #333;
-      margin-bottom: 0.5rem;
-    }
+      .faq-item {
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid #e5e7eb;
+      }
 
-    .email-note {
-      color: #666;
-      font-size: 0.9rem;
-      margin-bottom: 2rem;
-    }
+      .faq-item:last-child {
+        border-bottom: none;
+      }
 
-    .bank-details-card {
-      background: #f5f7ff;
-      border: 1px solid #e0e7ff;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-    }
+      .faq-item h3 {
+        color: #000080;
+        margin-bottom: 0.75rem;
+        font-size: 1.2rem;
+      }
 
-    .detail-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.75rem;
-      font-size: 0.95rem;
-    }
+      .faq-item p {
+        color: #666;
+        line-height: 1.8;
+      }
 
-    .detail-row:last-child {
-      margin-bottom: 0;
-    }
+      footer {
+        background: #1f2937;
+        color: white;
+        padding: 2rem;
+        text-align: center;
+        margin-top: 4rem;
+      }
 
-    .detail-row .label {
-      color: #666;
-    }
+      footer a {
+        color: #000080;
+        text-decoration: none;
+      }
 
-    .detail-row .value {
-      font-weight: 600;
-      color: #333;
-    }
+      footer a:hover {
+        text-decoration: underline;
+      }
+      /* Bitcoin Modal Styles */
+      .btc-icon {
+        color: #f7931a;
+        background: #fff5e6;
+      }
+      .btc-qr-container {
+        text-align: center;
+        margin: 20px 0;
+        padding: 15px;
+        background: white;
+        border-radius: 12px;
+        display: inline-block;
+        width: 100%;
+      }
+      .btc-qr-code {
+        max-width: 180px;
+        height: auto;
+        margin: 0 auto;
+        border: 1px solid #eee;
+        padding: 10px;
+        border-radius: 8px;
+      }
+      .btc-card {
+        border-color: #f7931a44;
+      }
+      .wallet-value {
+        font-size: 0.85em;
+        word-break: break-all;
+        font-family: monospace;
+        flex: 1;
+        margin-right: 10px;
+        text-align: left !important;
+      }
+      .copy-btn {
+        background: #f3f4f6;
+        border: 1px solid #d1d5db;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .copy-btn:hover {
+        background: #e5e7eb;
+      }
+      .btc-row {
+        flex-wrap: wrap;
+      }
 
-    .reference-row {
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px dashed #cbd5e1;
-    }
+      /* Bitcoin Modal Styles */
+      .btc-icon {
+        color: #f7931a;
+        background: #fff5e6;
+      }
+      .btc-qr-container {
+        text-align: center;
+        margin: 20px 0;
+        padding: 15px;
+        background: white;
+        border-radius: 12px;
+        display: inline-block;
+        width: 100%;
+      }
+      .btc-qr-code {
+        max-width: 180px;
+        height: auto;
+        margin: 0 auto;
+        border: 1px solid #eee;
+        padding: 10px;
+        border-radius: 8px;
+      }
+      .btc-card {
+        border-color: #f7931a44;
+      }
+      .wallet-value {
+        font-size: 0.85em;
+        word-break: break-all;
+        font-family: monospace;
+        flex: 1;
+        margin-right: 10px;
+        text-align: left !important;
+      }
+      .copy-btn {
+        background: #f3f4f6;
+        border: 1px solid #d1d5db;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .copy-btn:hover {
+        background: #e5e7eb;
+      }
+      .btc-row {
+        flex-wrap: wrap;
+      }
 
-    .reference-row .label {
-      color: #000080;
-      font-weight: 700;
-    }
+      /* Responsive Adjustments */
+      @media (max-width: 640px) {
+        header h1 {
+          font-size: 2rem;
+        }
 
-    .reference-row .value {
-      color: #000080;
-      font-weight: 800;
-      font-size: 1.1rem;
-    }
+        .pricing-grid {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
 
-    .next-steps {
-      text-align: left;
-      background: #f9fafb;
-      padding: 1.5rem;
-      border-radius: 8px;
-    }
+        .pricing-card.featured {
+          transform: scale(1);
+        }
 
-    .next-steps h4 {
-      margin-bottom: 0.5rem;
-      color: #333;
-    }
+        .comparison-section {
+          padding: 2rem 1rem;
+        }
 
-    .next-steps ol {
-      padding-left: 1.5rem;
-      color: #4b5563;
-      font-size: 0.9rem;
-    }
+        .comparison-table {
+          font-size: 0.85rem;
+        }
 
-    .next-steps li {
-      margin-bottom: 0.5rem;
-    }
+        .comparison-table th,
+        .comparison-table td {
+          padding: 0.75rem 0.5rem;
+        }
+      }
+      /* Modal Styles */
+      .modal {
+        border: none;
+        padding: 0;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        max-width: 500px;
+        width: 90%;
+        background: white;
+      }
 
-    .next-steps a {
-      color: #000080;
-      text-decoration: underline;
-    }
-  </style>
-  <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
-</head>
-<body>
-  <header>
-    <h1>Find Your Perfect Plan</h1>
-    <p>Choose the tier that matches your business needs. All plans include listing in our directory. Upgrade anytime.</p>
-    <div class="breadcrumb">
-      <a href="/">Home</a> / <span>Pricing</span>
-    </div>
-  </header>
+      /* Verification Styling */
+      .verification-addon {
+        display: block;
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+        background: #fffbeb;
+        border-left: 3px solid #f59e0b;
+        border-radius: 0 4px 4px 0;
+        font-size: 0.9rem;
+      }
 
-  <main>
-    <div class="pricing-grid">
-      <!-- Free Tier -->
-      <div class="pricing-card">
-        <div class="tier-name">Free</div>
-        <div class="tier-price">
-          <sup>$</sup>0<sub>/month</sub>
+      .verification-included {
+        display: block;
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+        background: #ecfdf5;
+        border-left: 3px solid #10b981;
+        border-radius: 0 4px 4px 0;
+        font-size: 0.9rem;
+      }
+
+      .verification-enterprise {
+        display: block;
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+        background: #eff6ff;
+        border-left: 3px solid #3b82f6;
+        border-radius: 0 4px 4px 0;
+        font-size: 0.9rem;
+      }
+
+      .modal::backdrop {
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+      }
+
+      .modal-content {
+        padding: 0;
+      }
+
+      .modal-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .modal-header h2 {
+        font-size: 1.25rem;
+        color: #000080;
+        margin: 0;
+      }
+
+      .close-modal {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #666;
+      }
+
+      .modal-body {
+        padding: 2rem;
+        text-align: center;
+      }
+
+      .success-icon {
+        font-size: 3rem;
+        color: #32cd32;
+        margin-bottom: 1rem;
+      }
+
+      .instruction-text {
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      .email-note {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 2rem;
+      }
+
+      .bank-details-card {
+        background: #f5f7ff;
+        border: 1px solid #e0e7ff;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+      }
+
+      .detail-row:last-child {
+        margin-bottom: 0;
+      }
+
+      .detail-row .label {
+        color: #666;
+      }
+
+      .detail-row .value {
+        font-weight: 600;
+        color: #333;
+      }
+
+      .reference-row {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px dashed #cbd5e1;
+      }
+
+      .reference-row .label {
+        color: #000080;
+        font-weight: 700;
+      }
+
+      .reference-row .value {
+        color: #000080;
+        font-weight: 800;
+        font-size: 1.1rem;
+      }
+
+      .next-steps {
+        text-align: left;
+        background: #f9fafb;
+        padding: 1.5rem;
+        border-radius: 8px;
+      }
+
+      .next-steps h4 {
+        margin-bottom: 0.5rem;
+        color: #333;
+      }
+
+      .next-steps ol {
+        padding-left: 1.5rem;
+        color: #4b5563;
+        font-size: 0.9rem;
+      }
+
+      .next-steps li {
+        margin-bottom: 0.5rem;
+      }
+
+      .next-steps a {
+        color: #000080;
+        text-decoration: underline;
+      }
+    </style>
+    <script>
+      function initApollo() {
+        var n = Math.random().toString(36).substring(7),
+          o = document.createElement('script');
+        ((o.src = 'https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache=' + n),
+          (o.async = !0),
+          (o.defer = !0),
+          (o.onload = function () {
+            window.trackingFunctions.onLoad({ appId: '6979e8021ac917001927e9b2' });
+          }),
+          document.head.appendChild(o));
+      }
+      initApollo();
+    </script>
+  </head>
+  <body>
+    <header>
+      <h1>Find Your Perfect Plan</h1>
+      <p>
+        Choose the tier that matches your business needs. All plans include listing in our
+        directory. Upgrade anytime.
+      </p>
+      <div class="breadcrumb">
+        <a href="/">Home</a> / <span>Pricing</span>
+      </div>
+    </header>
+
+    <main>
+      <div class="pricing-grid">
+        <!-- Free Tier -->
+        <div class="pricing-card">
+          <div class="tier-name">Free</div>
+          <div class="tier-price">
+            <sup>$</sup>0<sub>/month</sub>
+          </div>
+          <div class="tier-description">
+            Get listed in our directory and start building your online presence.
+          </div>
+          <ul class="features-list">
+            <li>Basic listing in directory</li>
+            <li>Company name & description</li>
+            <li>General location (city/state)</li>
+            <li class="not-included">Contact information hidden</li>
+            <li class="not-included">No analytics dashboard</li>
+            <li class="not-included">No lead notifications</li>
+          </ul>
+          <a href="/submit" class="cta-button secondary">Get Listed Free</a>
         </div>
-        <div class="tier-description">
-          Get listed in our directory and start building your online presence.
+
+        <!-- Professional Tier -->
+        <div class="pricing-card featured">
+          <div class="tier-name">Professional</div>
+          <div class="tier-price">
+            <sup>$</sup>295<sub>/month</sub>
+          </div>
+          <div class="tier-description">
+            Perfect for testing labs seeking direct customer inquiries and visibility.
+          </div>
+          <ul class="features-list">
+            <li>Everything in Free, plus:</li>
+            <li><strong>Full contact info displayed</strong></li>
+            <li>Detailed capabilities & certifications</li>
+            <li>Equipment list</li>
+            <li>Up to 3 case studies</li>
+            <li>Basic analytics dashboard</li>
+            <li>Profile view tracking</li>
+            <li>Profile view tracking</li>
+            <li>Email support</li>
+            <li class="extra-cost-note"><strong>+$150/mo per extra category</strong></li>
+            <li>
+              <span class="verification-addon">IAF Laboratory Verification (+$150/month)</span>
+            </li>
+          </ul>
+          <div style="margin-top: 2rem;">
+            <button
+              id="btn-professional-paypal"
+              class="cta-button"
+              data-tier="professional"
+              data-method="paypal">PayPal - $295/mo</button
+            >
+            <div style="margin-top: 0.5rem; text-align: center;">
+              <span style="font-size: 0.9rem; color: #666;">or</span>
+            </div>
+            <button
+              id="btn-professional-eft"
+              class="cta-button secondary"
+              data-tier="professional"
+              data-method="eft">Bank Transfer (EFT)</button
+            >
+            <button
+              id="btn-professional-btc"
+              class="cta-button secondary"
+              data-tier="professional"
+              data-method="btc"
+              style="margin-top: 0.5rem;">Bitcoin Payment</button
+            >
+          </div>
         </div>
-        <ul class="features-list">
-          <li>Basic listing in directory</li>
-          <li>Company name & description</li>
-          <li>General location (city/state)</li>
-          <li class="not-included">Contact information hidden</li>
-          <li class="not-included">No analytics dashboard</li>
-          <li class="not-included">No lead notifications</li>
-        </ul>
-        <a href="/submit" class="cta-button secondary">Get Listed Free</a>
+
+        <!-- Premium Tier -->
+        <div class="pricing-card premium">
+          <div class="tier-name">Premium</div>
+          <div class="tier-price">
+            <sup>$</sup>795<sub>/month</sub>
+          </div>
+          <div class="tier-description">
+            Maximize lead flow with priority ranking and real-time notifications.
+          </div>
+          <ul class="features-list">
+            <li>Everything in Professional, plus:</li>
+            <li><strong>Priority ranking in searches</strong></li>
+            <li><strong>Real-time lead notifications</strong></li>
+            <li>Featured case study section</li>
+            <li>Advanced analytics dashboard</li>
+            <li>Monthly performance reports</li>
+            <li>48-hour early access to RFQs</li>
+            <li>Priority email support</li>
+            <li class="extra-cost-note"><strong>+$150/mo per extra category</strong></li>
+            <li>
+              <span class="verification-included">✅ TSTR Laboratory Verification Included</span>
+            </li>
+          </ul>
+          <div style="margin-top: 2rem;">
+            <button
+              id="btn-premium-paypal"
+              class="cta-button"
+              data-tier="premium"
+              data-method="paypal">PayPal - $795/mo</button
+            >
+            <div style="margin-top: 0.5rem; text-align: center;">
+              <span style="font-size: 0.9rem; color: #666;">or</span>
+            </div>
+            <button
+              id="btn-premium-eft"
+              class="cta-button secondary"
+              data-tier="premium"
+              data-method="eft">Bank Transfer (EFT)</button
+            >
+            <button
+              id="btn-premium-btc"
+              class="cta-button secondary"
+              data-tier="premium"
+              data-method="btc"
+              style="margin-top: 0.5rem;">Bitcoin Payment</button
+            >
+          </div>
+        </div>
+
+        <!-- Enterprise Tier -->
+        <div class="pricing-card">
+          <div class="tier-name">Enterprise</div>
+          <div class="tier-price">Custom</div>
+          <div class="tier-description">
+            Dominate your market with exclusive features and dedicated support.
+          </div>
+          <ul class="features-list">
+            <li>Everything in Premium, plus:</li>
+            <li><strong>Category exclusivity</strong></li>
+            <li>Full analytics API access</li>
+            <li>Custom CRM integration</li>
+            <li>Co-branded marketing</li>
+            <li>Dedicated account manager</li>
+            <li>White-label profile widget</li>
+            <li>Custom contract terms</li>
+            <li>
+              <span class="verification-enterprise"
+                >✅ TSTR Laboratory Verification + API Access</span
+              >
+            </li>
+          </ul>
+          <a
+            href="/contact?inquiry=sales&subject=Enterprise%20Plan%20Inquiry"
+            class="cta-button secondary">Contact Sales</a
+          >
+        </div>
       </div>
 
-       <!-- Professional Tier -->
-       <div class="pricing-card featured">
-         <div class="tier-name">Professional</div>
-         <div class="tier-price">
-           <sup>$</sup>295<sub>/month</sub>
-         </div>
-         <div class="tier-description">
-           Perfect for testing labs seeking direct customer inquiries and visibility.
-         </div>
-         <ul class="features-list">
-           <li>Everything in Free, plus:</li>
-           <li><strong>Full contact info displayed</strong></li>
-           <li>Detailed capabilities & certifications</li>
-           <li>Equipment list</li>
-           <li>Up to 3 case studies</li>
-           <li>Basic analytics dashboard</li>
-           <li>Profile view tracking</li>
-           <li>Profile view tracking</li>
-           <li>Email support</li>
-           <li class="extra-cost-note"><strong>+$150/mo per extra category</strong></li>
-           <li><span class="verification-addon">IAF Laboratory Verification (+$150/month)</span></li>
-         </ul>
-         <div style="margin-top: 2rem;">
-           <button id="btn-professional-paypal" class="cta-button" data-tier="professional" data-method="paypal">PayPal - $295/mo</button>
-           <div style="margin-top: 0.5rem; text-align: center;">
-             <span style="font-size: 0.9rem; color: #666;">or</span>
-           </div>
-           <button id="btn-professional-eft" class="cta-button secondary" data-tier="professional" data-method="eft">Bank Transfer (EFT)</button>
-           <button id="btn-professional-btc" class="cta-button secondary" data-tier="professional" data-method="btc" style="margin-top: 0.5rem;">Bitcoin Payment</button>
-         </div>
-       </div>
-
-       <!-- Premium Tier -->
-       <div class="pricing-card premium">
-         <div class="tier-name">Premium</div>
-         <div class="tier-price">
-           <sup>$</sup>795<sub>/month</sub>
-         </div>
-         <div class="tier-description">
-           Maximize lead flow with priority ranking and real-time notifications.
-         </div>
-         <ul class="features-list">
-           <li>Everything in Professional, plus:</li>
-           <li><strong>Priority ranking in searches</strong></li>
-           <li><strong>Real-time lead notifications</strong></li>
-           <li>Featured case study section</li>
-           <li>Advanced analytics dashboard</li>
-           <li>Monthly performance reports</li>
-           <li>48-hour early access to RFQs</li>
-           <li>Priority email support</li>
-           <li class="extra-cost-note"><strong>+$150/mo per extra category</strong></li>
-           <li><span class="verification-included">✅ TSTR Laboratory Verification Included</span></li>
-         </ul>
-         <div style="margin-top: 2rem;">
-           <button id="btn-premium-paypal" class="cta-button" data-tier="premium" data-method="paypal">PayPal - $795/mo</button>
-           <div style="margin-top: 0.5rem; text-align: center;">
-             <span style="font-size: 0.9rem; color: #666;">or</span>
-           </div>
-           <button id="btn-premium-eft" class="cta-button secondary" data-tier="premium" data-method="eft">Bank Transfer (EFT)</button>
-           <button id="btn-premium-btc" class="cta-button secondary" data-tier="premium" data-method="btc" style="margin-top: 0.5rem;">Bitcoin Payment</button>
-         </div>
-       </div>
-
-      <!-- Enterprise Tier -->
-      <div class="pricing-card">
-        <div class="tier-name">Enterprise</div>
-        <div class="tier-price">
-          Custom
-        </div>
-        <div class="tier-description">
-          Dominate your market with exclusive features and dedicated support.
-        </div>
-        <ul class="features-list">
-          <li>Everything in Premium, plus:</li>
-          <li><strong>Category exclusivity</strong></li>
-          <li>Full analytics API access</li>
-          <li>Custom CRM integration</li>
-          <li>Co-branded marketing</li>
-          <li>Dedicated account manager</li>
-          <li>White-label profile widget</li>
-          <li>Custom contract terms</li>
-          <li><span class="verification-enterprise">✅ TSTR Laboratory Verification + API Access</span></li>
-        </ul>
-        <a href="/contact?inquiry=sales&subject=Enterprise%20Plan%20Inquiry" class="cta-button secondary">Contact Sales</a>
+      <div class="guarantee-section">
+        <h3>💡 Why Upgrade?</h3>
+        <p>
+          <strong>For Free Tier Users:</strong> Your listing is live, but potential customers can't reach
+          you. Upgrade to Professional to show your contact information and start receiving inquiries
+          today.
+        </p>
+        <p style="margin-top: 1rem;">
+          <strong>ROI Guarantee:</strong> Just one new client from TSTR typically covers 10+ months of
+          your subscription cost. Most Professional subscribers report their first inquiry within 30 days.
+        </p>
       </div>
-    </div>
 
-    <div class="guarantee-section">
-      <h3>💡 Why Upgrade?</h3>
-      <p><strong>For Free Tier Users:</strong> Your listing is live, but potential customers can't reach you. Upgrade to Professional to show your contact information and start receiving inquiries today.</p>
-      <p style="margin-top: 1rem;"><strong>ROI Guarantee:</strong> Just one new client from TSTR typically covers 10+ months of your subscription cost. Most Professional subscribers report their first inquiry within 30 days.</p>
-    </div>
+      <!-- Why Verification Matters -->
+      <div
+        class="verification-section"
+        style="background: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 2rem; margin: 3rem 0; border-radius: 0 12px 12px 0;"
+      >
+        <h3>🔒 Trust & Verification</h3>
+        <p>
+          Laboratories with TSTR Verified badges have undergone independent validation of their
+          certifications through IAF CertSearch, the global authority on accreditation. This
+          addresses the industry trust gap where self-reported credentials cannot be independently
+          confirmed.
+        </p>
 
-    <!-- Why Verification Matters -->
-    <div class="verification-section" style="background: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 2rem; margin: 3rem 0; border-radius: 0 12px 12px 0;">
-      <h3>🔒 Trust & Verification</h3>
-      <p>Laboratories with TSTR Verified badges have undergone independent validation of their certifications through IAF CertSearch, the global authority on accreditation. This addresses the industry trust gap where self-reported credentials cannot be independently confirmed.</p>
+        <p style="margin-top: 1rem;"><strong>Benefits of TSTR Verified status:</strong></p>
+        <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+          <li>Increased buyer confidence and inquiry conversion rates</li>
+          <li>Differentiation from laboratories with unverified claims</li>
+          <li>Access to verification-certified laboratory search filters</li>
+          <li>Quarterly monitoring ensures certifications remain current</li>
+        </ul>
+      </div>
 
-      <p style="margin-top: 1rem;"><strong>Benefits of TSTR Verified status:</strong></p>
-      <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
-        <li>Increased buyer confidence and inquiry conversion rates</li>
-        <li>Differentiation from laboratories with unverified claims</li>
-        <li>Access to verification-certified laboratory search filters</li>
-        <li>Quarterly monitoring ensures certifications remain current</li>
-      </ul>
-    </div>
-
-    <!-- Feature Comparison Table -->
-    <div class="comparison-section">
-      <h2>Feature Comparison</h2>
-      <table class="comparison-table">
-        <thead>
-          <tr>
-            <th>Feature</th>
-            <th>Free</th>
-            <th>Professional</th>
-            <th>Premium</th>
-            <th>Enterprise</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Directory listing</td>
-            <td class="check">✓</td>
-            <td class="check">✓</td>
-            <td class="check">✓</td>
-            <td class="check">✓</td>
-          </tr>
-          <tr>
-            <td>Contact info displayed</td>
-            <td class="cross">✗</td>
-            <td class="check">✓</td>
-            <td class="check">✓</td>
-            <td class="check">✓</td>
-          </tr>
-          <tr>
-            <td>Case studies</td>
-            <td>0</td>
-            <td>3</td>
-            <td>Unlimited</td>
-            <td>Unlimited</td>
-          </tr>
-          <tr>
-            <td>Profile analytics</td>
-            <td class="cross">✗</td>
-            <td>Basic</td>
-            <td>Advanced</td>
-            <td>API Access</td>
-          </tr>
-          <tr>
-            <td>Search ranking</td>
-            <td>Standard</td>
-            <td>Standard</td>
-            <td><strong>Priority (Top 3)</strong></td>
-            <td><strong>Exclusive</strong></td>
-          </tr>
-          <tr>
-            <td>Lead notifications</td>
-            <td class="cross">✗</td>
-            <td>Daily email</td>
-            <td><strong>Real-time alerts</strong></td>
-            <td><strong>Real-time + CRM</strong></td>
-          </tr>
-          <tr>
-            <td>RFQ access</td>
-            <td class="cross">✗</td>
-            <td>Standard</td>
-            <td><strong>48hr early access</strong></td>
-            <td><strong>Exclusive delivery</strong></td>
-          </tr>
-          <tr>
-            <td>Support</td>
-            <td>Community</td>
-            <td>Email</td
-            <td>Priority email</td>
+      <!-- Feature Comparison Table -->
+      <div class="comparison-section">
+        <h2>Feature Comparison</h2>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Free</th>
+              <th>Professional</th>
+              <th>Premium</th>
+              <th>Enterprise</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Directory listing</td>
+              <td class="check">✓</td>
+              <td class="check">✓</td>
+              <td class="check">✓</td>
+              <td class="check">✓</td>
+            </tr>
+            <tr>
+              <td>Contact info displayed</td>
+              <td class="cross">✗</td>
+              <td class="check">✓</td>
+              <td class="check">✓</td>
+              <td class="check">✓</td>
+            </tr>
+            <tr>
+              <td>Case studies</td>
+              <td>0</td>
+              <td>3</td>
+              <td>Unlimited</td>
+              <td>Unlimited</td>
+            </tr>
+            <tr>
+              <td>Profile analytics</td>
+              <td class="cross">✗</td>
+              <td>Basic</td>
+              <td>Advanced</td>
+              <td>API Access</td>
+            </tr>
+            <tr>
+              <td>Search ranking</td>
+              <td>Standard</td>
+              <td>Standard</td>
+              <td><strong>Priority (Top 3)</strong></td>
+              <td><strong>Exclusive</strong></td>
+            </tr>
+            <tr>
+              <td>Lead notifications</td>
+              <td class="cross">✗</td>
+              <td>Daily email</td>
+              <td><strong>Real-time alerts</strong></td>
+              <td><strong>Real-time + CRM</strong></td>
+            </tr>
+            <tr>
+              <td>RFQ access</td>
+              <td class="cross">✗</td>
+              <td>Standard</td>
+              <td><strong>48hr early access</strong></td>
+              <td><strong>Exclusive delivery</strong></td>
+            </tr>
+            <tr>
+              <td>Support</td>
+              <td>Community</td>
+              <td>Email</td>Priority email</tr
+            >
             <td><strong>Dedicated manager</strong></td>
-          </tr>
+          </tbody>
           <tr>
             <td>IAF Laboratory Verification</td>
             <td class="cross">✗</td>
@@ -842,9 +920,9 @@ import Footer from '../components/Footer.astro'
             <td class="check">✓ Included</td>
             <td class="check">✓ Included + API Access</td>
           </tr>
-        </tbody>
-      </table>
-    </div>
+        </table>
+      </div>
+    </main>
 
     <!-- FAQ Section -->
     <div class="faq-section">
@@ -852,46 +930,86 @@ import Footer from '../components/Footer.astro'
 
       <div class="faq-item">
         <h3>How do I claim my free listing?</h3>
-        <p>If you're already listed in our directory, you can claim your listing by <a href="/contact?inquiry=support&subject=Claim%20My%20Listing">contacting us</a> with your company name and verification details. If you're not listed yet, submit your lab via our <a href="/submit">submission form</a> - it's completely free!</p>
+        <p>
+          If you're already listed in our directory, you can claim your listing by <a
+            href="/contact?inquiry=support&subject=Claim%20My%20Listing">contacting us</a
+          > with your company name and verification details. If you're not listed yet, submit your lab
+          via our <a href="/submit">submission form</a> - it's completely free!
+        </p>
       </div>
 
       <div class="faq-item">
         <h3>Can I upgrade or downgrade my plan?</h3>
-        <p>Yes! You can upgrade to a higher tier at any time. <a href="/contact?inquiry=sales&subject=Plan%20Upgrade">Contact our sales team</a> to discuss plan changes. Downgrades take effect at the end of your current billing cycle.</p>
+        <p>
+          Yes! You can upgrade to a higher tier at any time. <a
+            href="/contact?inquiry=sales&subject=Plan%20Upgrade">Contact our sales team</a
+          > to discuss plan changes. Downgrades take effect at the end of your current billing cycle.
+        </p>
       </div>
 
-       <div class="faq-item">
-         <h3>What payment methods do you accept?</h3>
-         <p>We accept PayPal (instant online payments), bank transfers (EFT), Bitcoin cryptocurrency, company checks, and major credit cards. PayPal subscriptions are processed instantly. For EFT and Bitcoin payments, <a href="/contact?inquiry=sales&subject=Payment%20Arrangements">contact our sales team</a> to arrange payment details and account setup. Enterprise clients can arrange custom payment terms including annual billing with discounts.</p>
-       </div>
+      <div class="faq-item">
+        <h3>What payment methods do you accept?</h3>
+        <p>
+          We accept PayPal (instant online payments), bank transfers (EFT), Bitcoin cryptocurrency,
+          company checks, and major credit cards. PayPal subscriptions are processed instantly. For
+          EFT and Bitcoin payments, <a href="/contact?inquiry=sales&subject=Payment%20Arrangements"
+            >contact our sales team</a
+          > to arrange payment details and account setup. Enterprise clients can arrange custom payment
+          terms including annual billing with discounts.
+        </p>
+      </div>
 
       <div class="faq-item">
         <h3>Do you offer annual billing?</h3>
-        <p>Yes! Pay annually and save 2 months (17% discount). <a href="/contact?inquiry=sales&subject=Annual%20Billing">Contact our sales team</a> for annual billing options.</p>
+        <p>
+          Yes! Pay annually and save 2 months (17% discount). <a
+            href="/contact?inquiry=sales&subject=Annual%20Billing">Contact our sales team</a
+          > for annual billing options.
+        </p>
       </div>
 
       <div class="faq-item">
         <h3>What is category exclusivity (Enterprise)?</h3>
-        <p>Category exclusivity means your lab is the only one displayed when buyers search for your specific testing type in your region. This premium feature ensures 100% of relevant leads come to you. <a href="/contact?inquiry=sales&subject=Category%20Exclusivity">Contact us</a> to discuss availability for your category.</p>
+        <p>
+          Category exclusivity means your lab is the only one displayed when buyers search for your
+          specific testing type in your region. This premium feature ensures 100% of relevant leads
+          come to you. <a href="/contact?inquiry=sales&subject=Category%20Exclusivity">Contact us</a
+          > to discuss availability for your category.
+        </p>
       </div>
 
       <div class="faq-item">
         <h3>How do lead notifications work?</h3>
-        <p>When a buyer submits a Request for Quote (RFQ) matching your capabilities, Premium subscribers receive instant email alerts. Professional subscribers receive daily digest emails. You can then respond directly to the buyer through our platform.</p>
+        <p>
+          When a buyer submits a Request for Quote (RFQ) matching your capabilities, Premium
+          subscribers receive instant email alerts. Professional subscribers receive daily digest
+          emails. You can then respond directly to the buyer through our platform.
+        </p>
       </div>
 
       <div class="faq-item">
         <h3>What is the "Verified & Tested" certification?</h3>
-        <p>This optional add-on ($2,500 initial audit + $1,200/year renewal) includes verification of your equipment calibrations, technician certifications, insurance coverage, and customer references. Verified providers get a special badge and priority filtering in search results.</p>
+        <p>
+          This optional add-on ($2,500 initial audit + $1,200/year renewal) includes verification of
+          your equipment calibrations, technician certifications, insurance coverage, and customer
+          references. Verified providers get a special badge and priority filtering in search
+          results.
+        </p>
       </div>
     </div>
 
     <div class="guarantee-section" style="text-align: center; margin-top: 3rem;">
       <h3>Ready to Grow Your Testing Business?</h3>
-      <p style="margin-bottom: 1.5rem;">Join testing laboratories already generating qualified leads through TSTR Hub.</p>
-      <a href="/contact?inquiry=sales&subject=Pricing%20Plan%20Inquiry" class="cta-button" style="display: inline-block; width: auto; padding: 1rem 3rem;">Contact Sales Team</a>
+      <p style="margin-bottom: 1.5rem;">
+        Join testing laboratories already generating qualified leads through TSTR Hub.
+      </p>
+      <a
+        href="/contact?inquiry=sales&subject=Pricing%20Plan%20Inquiry"
+        class="cta-button"
+        style="display: inline-block; width: auto; padding: 1rem 3rem;">Contact Sales Team</a
+      >
     </div>
-  </main>
+  </body>
 
   <Footer />
 
@@ -905,12 +1023,10 @@ import Footer from '../components/Footer.astro'
       <div class="modal-body">
         <div class="success-icon">✓</div>
         <p class="instruction-text">
-          Thank you for choosing the <strong id="eft-plan-name">Professional</strong> plan.
-          Please use the details below to complete your payment.
+          Thank you for choosing the <strong id="eft-plan-name">Professional</strong> plan. Please use
+          the details below to complete your payment.
         </p>
-        <p class="email-note">
-          Please follow the steps below to finalize your upgrade.
-        </p>
+        <p class="email-note">Please follow the steps below to finalize your upgrade.</p>
 
         <div class="bank-details-card">
           <div class="detail-row">
@@ -943,7 +1059,11 @@ import Footer from '../components/Footer.astro'
           <h4>Next Steps:</h4>
           <ol>
             <li>Make the transfer using the reference above.</li>
-            <li>Submit your proof of payment via our <a href="/contact?inquiry=sales&subject=Proof%20of%20Payment">Contact Form</a>.</li>
+            <li>
+              Submit your proof of payment via our <a
+                href="/contact?inquiry=sales&subject=Proof%20of%20Payment">Contact Form</a
+              >.
+            </li>
             <li>Your account will be upgraded within 24-48 hours.</li>
           </ol>
         </div>
@@ -961,8 +1081,8 @@ import Footer from '../components/Footer.astro'
       <div class="modal-body btc-body">
         <div class="success-icon btc-icon">₿</div>
         <p class="instruction-text">
-          Thank you for choosing the <strong id="btc-plan-name">Professional</strong> plan.
-          Please use the details below to complete your payment.
+          Thank you for choosing the <strong id="btc-plan-name">Professional</strong> plan. Please use
+          the details below to complete your payment.
         </p>
 
         <div class="btc-qr-container">
@@ -973,7 +1093,11 @@ import Footer from '../components/Footer.astro'
           <div class="detail-row btc-row">
             <span class="label">Wallet Address:</span>
             <span class="value wallet-value">17B2BCJfDyNeMoFZ2mbAVHnmL8CwogQFeB</span>
-            <button class="copy-btn" onclick="navigator.clipboard.writeText('17B2BCJfDyNeMoFZ2mbAVHnmL8CwogQFeB').then(() => {this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy', 2000)})">Copy</button>
+            <button
+              class="copy-btn"
+              onclick="navigator.clipboard.writeText('17B2BCJfDyNeMoFZ2mbAVHnmL8CwogQFeB').then(() => {this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy', 2000)})"
+              >Copy</button
+            >
           </div>
           <div class="detail-row reference-row">
             <span class="label">Reference:</span>
@@ -985,7 +1109,11 @@ import Footer from '../components/Footer.astro'
           <h4>Next Steps:</h4>
           <ol>
             <li>Send the payment to the address above.</li>
-            <li>Submit your transaction hash via our <a href="/contact?inquiry=sales&subject=BTC%20Transaction%20Proof">Contact Form</a>.</li>
+            <li>
+              Submit your transaction hash via our <a
+                href="/contact?inquiry=sales&subject=BTC%20Transaction%20Proof">Contact Form</a
+              >.
+            </li>
             <li>Your account will be upgraded within 24 hours of confirmation.</li>
           </ol>
         </div>
@@ -994,23 +1122,26 @@ import Footer from '../components/Footer.astro'
   </dialog>
 
   <script>
-    import { supabaseBrowser, supabaseAnonKey, supabaseAnonJwt } from '../lib/supabase-browser'
+    import { supabaseBrowser, supabaseAnonKey, supabaseAnonJwt } from '../lib/supabase-browser';
 
     async function handleSubscribe(tier, method = 'paypal') {
-      const button = document.querySelector(`[data-tier="${tier}"][data-method="${method}"]`)
-      const originalText = button.textContent
-      button.textContent = 'Processing...'
-      button.disabled = true
+      const button = document.querySelector(`[data-tier="${tier}"][data-method="${method}"]`);
+      const originalText = button.textContent;
+      button.textContent = 'Processing...';
+      button.disabled = true;
 
       try {
-          if (method === 'eft') {
-            await handleEFTFlow(tier)
-            return
-          }
+        if (method === 'eft') {
+          await handleEFTFlow(tier);
+          return;
+        }
 
-          if (method === 'paypal') {
-            // PayPal subscription flow
-          const { data: { session: currentSession }, error: sessionError } = await supabaseBrowser.auth.getSession()
+        if (method === 'paypal') {
+          // PayPal subscription flow
+          const {
+            data: { session: currentSession },
+            error: sessionError,
+          } = await supabaseBrowser.auth.getSession();
 
           if (sessionError || !currentSession) {
             // Store pending subscription server-side
@@ -1019,55 +1150,57 @@ import Footer from '../components/Footer.astro'
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${supabaseAnonJwt}`
+                  Authorization: `Bearer ${supabaseAnonJwt}`,
                 },
                 body: JSON.stringify({
                   tier,
-                  checkoutData: { timestamp: Date.now() }
-                })
-              })
+                  checkoutData: { timestamp: Date.now() },
+                }),
+              });
 
               if (!saveResponse.ok) {
-                throw new Error('Failed to save pending subscription')
+                throw new Error('Failed to save pending subscription');
               }
 
-              const saveData = await saveResponse.json()
-              console.log('[PayPal] Pending subscription saved:', saveData.pending_token)
+              const saveData = await saveResponse.json();
+              console.log('[PayPal] Pending subscription saved:', saveData.pending_token);
 
               // Redirect to login with pending token
-              window.location.href = `/login?redirect_to=${encodeURIComponent('/pricing?pending=' + saveData.pending_token)}`
+              window.location.href = `/login?redirect_to=${encodeURIComponent('/pricing?pending=' + saveData.pending_token)}`;
             } catch (saveError) {
-              console.error('[PayPal] Failed to save pending subscription:', saveError)
-              alert('Failed to prepare subscription. Please try again.')
-              button.textContent = originalText
-              button.disabled = false
+              console.error('[PayPal] Failed to save pending subscription:', saveError);
+              alert('Failed to prepare subscription. Please try again.');
+              button.textContent = originalText;
+              button.disabled = false;
             }
-            return
+            return;
           }
 
           if (!currentSession.user) {
-            throw new Error('No valid user session available. Please log in again.')
+            throw new Error('No valid user session available. Please log in again.');
           }
 
           console.log('[PayPal] Session validated:', {
             userId: currentSession.user.id,
             userEmail: currentSession.user.email,
             expiresAt: currentSession.expires_at,
-            expiresIn: currentSession.expires_at ? Math.floor((currentSession.expires_at * 1000 - Date.now()) / 1000) : 'unknown'
-          })
+            expiresIn: currentSession.expires_at
+              ? Math.floor((currentSession.expires_at * 1000 - Date.now()) / 1000)
+              : 'unknown',
+          });
 
           // Call Edge Function directly with fetch to avoid any automatic JWT handling
-          const functionUrl = `${supabaseBrowser.supabaseUrl}/functions/v1/paypal-create-subscription`
+          const functionUrl = `${supabaseBrowser.supabaseUrl}/functions/v1/paypal-create-subscription`;
 
-          console.log('🎯🎯🎯 FRONTEND: About to call Edge Function...')
-          console.log('🎯 Supabase URL:', supabaseBrowser.supabaseUrl)
+          console.log('🎯🎯🎯 FRONTEND: About to call Edge Function...');
+          console.log('🎯 Supabase URL:', supabaseBrowser.supabaseUrl);
           console.log('🎯 Supabase client details:', {
             url: supabaseBrowser.supabaseUrl,
             keyLength: supabaseBrowser.supabaseKey.length,
-            keyPrefix: supabaseBrowser.supabaseKey.substring(0, 20)
-          })
-          console.log('🎯 Function URL:', functionUrl)
-          console.log('🎯 Current timestamp:', new Date().toISOString())
+            keyPrefix: supabaseBrowser.supabaseKey.substring(0, 20),
+          });
+          console.log('🎯 Function URL:', functionUrl);
+          console.log('🎯 Current timestamp:', new Date().toISOString());
           console.log('🎯 User session details:', {
             userId: currentSession.user.id,
             userEmail: currentSession.user.email,
@@ -1075,36 +1208,39 @@ import Footer from '../components/Footer.astro'
             tokenExpiry: new Date(currentSession.expires_at * 1000).toISOString(),
             currentTime: new Date().toISOString(),
             tokenExpired: currentSession.expires_at * 1000 < Date.now(),
-            tokenValidFor: Math.floor((currentSession.expires_at * 1000 - Date.now()) / 1000 / 60) + ' minutes'
-          })
+            tokenValidFor:
+              Math.floor((currentSession.expires_at * 1000 - Date.now()) / 1000 / 60) + ' minutes',
+          });
 
           // Check if token is expired
           if (currentSession.expires_at * 1000 < Date.now()) {
-            console.error('🎯 JWT token is expired!')
-            throw new Error('Session expired. Please log in again.')
+            console.error('🎯 JWT token is expired!');
+            throw new Error('Session expired. Please log in again.');
           }
 
           // Force refresh token if it's close to expiry
-          const timeToExpiry = (currentSession.expires_at * 1000 - Date.now()) / 1000 / 60 // minutes
-          if (timeToExpiry < 5) { // Less than 5 minutes
-            console.log('🎯 Token expires soon, refreshing...')
-            const { data: refreshData, error: refreshError } = await supabaseBrowser.auth.refreshSession()
+          const timeToExpiry = (currentSession.expires_at * 1000 - Date.now()) / 1000 / 60; // minutes
+          if (timeToExpiry < 5) {
+            // Less than 5 minutes
+            console.log('🎯 Token expires soon, refreshing...');
+            const { data: refreshData, error: refreshError } =
+              await supabaseBrowser.auth.refreshSession();
             if (refreshError) {
-              console.error('🎯 Token refresh failed:', refreshError)
-              throw new Error('Session refresh failed: ' + refreshError.message)
+              console.error('🎯 Token refresh failed:', refreshError);
+              throw new Error('Session refresh failed: ' + refreshError.message);
             }
             if (refreshData.session) {
-              console.log('🎯 Session refreshed successfully')
+              console.log('🎯 Session refreshed successfully');
               // Use the refreshed session
-              currentSession.access_token = refreshData.session.access_token
-              currentSession.expires_at = refreshData.session.expires_at
+              currentSession.access_token = refreshData.session.access_token;
+              currentSession.expires_at = refreshData.session.expires_at;
             }
           }
 
           // Check if token is expired
           if (currentSession.expires_at * 1000 < Date.now()) {
-            console.error('🎯 JWT token is expired!')
-            throw new Error('Session expired. Please log in again.')
+            console.error('🎯 JWT token is expired!');
+            throw new Error('Session expired. Please log in again.');
           }
           console.log('[PayPal] Request payload:', {
             tier,
@@ -1112,372 +1248,392 @@ import Footer from '../components/Footer.astro'
             userIdType: typeof currentSession.user.id,
             userIdLength: currentSession.user.id.length,
             return_url: window.location.origin + '/checkout/success',
-            cancel_url: window.location.origin + '/checkout/cancel'
-          })
+            cancel_url: window.location.origin + '/checkout/cancel',
+          });
 
           // First test if Edge Function is reachable with GET request
-          console.log('🧪 Testing Edge Function connectivity...')
+          console.log('🧪 Testing Edge Function connectivity...');
           try {
             const testResponse = await fetch(functionUrl, {
               method: 'GET',
               headers: {
-                'Authorization': `Bearer ${supabaseAnonJwt}`
-              }
-            })
-            console.log('🧪 Test GET response status:', testResponse.status)
-            const testData = await testResponse.json()
-            console.log('🧪 Test GET response data:', testData)
+                Authorization: `Bearer ${supabaseAnonJwt}`,
+              },
+            });
+            console.log('🧪 Test GET response status:', testResponse.status);
+            const testData = await testResponse.json();
+            console.log('🧪 Test GET response data:', testData);
           } catch (testError) {
-            console.error('🧪 Test GET failed:', testError)
+            console.error('🧪 Test GET failed:', testError);
           }
 
-          console.log('🎯 Making actual POST request...')
+          console.log('🎯 Making actual POST request...');
           console.log('🎯 Full request details:', {
             url: functionUrl,
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${currentSession.access_token.substring(0, 20)}...`
+              Authorization: `Bearer ${currentSession.access_token.substring(0, 20)}...`,
             },
             body: JSON.stringify({
               tier,
               userId: currentSession.user.id,
               return_url: window.location.origin + '/checkout/success',
-              cancel_url: window.location.origin + '/checkout/cancel'
-            })
-          })
+              cancel_url: window.location.origin + '/checkout/cancel',
+            }),
+          });
 
-          let response
+          let response;
           try {
             response = await fetch(functionUrl, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${supabaseAnonJwt}`
+                Authorization: `Bearer ${supabaseAnonJwt}`,
               },
               body: JSON.stringify({
                 tier,
                 userId: currentSession.user.id,
                 return_url: window.location.origin + '/checkout/success',
-                cancel_url: window.location.origin + '/checkout/cancel'
-              })
-            })
-            console.log('🎯 Fetch promise resolved')
+                cancel_url: window.location.origin + '/checkout/cancel',
+              }),
+            });
+            console.log('🎯 Fetch promise resolved');
           } catch (fetchError) {
-            console.error('🎯 Fetch threw an error:', fetchError)
-            throw new Error(`Network error: ${fetchError.message}`)
+            console.error('🎯 Fetch threw an error:', fetchError);
+            throw new Error(`Network error: ${fetchError.message}`);
           }
 
-          console.log('🎯 Fetch completed, response received')
-          console.log('🎯 Raw response status:', response.status)
-          console.log('🎯 Raw response status text:', response.statusText)
-          console.log('🎯 Raw response headers:', Object.fromEntries(response.headers.entries()))
-          console.log('🎯 Response ok:', response.ok)
+          console.log('🎯 Fetch completed, response received');
+          console.log('🎯 Raw response status:', response.status);
+          console.log('🎯 Raw response status text:', response.statusText);
+          console.log('🎯 Raw response headers:', Object.fromEntries(response.headers.entries()));
+          console.log('🎯 Response ok:', response.ok);
 
           if (!response.ok) {
-            console.error('[PayPal] Response not OK')
-            let errorText
+            console.error('[PayPal] Response not OK');
+            let errorText;
             try {
-              errorText = await response.text()
-              console.error('[PayPal] Error response text:', errorText)
+              errorText = await response.text();
+              console.error('[PayPal] Error response text:', errorText);
             } catch (textError) {
-              console.error('[PayPal] Failed to read error response:', textError)
-              errorText = 'Unable to read error response'
+              console.error('[PayPal] Failed to read error response:', textError);
+              errorText = 'Unable to read error response';
             }
 
             // Try to parse as JSON
-            let errorData
+            let errorData;
             try {
               if (errorText) {
-                errorData = JSON.parse(errorText)
-                console.error('[PayPal] Parsed error data:', errorData)
+                errorData = JSON.parse(errorText);
+                console.error('[PayPal] Parsed error data:', errorData);
               }
             } catch (parseError) {
-              console.error('[PayPal] Error response not valid JSON:', parseError)
+              console.error('[PayPal] Error response not valid JSON:', parseError);
             }
 
-            const errorMessage = errorData?.error || errorData?.message || errorText || `HTTP ${response.status}`
-            console.error('[PayPal] Final error message:', errorMessage)
-            throw new Error(errorMessage)
+            const errorMessage =
+              errorData?.error || errorData?.message || errorText || `HTTP ${response.status}`;
+            console.error('[PayPal] Final error message:', errorMessage);
+            throw new Error(errorMessage);
           }
 
-          let responseData
+          let responseData;
           try {
-            responseData = await response.json()
-            console.log('[PayPal] Successfully parsed response JSON:', responseData)
+            responseData = await response.json();
+            console.log('[PayPal] Successfully parsed response JSON:', responseData);
           } catch (jsonError) {
-            console.error('[PayPal] Failed to parse success response as JSON:', jsonError)
-            const textResponse = await response.text()
-            console.error('[PayPal] Raw success response:', textResponse)
-            throw new Error('Invalid response format from server')
+            console.error('[PayPal] Failed to parse success response as JSON:', jsonError);
+            const textResponse = await response.text();
+            console.error('[PayPal] Raw success response:', textResponse);
+            throw new Error('Invalid response format from server');
           }
 
           // Check for version in response to verify we're hitting the new code
           if (responseData?.version) {
-            console.log('[PayPal] Response version:', responseData.version)
+            console.log('[PayPal] Response version:', responseData.version);
           }
 
           // Redirect to PayPal
           if (responseData?.approval_url) {
-            console.log('[PayPal] Redirecting to PayPal:', responseData.approval_url)
-            window.location.href = responseData.approval_url
+            console.log('[PayPal] Redirecting to PayPal:', responseData.approval_url);
+            window.location.href = responseData.approval_url;
           } else {
-            throw new Error('No approval URL returned')
+            throw new Error('No approval URL returned');
           }
         } else if (method === 'eft') {
           // EFT/Bank Transfer
-          const amount = tier === 'professional' ? 295 : 795
-          const subject = `TSTR ${tier.charAt(0).toUpperCase() + tier.slice(1)} Plan - Bank Transfer`
-          
-          window.location.href = `/contact?inquiry=sales&subject=${encodeURIComponent(subject)}`
-          button.textContent = originalText
-          button.disabled = false
-          return
+          const amount = tier === 'professional' ? 295 : 795;
+          const subject = `TSTR ${tier.charAt(0).toUpperCase() + tier.slice(1)} Plan - Bank Transfer`;
+
+          window.location.href = `/contact?inquiry=sales&subject=${encodeURIComponent(subject)}`;
+          button.textContent = originalText;
+          button.disabled = false;
+          return;
         } else if (method === 'btc') {
           // Bitcoin payment
-          const amount = tier === 'professional' ? 295 : 795
-          const subject = `TSTR ${tier.charAt(0).toUpperCase() + tier.slice(1)} Plan - Bitcoin Payment`
+          const amount = tier === 'professional' ? 295 : 795;
+          const subject = `TSTR ${tier.charAt(0).toUpperCase() + tier.slice(1)} Plan - Bitcoin Payment`;
 
-          window.location.href = `/contact?inquiry=sales&subject=${encodeURIComponent(subject)}`
-          button.textContent = originalText
-          button.disabled = false
-          return
+          window.location.href = `/contact?inquiry=sales&subject=${encodeURIComponent(subject)}`;
+          button.textContent = originalText;
+          button.disabled = false;
+          return;
         }
-
       } catch (error) {
-        console.error('Subscription error:', error)
+        console.error('Subscription error:', error);
 
-        let errorDetail = error?.message || 'Unknown error'
+        let errorDetail = error?.message || 'Unknown error';
 
         // Try to extract detailed error from Supabase FunctionsHttpError
         if (error.context && typeof error.context.json === 'function') {
           try {
-            const body = await error.context.json()
-            errorDetail = body.error || body.message || JSON.stringify(body)
+            const body = await error.context.json();
+            errorDetail = body.error || body.message || JSON.stringify(body);
             if (body.details) {
-              console.error('Detailed PayPal error:', body.details)
-              errorDetail += ': ' + (body.details.message || JSON.stringify(body.details))
+              console.error('Detailed PayPal error:', body.details);
+              errorDetail += ': ' + (body.details.message || JSON.stringify(body.details));
             }
           } catch (e) {
-            console.error('Failed to parse error body:', e)
+            console.error('Failed to parse error body:', e);
           }
         } else if (error.error_description) {
-          errorDetail = error.error_description
+          errorDetail = error.error_description;
         } else if (typeof error === 'object' && error !== null && !(error instanceof Error)) {
-          errorDetail = JSON.stringify(error)
+          errorDetail = JSON.stringify(error);
         }
 
-        alert(`Failed to start checkout: ${errorDetail}. Please try again or contact support.`)
-        button.textContent = originalText
-        button.disabled = false
+        alert(`Failed to start checkout: ${errorDetail}. Please try again or contact support.`);
+        button.textContent = originalText;
+        button.disabled = false;
       }
     }
 
     // EFT Payment Flow Handler
     async function handleEFTFlow(tier) {
-      const button = document.querySelector(`[data-tier="${tier}"][data-method="eft"]`)
-      const originalText = button.textContent
-      button.textContent = 'Loading...'
-      button.disabled = true
+      const button = document.querySelector(`[data-tier="${tier}"][data-method="eft"]`);
+      const originalText = button.textContent;
+      button.textContent = 'Loading...';
+      button.disabled = true;
 
       try {
-        const { data: { session }, error } = await supabaseBrowser.auth.getSession()
-        
+        const {
+          data: { session },
+          error,
+        } = await supabaseBrowser.auth.getSession();
+
         if (error || !session) {
           // Redirect to login if not authenticated
-           window.location.href = `/login?redirect_to=${encodeURIComponent('/pricing')}`
-           return
+          window.location.href = `/login?redirect_to=${encodeURIComponent('/pricing')}`;
+          return;
         }
 
         // Tier details
         const amounts = {
-          'professional': '$295.00',
-          'premium': '$795.00'
-        }
-        const planName = tier.charAt(0).toUpperCase() + tier.slice(1)
-        const amount = amounts[tier]
+          professional: '$295.00',
+          premium: '$795.00',
+        };
+        const planName = tier.charAt(0).toUpperCase() + tier.slice(1);
+        const amount = amounts[tier];
 
         // Call API to generate reference and send email
         const response = await fetch('/api/subscription/eft', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.access_token}`
+            Authorization: `Bearer ${session.access_token}`,
           },
           body: JSON.stringify({
             plan: planName,
-            amount: amount
-          })
-        })
+            amount: amount,
+          }),
+        });
 
         if (!response.ok) {
-          let errorMsg = 'Failed to initiate EFT payment'
+          let errorMsg = 'Failed to initiate EFT payment';
           try {
-            const errorData = await response.json()
-            if (errorData.error) errorMsg = errorData.error
+            const errorData = await response.json();
+            if (errorData.error) errorMsg = errorData.error;
           } catch (e) {
             // Use default message if JSON parsing fails
           }
-          throw new Error(errorMsg)
+          throw new Error(errorMsg);
         }
 
-        const data = await response.json()
-        
+        const data = await response.json();
+
         // Show Modal
-        const modal = document.getElementById('eft-modal')
-        const planNameEl = document.getElementById('eft-plan-name')
-        const refEl = document.getElementById('eft-reference')
-        
-        if (planNameEl) planNameEl.textContent = planName
-        if (refEl) refEl.textContent = data.reference
-        
-        if (modal) {
-           modal.showModal()
-           // Reset button state immediately since modal is open
-           button.textContent = originalText
-           button.disabled = false
-        }
+        const modal = document.getElementById('eft-modal');
+        const planNameEl = document.getElementById('eft-plan-name');
+        const refEl = document.getElementById('eft-reference');
 
+        if (planNameEl) planNameEl.textContent = planName;
+        if (refEl) refEl.textContent = data.reference;
+
+        if (modal) {
+          modal.showModal();
+          // Reset button state immediately since modal is open
+          button.textContent = originalText;
+          button.disabled = false;
+        }
       } catch (err) {
-        console.error('EFT Flow Error:', err)
-        alert(`Failed to load bank details: ${err.message || 'Unknown error'}. Please try again or contact support.`)
-        button.textContent = originalText
-        button.disabled = false
+        console.error('EFT Flow Error:', err);
+        alert(
+          `Failed to load bank details: ${err.message || 'Unknown error'}. Please try again or contact support.`
+        );
+        button.textContent = originalText;
+        button.disabled = false;
       }
     }
 
     // Bitcoin Payment Flow Handler
     async function handleBTCFlow(tier) {
-      const button = document.querySelector(`[data-tier="${tier}"][data-method="btc"]`)
-      const originalText = button.textContent
-      button.textContent = 'Loading...'
-      button.disabled = true
+      const button = document.querySelector(`[data-tier="${tier}"][data-method="btc"]`);
+      const originalText = button.textContent;
+      button.textContent = 'Loading...';
+      button.disabled = true;
 
       try {
-        const { data: { session }, error } = await supabaseBrowser.auth.getSession()
-        
+        const {
+          data: { session },
+          error,
+        } = await supabaseBrowser.auth.getSession();
+
         if (error || !session) {
-           window.location.href = `/login?redirect_to=${encodeURIComponent('/pricing')}`
-           return
+          window.location.href = `/login?redirect_to=${encodeURIComponent('/pricing')}`;
+          return;
         }
 
         const amounts = {
-          'professional': '$295.00',
-          'premium': '$795.00'
-        }
-        const planName = tier.charAt(0).toUpperCase() + tier.slice(1)
-        const amount = amounts[tier]
+          professional: '$295.00',
+          premium: '$795.00',
+        };
+        const planName = tier.charAt(0).toUpperCase() + tier.slice(1);
+        const amount = amounts[tier];
 
         const response = await fetch('/api/subscription/eft', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.access_token}`
+            Authorization: `Bearer ${session.access_token}`,
           },
           body: JSON.stringify({
             plan: planName,
-            amount: amount
-          })
-        })
+            amount: amount,
+          }),
+        });
 
         if (!response.ok) {
-          let errorMsg = 'Failed to initiate Bitcoin payment'
+          let errorMsg = 'Failed to initiate Bitcoin payment';
           try {
-            const errorData = await response.json()
-            if (errorData.error) errorMsg = errorData.error
+            const errorData = await response.json();
+            if (errorData.error) errorMsg = errorData.error;
           } catch (e) {
-          console.error('Session check error:', e)
-        }
-          throw new Error(errorMsg)
+            console.error('Session check error:', e);
+          }
+          throw new Error(errorMsg);
         }
 
-        const data = await response.json()
-        
-        const modal = document.getElementById('btc-modal')
-        const planNameEl = document.getElementById('btc-plan-name')
-        const refEl = document.getElementById('btc-reference')
-        
-        if (planNameEl) planNameEl.textContent = planName
-        if (refEl) refEl.textContent = data.reference
-        
+        const data = await response.json();
+
+        const modal = document.getElementById('btc-modal');
+        const planNameEl = document.getElementById('btc-plan-name');
+        const refEl = document.getElementById('btc-reference');
+
+        if (planNameEl) planNameEl.textContent = planName;
+        if (refEl) refEl.textContent = data.reference;
+
         if (modal) {
-           modal.showModal()
-           button.textContent = originalText
-           button.disabled = false
+          modal.showModal();
+          button.textContent = originalText;
+          button.disabled = false;
         }
-
       } catch (err) {
-        console.error('BTC Flow Error:', err)
-        alert(`Failed to load Bitcoin details: ${err.message || 'Unknown error'}. Please try again or contact support.`)
-        button.textContent = originalText
-        button.disabled = false
+        console.error('BTC Flow Error:', err);
+        alert(
+          `Failed to load Bitcoin details: ${err.message || 'Unknown error'}. Please try again or contact support.`
+        );
+        button.textContent = originalText;
+        button.disabled = false;
       }
     }
 
     // Modal Close Logic
-    const modal = document.getElementById('eft-modal')
-    const closeBtn = document.querySelector('.close-modal')
-    
+    const modal = document.getElementById('eft-modal');
+    const closeBtn = document.querySelector('.close-modal');
+
     if (modal && closeBtn) {
       closeBtn.addEventListener('click', () => {
-        modal.close()
-      })
+        modal.close();
+      });
 
       modal.addEventListener('click', (e) => {
-        const dialogDimensions = modal.getBoundingClientRect()
+        const dialogDimensions = modal.getBoundingClientRect();
         if (
           e.clientX < dialogDimensions.left ||
           e.clientX > dialogDimensions.right ||
           e.clientY < dialogDimensions.top ||
           e.clientY > dialogDimensions.bottom
         ) {
-          modal.close()
+          modal.close();
         }
-      })
+      });
     }
 
     // Bitcoin Modal Close Logic
-    const btcModal = document.getElementById('btc-modal')
-    const btcCloseBtn = document.querySelector('.close-modal-btc')
-    
+    const btcModal = document.getElementById('btc-modal');
+    const btcCloseBtn = document.querySelector('.close-modal-btc');
+
     if (btcModal && btcCloseBtn) {
       btcCloseBtn.addEventListener('click', () => {
-        btcModal.close()
-      })
+        btcModal.close();
+      });
 
       btcModal.addEventListener('click', (e) => {
-        const dialogDimensions = btcModal.getBoundingClientRect()
+        const dialogDimensions = btcModal.getBoundingClientRect();
         if (
           e.clientX < dialogDimensions.left ||
           e.clientX > dialogDimensions.right ||
           e.clientY < dialogDimensions.top ||
           e.clientY > dialogDimensions.bottom
         ) {
-          btcModal.close()
+          btcModal.close();
         }
-      })
+      });
     }
 
     // Safely attach click handlers with error handling
     try {
       // PayPal buttons
-      document.getElementById('btn-professional-paypal')?.addEventListener('click', () => handleSubscribe('professional', 'paypal'))
-      document.getElementById('btn-premium-paypal')?.addEventListener('click', () => handleSubscribe('premium', 'paypal'))
+      document
+        .getElementById('btn-professional-paypal')
+        ?.addEventListener('click', () => handleSubscribe('professional', 'paypal'));
+      document
+        .getElementById('btn-premium-paypal')
+        ?.addEventListener('click', () => handleSubscribe('premium', 'paypal'));
 
       // EFT buttons
-      document.getElementById('btn-professional-eft')?.addEventListener('click', () => handleEFTFlow('professional'))
-      document.getElementById('btn-premium-eft')?.addEventListener('click', () => handleEFTFlow('premium'))
+      document
+        .getElementById('btn-professional-eft')
+        ?.addEventListener('click', () => handleEFTFlow('professional'));
+      document
+        .getElementById('btn-premium-eft')
+        ?.addEventListener('click', () => handleEFTFlow('premium'));
 
       // Bitcoin buttons
-      document.getElementById('btn-professional-btc')?.addEventListener('click', () => handleBTCFlow('professional'))
-      document.getElementById('btn-premium-btc')?.addEventListener('click', () => handleBTCFlow('premium'))
+      document
+        .getElementById('btn-professional-btc')
+        ?.addEventListener('click', () => handleBTCFlow('professional'));
+      document
+        .getElementById('btn-premium-btc')
+        ?.addEventListener('click', () => handleBTCFlow('premium'));
     } catch (error) {
-      console.warn('Failed to initialize subscription handlers:', error)
+      console.warn('Failed to initialize subscription handlers:', error);
       // If initialization fails, disable the buttons gracefully
       document.addEventListener('DOMContentLoaded', () => {
         const paypalBtns = document.querySelectorAll('[data-method="paypal"]');
 
-        paypalBtns.forEach(btn => {
+        paypalBtns.forEach((btn) => {
           btn.disabled = true;
           btn.title = 'Subscription system temporarily unavailable';
           btn.addEventListener('click', (e) => {
@@ -1489,7 +1645,7 @@ import Footer from '../components/Footer.astro'
     }
 
     // Auto-resume pending subscription if returning from login with pending token
-    (function() {
+    (function () {
       const urlParams = new URLSearchParams(window.location.search);
       const pendingToken = urlParams.get('pending');
 
@@ -1509,69 +1665,70 @@ import Footer from '../components/Footer.astro'
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${supabaseAnonJwt}`
+                Authorization: `Bearer ${supabaseAnonJwt}`,
               },
-              body: JSON.stringify({ pendingToken })
-            })
+              body: JSON.stringify({ pendingToken }),
+            });
 
             if (!resumeResponse.ok) {
-              const errorData = await resumeResponse.json()
-              throw new Error(errorData.error || 'Failed to resume subscription')
+              const errorData = await resumeResponse.json();
+              throw new Error(errorData.error || 'Failed to resume subscription');
             }
 
-            const resumeData = await resumeResponse.json()
-            console.log('[Pricing] Subscription resumed:', resumeData.pending_data.tier)
+            const resumeData = await resumeResponse.json();
+            console.log('[Pricing] Subscription resumed:', resumeData.pending_data.tier);
 
             // Now trigger the PayPal subscription with the resumed tier
-            await handleSubscribe(resumeData.pending_data.tier)
-            return true
-
+            await handleSubscribe(resumeData.pending_data.tier);
+            return true;
           } catch (error) {
-            console.error('[Pricing] Failed to resume subscription:', error)
-            alert(`Failed to resume subscription: ${error.message}`)
-            return false
+            console.error('[Pricing] Failed to resume subscription:', error);
+            alert(`Failed to resume subscription: ${error.message}`);
+            return false;
           }
-        }
+        };
 
         // Try immediately, then retry with delays
         const attemptResume = async () => {
           try {
-            const { data: { session }, error } = await supabaseBrowser.auth.getSession()
+            const {
+              data: { session },
+              error,
+            } = await supabaseBrowser.auth.getSession();
             if (session && !error) {
-              console.log('[Pricing] Session available, resuming subscription')
-              await resumeSubscription()
-              return true
+              console.log('[Pricing] Session available, resuming subscription');
+              await resumeSubscription();
+              return true;
             }
-            return false
+            return false;
           } catch (e) {
-            console.error('[Pricing] Error checking session for resume:', e)
-            return false
+            console.error('[Pricing] Error checking session for resume:', e);
+            return false;
           }
-        }
+        };
 
         // Polling approach for session establishment
         const pollForSession = async () => {
-          let attempts = 0
-          const maxAttempts = 20 // 10 seconds at 500ms intervals
+          let attempts = 0;
+          const maxAttempts = 20; // 10 seconds at 500ms intervals
 
           const checkSession = async () => {
-            attempts++
+            attempts++;
             if (await attemptResume()) {
-              return // Success
+              return; // Success
             } else if (attempts >= maxAttempts) {
-              console.error('[Pricing] Failed to establish session for resume after 10 seconds')
-              alert('Session not established. Please refresh the page and try again.')
+              console.error('[Pricing] Failed to establish session for resume after 10 seconds');
+              alert('Session not established. Please refresh the page and try again.');
             } else {
-              setTimeout(checkSession, 500)
+              setTimeout(checkSession, 500);
             }
-          }
+          };
 
-          checkSession()
-        }
+          checkSession();
+        };
 
-        pollForSession()
+        pollForSession();
       }
     })();
   </script>
-</body>
 </html>

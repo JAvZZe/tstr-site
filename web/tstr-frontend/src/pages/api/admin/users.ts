@@ -1,38 +1,43 @@
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
+import { getServiceKey } from '../../../lib/supabase-admin';
 
 const SUPABASE_URL =
   import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co';
-const SERVICE_KEY = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!SERVICE_KEY) {
-  throw new Error('SUPABASE_SERVICE_ROLE_KEY is required');
+function getAdmin(locals: unknown) {
+  const key = getServiceKey(locals);
+  if (!key) return null;
+  return createClient(SUPABASE_URL, key);
 }
 
-const supabaseAdmin = createClient(SUPABASE_URL, SERVICE_KEY);
-
-async function verifySuperAdmin(request: Request) {
+async function verifySuperAdmin(request: Request, key: string | null) {
+  if (!key) return null;
   const authHeader = request.headers.get('Authorization');
   if (!authHeader) return null;
   const token = authHeader.replace('Bearer ', '');
+  const supabase = createClient(SUPABASE_URL, key);
   const {
     data: { user },
     error,
-  } = await supabaseAdmin.auth.getUser(token);
+  } = await supabase.auth.getUser(token);
   if (error || !user) return null;
   const role = user.app_metadata?.role;
   return role === 'super_admin' ? user : null;
 }
 
-export const GET: APIRoute = async ({ request }) => {
-  const user = await verifySuperAdmin(request);
+export const GET: APIRoute = async ({ request, locals }) => {
+  const admin = getAdmin(locals);
+  if (!admin) return new Response('Service key not configured', { status: 500 });
+
+  const user = await verifySuperAdmin(request, getServiceKey(locals));
   if (!user) return new Response('Unauthorized: Super Admin Access Required', { status: 403 });
 
   try {
     const {
       data: { users },
       error,
-    } = await supabaseAdmin.auth.admin.listUsers();
+    } = await admin.auth.admin.listUsers();
     if (error) throw error;
 
     const staffUsers = users.filter(
@@ -47,8 +52,11 @@ export const GET: APIRoute = async ({ request }) => {
   }
 };
 
-export const POST: APIRoute = async ({ request }) => {
-  const user = await verifySuperAdmin(request);
+export const POST: APIRoute = async ({ request, locals }) => {
+  const admin = getAdmin(locals);
+  if (!admin) return new Response('Service key not configured', { status: 500 });
+
+  const user = await verifySuperAdmin(request, getServiceKey(locals));
   if (!user) return new Response('Unauthorized: Super Admin Access Required', { status: 403 });
 
   try {
@@ -59,7 +67,7 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(JSON.stringify({ error: 'Missing fields' }), { status: 400 });
     }
 
-    const { data, error } = await supabaseAdmin.auth.admin.createUser({
+    const { data, error } = await admin.auth.admin.createUser({
       email,
       password,
       email_confirm: true,
@@ -74,8 +82,11 @@ export const POST: APIRoute = async ({ request }) => {
   }
 };
 
-export const DELETE: APIRoute = async ({ request }) => {
-  const user = await verifySuperAdmin(request);
+export const DELETE: APIRoute = async ({ request, locals }) => {
+  const admin = getAdmin(locals);
+  if (!admin) return new Response('Service key not configured', { status: 500 });
+
+  const user = await verifySuperAdmin(request, getServiceKey(locals));
   if (!user) return new Response('Unauthorized: Super Admin Access Required', { status: 403 });
 
   try {
@@ -84,7 +95,7 @@ export const DELETE: APIRoute = async ({ request }) => {
 
     if (!id) return new Response('Missing ID', { status: 400 });
 
-    const { error } = await supabaseAdmin.auth.admin.deleteUser(id);
+    const { error } = await admin.auth.admin.deleteUser(id);
     if (error) throw error;
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
@@ -93,8 +104,11 @@ export const DELETE: APIRoute = async ({ request }) => {
   }
 };
 
-export const PUT: APIRoute = async ({ request }) => {
-  const user = await verifySuperAdmin(request);
+export const PUT: APIRoute = async ({ request, locals }) => {
+  const admin = getAdmin(locals);
+  if (!admin) return new Response('Service key not configured', { status: 500 });
+
+  const user = await verifySuperAdmin(request, getServiceKey(locals));
   if (!user) return new Response('Unauthorized: Super Admin Access Required', { status: 403 });
 
   try {
@@ -104,10 +118,10 @@ export const PUT: APIRoute = async ({ request }) => {
     if (!id) return new Response('Missing ID', { status: 400 });
 
     const updates: any = {};
-    if (role) updates.user_metadata = { role };
+    if (role) updates.app_metadata = { role };
     if (password) updates.password = password;
 
-    const { data, error } = await supabaseAdmin.auth.admin.updateUserById(id, updates);
+    const { data, error } = await admin.auth.admin.updateUserById(id, updates);
     if (error) throw error;
 
     return new Response(JSON.stringify({ user: data.user }), { status: 200 });

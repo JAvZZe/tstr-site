@@ -1,9 +1,11 @@
 ---
-import { supabase } from '../../lib/supabase'
+import { supabase } from '../../lib/supabase';
 
 export const prerender = false;
 
-const { data: { session } } = await supabase.auth.getSession();
+const {
+  data: { session },
+} = await supabase.auth.getSession();
 const userRole = session?.user?.user_metadata?.role;
 const isStaff = userRole === 'staff' || userRole === 'super_admin';
 
@@ -11,58 +13,93 @@ if (!session || !isStaff) {
   return Astro.redirect('/admin/login');
 }
 
-const title = 'Admin Dashboard'
+const title = 'Admin Dashboard';
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
-    <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
-</head>
-  <body class="bg-gray-50 min-h-screen">
+    <script>
+      function initApollo() {
+        var n = Math.random().toString(36).substring(7),
+          o = document.createElement('script');
+        ((o.src = 'https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache=' + n),
+          (o.async = !0),
+          (o.defer = !0),
+          (o.onload = function () {
+            window.trackingFunctions.onLoad({ appId: '6979e8021ac917001927e9b2' });
+          }),
+          document.head.appendChild(o));
+      }
+      initApollo();
+    </script>
+  </head>
+  <body class="min-h-screen bg-gray-50">
     <div class="container mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-8">{title}</h1>
+      <h1 class="mb-8 text-3xl font-bold text-gray-900">{title}</h1>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <a href="/admin/dashboard" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-          <h2 class="text-xl font-semibold text-gray-800 mb-3">Scraper Dashboard</h2>
-          <p class="text-gray-600 mb-4">Monitor scraper performance, view metrics by category, and track system health.</p>
-          <span class="text-blue-600 font-medium">View Dashboard →</span>
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <a
+          href="/admin/dashboard"
+          class="rounded-lg bg-white p-6 shadow-md transition-shadow hover:shadow-lg"
+        >
+          <h2 class="mb-3 text-xl font-semibold text-gray-800">Scraper Dashboard</h2>
+          <p class="mb-4 text-gray-600">
+            Monitor scraper performance, view metrics by category, and track system health.
+          </p>
+          <span class="font-medium text-blue-600">View Dashboard →</span>
         </a>
 
-        <a href="/admin/analytics" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-          <h2 class="text-xl font-semibold text-gray-800 mb-3">Analytics</h2>
-          <p class="text-gray-600 mb-4">View click tracking analytics and user engagement metrics.</p>
-          <span class="text-blue-600 font-medium">View Analytics →</span>
+        <a
+          href="/admin/analytics"
+          class="rounded-lg bg-white p-6 shadow-md transition-shadow hover:shadow-lg"
+        >
+          <h2 class="mb-3 text-xl font-semibold text-gray-800">Analytics</h2>
+          <p class="mb-4 text-gray-600">
+            View click tracking analytics and user engagement metrics.
+          </p>
+          <span class="font-medium text-blue-600">View Analytics →</span>
         </a>
 
-        <a href="/admin/claims" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-          <h2 class="text-xl font-semibold text-gray-800 mb-3">Claims Management</h2>
-          <p class="text-gray-600 mb-4">Review and manage business claims for listings ownership.</p>
-          <span class="text-orange-600 font-medium">Manage Claims →</span>
+        <a
+          href="/admin/claims"
+          class="rounded-lg bg-white p-6 shadow-md transition-shadow hover:shadow-lg"
+        >
+          <h2 class="mb-3 text-xl font-semibold text-gray-800">Claims Management</h2>
+          <p class="mb-4 text-gray-600">
+            Review and manage business claims for listings ownership.
+          </p>
+          <span class="font-medium text-orange-600">Manage Claims →</span>
         </a>
 
-        <a href="/admin/failed-urls" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-          <h2 class="text-xl font-semibold text-gray-800 mb-3">Failed URLs</h2>
-          <p class="text-gray-600 mb-4">Review URLs that failed validation and need manual attention.</p>
-          <span class="text-red-600 font-medium">View Failed URLs →</span>
+        <a
+          href="/admin/failed-urls"
+          class="rounded-lg bg-white p-6 shadow-md transition-shadow hover:shadow-lg"
+        >
+          <h2 class="mb-3 text-xl font-semibold text-gray-800">Failed URLs</h2>
+          <p class="mb-4 text-gray-600">
+            Review URLs that failed validation and need manual attention.
+          </p>
+          <span class="font-medium text-red-600">View Failed URLs →</span>
         </a>
       </div>
 
-      <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <h3 class="text-lg font-semibold text-blue-800 mb-3">Admin Tools Overview</h3>
-        <div class="text-sm text-blue-700 space-y-2">
-          <p><strong>Scraper Dashboard:</strong> Real-time monitoring of scraping operations across all categories</p>
+      <div class="mt-8 rounded-lg border border-blue-200 bg-blue-50 p-6">
+        <h3 class="mb-3 text-lg font-semibold text-blue-800">Admin Tools Overview</h3>
+        <div class="space-y-2 text-sm text-blue-700">
+          <p>
+            <strong>Scraper Dashboard:</strong> Real-time monitoring of scraping operations across all
+            categories
+          </p>
           <p><strong>Analytics:</strong> Click tracking and user behavior insights</p>
-          <p><strong>Claims Management:</strong> Review and approve/reject business ownership claims</p>
+          <p>
+            <strong>Claims Management:</strong> Review and approve/reject business ownership claims
+          </p>
           <p><strong>Failed URLs:</strong> Remedial actions for validation failures</p>
         </div>
       </div>

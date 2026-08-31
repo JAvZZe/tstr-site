@@ -1,71 +1,74 @@
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
+import { getServiceKey } from '../../../lib/supabase-admin';
 
 const SUPABASE_URL =
   import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co';
-const SERVICE_KEY = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!SERVICE_KEY) {
-  throw new Error('SUPABASE_SERVICE_ROLE_KEY is required');
-}
-
-const supabaseAdmin = createClient(SUPABASE_URL, SERVICE_KEY, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false,
-  },
-});
-
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
-    const body = await request.json();
-    const { email, password } = body;
-
-    // 1. Basic Validation
-    if (!email || !password) {
-      return new Response(JSON.stringify({ error: 'Email and password required' }), {
-        status: 400,
+    const serviceKey = getServiceKey(locals);
+    if (!serviceKey) {
+      return new Response(JSON.stringify({ error: 'Service key not configured' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    // 2. Perform Login via Service Role (Bypasses Captcha)
-    const { data, error } = await supabaseAdmin.auth.signInWithPassword({
+    const { email, password } = await request.json();
+
+    if (!email || !password) {
+      return new Response(JSON.stringify({ error: 'Email and password are required' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    const supabase = createClient(SUPABASE_URL, serviceKey);
+
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    if (error) {
-      return new Response(JSON.stringify({ error: error.message }), { status: 401 });
-    }
-
-    if (!data.session || !data.user) {
-      return new Response(JSON.stringify({ error: 'No session returned' }), { status: 500 });
-    }
-
-    // 3. Security: Check if user is actually Staff/Admin
-    // We don't want regular customers using this endpoint to bypass captcha
-    const role = data.user.app_metadata?.role;
-    if (role !== 'staff' && role !== 'super_admin') {
-      // Allow specific overrides if needed (legacy check), but mostly rely on role
-      return new Response(JSON.stringify({ error: 'Unauthorized: Staff access only' }), {
-        status: 403,
+    if (error || !data.user) {
+      return new Response(JSON.stringify({ error: 'Invalid credentials' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    // 4. Return Session
+    const role = data.user.app_metadata?.role;
+    if (role !== 'staff' && role !== 'super_admin') {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
     return new Response(
       JSON.stringify({
+        success: true,
+        user: {
+          id: data.user.id,
+          email: data.user.email,
+          role,
+        },
         session: {
-          access_token: data.session.access_token,
-          refresh_token: data.session.refresh_token,
-          user: data.user,
+          access_token: data.session?.access_token,
+          refresh_token: data.session?.refresh_token,
         },
       }),
-      { status: 200 }
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }
     );
-  } catch (e: any) {
-    return new Response(JSON.stringify({ error: e.message || 'Internal Server Error' }), {
+  } catch (error) {
+    console.error('Auth login error:', error);
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
+      headers: { 'Content-Type': 'application/json' },
     });
   }
 };

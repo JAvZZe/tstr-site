@@ -4,24 +4,96 @@ import { createClient } from '@supabase/supabase-js';
 export const prerender = false;
 
 const GEMINI_API_KEY = import.meta.env.GEMINI_API_KEY;
-const SUPABASE_URL = (import.meta.env.SUPABASE_URL || import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co') as string;
+const SUPABASE_URL = (import.meta.env.SUPABASE_URL ||
+  import.meta.env.PUBLIC_SUPABASE_URL ||
+  'https://haimjeaetrsaauitrhfy.supabase.co') as string;
 const SUPABASE_SERVICE_ROLE_KEY = import.meta.env.SUPABASE_SERVICE_ROLE_KEY as string;
 
 // Real category slugs from the DB — keep in sync with categories table
 const CATEGORY_CONTEXT = [
-  { slug: 'hydrogen-infrastructure-testing', name: 'Hydrogen Infrastructure Testers', keywords: ['hydrogen', 'h2', 'valve', 'pressure', 'fuel cell', 'electrolyser', 'iso 19880', 'sae j2601', 'iso 11114'] },
-  { slug: 'materials-testing', name: 'Materials Testers', keywords: ['materials', 'fatigue', 'tensile', 'composites', 'metals', 'corrosion', 'hardness', 'ndt', 'mechanical'] },
-  { slug: 'environmental-testing', name: 'Environmental Testers', keywords: ['environmental', 'air quality', 'water quality', 'soil', 'noise', 'esg', 'emissions', 'pollution', 'vibration'] },
-  { slug: 'pharmaceutical-testing', name: 'Biopharma & Life Sciences Testers', keywords: ['pharma', 'biopharma', 'life sciences', 'biotech', 'drug', 'medical', 'clinical', 'gmp', 'fda'] },
-  { slug: 'oil-gas-testing', name: 'Oil & Gas Testers', keywords: ['oil', 'gas', 'petroleum', 'pipeline', 'refinery', 'upstream', 'downstream'] },
-  { slug: 'biotech-testing', name: 'Biotech Testers', keywords: ['biotech', 'biotechnology', 'biological', 'genomics', 'microbiology'] },
-  { slug: 'engineering-services', name: 'Engineering Services', keywords: ['engineering', 'inspection', 'calibration', 'ndt', 'structural'] },
+  {
+    slug: 'hydrogen-infrastructure-testing',
+    name: 'Hydrogen Infrastructure Testers',
+    keywords: [
+      'hydrogen',
+      'h2',
+      'valve',
+      'pressure',
+      'fuel cell',
+      'electrolyser',
+      'iso 19880',
+      'sae j2601',
+      'iso 11114',
+    ],
+  },
+  {
+    slug: 'materials-testing',
+    name: 'Materials Testers',
+    keywords: [
+      'materials',
+      'fatigue',
+      'tensile',
+      'composites',
+      'metals',
+      'corrosion',
+      'hardness',
+      'ndt',
+      'mechanical',
+    ],
+  },
+  {
+    slug: 'environmental-testing',
+    name: 'Environmental Testers',
+    keywords: [
+      'environmental',
+      'air quality',
+      'water quality',
+      'soil',
+      'noise',
+      'esg',
+      'emissions',
+      'pollution',
+      'vibration',
+    ],
+  },
+  {
+    slug: 'pharmaceutical-testing',
+    name: 'Biopharma & Life Sciences Testers',
+    keywords: [
+      'pharma',
+      'biopharma',
+      'life sciences',
+      'biotech',
+      'drug',
+      'medical',
+      'clinical',
+      'gmp',
+      'fda',
+    ],
+  },
+  {
+    slug: 'oil-gas-testing',
+    name: 'Oil & Gas Testers',
+    keywords: ['oil', 'gas', 'petroleum', 'pipeline', 'refinery', 'upstream', 'downstream'],
+  },
+  {
+    slug: 'biotech-testing',
+    name: 'Biotech Testers',
+    keywords: ['biotech', 'biotechnology', 'biological', 'genomics', 'microbiology'],
+  },
+  {
+    slug: 'engineering-services',
+    name: 'Engineering Services',
+    keywords: ['engineering', 'inspection', 'calibration', 'ndt', 'structural'],
+  },
 ];
 
-const GEMINI_PROMPT = (query: string) => `You are a search intent parser for TSTR.directory, a global directory for specialist testing laboratories.
+const GEMINI_PROMPT = (
+  query: string
+) => `You are a search intent parser for TSTR.directory, a global directory for specialist testing laboratories.
 
 Available category slugs:
-${CATEGORY_CONTEXT.map(c => `- ${c.slug}: "${c.name}" (keywords: ${c.keywords.join(', ')})`).join('\n')}
+${CATEGORY_CONTEXT.map((c) => `- ${c.slug}: "${c.name}" (keywords: ${c.keywords.join(', ')})`).join('\n')}
 
 User query: "${query}"
 
@@ -70,7 +142,7 @@ export const POST: APIRoute = async ({ request }) => {
   if (GEMINI_API_KEY || GEMINI_API_KEY_ALT || OPENROUTER_API_KEY) {
     try {
       let rawText = '';
-      
+
       // 1. Try Primary Gemini
       if (GEMINI_API_KEY) {
         const geminiRes = await fetch(
@@ -80,7 +152,11 @@ export const POST: APIRoute = async ({ request }) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               contents: [{ parts: [{ text: GEMINI_PROMPT(query) }] }],
-              generationConfig: { temperature: 0.1, maxOutputTokens: 300, responseMimeType: 'application/json' },
+              generationConfig: {
+                temperature: 0.1,
+                maxOutputTokens: 300,
+                responseMimeType: 'application/json',
+              },
             }),
           }
         );
@@ -104,7 +180,11 @@ export const POST: APIRoute = async ({ request }) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               contents: [{ parts: [{ text: GEMINI_PROMPT(query) }] }],
-              generationConfig: { temperature: 0.1, maxOutputTokens: 300, responseMimeType: 'application/json' },
+              generationConfig: {
+                temperature: 0.1,
+                maxOutputTokens: 300,
+                responseMimeType: 'application/json',
+              },
             }),
           }
         );
@@ -124,15 +204,15 @@ export const POST: APIRoute = async ({ request }) => {
         const orRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+            Authorization: `Bearer ${OPENROUTER_API_KEY}`,
             'Content-Type': 'application/json',
             'HTTP-Referer': 'https://tstr.directory',
-            'X-Title': 'TSTR Hub'
+            'X-Title': 'TSTR Hub',
           },
           body: JSON.stringify({
             model: 'google/gemini-flash-1.5-8b:free',
             messages: [{ role: 'user', content: GEMINI_PROMPT(query) }],
-            response_format: { type: 'json_object' }
+            response_format: { type: 'json_object' },
           }),
         });
 
@@ -148,7 +228,10 @@ export const POST: APIRoute = async ({ request }) => {
 
       if (rawText) {
         // Strip any residual markdown fences just in case
-        const cleanText = rawText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        const cleanText = rawText
+          .replace(/```json\n?/g, '')
+          .replace(/```\n?/g, '')
+          .trim();
         intent = JSON.parse(cleanText);
         console.log('AI intent extracted:', intent, 'Mode:', searchMode);
       }
@@ -160,7 +243,8 @@ export const POST: APIRoute = async ({ request }) => {
   // --- Build Supabase Query ---
   let dbQuery = supabase
     .from('listings')
-    .select(`
+    .select(
+      `
       id,
       business_name,
       region,
@@ -168,7 +252,8 @@ export const POST: APIRoute = async ({ request }) => {
       claimed,
       slug,
       category:category_id (name, slug)
-    `)
+    `
+    )
     .eq('status', 'active')
     .order('trust_score', { ascending: false })
     .limit(10);
@@ -203,7 +288,9 @@ export const POST: APIRoute = async ({ request }) => {
   if ((!results || results.length === 0) && intent.category_slug) {
     const { data: wideResults } = await supabase
       .from('listings')
-      .select(`id, business_name, region, trust_score, claimed, slug, category:category_id (name, slug)`)
+      .select(
+        `id, business_name, region, trust_score, claimed, slug, category:category_id (name, slug)`
+      )
       .eq('status', 'active')
       .ilike('business_name', `%${query}%`)
       .order('trust_score', { ascending: false })

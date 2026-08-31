@@ -11,7 +11,8 @@ export const prerender = true;
 // Page metadata
 const subcategory = 'air-quality';
 const subcategoryName = 'Air Quality Testing';
-const subcategoryDescription = 'Professional air quality monitoring, emissions testing, and particulate matter analysis services';
+const subcategoryDescription =
+  'Professional air quality monitoring, emissions testing, and particulate matter analysis services';
 
 // Fetch category metadata (environmental-testing)
 const { data: categoryData } = await supabase
@@ -27,7 +28,8 @@ if (!categoryData) {
 // Fetch listings with custom fields for air quality testing
 const { data: listings, error: listingsError } = await supabase
   .from('listings')
-  .select(`
+  .select(
+    `
     id,
     business_name,
     region,
@@ -45,23 +47,27 @@ const { data: listings, error: listingsError } = await supabase
         name
       )
     )
-  `)
+  `
+  )
   .eq('status', 'active')
   .eq('category_id', categoryData.id)
   .order('priority_rank', { ascending: false })
   .order('created_at', { ascending: false });
 
 // Filter listings that have air quality testing
-const airQualityListings = listings?.filter(listing => {
-  return listing.listing_custom_field_values?.some(field => {
-    return field.custom_fields?.name === 'test_types' &&
-           field.value?.toLowerCase().includes('air quality');
-  });
-}) || [];
+const airQualityListings =
+  listings?.filter((listing) => {
+    return listing.listing_custom_field_values?.some((field) => {
+      return (
+        field.custom_fields?.name === 'test_types' &&
+        field.value?.toLowerCase().includes('air quality')
+      );
+    });
+  }) || [];
 
 // Group filtered listings by region
 const listingsByRegion = new Map<string, typeof airQualityListings>();
-airQualityListings.forEach(listing => {
+airQualityListings.forEach((listing) => {
   const region = listing.region || 'global';
   if (!listingsByRegion.has(region)) {
     listingsByRegion.set(region, []);
@@ -70,8 +76,9 @@ airQualityListings.forEach(listing => {
 });
 
 // Sort regions by listing count (descending)
-const sortedRegions = Array.from(listingsByRegion.entries())
-  .sort((a, b) => b[1].length - a[1].length);
+const sortedRegions = Array.from(listingsByRegion.entries()).sort(
+  (a, b) => b[1].length - a[1].length
+);
 
 const totalListings = airQualityListings.length;
 
@@ -90,44 +97,51 @@ const pageDescription = formatDescription(
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
-  <main class="max-w-7xl mx-auto px-6 py-12">
+  <main class="mx-auto max-w-7xl px-6 py-12">
     <!-- Breadcrumbs -->
-    <nav class="flex items-center gap-2 text-sm font-medium text-slate-500 mb-8 overflow-x-auto whitespace-nowrap pb-2 no-scrollbar">
-      <a href="/" class="hover:text-emerald-400 transition-colors">Home</a>
+    <nav
+      class="no-scrollbar mb-8 flex items-center gap-2 overflow-x-auto whitespace-nowrap pb-2 text-sm font-medium text-slate-500"
+    >
+      <a href="/" class="transition-colors hover:text-emerald-400">Home</a>
       <span class="text-slate-700">/</span>
-      <a href="/environmental-testing" class="hover:text-emerald-400 transition-colors">{categoryData.name}</a>
+      <a href="/environmental-testing" class="transition-colors hover:text-emerald-400"
+        >{categoryData.name}</a
+      >
       <span class="text-slate-700">/</span>
       <span class="text-white">{subcategoryName}</span>
     </nav>
 
     <!-- Page Header -->
     <div class="mb-12">
-      <div class="flex items-center gap-4 mb-6">
-        {categoryData.icon && (
-          <span class="text-4xl md:text-6xl">{categoryData.icon}</span>
-        )}
-        <h1 class="text-4xl md:text-6xl font-black text-white tracking-tight">
+      <div class="mb-6 flex items-center gap-4">
+        {categoryData.icon && <span class="text-4xl md:text-6xl">{categoryData.icon}</span>}
+        <h1 class="text-4xl font-black tracking-tight text-white md:text-6xl">
           {subcategoryName}
         </h1>
       </div>
 
-      <h2 class="text-xl md:text-2xl font-bold text-slate-300 mb-6 font-mono">
+      <h2 class="mb-6 font-mono text-xl font-bold text-slate-300 md:text-2xl">
         Professional Air Quality Monitoring & Emissions Testing Services
       </h2>
 
-      <p class="text-lg text-slate-400 max-w-3xl leading-relaxed mb-8">
-        Find verified <strong class="text-white">air quality testing laboratories</strong> and
-        compare <strong class="text-white">emissions testing services</strong> from
-        ISO 17025 accredited laboratories worldwide.
+      <p class="mb-8 max-w-3xl text-lg leading-relaxed text-slate-400">
+        Find verified <strong class="text-white">air quality testing laboratories</strong> and compare
+        <strong class="text-white">emissions testing services</strong> from ISO 17025 accredited laboratories
+        worldwide.
         {subcategoryDescription}
       </p>
 
       <div class="flex items-center gap-4">
-        <div class="px-6 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-black text-sm uppercase tracking-widest">
+        <div
+          class="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-6 py-2 text-sm font-black uppercase tracking-widest text-emerald-400"
+        >
           {totalListings} verified {totalListings === 1 ? 'provider' : 'providers'}
         </div>
-        <div class="px-6 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 font-black text-sm uppercase tracking-widest">
-          {sortedRegions.length} {sortedRegions.length === 1 ? 'region' : 'regions'}
+        <div
+          class="rounded-full border border-blue-500/20 bg-blue-500/10 px-6 py-2 text-sm font-black uppercase tracking-widest text-blue-400"
+        >
+          {sortedRegions.length}
+          {sortedRegions.length === 1 ? 'region' : 'regions'}
         </div>
       </div>
     </div>
@@ -135,96 +149,148 @@ const pageDescription = formatDescription(
     <AdUnit type="horizontal" class="mb-12" />
 
     <!-- Error Handling -->
-    {listingsError && (
-      <div class="glass-card bg-red-500/5 border-red-500/20 p-6 mb-8 flex items-center gap-4">
-        <span class="text-red-500 text-2xl">⚠️</span>
-        <p class="text-red-200/80 font-medium">Error loading directory. Our engineers have been notified.</p>
-      </div>
-    )}
+    {
+      listingsError && (
+        <div class="glass-card mb-8 flex items-center gap-4 border-red-500/20 bg-red-500/5 p-6">
+          <span class="text-2xl text-red-500">⚠️</span>
+          <p class="font-medium text-red-200/80">
+            Error loading directory. Our engineers have been notified.
+          </p>
+        </div>
+      )
+    }
 
     <!-- Regions Grid -->
-    {sortedRegions.length > 0 ? (
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sortedRegions.map(([region, regionListings]) => {
-          const featuredCount = regionListings.filter(l => l.featured).length;
-          const verifiedCount = regionListings.filter(l => l.verified).length;
+    {
+      sortedRegions.length > 0 ? (
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {sortedRegions.map(([region, regionListings]) => {
+            const featuredCount = regionListings.filter((l) => l.featured).length;
+            const verifiedCount = regionListings.filter((l) => l.verified).length;
 
-          return (
-            <a
-              href={`/environmental-testing/${region.toLowerCase()}?filter=air-quality`}
-              class="glass-card glass-card-hover p-8 group flex flex-col justify-between"
-            >
-              <div>
-                <div class="flex justify-between items-start mb-6">
-                  <h3 class="text-2xl font-black text-white group-hover:text-emerald-400 transition-colors tracking-tight">
-                    {region.toUpperCase()}
-                  </h3>
-                  <span class="bg-white/5 text-slate-300 text-xs font-black px-3 py-1 rounded-full border border-white/10 group-hover:bg-emerald-500/10 group-hover:text-emerald-400 transition-colors">
-                    {regionListings.length}
-                  </span>
-                </div>
-
-                <div class="space-y-3">
-                  <div class="flex items-center justify-between text-sm">
-                    <span class="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Providers</span>
-                    <span class="text-slate-300 font-mono">{regionListings.length}</span>
+            return (
+              <a
+                href={`/environmental-testing/${region.toLowerCase()}?filter=air-quality`}
+                class="glass-card glass-card-hover group flex flex-col justify-between p-8"
+              >
+                <div>
+                  <div class="mb-6 flex items-start justify-between">
+                    <h3 class="text-2xl font-black tracking-tight text-white transition-colors group-hover:text-emerald-400">
+                      {region.toUpperCase()}
+                    </h3>
+                    <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-black text-slate-300 transition-colors group-hover:bg-emerald-500/10 group-hover:text-emerald-400">
+                      {regionListings.length}
+                    </span>
                   </div>
-                  {featuredCount > 0 && (
+
+                  <div class="space-y-3">
                     <div class="flex items-center justify-between text-sm">
-                      <span class="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Featured</span>
-                      <span class="text-amber-500 font-mono">{featuredCount}</span>
+                      <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                        Providers
+                      </span>
+                      <span class="font-mono text-slate-300">{regionListings.length}</span>
                     </div>
-                  )}
-                  {verifiedCount > 0 && (
-                    <div class="flex items-center justify-between text-sm">
-                      <span class="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Verified</span>
-                      <span class="text-emerald-400 font-mono">{verifiedCount}</span>
-                    </div>
-                  )}
+                    {featuredCount > 0 && (
+                      <div class="flex items-center justify-between text-sm">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                          Featured
+                        </span>
+                        <span class="font-mono text-amber-500">{featuredCount}</span>
+                      </div>
+                    )}
+                    {verifiedCount > 0 && (
+                      <div class="flex items-center justify-between text-sm">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                          Verified
+                        </span>
+                        <span class="font-mono text-emerald-400">{verifiedCount}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
 
-              <div class="mt-8 pt-6 border-t border-white/5 flex items-center justify-between group-hover:text-emerald-400 transition-colors">
-                <span class="text-xs font-black uppercase tracking-widest">Explore Directory</span>
-                <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                </svg>
-              </div>
-            </a>
-          );
-        })}
-      </div>
-    ) : (
-      <div class="text-center py-24 glass-card border-dashed border-white/10">
-        <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
-          <svg class="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-          </svg>
+                <div class="mt-8 flex items-center justify-between border-t border-white/5 pt-6 transition-colors group-hover:text-emerald-400">
+                  <span class="text-xs font-black uppercase tracking-widest">
+                    Explore Directory
+                  </span>
+                  <svg
+                    class="h-5 w-5 transition-transform group-hover:translate-x-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 8l4 4m0 0l-4 4m4-4H3"
+                    />
+                  </svg>
+                </div>
+              </a>
+            );
+          })}
         </div>
-        <p class="text-slate-400 text-lg font-medium mb-6">No air quality testing providers listed yet.</p>
-        <a href="/contact" class="inline-flex items-center gap-2 px-8 py-3 bg-white/5 hover:bg-white/10 text-white font-bold rounded-full transition-all border border-white/10">
-          Be the first to list here
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-          </svg>
-        </a>
-      </div>
-    )}
-
-    <!-- CTA Section -->
-    {totalListings > 0 && (
-      <div class="mt-20 glass-card p-10 border-blue-500/20 bg-gradient-to-r from-blue-600/10 to-emerald-500/10 relative overflow-hidden group">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] rounded-full -mr-32 -mt-32"></div>
-        <div class="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
-          <div class="text-center md:text-left">
-            <h2 class="text-3xl font-black text-white mb-3">List Your Air Quality Lab</h2>
-            <p class="text-slate-400 text-lg">Reach thousands of customers searching for air quality monitoring and emissions testing services.</p>
+      ) : (
+        <div class="glass-card border-dashed border-white/10 py-24 text-center">
+          <div class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-white/5">
+            <svg
+              class="h-8 w-8 text-slate-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
           </div>
-          <a href="/pricing" class="px-10 py-4 bg-white text-black font-black uppercase tracking-widest rounded-full hover:bg-emerald-400 transition-all hover:scale-110 shadow-xl text-center whitespace-nowrap">
-            Get Listed Now
+          <p class="mb-6 text-lg font-medium text-slate-400">
+            No air quality testing providers listed yet.
+          </p>
+          <a
+            href="/contact"
+            class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-8 py-3 font-bold text-white transition-all hover:bg-white/10"
+          >
+            Be the first to list here
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+              />
+            </svg>
           </a>
         </div>
-      </div>
-    )}
+      )
+    }
+
+    <!-- CTA Section -->
+    {
+      totalListings > 0 && (
+        <div class="glass-card group relative mt-20 overflow-hidden border-blue-500/20 bg-gradient-to-r from-blue-600/10 to-emerald-500/10 p-10">
+          <div class="absolute right-0 top-0 -mr-32 -mt-32 h-64 w-64 rounded-full bg-emerald-500/10 blur-[100px]" />
+          <div class="relative z-10 flex flex-col items-center justify-between gap-8 md:flex-row">
+            <div class="text-center md:text-left">
+              <h2 class="mb-3 text-3xl font-black text-white">List Your Air Quality Lab</h2>
+              <p class="text-lg text-slate-400">
+                Reach thousands of customers searching for air quality monitoring and emissions
+                testing services.
+              </p>
+            </div>
+            <a
+              href="/pricing"
+              class="whitespace-nowrap rounded-full bg-white px-10 py-4 text-center font-black uppercase tracking-widest text-black shadow-xl transition-all hover:scale-110 hover:bg-emerald-400"
+            >
+              Get Listed Now
+            </a>
+          </div>
+        </div>
+      )
+    }
   </main>
 </BaseLayout>

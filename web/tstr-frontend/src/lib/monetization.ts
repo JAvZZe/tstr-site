@@ -11,10 +11,10 @@ export type MapTier = 'none' | 'static' | 'premium' | 'enterprise';
  */
 export function hasInteractiveMapAccess(tier: string | null | undefined): boolean {
   if (!tier) return false;
-  
+
   // Normalize tier strings from various migrations/conventions
   const normalized = tier.toLowerCase();
-  
+
   return normalized === 'premium' || normalized === 'enterprise';
 }
 
@@ -23,10 +23,10 @@ export function hasInteractiveMapAccess(tier: string | null | undefined): boolea
  */
 export function getEffectiveMapTier(tier: string | null | undefined): MapTier {
   if (!tier) return 'static';
-  
+
   const normalized = tier.toLowerCase();
   if (normalized === 'premium' || normalized === 'enterprise') return 'premium';
   if (normalized === 'none') return 'none';
-  
+
   return 'static';
 }

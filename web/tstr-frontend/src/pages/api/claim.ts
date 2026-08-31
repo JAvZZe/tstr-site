@@ -7,30 +7,38 @@ import {
   createVerificationEmail,
   createClaimStatusEmail,
 } from '../../lib/email';
+import { getServiceKey } from '../../lib/supabase-admin';
 
 const SUPABASE_URL =
   import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co';
-const SERVICE_KEY = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!SERVICE_KEY) {
-  throw new Error('SUPABASE_SERVICE_ROLE_KEY is required');
+function getAdmin(locals: unknown) {
+  const key = getServiceKey(locals);
+  if (!key) return null;
+  return createClient(SUPABASE_URL, key);
 }
 
-const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
-
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
     const data = await request.json();
     const { mode = 'claim', listingId, resumeToken, ...claimData } = data;
 
+    const admin = getAdmin(locals);
+    if (!admin) {
+      return new Response(JSON.stringify({ error: 'Service key not configured' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
     // Get authenticated user (may be null for anonymous claims)
     const {
       data: { user },
-    } = await supabase.auth.getUser();
+    } = await admin.auth.getUser();
 
     // Handle resume token for draft access
     if (resumeToken && !user) {
-      const { data: draftClaim } = await supabase
+      const { data: draftClaim } = await admin
         .from('claims')
         .select('*')
         .eq('resume_token', resumeToken)
@@ -38,15 +46,10 @@ export const POST: APIRoute = async ({ request }) => {
         .single();
 
       if (!draftClaim) {
-        return new Response(
-          JSON.stringify({
-            error: 'Invalid or expired resume token',
-          }),
-          {
-            status: 400,
-            headers: { 'Content-Type': 'application/json' },
-          }
-        );
+        return new Response(JSON.stringify({ error: 'Invalid or expired resume token' }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        });
       }
 
       return new Response(
@@ -56,17 +59,14 @@ export const POST: APIRoute = async ({ request }) => {
           draft: draftClaim.draft_data,
           expires_at: draftClaim.draft_expires_at,
         }),
-        {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
-        }
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
     // Handle draft saving
     if (mode === 'save_draft') {
-      const { data: resumeToken, error: tokenError } = await supabase.rpc('generate_resume_token');
-      const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
+      const { data: resumeToken, error: tokenError } = await admin.rpc('generate_resume_token');
+      const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
       if (tokenError || !resumeToken) {
         console.error('Token generation error:', tokenError);
@@ -75,7 +75,7 @@ export const POST: APIRoute = async ({ request }) => {
         });
       }
 
-      const { error } = await supabase.from('claims').insert({
+      const { error } = await admin.from('claims').insert({
         provider_name: claimData.provider_name,
         contact_name: claimData.contact_name,
         business_email: claimData.business_email,
@@ -104,10 +104,7 @@ export const POST: APIRoute = async ({ request }) => {
             ? 'Draft saved successfully. Check your email for a resume link.'
             : 'Draft saved successfully. Email delivery failed - save your resume token.',
         }),
-        {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
-        }
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
@@ -118,24 +115,16 @@ export const POST: APIRoute = async ({ request }) => {
           error:
             'Missing required fields: provider_name, contact_name, and business_email are required',
         }),
-        {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        }
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(claimData.business_email)) {
-      return new Response(
-        JSON.stringify({
-          error: 'Invalid email format',
-        }),
-        {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
+      return new Response(JSON.stringify({ error: 'Invalid email format' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // Domain verification
@@ -160,7 +149,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Handle existing listing claims (authenticated users)
     if (listingId && user) {
-      const { data: listing } = await supabase
+      const { data: listing } = await admin
         .from('listings')
         .select('id, name, website, claimed')
         .eq('id', listingId)
@@ -176,7 +165,7 @@ export const POST: APIRoute = async ({ request }) => {
         });
       }
 
-      const { data: existingClaim } = await supabase
+      const { data: existingClaim } = await admin
         .from('listing_owners')
         .select('id, status')
         .eq('user_id', user.id)
@@ -203,7 +192,7 @@ export const POST: APIRoute = async ({ request }) => {
         verified_at: domainVerified ? new Date().toISOString() : null,
       };
 
-      const { error: claimError } = await supabase.from('listing_owners').insert(listingOwnerClaim);
+      const { error: claimError } = await admin.from('listing_owners').insert(listingOwnerClaim);
 
       if (claimError) {
         console.error('Claim error:', claimError);
@@ -211,7 +200,7 @@ export const POST: APIRoute = async ({ request }) => {
       }
 
       if (domainVerified) {
-        await supabase
+        await admin
           .from('listings')
           .update({ claimed: true, claimed_at: new Date().toISOString() })
           .eq('id', listingId);
@@ -243,7 +232,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Handle anonymous claims (no listingId, or no user)
     const verificationToken = generateVerificationToken();
-    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
     const newClaim = {
       provider_name: claimData.provider_name,
@@ -256,7 +245,7 @@ export const POST: APIRoute = async ({ request }) => {
       token_expires_at: expiresAt.toISOString(),
     };
 
-    const { data: insertedClaim, error } = await supabase
+    const { data: insertedClaim, error } = await admin
       .from('claims')
       .insert(newClaim)
       .select()
@@ -301,14 +290,9 @@ export const POST: APIRoute = async ({ request }) => {
     );
   } catch (error) {
     console.error('Unified claim API error:', error);
-    return new Response(
-      JSON.stringify({
-        error: 'Internal server error',
-      }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 };

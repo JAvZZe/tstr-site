@@ -34,9 +34,7 @@ export const GET: APIRoute = async ({ params }) => {
   const isVerified = data.claimed === true;
   const score = typeof data.trust_score === 'number' ? data.trust_score : 0;
 
-  const bgColor = isVerified
-    ? score >= 70 ? '#15803d' : '#16a34a'
-    : '#4B5563';
+  const bgColor = isVerified ? (score >= 70 ? '#15803d' : '#16a34a') : '#4B5563';
   const accentColor = isVerified ? '#86efac' : '#D1D5DB';
   const label = isVerified ? 'TSTR Verified' : 'Listed on TSTR';
   const icon = isVerified ? '\u2713' : '\u25cf';

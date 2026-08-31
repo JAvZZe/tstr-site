@@ -4,18 +4,18 @@ import { sendEmail, createClaimStatusEmail } from '../../../lib/email';
 
 const SUPABASE_URL =
   import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co';
-const SERVICE_KEY = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!SERVICE_KEY) {
-  throw new Error('SUPABASE_SERVICE_ROLE_KEY is required');
+function getServiceKey(locals: unknown): string | null {
+  const env = (locals as { runtime?: { env?: Record<string, string> } }).runtime?.env;
+  return env?.SUPABASE_SERVICE_ROLE_KEY || import.meta.env.SUPABASE_SERVICE_ROLE_KEY || null;
 }
 
-const supabaseAdmin = createClient(SUPABASE_URL, SERVICE_KEY);
-
-async function verifyAuth(request: Request) {
+async function verifyAuth(request: Request, serviceKey: string | null) {
+  if (!serviceKey) return null;
   const authHeader = request.headers.get('Authorization');
   if (!authHeader) return null;
   const token = authHeader.replace('Bearer ', '');
+  const supabaseAdmin = createClient(SUPABASE_URL, serviceKey);
   const {
     data: { user },
     error,
@@ -26,10 +26,12 @@ async function verifyAuth(request: Request) {
   return user;
 }
 
-export const GET: APIRoute = async ({ request }) => {
-  const user = await verifyAuth(request);
+export const GET: APIRoute = async ({ request, locals }) => {
+  const serviceKey = getServiceKey(locals);
+  const user = await verifyAuth(request, serviceKey);
   if (!user) return new Response('Unauthorized', { status: 401 });
 
+  const supabaseAdmin = createClient(SUPABASE_URL, serviceKey!);
   const { data: claims, error } = await supabaseAdmin
     .from('claims')
     .select('id, provider_name, contact_name, business_email, phone, created_at, status')
@@ -40,8 +42,9 @@ export const GET: APIRoute = async ({ request }) => {
   return new Response(JSON.stringify(claims), { headers: { 'Content-Type': 'application/json' } });
 };
 
-export const POST: APIRoute = async ({ request }) => {
-  const user = await verifyAuth(request);
+export const POST: APIRoute = async ({ request, locals }) => {
+  const serviceKey = getServiceKey(locals);
+  const user = await verifyAuth(request, serviceKey);
   if (!user) return new Response('Unauthorized', { status: 401 });
 
   try {
@@ -52,6 +55,7 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response('Invalid Request', { status: 400 });
     }
 
+    const supabaseAdmin = createClient(SUPABASE_URL, serviceKey!);
     const { data: claim, error: fetchError } = await supabaseAdmin
       .from('claims')
       .select('id, provider_name, business_email, status')
@@ -66,7 +70,6 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 });
 
-    // Notify claimant of status change
     if (claim.business_email) {
       const emailTemplate = createClaimStatusEmail(
         claim.provider_name,

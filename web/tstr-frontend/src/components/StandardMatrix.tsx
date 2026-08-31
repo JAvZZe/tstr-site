@@ -19,16 +19,16 @@ interface StandardMatrixProps {
 
 const StandardMatrix: React.FC<StandardMatrixProps> = ({ standards, labs }) => {
   return (
-    <div className="w-full overflow-x-auto rounded-3xl border border-white/10 bg-[#0a0a0b] backdrop-blur-md shadow-2xl">
+    <div className="w-full overflow-x-auto rounded-3xl border border-white/10 bg-[#0a0a0b] shadow-2xl backdrop-blur-md">
       <table className="w-full border-collapse">
         <thead>
           <tr className="border-b border-white/5">
-            <th className="p-6 text-left text-sm font-black uppercase tracking-[0.2em] text-slate-500 bg-white/5 sticky left-0 z-20">
+            <th className="sticky left-0 z-20 bg-white/5 p-6 text-left text-sm font-black uppercase tracking-[0.2em] text-slate-500">
               Testing Standard
             </th>
             {labs.map((lab) => (
-              <th key={lab.id} className="p-6 text-center min-w-[100px] max-w-[120px]">
-                <div className="text-[13px] font-black uppercase tracking-[0.1em] text-white leading-tight break-words">
+              <th key={lab.id} className="min-w-[100px] max-w-[120px] p-6 text-center">
+                <div className="break-words text-[13px] font-black uppercase leading-tight tracking-[0.1em] text-white">
                   {lab.business_name}
                 </div>
               </th>
@@ -37,11 +37,18 @@ const StandardMatrix: React.FC<StandardMatrixProps> = ({ standards, labs }) => {
         </thead>
         <tbody>
           {standards.map((std) => (
-            <tr key={std.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors group">
-              <td className="p-6 sticky left-0 z-10 bg-[#0a0a0b] group-hover:bg-[#111112]">
+            <tr
+              key={std.id}
+              className="group border-b border-white/5 transition-colors hover:bg-white/[0.02]"
+            >
+              <td className="sticky left-0 z-10 bg-[#0a0a0b] p-6 group-hover:bg-[#111112]">
                 <div className="flex flex-col">
-                  <span className="text-lg font-bold text-blue-400 font-mono tracking-tight">{std.code}</span>
-                  <span className="text-sm text-slate-400 font-medium leading-tight max-w-[280px] mt-2">{std.name}</span>
+                  <span className="font-mono text-lg font-bold tracking-tight text-blue-400">
+                    {std.code}
+                  </span>
+                  <span className="mt-2 max-w-[280px] text-sm font-medium leading-tight text-slate-400">
+                    {std.name}
+                  </span>
                 </div>
               </td>
               {labs.map((lab) => {
@@ -49,14 +56,26 @@ const StandardMatrix: React.FC<StandardMatrixProps> = ({ standards, labs }) => {
                 return (
                   <td key={`${lab.id}-${std.id}`} className="p-6 text-center">
                     {isCapable ? (
-                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3">
+                      <div className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-emerald-500/20 bg-emerald-500/10 text-emerald-400">
+                        <svg
+                          className="h-4 w-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          strokeWidth="3"
+                        >
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
                     ) : (
-                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/10 text-slate-500">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3">
+                      <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-slate-500">
+                        <svg
+                          className="h-4 w-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          strokeWidth="3"
+                        >
                           <path strokeLinecap="round" strokeLinejoin="round" d="M18 12H6" />
                         </svg>
                       </div>

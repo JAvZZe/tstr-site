@@ -1,36 +1,40 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js';
 
 // Browser-side Supabase client for authentication
 // Uses anon key (safe to expose to client)
 
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co'
+const supabaseUrl =
+  import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co';
 
 // Anon key - safe for client-side use (RLS policies protect data)
 // Safe key selection: Prefer env var ONLY if it matches new format (starts with sb_), otherwise use known good fallback
-const envKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-const fallbackKey = 'sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4'
-export const supabaseAnonKey = (envKey && envKey.startsWith('sb_')) ? envKey : fallbackKey
+const envKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+const fallbackKey = 'sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4';
+export const supabaseAnonKey = envKey && envKey.startsWith('sb_') ? envKey : fallbackKey;
 
 // Legacy JWT Anon Key - No longer needed as new sb_publishable_* keys work as Bearer tokens
-export const supabaseAnonJwt = 'sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4'
+export const supabaseAnonJwt = 'sb_publishable_nFGCy-22_7FQlVr_SkJ6cQ_mwfYVhA4';
 
 export const supabaseBrowser = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
-    flowType: 'pkce'
-  }
-})
+    flowType: 'pkce',
+  },
+});
 
 // Helper function to get current user
 export async function getCurrentUser() {
-  const { data: { user }, error } = await supabaseBrowser.auth.getUser()
+  const {
+    data: { user },
+    error,
+  } = await supabaseBrowser.auth.getUser();
   if (error) {
-    console.error('Error getting user:', error)
-    return null
+    console.error('Error getting user:', error);
+    return null;
   }
-  return user
+  return user;
 }
 
 // Helper function to get user profile with subscription tier
@@ -39,20 +43,20 @@ export async function getUserProfile(userId: string) {
     .from('user_profiles')
     .select('*')
     .eq('id', userId)
-    .single()
+    .single();
 
   if (error) {
-    console.error('Error getting user profile:', error)
-    return null
+    console.error('Error getting user profile:', error);
+    return null;
   }
-  return data
+  return data;
 }
 
 // Helper function to get user tier
 export async function getUserTier() {
-  const user = await getCurrentUser()
-  if (!user) return 'free'
+  const user = await getCurrentUser();
+  if (!user) return 'free';
 
-  const profile = await getUserProfile(user.id)
-  return profile?.subscription_tier || 'basic'
+  const profile = await getUserProfile(user.id);
+  return profile?.subscription_tier || 'basic';
 }

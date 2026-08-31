@@ -1,39 +1,44 @@
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
+import { getServiceKey } from '../../../lib/supabase-admin';
 
 const SUPABASE_URL =
   import.meta.env.PUBLIC_SUPABASE_URL || 'https://haimjeaetrsaauitrhfy.supabase.co';
-const SERVICE_KEY = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!SERVICE_KEY) {
-  throw new Error('SUPABASE_SERVICE_ROLE_KEY is required');
+function getAdmin(locals: unknown) {
+  const key = getServiceKey(locals);
+  if (!key) return null;
+  return createClient(SUPABASE_URL, key);
 }
 
-const supabaseAdmin = createClient(SUPABASE_URL, SERVICE_KEY);
-
-async function verifyAuth(request: Request) {
+async function verifyAuth(request: Request, key: string | null) {
+  if (!key) return null;
   const authHeader = request.headers.get('Authorization');
   if (!authHeader) return null;
   const token = authHeader.replace('Bearer ', '');
+  const supabase = createClient(SUPABASE_URL, key);
   const {
     data: { user },
     error,
-  } = await supabaseAdmin.auth.getUser(token);
+  } = await supabase.auth.getUser(token);
   if (error || !user) return null;
   const role = user.app_metadata?.role;
   if (role !== 'staff' && role !== 'super_admin') return null;
   return user;
 }
 
-export const GET: APIRoute = async ({ request }) => {
-  const user = await verifyAuth(request);
+export const GET: APIRoute = async ({ request, locals }) => {
+  const admin = getAdmin(locals);
+  if (!admin) return new Response('Service key not configured', { status: 500 });
+
+  const user = await verifyAuth(request, getServiceKey(locals));
   if (!user) return new Response('Unauthorized', { status: 401 });
 
   try {
     const url = new URL(request.url);
     const statusFilter = url.searchParams.get('status');
 
-    let query = supabaseAdmin
+    let query = admin
       .from('listings')
       .select(
         'id, business_name, website, category:category_id(name), status, created_at, source_script'
@@ -56,8 +61,11 @@ export const GET: APIRoute = async ({ request }) => {
   }
 };
 
-export const POST: APIRoute = async ({ request }) => {
-  const user = await verifyAuth(request);
+export const POST: APIRoute = async ({ request, locals }) => {
+  const admin = getAdmin(locals);
+  if (!admin) return new Response('Service key not configured', { status: 500 });
+
+  const user = await verifyAuth(request, getServiceKey(locals));
   if (!user) return new Response('Unauthorized', { status: 401 });
 
   try {
@@ -66,7 +74,6 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (!id) return new Response('Missing ID', { status: 400 });
 
-    // Allowed fields to update
     const allowed = ['business_name', 'status', 'website', 'category_id'];
     const payload: any = {};
 
@@ -74,7 +81,7 @@ export const POST: APIRoute = async ({ request }) => {
       if (updates[key] !== undefined) payload[key] = updates[key];
     }
 
-    const { error } = await supabaseAdmin.from('listings').update(payload).eq('id', id);
+    const { error } = await admin.from('listings').update(payload).eq('id', id);
 
     if (error) throw error;
 

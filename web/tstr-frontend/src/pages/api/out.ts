@@ -39,7 +39,7 @@ export const GET: APIRoute = async ({ url, redirect, request }) => {
         listing_id: listingId,
         url: target,
         user_agent: request.headers.get('user-agent'),
-        referrer: request.headers.get('referer')
+        referrer: request.headers.get('referer'),
       })
       .then(({ error: insertError }) => {
         if (insertError) {

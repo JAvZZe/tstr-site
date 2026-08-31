@@ -3,10 +3,16 @@
 // helper used by contact/newsletter/submit API routes.
 import { requiredString, optionalString, validateJson } from './validate.ts';
 
-let pass = 0, fail = 0;
+let pass = 0,
+  fail = 0;
 function check(name: string, cond: boolean) {
-  if (cond) { pass++; console.log(`  ok  ${name}`); }
-  else { fail++; console.log(`FAIL  ${name}`); }
+  if (cond) {
+    pass++;
+    console.log(`  ok  ${name}`);
+  } else {
+    fail++;
+    console.log(`FAIL  ${name}`);
+  }
 }
 
 // requiredString
@@ -19,7 +25,10 @@ check('accepts good email', requiredString('a@b.co', 'e', { email: true }).ok);
 
 // optionalString
 check('optional empty -> ""', optionalString(undefined) === '');
-check('optional trims+clamps', optionalString('  x'.padEnd(300, 'y'), { max: 5 }) === 'x'.padEnd(5, 'y'));
+check(
+  'optional trims+clamps',
+  optionalString('  x'.padEnd(300, 'y'), { max: 5 }) === 'x'.padEnd(5, 'y')
+);
 
 // validateJson
 const bad = validateJson('{not json', () => ({ ok: true, data: {} as any }));

@@ -6,128 +6,200 @@ export const prerender = false;
 ---
 
 <AdminLayout title="Team Management">
-    <div id="loading" class="flex items-center justify-center min-h-[50vh]">
-        <div class="text-center">
-             <svg class="animate-spin h-10 w-10 text-blue-500 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <p class="text-gray-500 text-lg">Loading Team Data...</p>
-        </div>
+  <div id="loading" class="flex min-h-[50vh] items-center justify-center">
+    <div class="text-center">
+      <svg
+        class="mx-auto mb-4 h-10 w-10 animate-spin text-blue-500"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+      <p class="text-lg text-gray-500">Loading Team Data...</p>
+    </div>
+  </div>
+
+  <div id="content" class="hidden">
+    <div class="mb-8 flex items-center justify-between">
+      <div>
+        <a
+          href="/admin/dashboard"
+          class="mb-2 inline-block text-sm text-blue-600 hover:text-blue-800">← Back to Dashboard</a
+        >
+        <h1 class="text-3xl font-bold text-gray-900">Team & Access</h1>
+      </div>
+      <button
+        id="add-member-btn"
+        class="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700"
+      >
+        Add New Staff
+      </button>
     </div>
 
-    <div id="content" class="hidden">
-        <div class="mb-8 flex justify-between items-center">
-            <div>
-                 <a href="/admin/dashboard" class="text-blue-600 hover:text-blue-800 text-sm mb-2 inline-block">← Back to Dashboard</a>
-                 <h1 class="text-3xl font-bold text-gray-900">Team & Access</h1>
-            </div>
-            <button id="add-member-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
-                Add New Staff
-            </button>
-        </div>
-
-        <div id="error-banner" class="hidden bg-red-50 border border-red-200 rounded-lg p-4 mb-6 text-red-800"></div>
-
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-lg font-semibold text-gray-800">Staff Members (<span id="user-count">0</span>)</h2>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Sign In</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="user-table-body" class="bg-white divide-y divide-gray-200">
-                        <!-- Filled via JS -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div
+      id="error-banner"
+      class="mb-6 hidden rounded-lg border border-red-200 bg-red-50 p-4 text-red-800"
+    >
     </div>
 
-    <!-- Modal -->
-    <div id="modal-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-xl">
-            <h2 id="modal-title" class="text-xl font-bold mb-4">Add Staff Member</h2>
-            <form id="staff-form" class="space-y-4">
-                <input type="hidden" id="edit-user-id">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" id="form-email" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <input type="password" id="form-password" minlength="6" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Required for new users">
-                    <p id="password-hint" class="text-xs text-gray-500 mt-1 hidden">Leave blank to keep current password</p>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
-                    <select id="form-role" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
-                        <option value="staff">Staff (Standard)</option>
-                        <option value="super_admin">Super Admin (Full Access)</option>
-                    </select>
-                </div>
-                <div class="flex justify-end gap-3 mt-6">
-                    <button type="button" id="cancel-btn" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
-                    <button type="submit" id="submit-btn" class="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Create User</button>
-                </div>
-            </form>
-        </div>
+    <div class="overflow-hidden rounded-lg bg-white shadow-md">
+      <div class="border-b border-gray-200 px-6 py-4">
+        <h2 class="text-lg font-semibold text-gray-800">
+          Staff Members (<span id="user-count">0</span>)
+        </h2>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                >User</th
+              >
+              <th
+                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                >Role</th
+              >
+              <th
+                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                >Created</th
+              >
+              <th
+                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                >Last Sign In</th
+              >
+              <th
+                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                >Status</th
+              >
+              <th
+                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                >Actions</th
+              >
+            </tr>
+          </thead>
+          <tbody id="user-table-body" class="divide-y divide-gray-200 bg-white">
+            <!-- Filled via JS -->
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
+
+  <!-- Modal -->
+  <div
+    id="modal-overlay"
+    class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black bg-opacity-50"
+  >
+    <div class="mx-4 w-full max-w-md rounded-lg bg-white p-8 shadow-xl">
+      <h2 id="modal-title" class="mb-4 text-xl font-bold">Add Staff Member</h2>
+      <form id="staff-form" class="space-y-4">
+        <input type="hidden" id="edit-user-id" />
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700">Email</label>
+          <input
+            type="email"
+            id="form-email"
+            required
+            class="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700">Password</label>
+          <input
+            type="password"
+            id="form-password"
+            minlength="6"
+            class="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-blue-500"
+            placeholder="Required for new users"
+          />
+          <p id="password-hint" class="mt-1 hidden text-xs text-gray-500">
+            Leave blank to keep current password
+          </p>
+        </div>
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700">Role</label>
+          <select
+            id="form-role"
+            class="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="staff">Staff (Standard)</option>
+            <option value="super_admin">Super Admin (Full Access)</option>
+          </select>
+        </div>
+        <div class="mt-6 flex justify-end gap-3">
+          <button
+            type="button"
+            id="cancel-btn"
+            class="rounded-lg px-4 py-2 text-gray-600 hover:bg-gray-100">Cancel</button
+          >
+          <button
+            type="submit"
+            id="submit-btn"
+            class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+            >Create User</button
+          >
+        </div>
+      </form>
+    </div>
+  </div>
 </AdminLayout>
 
 <script>
-    import { supabaseBrowser } from '../../lib/supabase-browser';
+  import { supabaseBrowser } from '../../lib/supabase-browser';
 
-    let currentSession = null;
-    let allUsers = [];
+  let currentSession = null;
+  let allUsers = [];
 
-    async function loadUsers() {
-        const loading = document.getElementById('loading');
-        const content = document.getElementById('content');
-        const tbody = document.getElementById('user-table-body');
-        const errorBanner = document.getElementById('error-banner');
+  async function loadUsers() {
+    const loading = document.getElementById('loading');
+    const content = document.getElementById('content');
+    const tbody = document.getElementById('user-table-body');
+    const errorBanner = document.getElementById('error-banner');
 
-        try {
-            // 1. Auth Check
-            const { data: { session } } = await supabaseBrowser.auth.getSession();
-            if (!session) {
-                window.location.href = '/admin/login';
-                return;
-            }
-            currentSession = session;
+    try {
+      // 1. Auth Check
+      const {
+        data: { session },
+      } = await supabaseBrowser.auth.getSession();
+      if (!session) {
+        window.location.href = '/admin/login';
+        return;
+      }
+      currentSession = session;
 
-            // 2. Fetch Data
-            const res = await fetch('/api/admin/users', {
-                headers: { 'Authorization': `Bearer ${session.access_token}` }
-            });
+      // 2. Fetch Data
+      const res = await fetch('/api/admin/users', {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
 
-            if (res.status === 403) {
-                loading.classList.add('hidden');
-                errorBanner.textContent = 'Access Denied: You must be a Super Admin to view this page.';
-                errorBanner.classList.remove('hidden');
-                content.classList.remove('hidden');
-                // Hide controls
-                document.getElementById('add-member-btn').classList.add('hidden');
-                return;
-            }
+      if (res.status === 403) {
+        loading.classList.add('hidden');
+        errorBanner.textContent = 'Access Denied: You must be a Super Admin to view this page.';
+        errorBanner.classList.remove('hidden');
+        content.classList.remove('hidden');
+        // Hide controls
+        document.getElementById('add-member-btn').classList.add('hidden');
+        return;
+      }
 
-            if (!res.ok) throw new Error('Failed to load users');
+      if (!res.ok) throw new Error('Failed to load users');
 
-            const { users } = await res.json();
-            allUsers = users;
+      const { users } = await res.json();
+      allUsers = users;
 
-            // 3. Render
-            document.getElementById('user-count').textContent = users.length;
-            tbody.innerHTML = users.map(u => `
+      // 3. Render
+      document.getElementById('user-count').textContent = users.length;
+      tbody.innerHTML = users
+        .map(
+          (u) => `
                 <tr class="hover:bg-gray-50">
                     <td class="px-6 py-4">
                         <div class="text-sm font-medium text-gray-900">${u.email}</div>
@@ -135,7 +207,9 @@ export const prerender = false;
                     </td>
                     <td class="px-6 py-4">
                         <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                             u.user_metadata?.role === 'super_admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+                          u.user_metadata?.role === 'super_admin'
+                            ? 'bg-purple-100 text-purple-800'
+                            : 'bg-blue-100 text-blue-800'
                         }">
                             ${u.user_metadata?.role || 'staff'}
                         </span>
@@ -158,149 +232,148 @@ export const prerender = false;
                         </div>
                     </td>
                 </tr>
-            `).join('');
+            `
+        )
+        .join('');
 
-            loading.classList.add('hidden');
-            content.classList.remove('hidden');
+      loading.classList.add('hidden');
+      content.classList.remove('hidden');
+    } catch (e) {
+      console.error(e);
+      loading.innerHTML = `<p class="text-red-500">Error: ${e.message}</p>`;
+    }
+  }
 
-        } catch (e) {
-            console.error(e);
-            loading.innerHTML = `<p class="text-red-500">Error: ${e.message}</p>`;
-        }
+  // Modal Logic
+  const modal = document.getElementById('modal-overlay');
+  const form = document.getElementById('staff-form');
+  // Using delegation for table actions
+  document.getElementById('user-table-body').addEventListener('click', async (e) => {
+    const target = e.target;
+    const id = target.getAttribute('data-id');
+
+    if (target.classList.contains('edit-btn')) {
+      openModal(id);
+    } else if (target.classList.contains('delete-btn')) {
+      if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+        await deleteUser(id);
+      }
+    }
+  });
+
+  document.getElementById('add-member-btn').addEventListener('click', () => {
+    openModal();
+  });
+
+  document.getElementById('cancel-btn').addEventListener('click', () => {
+    modal.classList.add('hidden');
+  });
+
+  function openModal(id = null) {
+    const title = document.getElementById('modal-title');
+    const submitBtn = document.getElementById('submit-btn');
+    const emailInput = document.getElementById('form-email');
+    const passwordInput = document.getElementById('form-password');
+    const roleInput = document.getElementById('form-role');
+    const idInput = document.getElementById('edit-user-id');
+    const passwordHint = document.getElementById('password-hint');
+
+    if (id) {
+      // Edit Mode
+      const user = allUsers.find((u) => u.id === id);
+      if (!user) return;
+
+      idInput.value = id;
+      title.textContent = 'Edit Staff Member';
+      submitBtn.textContent = 'Save Changes';
+
+      emailInput.value = user.email;
+      emailInput.disabled = true; // Typically can't change email easily without re-verify
+
+      roleInput.value = user.user_metadata?.role || 'staff';
+
+      passwordInput.required = false;
+      passwordInput.placeholder = '(Unchanged)';
+      passwordHint.classList.remove('hidden');
+    } else {
+      // Create Mode
+      idInput.value = '';
+      title.textContent = 'Add Staff Member';
+      submitBtn.textContent = 'Create User';
+
+      emailInput.value = '';
+      emailInput.disabled = false;
+
+      roleInput.value = 'staff';
+
+      passwordInput.required = true;
+      passwordInput.placeholder = 'Required for new users';
+      passwordHint.classList.add('hidden');
     }
 
-    // Modal Logic
-    const modal = document.getElementById('modal-overlay');
-    const form = document.getElementById('staff-form');
-    // Using delegation for table actions
-    document.getElementById('user-table-body').addEventListener('click', async (e) => {
-        const target = e.target;
-        const id = target.getAttribute('data-id');
+    modal.classList.remove('hidden');
+  }
 
-        if (target.classList.contains('edit-btn')) {
-            openModal(id);
-        } else if (target.classList.contains('delete-btn')) {
-            if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
-                await deleteUser(id);
-            }
-        }
-    });
+  async function deleteUser(id) {
+    try {
+      const res = await fetch(`/api/admin/users?id=${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${currentSession?.access_token}` },
+      });
 
-    document.getElementById('add-member-btn').addEventListener('click', () => {
-        openModal();
-    });
+      if (!res.ok) throw new Error('Delete failed');
 
-    document.getElementById('cancel-btn').addEventListener('click', () => {
-        modal.classList.add('hidden');
-    });
-
-    function openModal(id = null) {
-        const title = document.getElementById('modal-title');
-        const submitBtn = document.getElementById('submit-btn');
-        const emailInput = document.getElementById('form-email');
-        const passwordInput = document.getElementById('form-password');
-        const roleInput = document.getElementById('form-role');
-        const idInput = document.getElementById('edit-user-id');
-        const passwordHint = document.getElementById('password-hint');
-
-        if (id) {
-            // Edit Mode
-            const user = allUsers.find(u => u.id === id);
-            if (!user) return;
-
-            idInput.value = id;
-            title.textContent = 'Edit Staff Member';
-            submitBtn.textContent = 'Save Changes';
-            
-            emailInput.value = user.email;
-            emailInput.disabled = true; // Typically can't change email easily without re-verify
-            
-            roleInput.value = user.user_metadata?.role || 'staff';
-            
-            passwordInput.required = false;
-            passwordInput.placeholder = "(Unchanged)";
-            passwordHint.classList.remove('hidden');
-
-        } else {
-            // Create Mode
-            idInput.value = '';
-            title.textContent = 'Add Staff Member';
-            submitBtn.textContent = 'Create User';
-            
-            emailInput.value = '';
-            emailInput.disabled = false;
-            
-            roleInput.value = 'staff';
-            
-            passwordInput.required = true;
-            passwordInput.placeholder = "Required for new users";
-            passwordHint.classList.add('hidden');
-        }
-
-        modal.classList.remove('hidden');
+      loadUsers(); // Reload table
+    } catch (e) {
+      alert('Error deleting user: ' + e.message);
     }
+  }
 
-    async function deleteUser(id) {
-        try {
-            const res = await fetch(`/api/admin/users?id=${id}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${currentSession?.access_token}` }
-            });
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = document.getElementById('submit-btn');
+    const id = document.getElementById('edit-user-id').value;
+    const email = document.getElementById('form-email').value;
+    const password = document.getElementById('form-password').value;
+    const role = document.getElementById('form-role').value;
 
-            if (!res.ok) throw new Error('Delete failed');
-            
-            loadUsers(); // Reload table
-        } catch (e) {
-            alert('Error deleting user: ' + e.message);
-        }
+    submitBtn.disabled = true;
+
+    try {
+      const isEdit = !!id;
+      const url = '/api/admin/users';
+      const method = isEdit ? 'PUT' : 'POST';
+
+      const body = { role };
+      if (isEdit) {
+        body.id = id;
+        if (password) body.password = password;
+      } else {
+        body.email = email;
+        body.password = password;
+      }
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${currentSession?.access_token}`,
+        },
+        body: JSON.stringify(body),
+      });
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error);
+
+      alert(isEdit ? 'User updated successfully!' : 'User created successfully!');
+      modal.classList.add('hidden');
+      loadUsers();
+    } catch (err) {
+      alert('Error: ' + err.message);
+    } finally {
+      submitBtn.disabled = false;
     }
+  });
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const submitBtn = document.getElementById('submit-btn');
-        const id = document.getElementById('edit-user-id').value;
-        const email = document.getElementById('form-email').value;
-        const password = document.getElementById('form-password').value;
-        const role = document.getElementById('form-role').value;
-
-        submitBtn.disabled = true;
-
-        try {
-            const isEdit = !!id;
-            const url = '/api/admin/users';
-            const method = isEdit ? 'PUT' : 'POST';
-            
-            const body = { role };
-            if (isEdit) {
-                body.id = id;
-                if (password) body.password = password;
-            } else {
-                body.email = email;
-                body.password = password;
-            }
-
-            const res = await fetch(url, {
-                method,
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${currentSession?.access_token}`
-                },
-                body: JSON.stringify(body)
-            });
-
-            const result = await res.json();
-            if (!res.ok) throw new Error(result.error);
-
-            alert(isEdit ? 'User updated successfully!' : 'User created successfully!');
-            modal.classList.add('hidden');
-            loadUsers();
-            
-        } catch (err) {
-            alert('Error: ' + err.message);
-        } finally {
-            submitBtn.disabled = false;
-        }
-    });
-
-    loadUsers();
+  loadUsers();
 </script>

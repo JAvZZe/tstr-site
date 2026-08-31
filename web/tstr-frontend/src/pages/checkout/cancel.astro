@@ -1,69 +1,104 @@
 ---
-export const prerender = false
+export const prerender = false;
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Checkout Cancelled - TSTR Hub</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f5f5f5;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .card {
-      background: white;
-      border-radius: 16px;
-      padding: 3rem;
-      max-width: 500px;
-      text-align: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-    .icon { font-size: 4rem; margin-bottom: 1.5rem; }
-    h1 { color: #333; margin-bottom: 1rem; font-size: 1.8rem; }
-    p { color: #666; margin-bottom: 2rem; line-height: 1.6; }
-    .buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-    .btn {
-      display: inline-block;
-      padding: 1rem 2rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: transform 0.2s;
-      cursor: pointer;
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, #000080 0%, #32CD32 100%);
-      color: white;
-    }
-    .btn-secondary {
-      background: white;
-      color: #000080;
-      border: 2px solid #000080;
-    }
-    .btn:hover { transform: translateY(-2px); }
-  </style>
-  <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-  o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-  o.onload=function(){window.trackingFunctions.onLoad({appId:"6979e8021ac917001927e9b2"})},
-  document.head.appendChild(o)}initApollo();</script>
-</head>
-<body>
-  <div class="card">
-    <div class="icon">↩️</div>
-    <h1>Checkout Cancelled</h1>
-    <p>No worries! Your payment was not processed. You can try again whenever you're ready, or contact us if you have questions.</p>
-    <div class="buttons">
-      <a href="/pricing" class="btn btn-primary">View Plans</a>
-      <a href="/" class="btn btn-secondary">Go Home</a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout Cancelled - TSTR Hub</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #f5f5f5;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .card {
+        background: white;
+        border-radius: 16px;
+        padding: 3rem;
+        max-width: 500px;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+      .icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+      }
+      h1 {
+        color: #333;
+        margin-bottom: 1rem;
+        font-size: 1.8rem;
+      }
+      p {
+        color: #666;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+      }
+      .buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .btn {
+        display: inline-block;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: transform 0.2s;
+        cursor: pointer;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, #000080 0%, #32cd32 100%);
+        color: white;
+      }
+      .btn-secondary {
+        background: white;
+        color: #000080;
+        border: 2px solid #000080;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+    </style>
+    <script>
+      function initApollo() {
+        var n = Math.random().toString(36).substring(7),
+          o = document.createElement('script');
+        ((o.src = 'https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache=' + n),
+          (o.async = !0),
+          (o.defer = !0),
+          (o.onload = function () {
+            window.trackingFunctions.onLoad({ appId: '6979e8021ac917001927e9b2' });
+          }),
+          document.head.appendChild(o));
+      }
+      initApollo();
+    </script>
+  </head>
+  <body>
+    <div class="card">
+      <div class="icon">↩️</div>
+      <h1>Checkout Cancelled</h1>
+      <p>
+        No worries! Your payment was not processed. You can try again whenever you're ready, or
+        contact us if you have questions.
+      </p>
+      <div class="buttons">
+        <a href="/pricing" class="btn btn-primary">View Plans</a>
+        <a href="/" class="btn btn-secondary">Go Home</a>
+      </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>

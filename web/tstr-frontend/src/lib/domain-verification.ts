@@ -7,18 +7,18 @@
  * @returns {string|null} - The extracted domain or null if invalid
  */
 export function extractDomain(url) {
-  if (!url) return null
+  if (!url) return null;
 
   try {
     // Ensure URL has protocol
-    const urlWithProtocol = url.startsWith('http') ? url : `https://${url}`
-    const urlObj = new URL(urlWithProtocol)
+    const urlWithProtocol = url.startsWith('http') ? url : `https://${url}`;
+    const urlObj = new URL(urlWithProtocol);
 
     // Remove www prefix and return hostname
-    return urlObj.hostname.replace(/^www\./, '').toLowerCase()
+    return urlObj.hostname.replace(/^www\./, '').toLowerCase();
   } catch (error) {
-    console.warn('Invalid URL for domain extraction:', url, error)
-    return null
+    console.warn('Invalid URL for domain extraction:', url, error);
+    return null;
   }
 }
 
@@ -28,8 +28,8 @@ export function extractDomain(url) {
  * @returns {string|null} - The domain part or null if invalid
  */
 export function extractEmailDomain(email) {
-  if (!email || !email.includes('@')) return null
-  return email.split('@')[1].toLowerCase()
+  if (!email || !email.includes('@')) return null;
+  return email.split('@')[1].toLowerCase();
 }
 
 /**
@@ -39,19 +39,19 @@ export function extractEmailDomain(email) {
  * @returns {boolean} - True if auto-claim is possible
  */
 export function canAutoClaim(userEmail, listingWebsite) {
-  const userDomain = extractEmailDomain(userEmail)
-  const listingDomain = extractDomain(listingWebsite)
+  const userDomain = extractEmailDomain(userEmail);
+  const listingDomain = extractDomain(listingWebsite);
 
-  if (!userDomain || !listingDomain) return false
+  if (!userDomain || !listingDomain) return false;
 
   // Exact match
-  if (userDomain === listingDomain) return true
+  if (userDomain === listingDomain) return true;
 
   // Handle common TLD variations (remove .com, .org, etc. and compare)
-  const normalizedUser = userDomain.replace(/\.(com|org|net|edu|gov)$/i, '')
-  const normalizedListing = listingDomain.replace(/\.(com|org|net|edu|gov)$/i, '')
+  const normalizedUser = userDomain.replace(/\.(com|org|net|edu|gov)$/i, '');
+  const normalizedListing = listingDomain.replace(/\.(com|org|net|edu|gov)$/i, '');
 
-  return normalizedUser === normalizedListing
+  return normalizedUser === normalizedListing;
 }
 
 /**
@@ -59,8 +59,7 @@ export function canAutoClaim(userEmail, listingWebsite) {
  * @returns {string} - Random verification token
  */
 export function generateVerificationToken() {
-  return Math.random().toString(36).substring(2, 15) +
-         Math.random().toString(36).substring(2, 15)
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
 
 /**
@@ -69,8 +68,8 @@ export function generateVerificationToken() {
  * @returns {boolean} - True if token is still valid
  */
 export function isTokenValid(expiresAt) {
-  if (!expiresAt) return false
-  return new Date(expiresAt) > new Date()
+  if (!expiresAt) return false;
+  return new Date(expiresAt) > new Date();
 }
 
 /**
@@ -79,13 +78,13 @@ export function isTokenValid(expiresAt) {
  * @returns {boolean} - True if email has valid domain format
  */
 export function isValidEmailDomain(email) {
-  if (!email || !email.includes('@')) return false
+  if (!email || !email.includes('@')) return false;
 
-  const domain = extractEmailDomain(email)
-  if (!domain) return false
+  const domain = extractEmailDomain(email);
+  if (!domain) return false;
 
   // Basic domain validation (has at least one dot, no spaces)
-  return domain.includes('.') && !domain.includes(' ') && domain.length > 3
+  return domain.includes('.') && !domain.includes(' ') && domain.length > 3;
 }
 
 /**
@@ -99,26 +98,26 @@ export function getClaimStatusInfo(status) {
       return {
         text: 'Verified Owner',
         color: 'green',
-        icon: '✓'
-      }
+        icon: '✓',
+      };
     case 'pending':
       return {
         text: 'Claim Pending',
         color: 'yellow',
-        icon: '⏳'
-      }
+        icon: '⏳',
+      };
     case 'rejected':
       return {
         text: 'Claim Rejected',
         color: 'red',
-        icon: '✗'
-      }
+        icon: '✗',
+      };
     default:
       return {
         text: 'Not Claimed',
         color: 'gray',
-        icon: '?'
-      }
+        icon: '?',
+      };
   }
 }
 
@@ -130,12 +129,12 @@ export function getClaimStatusInfo(status) {
 export function formatVerificationMethod(method) {
   switch (method) {
     case 'domain_match':
-      return 'Automatic (Domain Match)'
+      return 'Automatic (Domain Match)';
     case 'email_verification':
-      return 'Email Verification'
+      return 'Email Verification';
     case 'admin_approval':
-      return 'Admin Approval'
+      return 'Admin Approval';
     default:
-      return 'Unknown'
+      return 'Unknown';
   }
 }

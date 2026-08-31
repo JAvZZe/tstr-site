@@ -14,7 +14,7 @@ export async function notifyIndexNow(urls: string[]) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ urls })
+      body: JSON.stringify({ urls }),
     });
 
     const result = await response.json();
@@ -29,24 +29,24 @@ export async function notifyIndexNow(urls: string[]) {
  * Generates the full PSEO URL matrix for a listing
  */
 export function generatePSEOUrlsForListing(listing: any, categories: any[], capabilities: any[]) {
-    const urls: string[] = [];
-    const baseUrl = 'https://tstr.directory';
-    
-    // 1. Company detail page
-    urls.push(`${baseUrl}/company/${listing.slug}`);
+  const urls: string[] = [];
+  const baseUrl = 'https://tstr.directory';
 
-    // 2. 3D Matrix Pages (testing/[industry]/[standard]-in-[region])
-    if (listing.region) {
-        const regionSlug = listing.region.toLowerCase().replace(/\s+/g, '-');
-        
-        categories.forEach(cat => {
-            capabilities.forEach(cap => {
-                if (cat.slug && cap.standard?.slug) {
-                    urls.push(`${baseUrl}/testing/${cat.slug}/${cap.standard.slug}-in-${regionSlug}`);
-                }
-            });
-        });
-    }
+  // 1. Company detail page
+  urls.push(`${baseUrl}/company/${listing.slug}`);
 
-    return urls;
+  // 2. 3D Matrix Pages (testing/[industry]/[standard]-in-[region])
+  if (listing.region) {
+    const regionSlug = listing.region.toLowerCase().replace(/\s+/g, '-');
+
+    categories.forEach((cat) => {
+      capabilities.forEach((cap) => {
+        if (cat.slug && cap.standard?.slug) {
+          urls.push(`${baseUrl}/testing/${cat.slug}/${cap.standard.slug}-in-${regionSlug}`);
+        }
+      });
+    });
+  }
+
+  return urls;
 }
