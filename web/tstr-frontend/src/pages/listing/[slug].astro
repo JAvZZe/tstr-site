@@ -373,6 +373,18 @@ const pageDescription = formatDescription(
                 }
               </div>
             </div>
+            {
+              listing.logo_url && (
+                <div class="flex-shrink-0">
+                  <img
+                    src={listing.logo_url}
+                    alt={`${listing.business_name} logo`}
+                    class="h-16 w-auto rounded-lg bg-white/5 p-2 md:h-20"
+                    loading="lazy"
+                  />
+                </div>
+              )
+            }
           </div>
         </div>
 
