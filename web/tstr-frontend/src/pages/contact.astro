@@ -227,6 +227,15 @@ import Footer from '../components/Footer.astro';
     <main>
       <div class="contact-card">
         <form id="contactForm">
+          <!-- Honeypot — hidden from real users, bots fill it -->
+          <input
+            type="email"
+            name="hp_email"
+            style="position:absolute;left:-9999px"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+          />
           <div class="form-group">
             <label for="name">Full Name *</label>
             <input type="text" id="name" name="name" required placeholder="John Doe" />
@@ -320,9 +329,12 @@ import Footer from '../components/Footer.astro';
 
         try {
           const formData = new FormData(form);
-          const response = await fetch('/api/contact', {
+          const data = Object.fromEntries(formData);
+          data.form_type = 'contact';
+          const response = await fetch('/api/form', {
             method: 'POST',
-            body: formData,
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(data),
           });
 
           const result = await response.json();

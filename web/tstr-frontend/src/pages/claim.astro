@@ -60,6 +60,15 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
       <!-- Claim Form -->
       <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-2xl md:p-10">
         <form id="claim-form" class="space-y-6">
+          <!-- Honeypot — hidden from real users, bots fill it -->
+          <input
+            type="email"
+            name="hp_email"
+            style="position:absolute;left:-9999px"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+          />
           <!-- Company Name -->
           <div>
             <label for="provider_name" class="mb-2 block text-sm font-semibold text-gray-700">
@@ -268,10 +277,11 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
           return;
         }
 
-        fetch('/api/claim', {
+        fetch('/api/form', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            form_type: 'claim',
             mode: 'save_draft',
             ...payload,
           }),
@@ -290,10 +300,10 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
       const listingId = urlParams.get('id') || urlParams.get('listingId') || '';
 
       if (resumeToken) {
-        fetch('/api/claim', {
+        fetch('/api/form', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ resumeToken }),
+          body: JSON.stringify({ form_type: 'claim', resumeToken }),
         })
           .then((res) => res.json())
           .then((data) => {
@@ -336,37 +346,30 @@ const resumeToken = Astro.url.searchParams.get('resume') || '';
         }
 
         try {
-          const res = await fetch('/api/claim', {
+          const res = await fetch('/api/form', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
+            body: JSON.stringify({ form_type: 'claim', ...payload }),
           });
 
           const data = await res.json();
 
           if (res.ok) {
-            if (data.method === 'auto') {
-              msg.textContent = `\u2705 ${data.message}`;
-              msg.className =
-                'text-center text-sm font-medium text-green-600 bg-green-50 p-4 rounded-lg border border-green-200';
-              setTimeout(() => (window.location.href = '/account'), 2000);
-            } else {
-              msg.className =
-                'text-center text-sm font-medium text-blue-600 bg-blue-50 p-4 rounded-lg border border-blue-200';
-              msg.innerHTML = `
-                            <div class="mb-3">\u2705 ${data.message}</div>
-                            <div class="mt-4 p-4 bg-white rounded border border-blue-100 shadow-sm text-left">
-                                <h4 class="font-bold text-gray-900 mb-2">What happens next</h4>
-                                <p class="text-sm text-gray-600 mb-2">We'll confirm you work at the company, then you can fill in:</p>
-                                <ul class="text-sm text-gray-600 mb-3 list-disc pl-5 space-y-1">
-                                    <li>Accreditations: ISO/IEC 17025, accrediting body, certificate number, scope</li>
-                                    <li>Capabilities, equipment, and the standards you test to</li>
-                                    <li>Contact details, so enquiries reach the right person</li>
-                                </ul>
-                                <p class="text-sm text-gray-600">Claiming and keeping your listing current is free. There's nothing to buy.</p>
-                            </div>
-                        `;
-            }
+            msg.className =
+              'text-center text-sm font-medium text-blue-600 bg-blue-50 p-4 rounded-lg border border-blue-200';
+            msg.innerHTML = `
+                <div class="mb-3">${data.message || 'Claim request sent. Check your email for a verification link.'}</div>
+                <div class="mt-4 p-4 bg-white rounded border border-blue-100 shadow-sm text-left">
+                    <h4 class="font-bold text-gray-900 mb-2">What happens next</h4>
+                    <p class="text-sm text-gray-600 mb-2">We'll confirm you work at the company, then you can fill in:</p>
+                    <ul class="text-sm text-gray-600 mb-3 list-disc pl-5 space-y-1">
+                        <li>Accreditations: ISO/IEC 17025, accrediting body, certificate number, scope</li>
+                        <li>Capabilities, equipment, and the standards you test to</li>
+                        <li>Contact details, so enquiries reach the right person</li>
+                    </ul>
+                    <p class="text-sm text-gray-600">Claiming and keeping your listing current is free. There's nothing to buy.</p>
+                </div>
+            `;
           } else {
             msg.textContent = `\u274c ${data.error || 'Error submitting claim. Please try again.'}`;
             msg.className =

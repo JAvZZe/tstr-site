@@ -86,10 +86,11 @@ export default function ContactLabModal({
       // Posts to the gated RFQ endpoint: the enquiry reaches us first and we
       // forward it to the lab. /api/leads emailed the lab directly, which broke
       // the model we operate on.
-      const response = await fetch('/api/rfq', {
+      const response = await fetch('/api/form', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          form_type: 'rfq',
           listing_id: listingId,
           buyer_name: formData.name,
           buyer_email: formData.email,
