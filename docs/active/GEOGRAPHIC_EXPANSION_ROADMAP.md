@@ -53,6 +53,7 @@ The Middle East expansion (Phase 2) will prioritize the **Saudi Energy Testing H
 
 ### 3. Implementation
 *   Develop a **Specialized Energy PSEO landing page** targeting "Aramco Approved Labs in Saudi Arabia" and "SEC Qualified Testing Facilities."
+*   **✅ DONE** — Created `web/tstr-frontend/src/pages/europe-pseo.astro` targeting European accreditation bodies (UKAS, DAkkS, COFRAC, RvA, ACCREDIA, ENAC).
 
 ---
 

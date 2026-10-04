@@ -1,9 +1,10 @@
 # 📊 TSTR.DIRECTORY - PROJECT STATUS
 
 > **SINGLE SOURCE OF TRUTH** - Executive summary for agents
-> **Last Updated**: 2026-08-31 19:38 UTC
-> **Updated By**: Hermes Agent
-> **Status**: ⚠️ IAF VERIFICATION IN PROGRESS - Pricing-page UI done; backend client is a STUB (# TODO: Implement actual API call in iaf_api_client.py), no API key wired, Basic 499 plan not purchased. See pending tasks.
+> **Last Updated**: 2026-10-04 08:05 UTC
+> **Updated By**: Al ai
+> **Status**: ⚠️ **IAF VERIFICATION DEFERRED** — Pricing-page UI done; backend client is a STUB (`# TODO: Implement actual API call in iaf_api_client.py`), no API key wired, Basic 499 plan not purchased. **DEFERRED until first client payment.** See pending tasks.
+> **Repo state**: 103 modified files UNCOMMITTED — mix of (a) 2026-09-20 form-handler/security work by prior session and (b) 2026-09-22 Ubuntu-26 path migration by Hermes (docs + path strings only, no functional code). Do NOT commit blindly; separate first.
 
 ---
 
@@ -12,10 +13,15 @@
 - [x] **Phase 2: Middle East (ARAC)**: ✅ Scaled (25+ labs via GAC & Manual Seeding).
 - [ ] **Phase 3: Asia-Pacific (APAC)**: ⚠️ NATA Blocked (Bot protection); redirected to IAF API path.
 
-### 🛡️ GLOBAL VERIFICATION (IAF)
-- [ ] **Strategy**: Integrate [IAF CertSearch API](./docs/active/IAF_API_INTEGRATION_PLAN.md) for global verification.
-- [ ] **Cost**: ~$499/year for Basic (150 company verifications).
-- [ ] **Next**: User registration and API key generation.
+### 🛡️ GLOBAL VERIFICATION (IAF) — DEFERRED
+
+> **Status**: **DEFERRED** — IAF CertSearch API integration paused until first client payment received. No API key wired, no plan purchased, backend client is a stub. Do not work on this until revenue triggers it.
+
+- [ ] **Strategy**: Integrate [IAF CertSearch API](./docs/active/IAF_API_INTEGRATION_PLAN.md) for global verification — **DEFERRED pending first client payment**.
+- [ ] **Cost**: ~$499/year for Basic (150 company verifications) — **not purchased**.
+- [ ] **Next**: User registration and API key generation — **BLOCKED: wait for client payment**.
+
+**Rationale**: TSTR's revenue model is lead-gen (buyer → us → we forward). Verification is a value-add for lab owners to claim their listings. No paying clients = no need to burn verification credits. Re-evaluate after first subscription sale.
 
 ---
 
@@ -34,7 +40,8 @@
 ---
 
 ## 🚀 LATEST UPDATES (v2.6.4)
-- **Security Hardening**: ✅ **LOCAL FIXES APPLIED + 2026-08-10 REPO REDACTION SWEEP**. Tracked docs/configs and git-ignored credential stores (`docs/credentials/*`, `TSTR_hub_Supabase_Keys.md`, `secret_alerts.json`, `.gitnexus/lbug`) had plaintext secrets redacted; a commit-gating secret scanner now exists (`scripts/secret_scan.py` + `scripts/pre-commit.hook`, see `agents/tstr-secret-scanner.md`). Live debug routes (`/api/debug-env`, `/api/debug-full`) return 404 in production (gated behind `PUBLIC_DEBUG_ENDPOINTS`). ⚠️ **KEY ROTATION STILL PENDING**: 19 GitHub secret-scanning alerts remain OPEN (secrets still in git history + runtimes). Per `CREDENTIAL_ROTATION_RUNBOOK.md`, rotate every exposed credential, then update Cloudflare/OCI/GitHub/local `.env` before alerts can close. `ai-search.ts:8,55` still uses the service-role key — code fix outstanding.
+- **Security Hardening**: ✅ **LOCAL FIXES APPLIED + 2026-08-10 REPO REDACTION SWEEP**. Tracked docs/configs and git-ignored credential stores (`docs/credentials/*`, `TSTR_hub_Supabase_Keys.md`, `secret_alerts.json`, `.gitnexus/lbug`) had plaintext secrets redacted; a commit-gating secret scanner now exists (`scripts/secret_scan.py` + `scripts/pre-commit.hook`, see `agents/tstr-secret-scanner.md`). Live debug routes (`/api/debug-env`, `/api/debug-full`) return 404 in production (gated behind `PUBLIC_DEBUG_ENDPOINTS`). ⚠️ **KEY ROTATION STILL PENDING**: 19 GitHub secret-scanning alerts remain OPEN (secrets still in git history + runtimes). Per `CREDENTIAL_ROTATION_RUNBOOK.md`, rotate every exposed credential, then update Cloudflare/OCI/GitHub/local `.env` before alerts can close.
+- **ai-search.ts Security Fix (2026-09-12)**: ✅ **RESOLVED**. Replaced `SUPABASE_SERVICE_ROLE_KEY` with `PUBLIC_SUPABASE_ANON_KEY` (verified RLS allows anon reads on listings + categories). Removed all service-role references. Build passes. Scraper monitor now has Telegram alerting with cooldown.
 - **Saudi Energy Hub**: ✅ **SEEDED**. Manually enriched top-tier labs (GCC Lab, Al-Hoty, ETLCO).
 - **ShellCheck gate**: ✅ **ADDED**. `scripts/shellcheck-changed.sh` lints changed `.sh` at warning severity (excludes `_ARCHIVE/`), wired into `scripts/pre-commit.hook` (shell stage) and `.github/workflows/ci.yml`. Fixed 4 real warnings in active scripts (unquoted `cd` + dead vars). Pre-existing `-S info` hits (unquoted `$DATABASE_URL` in `tests/*.sh`) logged but not enforced.
 - **International Scaling**: ✅ **COMPLETE**. Deployed ScopeMatch.eu (Europe) and GAC (Middle East) scrapers. 
@@ -53,8 +60,8 @@
 
 ### Medium Priority
 - [x] Build **Saudi Energy Testing Hub** PSEO landing page.
-- [ ] Setup error alerting for scraper failures.
-- [ ] Deploy Europe-specific PSEO landing pages.
+- [x] Setup error alerting for scraper failures.
+- [ ] **Deploy Europe-specific PSEO landing pages**: ✅ DONE — Created `web/tstr-frontend/src/pages/europe-pseo.astro`.
 
 ### Low Priority
 - [x] **Fix 1 — invalid URL**: SCANNED 792 live listings (read-only, 2026-08-10).

@@ -1,0 +1,107 @@
+---
+// Europe PSEO Landing Page — TSTR.directory
+// Targets: European testing laboratories (ISO 17025, UKAS, DAkkS, COFRAC, RvA, ACCREDIA, ENAC)
+// Strategic intent: Capture high-intent European search traffic for testing services
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StandardMatrix from '../components/StandardMatrix';
+import ContactLabModal from '../components/ContactLabModal';
+import TrustBadge from '../components/TrustBadge';
+import StaticLabMap from '../components/StaticLabMap.astro';
+import { supabase } from '../lib/supabase';
+import { formatTitle, formatDescription } from '../lib/seo';
+
+// Edge cache: 1 day stale-while-revalidate
+Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=3600');
+
+// European accreditation body category IDs — populated by ScopeMatch EU scraper
+const EU_CATEGORY_IDS = [
+  'european-testing', // placeholder — update with actual UUID from Supabase
+];
+
+// Primary European Tier-1 labs (seeded via ScopeMatch + manual)
+const PRIMARY_LAB_IDS = [
+  // Placeholder UUIDs — replace with actual listing IDs after ScopeMatch ingestion
+  'EU-LAB-001',
+];
+
+// Fetch European standards
+const { data: euStandards, error: standardsError } = await supabase
+  .from('standards')
+  .select('id, code, name, description, category_id')
+  .eq('is_active', true)
+  .order('code');
+
+// Fetch lab data
+const { data: labsData, error: labsError } = await supabase
+  .from('listings')
+  .select(`
+    id,
+    business_name,
+    slug,
+    description,
+    region,
+    verified,
+    claimed,
+    website,
+    latitude,
+    longitude,
+    listing_categories!inner (category:category_id!inner (name, slug)),
+    listing_capabilities!inner (verified, standard_id)
+  `)
+  .in('id', PRIMARY_LAB_IDS);
+
+const matrixLabs =
+  labsData?.map((lab) => ({
+    id: lab.id,
+    business_name: lab.business_name,
+    capabilities: lab.listing_capabilities.map((c) => c.standard_id),
+  })) || [];
+
+const pageTitle = formatTitle('European Testing Laboratories | ISO 17025 & UKAS Accredited Labs');
+const pageDescription = formatDescription(
+  'Find ISO 17025, UKAS, DAkkS, COFRAC, RvA, and ACCREDIA accredited testing laboratories across Europe. Compare capabilities for materials, environmental, oil & gas, and pharmaceutical testing.'
+);
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <!-- Hero -->
+    <div class="text-center mb-16">
+      <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">
+        European Testing Laboratories
+      </h1>
+      <p class="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
+        Compare accredited testing labs across Europe. ISO 17025, UKAS, DAkkS, COFRAC, RvA,
+        ACCREDIA, and ENAC certified. Find the right partner for your testing needs.
+      </p>
+    </div>
+
+    <!-- Trust badges -->
+    <TrustBadge client:load />
+
+    <!-- Standard Matrix -->
+    {euStandards && euStandards.length > 0 && (
+      <section class="mb-16">
+        <h2 class="text-2xl font-bold text-gray-900 mb-8">By Testing Standard</h2>
+        <StandardMatrix labs={matrixLabs} standards={euStandards} client:load />
+      </section>
+    )}
+
+    <!-- Lab Map -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-bold text-gray-900 mb-8">Labs Across Europe</h2>
+      <StaticLabMap labs={labsData || []} client:load />
+    </section>
+
+    <!-- RFQ CTA -->
+    <section class="bg-blue-50 rounded-2xl p-8 text-center">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Need Testing Results Fast?</h2>
+      <p class="text-gray-600 mb-6 max-w-2xl mx-auto">
+        Submit a Request for Quote (RFQ) and we'll forward it to the right European lab.
+        No direct contact — we facilitate, you receive competitive responses.
+      </p>
+      <ContactLabModal client:load />
+    </section>
+  </section>
+</BaseLayout>
