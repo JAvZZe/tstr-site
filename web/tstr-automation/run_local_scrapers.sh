@@ -5,8 +5,8 @@
 
 set -e
 
-LOG_FILE="/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/local_scraper.log"
-SCRIPT_DIR="/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation"
+LOG_FILE="/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/local_scraper.log"
+SCRIPT_DIR="/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation"
 
 echo "$(date): Starting local scraper automation" >> "$LOG_FILE"
 

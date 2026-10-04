@@ -87,6 +87,6 @@ All fields are:
 ## Support
 
 For issues or questions:
-- See full report: `/media/al/AI_DATA/AI_PROJECTS_SPACE/TRACK_B_CUSTOM_FIELDS_REPORT.md`
-- Enhancement plan: `/media/al/AI_DATA/AI_PROJECTS_SPACE/TSTR_SCRAPER_ENHANCEMENT_PLAN.md`
-- Implementation plan: `/media/al/AI_DATA/AI_PROJECTS_SPACE/TSTR_HYBRID_IMPLEMENTATION_PLAN.md`
+- See full report: `/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/TRACK_B_CUSTOM_FIELDS_REPORT.md`
+- Enhancement plan: `/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/TSTR_SCRAPER_ENHANCEMENT_PLAN.md`
+- Implementation plan: `/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/TSTR_HYBRID_IMPLEMENTATION_PLAN.md`

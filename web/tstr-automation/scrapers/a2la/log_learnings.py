@@ -3,7 +3,7 @@
 
 import sys
 
-sys.path.insert(0, "/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state")
+sys.path.insert(0, "/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state")
 
 from db_utils import add_learning
 
@@ -32,4 +32,4 @@ add_learning(
 )
 
 print("\n✓ All learnings logged to system database")
-print("✓ Location: /media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state/project.db")
+print("✓ Location: /run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state/project.db")

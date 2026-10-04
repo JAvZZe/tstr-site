@@ -130,15 +130,15 @@ Extract organization name and location for 10 A2LA-accredited labs using:
 
 All files in:
 ```
-/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/
+/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/
 ```
 
 Individual files:
-- `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/claude_extraction.jsonl`
-- `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/EXTRACTION_TEMPLATE.md`
-- `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/HANDOFF_SUMMARY.md`
-- `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/extraction_plan.json`
-- `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/README_EXTRACTION.md` (this file)
+- `/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/claude_extraction.jsonl`
+- `/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/EXTRACTION_TEMPLATE.md`
+- `/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/HANDOFF_SUMMARY.md`
+- `/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/extraction_plan.json`
+- `/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/scrapers/a2la/README_EXTRACTION.md` (this file)
 
 ---
 
