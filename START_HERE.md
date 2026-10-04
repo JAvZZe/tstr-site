@@ -2,7 +2,7 @@
 
 **Project**: Global testing laboratory directory (Oil & Gas, Environmental, Materials Testing, etc.)
 **Status**: Production - scrapers on OCI, frontend LIVE at https://tstr.directory
-**Location**: `/home/al/tstr-site-working`
+**Location**: `/home/alber-ai/tstr-site-working`
 
 ---
 
@@ -11,7 +11,7 @@
 **⚠️ ALWAYS RUN GLOBAL BOOTSTRAP BEFORE ANY PROJECT WORK:**
 
 ```bash
-cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
+cd "/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 ```
 
 **This provides:**
@@ -44,7 +44,7 @@ cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 
 **Why this matters**: Last 3 agents forgot critical learnings #45, #67, #88 and repeated mistakes. Bootstrap prevents this.
 
-**If bootstrap.sh doesn't exist**: You're in the wrong directory or symlinks not created. Check you're in `/media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/TSTR-site/tstr-site-working/`
+**If bootstrap.sh doesn't exist**: You're in the wrong directory or symlinks not created. Check you're in `/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/`
 
 ---
 
@@ -117,7 +117,7 @@ cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 
 ### After Errors/Discoveries (3+ failed attempts OR new insights)
 ```bash
-cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state"
+cd "/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state"
 python3 db_utils.py learning-add \
   "What you learned" \
   "gotcha" \
@@ -159,7 +159,7 @@ Because of symlinks, you can run:
 - `./resume.sh` - Load last checkpoint
 - `./handoff.sh agent reason` - Transfer to another agent
 
-All point to global system at `/media/al/AI_DATA/AI_PROJECTS_SPACE/`
+All point to global system at `/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/`
 
 ---
 

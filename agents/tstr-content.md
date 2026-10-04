@@ -111,4 +111,4 @@ the content unusable even if it reads well:
 
 ---
 *Mirrored from the canonical Hermes skill `tstr-content` (source of truth). Keep this
-file in sync with `/home/al/.hermes/profiles/tstr-hub_pm/skills/tstr-content/SKILL.md`.*
+file in sync with `/home/alber-ai/.hermes/profiles/tstr-hub_pm/skills/tstr-content/SKILL.md`.*

@@ -5,7 +5,7 @@
 **1. ALWAYS RUN GLOBAL BOOTSTRAP BEFORE ANY PROJECT WORK:**
 
 ```bash
-cd "/media/al/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
+cd "/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE" && ./bootstrap_global.sh
 ```
 
 **2. MANDATORY GIT & DATA AUDIT:**
@@ -259,7 +259,7 @@ nano web/tstr-frontend/.env  # or vim, code, etc.
 
 ## ✍️ WRITING STYLE (MANDATORY, ALL TEXT)
 
-Load and apply `/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/skills/anti-ai-writing-style.md`
+Load and apply `/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/skills/anti-ai-writing-style.md`
 before writing any text for this project.
 
 **This applies to text no human ever reads.** Google and LLM crawlers parse machine-only

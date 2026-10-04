@@ -73,4 +73,4 @@ Unit tests aren't enough for browser code. Use the browser tools / Playwright:
 
 ---
 *Mirrored from the canonical Hermes skill `tstr-tdd` (source of truth). Keep this
-file in sync with `/home/al/.hermes/profiles/tstr-hub_pm/skills/tstr-tdd/SKILL.md`.*
+file in sync with `/home/alber-ai/.hermes/profiles/tstr-hub_pm/skills/tstr-tdd/SKILL.md`.*

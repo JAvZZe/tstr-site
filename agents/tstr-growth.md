@@ -45,4 +45,4 @@ GEO (Generative Engine Optimization) wins when AI engines cite TSTR in buyer ans
 
 ---
 *Mirrored from the canonical Hermes skill `tstr-growth` (source of truth). Keep this
-file in sync with `/home/al/.hermes/profiles/tstr-hub_pm/skills/tstr-growth/SKILL.md`.*
+file in sync with `/home/alber-ai/.hermes/profiles/tstr-hub_pm/skills/tstr-growth/SKILL.md`.*

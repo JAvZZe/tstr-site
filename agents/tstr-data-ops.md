@@ -41,4 +41,4 @@ Scope: keep the 792 listings (EXACT count verified 2026-08-07 via anon query: 79
 
 ---
 *Mirrored from the canonical Hermes skill `tstr-data-ops` (source of truth). Keep this
-file in sync with `/home/al/.hermes/profiles/tstr-hub_pm/skills/tstr-data-ops/SKILL.md`.*
+file in sync with `/home/alber-ai/.hermes/profiles/tstr-hub_pm/skills/tstr-data-ops/SKILL.md`.*

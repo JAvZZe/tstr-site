@@ -115,4 +115,4 @@ integration, so no `cloudflare/pages-action` step. See `references/pitfalls.md`.
 
 ---
 *Mirrored from the canonical Hermes skill `tstr-verification-gate` (source of truth). Keep this
-file in sync with `/home/al/.hermes/profiles/tstr-hub_pm/skills/tstr-verification-gate/SKILL.md`.*
+file in sync with `/home/alber-ai/.hermes/profiles/tstr-hub_pm/skills/tstr-verification-gate/SKILL.md`.*

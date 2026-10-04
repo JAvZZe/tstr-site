@@ -21,7 +21,7 @@ https://tstr.directory/ now displays:
 - Singapore: 19 listings
 
 ### Files Modified
-- `/home/al/tstr-site-working/web/tstr-frontend/src/pages/index.astro` (lines 4-74, 308)
+- `/home/alber-ai/tstr-site-working/web/tstr-frontend/src/pages/index.astro` (lines 4-74, 308)
 - Database: RLS policy on `locations` table
 
 ### Git Commits
@@ -35,7 +35,7 @@ https://tstr.directory/ now displays:
 ### Completed
 **✓ Custom Fields Schema (28 fields for 4 niches)**
 
-Migration executed: `/home/al/tstr-site-working/web/tstr-automation/migrations/FINAL_ONE_BLOCK.sql`
+Migration executed: `/home/alber-ai/tstr-site-working/web/tstr-automation/migrations/FINAL_ONE_BLOCK.sql`
 
 #### Oil & Gas Testing (7 fields)
 - `testing_types` (multi_select): Well Logging, Production Testing, Flow Assurance, Pressure Testing, NDT Inspection
@@ -93,10 +93,10 @@ class LocationParser:
 ```
 
 **Dependencies Ready**:
-- ✓ libpostal installed at `/home/al/.local/share/libpostal`
+- ✓ libpostal installed at `/home/alber-ai/.local/share/libpostal`
 - ✓ Python `postal` package installed (with --break-system-packages)
 - ✓ locations table schema known
-- ✓ Reference implementation: `/home/al/tstr-site-working/web/tstr-automation/backfill_location_ids.py`
+- ✓ Reference implementation: `/home/alber-ai/tstr-site-working/web/tstr-automation/backfill_location_ids.py`
 
 **Benefits**:
 - Solves location parsing once, reusable across all 4 niche scrapers
@@ -166,11 +166,11 @@ class OilGasScraper(BaseNicheScraper):
 ## Key Files & Context
 
 ### Created During Session
-- `/home/al/tstr-site-working/web/tstr-automation/backfill_location_ids.py` - Reference for libpostal usage
-- `/home/al/tstr-site-working/web/tstr-automation/migrations/FINAL_ONE_BLOCK.sql` - Custom fields schema
-- `/home/al/tstr-site-working/web/tstr-automation/migrations/fix_locations_rls.sql` - RLS fix
-- `/media/al/AI_DATA/AI_PROJECTS_SPACE/TSTR_HYBRID_IMPLEMENTATION_PLAN.md` - Overall strategy doc
-- `/media/al/AI_DATA/AI_PROJECTS_SPACE/install_libpostal.sh` - Installation script
+- `/home/alber-ai/tstr-site-working/web/tstr-automation/backfill_location_ids.py` - Reference for libpostal usage
+- `/home/alber-ai/tstr-site-working/web/tstr-automation/migrations/FINAL_ONE_BLOCK.sql` - Custom fields schema
+- `/home/alber-ai/tstr-site-working/web/tstr-automation/migrations/fix_locations_rls.sql` - RLS fix
+- `/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/TSTR_HYBRID_IMPLEMENTATION_PLAN.md` - Overall strategy doc
+- `/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/install_libpostal.sh` - Installation script
 
 ### Database State
 - **Supabase URL**: https://haimjeaetrsaauitrhfy.supabase.co
@@ -182,11 +182,11 @@ class OilGasScraper(BaseNicheScraper):
 - **Current Data**: 127 active listings (108 UK, 19 Singapore)
 
 ### Environment
-- **libpostal data dir**: `/home/al/.local/share/libpostal`
-- **Python venv**: `/home/al/tstr-site-working/web/tstr-automation/.venv/`
+- **libpostal data dir**: `/home/alber-ai/.local/share/libpostal`
+- **Python venv**: `/home/alber-ai/tstr-site-working/web/tstr-automation/.venv/`
 - **Working dirs**:
-  - Frontend: `/home/al/tstr-site-working/web/tstr-frontend`
-  - Automation: `/home/al/tstr-site-working/web/tstr-automation`
+  - Frontend: `/home/alber-ai/tstr-site-working/web/tstr-frontend`
+  - Automation: `/home/alber-ai/tstr-site-working/web/tstr-automation`
 
 ---
 
@@ -216,7 +216,7 @@ class OilGasScraper(BaseNicheScraper):
 
 **A. Continue Track B - Option 1** (Location Parser)
 ```bash
-cd /home/al/tstr-site-working/web/tstr-automation
+cd /home/alber-ai/tstr-site-working/web/tstr-automation
 # Reference: backfill_location_ids.py for libpostal patterns
 # Create: location_parser.py module
 # Test with: Sample addresses from existing listings
@@ -224,7 +224,7 @@ cd /home/al/tstr-site-working/web/tstr-automation
 
 **B. Continue Track B - Option 2** (Scraper Architecture)
 ```bash
-cd /home/al/tstr-site-working/web/tstr-automation
+cd /home/alber-ai/tstr-site-working/web/tstr-automation
 # Reference: Existing scraper patterns
 # Create: base_niche_scraper.py + oil_gas_scraper.py example
 # Integrate: Custom fields from FINAL_ONE_BLOCK.sql

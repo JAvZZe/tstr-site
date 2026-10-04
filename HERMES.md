@@ -44,4 +44,4 @@
 
 ## Caveats
 - `agent-cli` NOT on PATH here — use root `./agent-cli` if needed.
-- Don't confuse `/media/al/AI_SSD/` (empty/stale) with the real root `/media/al/AI_DATA/`.
+- Don't confuse `/run/media/alber-ai/AI_DATA/` (current) with the old `/media/al/AI_SSD/` (removed in the 2026-09 Ubuntu reinstall).

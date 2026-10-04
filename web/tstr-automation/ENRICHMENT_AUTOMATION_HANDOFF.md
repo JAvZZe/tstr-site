@@ -33,7 +33,7 @@ Each run processes **20 listings**, prioritizing those missing either a website 
 ### Monitoring
 ```bash
 # View real-time enrichment logs
-tail -f /media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/enrichment_cron.log
+tail -f /run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation/enrichment_cron.log
 
 # Check if the automated timer is active
 systemctl --user status tstr-enrichment.timer

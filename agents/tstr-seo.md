@@ -113,4 +113,4 @@ Then: Summary, Findings (severity · location · fix), and whether any CODE chan
 
 ---
 *Mirrored from the canonical Hermes skill `tstr-seo` (source of truth). Keep this
-file in sync with `/home/al/.hermes/profiles/tstr-hub_pm/skills/tstr-seo/SKILL.md`.*
+file in sync with `/home/alber-ai/.hermes/profiles/tstr-hub_pm/skills/tstr-seo/SKILL.md`.*

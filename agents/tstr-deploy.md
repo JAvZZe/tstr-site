@@ -109,4 +109,4 @@ push is the user's/deploy's action.
 
 ---
 *Mirrored from the canonical Hermes skill `tstr-deploy` (source of truth). Keep this
-file in sync with `/home/al/.hermes/profiles/tstr-hub_pm/skills/tstr-deploy/SKILL.md`.*
+file in sync with `/home/alber-ai/.hermes/profiles/tstr-hub_pm/skills/tstr-deploy/SKILL.md`.*

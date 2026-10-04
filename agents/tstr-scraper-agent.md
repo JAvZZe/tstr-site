@@ -100,4 +100,4 @@ returns hardcoded `0.75`.
 
 ---
 *Mirrored from the canonical Hermes skill `tstr-scraper-agent` (source of truth). Keep this
-file in sync with `/home/al/.hermes/profiles/tstr-hub_pm/skills/tstr-scraper-agent/SKILL.md`.*
+file in sync with `/home/alber-ai/.hermes/profiles/tstr-hub_pm/skills/tstr-scraper-agent/SKILL.md`.*

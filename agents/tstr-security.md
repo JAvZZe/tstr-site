@@ -62,4 +62,4 @@ GitHub secret scanner, which you must satisfy by having zero secrets in the rang
 
 ---
 *Mirrored from the canonical Hermes skill `tstr-security` (source of truth). Keep this
-file in sync with `/home/al/.hermes/profiles/tstr-hub_pm/skills/tstr-security/SKILL.md`.*
+file in sync with `/home/alber-ai/.hermes/profiles/tstr-hub_pm/skills/tstr-security/SKILL.md`.*

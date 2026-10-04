@@ -58,4 +58,4 @@ cannot confirm the LIVE HTTP response — say so explicitly, don't claim it work
 
 ---
 *Mirrored from the canonical Hermes skill `tstr-frontend` (source of truth). Keep this
-file in sync with `/home/al/.hermes/profiles/tstr-hub_pm/skills/tstr-frontend/SKILL.md`.*
+file in sync with `/home/alber-ai/.hermes/profiles/tstr-hub_pm/skills/tstr-frontend/SKILL.md`.*

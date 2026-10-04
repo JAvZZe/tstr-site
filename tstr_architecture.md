@@ -90,7 +90,7 @@ tstr-architecture-plan.md
   To ensure global continuity for the next agents interacting with TSTR, please run the following snippet in your terminal to inject this architectural pivot into
   your AI System root:
 
-    1 cd "/media/al/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state" && python3 << 'PYEOF'
+    1 cd "/run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/SYSTEM/state" && python3 << 'PYEOF'
     2 from db_utils import add_learning
     3 add_learning(
     4     "Astro configuration is SSR, not SSG. Cloudflare 20k static file limits do not apply to PSEO routes. Switch PSEO strategy from getStaticPaths to dynamic

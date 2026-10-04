@@ -30,7 +30,7 @@ then author a disciplined skill. Built on the project's own conventions
 
 ## Hard rules (TSTR discipline)
 1. **Folder discipline.** Agent/skill definitions live in ONE of:
-   - Hermes profile: `/home/al/.hermes/profiles/tstr-hub_pm/skills/tstr-<name>/SKILL.md`
+   - Hermes profile: `/home/alber-ai/.hermes/profiles/tstr-hub_pm/skills/tstr-<name>/SKILL.md`
      (canonical home for all tstr-* agents) — PREFER THIS.
    - Repo (Claude-style): `<repo>/.claude/agents/<name>.md` (only if the user
      wants Claude-compatible agents; otherwise archive to `_ARCHIVE/`).
@@ -155,4 +155,4 @@ fix dangling refs / defects (REFACTOR). Log in a ledger note what changed + test
 
 ---
 *Mirrored from the canonical Hermes skill `tstr-agent-creator` (source of truth). Keep this
-file in sync with `/home/al/.hermes/profiles/tstr-hub_pm/skills/tstr-agent-creator/SKILL.md`.*
+file in sync with `/home/alber-ai/.hermes/profiles/tstr-hub_pm/skills/tstr-agent-creator/SKILL.md`.*

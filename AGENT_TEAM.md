@@ -7,7 +7,7 @@ Agent, or any CLI tool. The role matters, not the name. This file is the
 human-readable map; the machine-readable role definitions live in `agents/`
 (see "Two layers" below).
 
-> Bootstrap first: `cd /media/al/AI_DATA/AI_PROJECTS_SPACE && ./bootstrap_global.sh`
+> Bootstrap first: `cd /run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE && ./bootstrap_global.sh`
 > then `./start-agent.sh` (per `AGENTS.md`). Do not skip — context lives outside
 > the repo (OCI, Supabase, Cloudflare, GitHub secrets).
 
@@ -15,7 +15,7 @@ human-readable map; the machine-readable role definitions live in `agents/`
 
 ## Two layers of role definitions
 
-1. **Harness-native source (Hermes):** `/home/al/.hermes/profiles/tstr-hub_pm/skills/tstr-*/SKILL.md`
+1. **Harness-native source (Hermes):** `/home/alber-ai/.hermes/profiles/tstr-hub_pm/skills/tstr-*/SKILL.md`
    — the authoritative behavior spec when running inside the Hermes harness.
 2. **Harness-neutral mirror:** `agents/tstr-*.md` (this repo) — same content,
    Claude/Codex/CLI-readable frontmatter. Use these when operating outside

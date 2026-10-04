@@ -113,4 +113,4 @@ where. READ + REPORT agent — propose fixes; commit schema only with user
 
 ---
 *Mirrored from the canonical Hermes skill `tstr-db` (source of truth). Keep this
-file in sync with `/home/al/.hermes/profiles/tstr-hub_pm/skills/tstr-db/SKILL.md`.*
+file in sync with `/home/alber-ai/.hermes/profiles/tstr-hub_pm/skills/tstr-db/SKILL.md`.*

@@ -99,4 +99,4 @@ commit without user "proceed" (tstr-team-lead protocol).
 
 ---
 *Mirrored from the canonical Hermes skill `tstr-perf` (source of truth). Keep this
-file in sync with `/home/al/.hermes/profiles/tstr-hub_pm/skills/tstr-perf/SKILL.md`.*
+file in sync with `/home/alber-ai/.hermes/profiles/tstr-hub_pm/skills/tstr-perf/SKILL.md`.*

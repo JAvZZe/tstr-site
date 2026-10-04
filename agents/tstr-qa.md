@@ -89,4 +89,4 @@ You are a WRITE + REPORT + BLOCK agent — you do not merge without user "procee
 
 ---
 *Mirrored from the canonical Hermes skill `tstr-qa` (source of truth). Keep this
-file in sync with `/home/al/.hermes/profiles/tstr-hub_pm/skills/tstr-qa/SKILL.md`.*
+file in sync with `/home/alber-ai/.hermes/profiles/tstr-hub_pm/skills/tstr-qa/SKILL.md`.*

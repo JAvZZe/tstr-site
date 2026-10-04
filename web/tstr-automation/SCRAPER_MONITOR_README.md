@@ -49,13 +49,13 @@ Add to crontab to run after the main scraper completes:
 
 ```bash
 # Run scraper monitor 5 minutes after main scraper (adjust timing as needed)
-5 2 * * * cd /media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation && /usr/bin/python3 monitor_scraper.py
+5 2 * * * cd /run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation && /usr/bin/python3 monitor_scraper.py
 ```
 
 Or to chain it with the scraper (run monitor immediately after scraper):
 ```bash
 # In your crontab, modify the scraper job to:
-0 2 * * * cd /media/al/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation && /usr/bin/python3 run_scraper.py && /usr/bin/python3 monitor_scraper.py
+0 2 * * * cd /run/media/alber-ai/AI_DATA/AI_PROJECTS_SPACE/ACTIVE_PROJECTS/tstr-site-working/web/tstr-automation && /usr/bin/python3 run_scraper.py && /usr/bin/python3 monitor_scraper.py
 ```
 
 ### Environment Variables
