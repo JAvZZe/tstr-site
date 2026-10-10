@@ -1,79 +1,122 @@
-# 📊 TSTR.DIRECTORY - PROJECT STATUS
+# TSTR.DIRECTORY - PROJECT STATUS
 
-> **SINGLE SOURCE OF TRUTH** - Executive summary for agents
-> **Last Updated**: 2026-10-04 08:05 UTC
+> **SINGLE SOURCE OF TRUTH** for agents. Prefer this file over chat memory.
+> **Last Updated**: 2026-10-10 08:07 UTC
 > **Updated By**: Al ai
-> **Status**: ⚠️ **IAF VERIFICATION DEFERRED** — Pricing-page UI done; backend client is a STUB (`# TODO: Implement actual API call in iaf_api_client.py`), no API key wired, Basic 499 plan not purchased. **DEFERRED until first client payment.** See pending tasks.
-> **Repo state**: 103 modified files UNCOMMITTED — mix of (a) 2026-09-20 form-handler/security work by prior session and (b) 2026-09-22 Ubuntu-26 path migration by Hermes (docs + path strings only, no functional code). Do NOT commit blindly; separate first.
+> **Live**: https://tstr.directory responds 200. Debug `/api/debug-env` and `/api/debug-full` return 404.
+> **Strategy flag**: IAF CertSearch **DEFERRED** until first client payment (stub client, no key, no $499 plan).
+> **Repo flag**: `main` is **4 commits ahead of origin/main** (local tip not on GitHub; includes this status ledger). Dirty tree still has real uncommitted work (notably `ai-search.ts`). Do not blind-commit.
 
 ---
 
-## 🌍 GEOGRAPHIC EXPANSION (PHASE 6)
-- [x] **Phase 1: Europe (EA)**: ✅ Scaled (54+ labs via ScopeMatch.eu).
-- [x] **Phase 2: Middle East (ARAC)**: ✅ Scaled (25+ labs via GAC & Manual Seeding).
-- [ ] **Phase 3: Asia-Pacific (APAC)**: ⚠️ NATA Blocked (Bot protection); redirected to IAF API path.
+## Do next (ordered)
 
-### 🛡️ GLOBAL VERIFICATION (IAF) — DEFERRED
-
-> **Status**: **DEFERRED** — IAF CertSearch API integration paused until first client payment received. No API key wired, no plan purchased, backend client is a stub. Do not work on this until revenue triggers it.
-
-- [ ] **Strategy**: Integrate [IAF CertSearch API](./docs/active/IAF_API_INTEGRATION_PLAN.md) for global verification — **DEFERRED pending first client payment**.
-- [ ] **Cost**: ~$499/year for Basic (150 company verifications) — **not purchased**.
-- [ ] **Next**: User registration and API key generation — **BLOCKED: wait for client payment**.
-
-**Rationale**: TSTR's revenue model is lead-gen (buyer → us → we forward). Verification is a value-add for lab owners to claim their listings. No paying clients = no need to burn verification credits. Re-evaluate after first subscription sale.
+1. **Decide fate of the 4 unpushed commits** (push, PR, or reset). Until then Cloudflare will not build this tip.
+2. **Finish or discard the uncommitted `ai-search.ts` anon-key change**. HEAD and `origin/main` still use `SUPABASE_SERVICE_ROLE_KEY`. Working tree swaps to `PUBLIC_SUPABASE_ANON_KEY`. That fix is **not** in any commit yet (commit message on `65bd86c` claims it; the file list does not include it).
+3. **Triage ~50 modified files** outside `_ARCHIVE/` (mostly Ubuntu-26 path/doc string churn). Keep real code separate from path noise.
+4. **Credential rotation** still open per older security docs. Live debug exposure is contained. Checklist: `docs/active/SECRET_ROTATION_CHECKLIST.md` (and `docs/active/LIVE_CREDENTIAL_EXPOSURE_REMEDIATION_PLAN.md`). Re-count GitHub secret-scanning alerts before treating “19” as current.
+5. **AdSense**: docs still say waiting since 2025-10-29. Check the Google account; update or archive `docs/active/ADSENSE_APPROVAL_WAITING.md`.
+6. **IAF work**: do not start until a paying client exists.
 
 ---
 
-## 🎯 PROJECT OVERVIEW
+## Overnight verify
+
+| Night | Verdict | Note |
+|-------|---------|------|
+| 2026-10-10 | PASS | Live 200, SSR build ~78s, lint 0, secrets CLEAN |
+| 2026-10-05 … 2026-10-09 | PASS | Same pattern |
+| 2026-10-04 | Mixed | History/links/audit fails; build/live still OK |
+
+Recurring warning only: unpushed commits (since Oct 5).
+
+---
+
+## Git reality (verified 2026-10-10)
+
+### Ahead of origin (4 commits)
+
+| SHA | What it actually contains |
+|-----|---------------------------|
+| `65bd86c` | Path/doc updates under agents + automation docs; supabase `.temp` cleanup. **Does not change `ai-search.ts`.** Message claims an ai-search fix; file list does not. |
+| `0dce6c0` | Ubuntu-26 layout path migration across docs/scripts |
+| `4e8f24f` | `europe-pseo.astro`, `hydrogen_scraper.py` skeleton, IAF deferred docs |
+| *(tip)* | This `PROJECT_STATUS.md` correction (v2.6.6) |
+
+Real code in that tip vs origin: Europe PSEO page, hydrogen scraper skeleton, plus a few scraper helper path edits.
+
+### Still dirty (selected)
+
+- `web/tstr-frontend/src/pages/api/ai-search.ts`: service-role → anon (uncommitted)
+- Dozens of path/doc files from the Ubuntu-26 migration leftover vs what was already committed
+- Untracked noise: plans, `audiences/`, `newsletters/`, `_ARCHIVE/tstr_verify_*`, one listing-logo migration SQL
+
+### Stale branches (do not merge blindly)
+
+| Branch | Note |
+|--------|------|
+| `hydrogen-standards` | Stale since 2026-03-19; high conflict |
+| `feat/astro-6-migration` | Stale since 2026-03-24; later phase |
+
+---
+
+## Project overview
 
 | Field | Value |
 |-------|-------|
-| **Name** | TSTR.directory |
-| **Type** | Testing Services Directory Platform |
-| **Stack** | Astro 5.x + React 18 + Supabase + Python Scrapers |
-| **Deployment** | Cloudflare Pages (Frontend) + OCI (Scrapers) |
-| **Listings** | 784 active (Verified on Homepage) |
-| **Categories** | 33+ specialized (+3 Hydrogen) |
-| **Geospatial** | ✅ Integrated (Google Maps Static + Interactive) |
+| Name | TSTR.directory |
+| Type | Testing services directory |
+| Stack | Astro 5.x + React 18 + Supabase + Python scrapers |
+| Deploy | Cloudflare Pages (frontend) + OCI (scrapers) |
+| Listings | 783 active (homepage, 2026-10-10) |
+| Categories | 33+ specialized (+3 Hydrogen) |
+| Maps | Google Maps Static + Interactive |
 
 ---
 
-## 🚀 LATEST UPDATES (v2.6.4)
-- **Security Hardening**: ✅ **LOCAL FIXES APPLIED + 2026-08-10 REPO REDACTION SWEEP**. Tracked docs/configs and git-ignored credential stores (`docs/credentials/*`, `TSTR_hub_Supabase_Keys.md`, `secret_alerts.json`, `.gitnexus/lbug`) had plaintext secrets redacted; a commit-gating secret scanner now exists (`scripts/secret_scan.py` + `scripts/pre-commit.hook`, see `agents/tstr-secret-scanner.md`). Live debug routes (`/api/debug-env`, `/api/debug-full`) return 404 in production (gated behind `PUBLIC_DEBUG_ENDPOINTS`). ⚠️ **KEY ROTATION STILL PENDING**: 19 GitHub secret-scanning alerts remain OPEN (secrets still in git history + runtimes). Per `CREDENTIAL_ROTATION_RUNBOOK.md`, rotate every exposed credential, then update Cloudflare/OCI/GitHub/local `.env` before alerts can close.
-- **ai-search.ts Security Fix (2026-09-12)**: ✅ **RESOLVED**. Replaced `SUPABASE_SERVICE_ROLE_KEY` with `PUBLIC_SUPABASE_ANON_KEY` (verified RLS allows anon reads on listings + categories). Removed all service-role references. Build passes. Scraper monitor now has Telegram alerting with cooldown.
-- **Saudi Energy Hub**: ✅ **SEEDED**. Manually enriched top-tier labs (GCC Lab, Al-Hoty, ETLCO).
-- **ShellCheck gate**: ✅ **ADDED**. `scripts/shellcheck-changed.sh` lints changed `.sh` at warning severity (excludes `_ARCHIVE/`), wired into `scripts/pre-commit.hook` (shell stage) and `.github/workflows/ci.yml`. Fixed 4 real warnings in active scripts (unquoted `cd` + dead vars). Pre-existing `-S info` hits (unquoted `$DATABASE_URL` in `tests/*.sh`) logged but not enforced.
-- **International Scaling**: ✅ **COMPLETE**. Deployed ScopeMatch.eu (Europe) and GAC (Middle East) scrapers. 
-- **OAuth Fix**: ✅ **RESOLVED**. Implemented cookie-based state preservation for LinkedIn redirects.
-- **Search Experience**: ✅ **IMPROVED**. Added premium floating search button and header search link (v2.6.2).
+## Geographic expansion
+
+- [x] Europe (EA): ScopeMatch.eu scaled (54+ labs). PSEO page local in unpushed `4e8f24f`.
+- [x] Middle East (ARAC): GAC + manual seeding (25+ labs). Saudi Energy hub seeded (GCC Lab, Al-Hoty, ETLCO).
+- [ ] APAC: NATA blocked; further scale waits on IAF (deferred).
+
+### IAF CertSearch (deferred)
+
+Paused until first subscription payment. No API key. No plan purchased. Client stub only. See `docs/active/IAF_API_INTEGRATION_PLAN.md`. Lead-gen pays first; verification is a claim/value-add, not a pre-revenue cost.
 
 ---
 
-## 📝 PENDING TASKS
+## Security snapshot
 
-### High Priority
-- [ ] Register for IAF CertSearch API (User Action required).
-- [ ] Implement `iaf_verify_client.py` for global certification checks.
-- [x] Standardize Scraper Suite (BaseNicheScraper inheritance).
-- [x] Hardened Location Parsing (International support & hierarchy fixes).
-
-### Medium Priority
-- [x] Build **Saudi Energy Testing Hub** PSEO landing page.
-- [x] Setup error alerting for scraper failures.
-- [ ] **Deploy Europe-specific PSEO landing pages**: ✅ DONE — Created `web/tstr-frontend/src/pages/europe-pseo.astro`.
-
-### Low Priority
-- [x] **Fix 1 — invalid URL**: SCANNED 792 live listings (read-only, 2026-08-10).
-  - **Confirmed malformed (safe to fix):** `ABIOMED HIGIENE` → `https://abiomed-hygiene.com ; jfraile` (stray `;`+junk). Fix: `update listings set website='https://abiomed-hygiene.com' where business_name='ABIOMED HIGIENE';` (needs a valid write credential — on-disk keys are stale post-rotation; anon PATCH is RLS-blocked).
-  - **Full dead-link re-scan attempt (blocked by environment):** an automated HEAD/GET scan from this dev box was unreliable — it flagged ~40 "dead" URLs, but most were false positives: live orgs (3M, SABS, SASO, Waygate/Baker Hughes, MACAW) returned `URLError` only because **this VM's outbound network can't reach them**; others were bot-403/soft-404 on Element/Eurofins deep pages, plus a `UnicodeEncodeError` script bug on a TÜV non-ASCII URL. A trustworthy dead-link scan must run from the **OCI scraper box** (clean outbound) or a neutral network. Action: re-run `cleanup_invalid_urls.py` (or a URL re-validation) on OCI, then apply fixes there.
-  - 23 listings have empty website (not "invalid") — left as-is.
-- [x] **Fix 2 — wire a free analytics provider**: DONE. Consent-gated loader + cookie banner live; Cloudflare Web Analytics confirmed active on `tstr.directory` (beacon present). Guide: `docs/active/ANALYTICS_SETUP_GUIDE.md`.
+| Item | State (2026-10-10) |
+|------|--------------------|
+| Public debug routes | Contained (404 in production) |
+| Repo plaintext redaction + pre-commit secret scan | Present (`scripts/secret_scan.py`) |
+| `ai-search.ts` key type | **Still service-role on HEAD/origin**; anon fix only in working tree |
+| Credential rotation | Incomplete; follow `docs/active/SECRET_ROTATION_CHECKLIST.md`. Older notes claimed 19 open GitHub alerts; re-verify with `gh` before acting on that number. |
 
 ---
 
-## 🔗 IMPORTANT LINKS
+## Done (context only)
 
-- **Live Site**: https://tstr.directory
-- **GitHub**: https://github.com/JAvZZe/tstr-site
-- **Supabase**: https://haimjeaetrsaauitrhfy.supabase.co
+- Unified form handler (claim/submit/contact/RFQ) on main history
+- Scraper BaseNicheScraper standardization + international location parsing
+- Scraper Telegram alerting with cooldown
+- ShellCheck gate in pre-commit + CI
+- Consent-gated analytics + Cloudflare Web Analytics live
+- Invalid URL scan 2026-08-10: one confirmed malformed (`ABIOMED HIGIENE`); full dead-link re-scan must run from OCI (dev box outbound false positives)
+
+---
+
+## Links
+
+- Live: https://tstr.directory
+- GitHub: https://github.com/JAvZZe/tstr-site
+- Supabase: https://haimjeaetrsaauitrhfy.supabase.co
+
+---
+
+## Changelog
+
+- **v2.6.6 (2026-10-10)**: Critique pass. Fixed false claim that `ai-search` anon-key landed in `65bd86c`. Separated verified git facts from aspirational commit messages. Replaced missing `CREDENTIAL_ROTATION_RUNBOOK.md` pointer. Softened unverified “19 alerts” count. Collapsed history into actionable “Do next”.
+- **v2.6.5 (2026-10-10)**: First refresh after stale Oct 4 ledger (overnight PASS streak, unpushed list, listing count).
